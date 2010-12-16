@@ -1,0 +1,7 @@
+glob:*.suo
+glob:*.pdb
+glob:*.user
+glob:*.orig
+relre:bin/
+relre:obj/
+relre:publish/
