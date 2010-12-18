@@ -61,7 +61,7 @@ namespace RDotNet
 		}
 
 		/// <summary>
-		/// Creates a new CharacterVector with the specified length.
+		/// Creates a new empty CharacterVector with the specified length.
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="length">The length.</param>

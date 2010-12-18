@@ -78,7 +78,7 @@ namespace RDotNet
 		}
 
 		/// <summary>
-		/// Creates a new ComplexMatrix with the specified size.
+		/// Creates a new empty ComplexMatrix with the specified size.
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="rowCount">The row size.</param>
@@ -97,7 +97,6 @@ namespace RDotNet
 			: base(engine, SymbolicExpressionType.CharacterVector, matrix)
 		{
 		}
-
 
 		internal protected ComplexMatrix(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
