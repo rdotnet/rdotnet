@@ -101,6 +101,7 @@
     <Compile Include="Internals\VECTOR_SEXPREC.cs" />
     <Compile Include="ParseException.cs" />
     <Compile Include="ProtectedPointer.cs" />
+    <Compile Include="REngineExtension.cs" />
     <Compile Include="SymbolicExpression.cs" />
     <Compile Include="Internals\SEXPREC.cs" />
     <Compile Include="Internals\SymbolicExpressionType.cs" />
