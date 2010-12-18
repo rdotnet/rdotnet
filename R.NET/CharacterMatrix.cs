@@ -70,7 +70,7 @@ namespace RDotNet
 		}
 
 		/// <summary>
-		/// Creates a new CharacterMatrix with the specified size.
+		/// Creates a new empty CharacterMatrix with the specified size.
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="rowCount">The row size.</param>

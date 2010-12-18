@@ -70,7 +70,7 @@ namespace RDotNet
 		}
 
 		/// <summary>
-		/// Creates a new ComplexVector with the specified length.
+		/// Creates a new empty ComplexVector with the specified length.
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="length">The length.</param>
