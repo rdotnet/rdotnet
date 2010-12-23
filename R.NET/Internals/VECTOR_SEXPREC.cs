@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace RDotNet.Internals
 {
 	[StructLayout(LayoutKind.Sequential)]
-	public struct VECTOR_SEXPREC
+	internal struct VECTOR_SEXPREC
 	{
 		private SEXPREC_HEADER header;
 		private vecsxp vecsxp;
