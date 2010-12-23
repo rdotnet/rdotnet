@@ -64,6 +64,13 @@ namespace RDotNet.Internals
 		public static extern int Rf_ncols(IntPtr expression);
 
 		[DllImport(RDllName, CallingConvention = CallingConvention.Cdecl)]
+		public static extern IntPtr Rf_allocList(int length);
+
+		[DllImport(RDllName, CallingConvention = CallingConvention.Cdecl)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		public static extern bool Rf_isList(IntPtr sexp);
+
+		[DllImport(RDllName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr R_tryEval(IntPtr statement, IntPtr environment, [MarshalAs(UnmanagedType.Bool)] out bool errorOccurred);
 
 		[DllImport(RDllName, CallingConvention = CallingConvention.Cdecl)]

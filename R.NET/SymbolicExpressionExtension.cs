@@ -11,6 +11,34 @@ namespace RDotNet
 		private const string DimensionAttributeName = "dim";
 
 		/// <summary>
+		/// Gets whether the specified expression is list.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns><c>True</c> if the specified expression is list.</returns>
+		public static bool IsList(this SymbolicExpression expression)
+		{
+			if (expression == null)
+			{
+				throw new ArgumentNullException();
+			}
+			return NativeMethods.Rf_isList((IntPtr)expression);
+		}
+
+		/// <summary>
+		/// Converts the specified expression to a GenericVector.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns>The GenericVector. Returns <c>null</c> if the specified expression is not vector.</returns>
+		public static GenericVector AsList(this SymbolicExpression expression)
+		{
+			if (!expression.IsList())
+			{
+				return null;
+			}
+			return new GenericVector(expression.Engine, (IntPtr)expression);
+		}
+
+		/// <summary>
 		/// Gets whether the specified expression is vector.
 		/// </summary>
 		/// <param name="expression">The expression.</param>
