@@ -13,7 +13,7 @@ namespace RDotNet
 		public InternalString(REngine engine, IntPtr pointer)
 			: base(engine, pointer)
 		{
-			IntPtr stringPointer = IntPtr.Add(this.handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+			IntPtr stringPointer = Utility.OffsetPointer(this.handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
 			internalString = Marshal.PtrToStringAnsi(stringPointer);
 		}
 
