@@ -4,7 +4,7 @@ using System.Security.Permissions;
 
 namespace RDotNet.Internals
 {
-	[SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	internal static class NativeMethods
 	{
 		public const string RDllName = "R.dll";
