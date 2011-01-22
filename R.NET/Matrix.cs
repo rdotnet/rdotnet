@@ -9,6 +9,8 @@ namespace RDotNet
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public abstract class Matrix<T> : SymbolicExpression
 	{
+		private const string DimNamesAttributeName = "dimnames";
+
 		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
@@ -40,6 +42,56 @@ namespace RDotNet
 			get
 			{
 				return NativeMethods.Rf_ncols(this.handle);
+			}
+		}
+
+		/// <summary>
+		/// Gets the names of rows.
+		/// </summary>
+		public string[] RowNames
+		{
+			get
+			{
+				SymbolicExpression dimnames = GetAttribute(DimNamesAttributeName);
+				if (dimnames == null)
+				{
+					return null;
+				}
+				CharacterVector rowNames = dimnames.AsList()[0].AsCharacter();
+				if (rowNames == null)
+				{
+					return null;
+				}
+
+				int length = rowNames.Length;
+				string[] result = new string[length];
+				rowNames.CopyTo(result, length);
+				return result;
+			}
+		}
+
+		/// <summary>
+		/// Gets the names of columns.
+		/// </summary>
+		public string[] ColumnNames
+		{
+			get
+			{
+				SymbolicExpression dimnames = GetAttribute(DimNamesAttributeName);
+				if (dimnames == null)
+				{
+					return null;
+				}
+				CharacterVector columnNames = dimnames.AsList()[1].AsCharacter();
+				if (columnNames == null)
+				{
+					return null;
+				}
+
+				int length = columnNames.Length;
+				string[] result = new string[length];
+				columnNames.CopyTo(result, length);
+				return result;
 			}
 		}
 
