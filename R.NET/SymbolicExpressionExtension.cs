@@ -31,7 +31,7 @@ namespace RDotNet
 		/// <returns>The GenericVector. Returns <c>null</c> if the specified expression is not vector.</returns>
 		public static GenericVector AsList(this SymbolicExpression expression)
 		{
-			if (!expression.IsList())
+			if (!expression.IsVector())
 			{
 				return null;
 			}
