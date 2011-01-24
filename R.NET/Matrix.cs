@@ -14,13 +14,71 @@ namespace RDotNet
 		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
-		/// <param name="rowIndex">The zero-based rowIndex index of the element to get or set.</param>
-		/// <param name="columnIndex">The zero-based columnIndex index of the element to get or set.</param>
+		/// <param name="rowIndex">The zero-based row index of the element to get or set.</param>
+		/// <param name="columnIndex">The zero-based column index of the element to get or set.</param>
 		/// <returns>The element at the specified index.</returns>
 		public abstract T this[int rowIndex, int columnIndex]
 		{
 			get;
 			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the element at the specified names.
+		/// </summary>
+		/// <param name="rowIndex">The row name of the element to get or set.</param>
+		/// <param name="columnIndex">The column name of the element to get or set.</param>
+		/// <returns>The element at the specified names.</returns>
+		public virtual T this[string rowName, string columnName]
+		{
+			get
+			{
+				if (rowName == null)
+				{
+					throw new ArgumentNullException("rowName");
+				}
+				if (columnName == null)
+				{
+					throw new ArgumentNullException("columnName");
+				}
+				string[] rowNames = RowNames;
+				if (rowNames == null)
+				{
+					throw new InvalidOperationException();
+				}
+				string[] columnNames = ColumnNames;
+				if (columnNames == null)
+				{
+					throw new InvalidOperationException();
+				}
+				int rowIndex = Array.IndexOf(rowNames, rowName);
+				int columnIndex = Array.IndexOf(columnNames, columnName);
+				return this[rowIndex, columnIndex];
+			}
+			set
+			{
+				if (rowName == null)
+				{
+					throw new ArgumentNullException("rowName");
+				}
+				if (columnName == null)
+				{
+					throw new ArgumentNullException("columnName");
+				}
+				string[] rowNames = RowNames;
+				if (rowNames == null)
+				{
+					throw new InvalidOperationException();
+				}
+				string[] columnNames = ColumnNames;
+				if (columnNames == null)
+				{
+					throw new InvalidOperationException();
+				}
+				int rowIndex = Array.IndexOf(rowNames, rowName);
+				int columnIndex = Array.IndexOf(columnNames, columnName);
+				this[rowIndex, columnIndex] = value;
+			}
 		}
 
 		/// <summary>

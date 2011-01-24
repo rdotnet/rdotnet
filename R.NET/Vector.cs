@@ -23,6 +23,39 @@ namespace RDotNet
 		}
 
 		/// <summary>
+		/// Gets or sets the element at the specified name.
+		/// </summary>
+		/// <param name="name">The name of the element to get or set.</param>
+		/// <returns>The element at the specified name.</returns>
+		public virtual T this[string name]
+		{
+			get
+			{
+				if (name == null)
+				{
+					throw new ArgumentNullException("name");
+				}
+				string[] names = Names;
+				if (names == null)
+				{
+					throw new InvalidOperationException();
+				}
+				int index = Array.IndexOf(names, name);
+				return this[index];
+			}
+			set
+			{
+				string[] names = Names;
+				if (names == null)
+				{
+					throw new InvalidOperationException();
+				}
+				int index = Array.IndexOf(names, name);
+				this[index] = value;
+			}
+		}
+
+		/// <summary>
 		/// Gets the number of elements.
 		/// </summary>
 		public int Length
