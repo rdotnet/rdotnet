@@ -9,7 +9,7 @@ namespace RDotNet
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public abstract class Vector<T> : SymbolicExpression, IEnumerable<T>
 	{
-		private const string NamesAttributeName = "names";
+		private const string RNamesSymbolName = "R_NamesSymbol";
 
 		/// <summary>
 		/// Gets or sets the element at the specified index.
@@ -73,7 +73,8 @@ namespace RDotNet
 		{
 			get
 			{
-				SymbolicExpression names = GetAttribute(NamesAttributeName);
+				SymbolicExpression namesSymbol = Engine.CallPredefinedExpression(RNamesSymbolName);
+				SymbolicExpression names = GetAttribute(namesSymbol);
 				if (names == null)
 				{
 					return null;
