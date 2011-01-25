@@ -114,6 +114,25 @@ namespace RDotNet
 			return new SymbolicExpression(Engine, attribute);
 		}
 
+		internal SymbolicExpression GetAttribute(SymbolicExpression symbol)
+		{
+			if (symbol == null)
+			{
+				throw new ArgumentNullException();
+			}
+			if (symbol.Type != SymbolicExpressionType.Symbol)
+			{
+				throw new ArgumentException();
+			}
+
+			IntPtr attribute = NativeMethods.Rf_getAttrib((IntPtr)this, (IntPtr)symbol);
+			if (attribute == (IntPtr)Engine.NilValue)
+			{
+				return null;
+			}
+			return new SymbolicExpression(Engine, attribute);
+		}
+
 		/// <summary>
 		/// Sets the new value to the attribute of the specified name.
 		/// </summary>
@@ -137,6 +156,25 @@ namespace RDotNet
 
 			IntPtr installedName = NativeMethods.Rf_install(attributeName);
 			NativeMethods.Rf_setAttrib((IntPtr)this, installedName, (IntPtr)value);
+		}
+
+		internal void SetAttribute(SymbolicExpression symbol, SymbolicExpression value)
+		{
+			if (symbol == null)
+			{
+				throw new ArgumentNullException();
+			}
+			if (symbol.Type != SymbolicExpressionType.Symbol)
+			{
+				throw new ArgumentException();
+			}
+
+			if (value == null)
+			{
+				value = Engine.NilValue;
+			}
+
+			NativeMethods.Rf_setAttrib((IntPtr)this, (IntPtr)symbol, (IntPtr)value);
 		}
 
 		public void Protect()

@@ -9,7 +9,7 @@ namespace RDotNet
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public abstract class Matrix<T> : SymbolicExpression
 	{
-		private const string DimNamesAttributeName = "dimnames";
+		private const string RDimnamesSymbolName = "R_DimNamesSymbol";
 
 		/// <summary>
 		/// Gets or sets the element at the specified index.
@@ -110,7 +110,8 @@ namespace RDotNet
 		{
 			get
 			{
-				SymbolicExpression dimnames = GetAttribute(DimNamesAttributeName);
+				SymbolicExpression dimnamesSymbol = Engine.CallPredefinedExpression(RDimnamesSymbolName);
+				SymbolicExpression dimnames = GetAttribute(dimnamesSymbol);
 				if (dimnames == null)
 				{
 					return null;
@@ -135,7 +136,8 @@ namespace RDotNet
 		{
 			get
 			{
-				SymbolicExpression dimnames = GetAttribute(DimNamesAttributeName);
+				SymbolicExpression dimnamesSymbol = Engine.CallPredefinedExpression(RDimnamesSymbolName);
+				SymbolicExpression dimnames = GetAttribute(dimnamesSymbol);
 				if (dimnames == null)
 				{
 					return null;

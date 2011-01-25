@@ -356,7 +356,7 @@ namespace RDotNet
 			base.Dispose(disposing);
 		}
 
-		private SymbolicExpression CallPredefinedExpression(string name)
+		internal SymbolicExpression CallPredefinedExpression(string name)
 		{
 			if (!predefinedExpressions.ContainsKey(name))
 			{
