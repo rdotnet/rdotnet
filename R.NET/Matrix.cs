@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using RDotNet.Internals;
@@ -26,8 +25,8 @@ namespace RDotNet
 		/// <summary>
 		/// Gets or sets the element at the specified names.
 		/// </summary>
-		/// <param name="rowIndex">The row name of the element to get or set.</param>
-		/// <param name="columnIndex">The column name of the element to get or set.</param>
+		/// <param name="rowName">The row name of the element to get or set.</param>
+		/// <param name="columnName">The column name of the element to get or set.</param>
 		/// <returns>The element at the specified names.</returns>
 		public virtual T this[string rowName, string columnName]
 		{
@@ -82,7 +81,7 @@ namespace RDotNet
 		}
 
 		/// <summary>
-		/// Gets the rowIndex size of elements.
+		/// Gets the row size of elements.
 		/// </summary>
 		public int RowCount
 		{
@@ -93,7 +92,7 @@ namespace RDotNet
 		}
 
 		/// <summary>
-		/// Gets the columnIndex size of elements.
+		/// Gets the column size of elements.
 		/// </summary>
 		public int ColumnCount
 		{
