@@ -324,8 +324,9 @@ namespace RDotNet
 					case ParseStatus.Incomplete:
 						return null;
 					default:
+						string errorStatement = incompleteStatement.ToString();
 						incompleteStatement.Clear();
-						throw new ParseException(status);
+						throw new ParseException(status, errorStatement);
 				}
 			}
 		}
