@@ -53,6 +53,21 @@ namespace RDotNet
 		}
 
 		/// <summary>
+		/// Converts the specified expression to a DynamicVector.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns>The DynamicVector. Returns <c>null</c> if the specified expression is not vector.</returns>
+		public static DynamicVector AsVector(this SymbolicExpression expression)
+		{
+			if (expression == null)
+			{
+				throw new ArgumentNullException();
+			}
+			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, expression.Type);
+			return new DynamicVector(expression.Engine, coerced);
+		}
+
+		/// <summary>
 		/// Converts the specified expression to a LogicalVector.
 		/// </summary>
 		/// <param name="expression">The expression.</param>
