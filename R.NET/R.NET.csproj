@@ -85,6 +85,7 @@
     <Compile Include="ComplexVector.cs" />
     <Compile Include="CharacterMatrix.cs" />
     <Compile Include="ComplexMatrix.cs" />
+    <Compile Include="DynamicVector.cs" />
     <Compile Include="GenericVector.cs" />
     <Compile Include="LogicalMatrix.cs" />
     <Compile Include="RawMatrix.cs" />
