@@ -97,7 +97,7 @@ namespace RDotNet
 		}
 
 		/// <summary>
-		/// Converts the specified expression to a IntegerVector.
+		/// Converts the specified expression to an IntegerVector.
 		/// </summary>
 		/// <param name="expression">The expression.</param>
 		/// <returns>The LogicalVector. Returns <c>null</c> if the specified expression is not vector.</returns>
@@ -227,7 +227,7 @@ namespace RDotNet
 		}
 
 		/// <summary>
-		/// Converts the specified expression to a IntegerMatrix.
+		/// Converts the specified expression to an IntegerMatrix.
 		/// </summary>
 		/// <param name="expression">The expression.</param>
 		/// <returns>The IntegerMatrix. Returns <c>null</c> if the specified expression is not vector.</returns>
