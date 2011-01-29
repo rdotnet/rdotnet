@@ -99,7 +99,7 @@ namespace RDotNet
 		{
 			get
 			{
-				return IntPtr.Add(this.handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+				return Utility.OffsetPointer(this.handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
 			}
 		}
 

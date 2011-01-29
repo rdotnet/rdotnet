@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using RDotNet.Internals;
@@ -34,7 +33,7 @@ namespace RDotNet
 				{
 					byte[] data = new byte[Marshal.SizeOf(typeof(Complex))];
 					int offset = GetOffset(rowIndex, columnIndex);
-					IntPtr pointer = IntPtr.Add(DataPointer, offset);
+					IntPtr pointer = Utility.OffsetPointer(DataPointer, offset);
 					Marshal.Copy(pointer, data, 0, data.Length);
 
 					double real = BitConverter.ToDouble(data, 0);
@@ -58,9 +57,9 @@ namespace RDotNet
 					byte[] imaginary = BitConverter.GetBytes(value.Imaginary);
 					
 					int offset = GetOffset(rowIndex, columnIndex);
-					IntPtr pointer = IntPtr.Add(DataPointer, offset);
+					IntPtr pointer = Utility.OffsetPointer(DataPointer, offset);
 					Marshal.Copy(real, 0, pointer, real.Length);
-					pointer = IntPtr.Add(pointer, real.Length);
+					pointer = Utility.OffsetPointer(pointer, real.Length);
 					Marshal.Copy(imaginary, 0, pointer, imaginary.Length);
 				}
 			}

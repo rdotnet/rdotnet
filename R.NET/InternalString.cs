@@ -25,7 +25,7 @@ namespace RDotNet
 
 		public override string ToString()
 		{
-			IntPtr pointer = IntPtr.Add(this.handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+			IntPtr pointer = Utility.OffsetPointer(this.handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
 			return Marshal.PtrToStringAnsi(pointer);
 		}
 	}
