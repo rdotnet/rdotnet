@@ -39,6 +39,20 @@ namespace RDotNet
 		}
 
 		/// <summary>
+		/// Converts the specified expression to a DataFrame.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns>The DataFrame. Returns <c>null</c> if the specified expression is not vector.</returns>
+		public static DataFrame AsDataFrame(this SymbolicExpression expression)
+		{
+			if (!expression.IsVector())
+			{
+				return null;
+			}
+			return new DataFrame(expression.Engine, (IntPtr)expression);
+		}
+
+		/// <summary>
 		/// Gets whether the specified expression is vector.
 		/// </summary>
 		/// <param name="expression">The expression.</param>
