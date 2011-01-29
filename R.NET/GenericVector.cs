@@ -56,8 +56,8 @@ namespace RDotNet
 		/// <summary>
 		/// Creates a new empty GenericVector with the specified length.
 		/// </summary>
-		/// <param columnName="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param columnName="length">The length.</param>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="length">The length.</param>
 		public GenericVector(REngine engine, int length)
 			: base(engine, NativeMethods.Rf_allocList(length))
 		{
@@ -66,8 +66,8 @@ namespace RDotNet
 		/// <summary>
 		/// Creates a new GenericVector with the specified values.
 		/// </summary>
-		/// <param columnName="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param columnName="list">The values.</param>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="list">The values.</param>
 		public GenericVector(REngine engine, SymbolicExpression[] list)
 			: base(engine, NativeMethods.Rf_allocList(list.Length))
 		{
