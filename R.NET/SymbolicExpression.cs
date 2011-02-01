@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Dynamic;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
+using RDotNet.Dynamic;
 using RDotNet.Internals;
 
 namespace RDotNet
@@ -9,7 +12,7 @@ namespace RDotNet
 	/// An expression in R environment.
 	/// </summary>
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-	public class SymbolicExpression : SafeHandle, IEquatable<SymbolicExpression>
+	public class SymbolicExpression : SafeHandle, IEquatable<SymbolicExpression>, IDynamicMetaObjectProvider
 	{
 		public override bool IsInvalid
 		{
@@ -217,6 +220,11 @@ namespace RDotNet
 		public bool Equals(SymbolicExpression other)
 		{
 			return other != null && this.handle == other.handle;
+		}
+
+		public virtual DynamicMetaObject GetMetaObject(Expression parameter)
+		{
+			return new SymbolicExpressionDynamicMeta(parameter, this);
 		}
 	}
 }

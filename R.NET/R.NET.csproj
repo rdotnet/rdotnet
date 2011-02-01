@@ -88,6 +88,9 @@
     <Compile Include="DataFrame.cs" />
     <Compile Include="DataFrameRow.cs" />
     <Compile Include="DynamicVector.cs" />
+    <Compile Include="Dynamic\DataFrameDynamicMeta.cs" />
+    <Compile Include="Dynamic\SymbolicExpressionDynamicMeta.cs" />
+    <Compile Include="Dynamic\ListDynamicMeta.cs" />
     <Compile Include="GenericVector.cs" />
     <Compile Include="LogicalMatrix.cs" />
     <Compile Include="RawMatrix.cs" />
