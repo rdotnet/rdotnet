@@ -221,8 +221,8 @@ namespace RDotNet
 		/// <param name="destination">The destination array.</param>
 		/// <param name="rowCount">The row length to copy.</param>
 		/// <param name="columnCount">The column length to copy.</param>
-		/// <param name="sourceRowIndex">The first row index of the vector.</param>
-		/// <param name="sourceColumnIndex">The first column index of the vector.</param>
+		/// <param name="sourceRowIndex">The first row index of the matrix.</param>
+		/// <param name="sourceColumnIndex">The first column index of the matrix.</param>
 		/// <param name="destinationRowIndex">The first row index of the destination array.</param>
 		/// <param name="destinationColumnIndex">The first column index of the destination array.</param>
 		public void CopyTo(T[,] destination, int rowCount, int columnCount, int sourceRowIndex = 0, int sourceColumnIndex = 0, int destinationRowIndex = 0, int destinationColumnIndex = 0)
