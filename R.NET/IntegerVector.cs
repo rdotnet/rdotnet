@@ -82,5 +82,36 @@ namespace RDotNet
 			: base(engine, coerced)
 		{
 		}
+
+		/// <summary>
+		/// Copies the elements to the specified array.
+		/// </summary>
+		/// <param name="destination">The destination array.</param>
+		/// <param name="length">The length to copy.</param>
+		/// <param name="sourceIndex">The first index of the vector.</param>
+		/// <param name="destinationIndex">The first index of the destination array.</param>
+		public new void CopyTo(int[] destination, int length, int sourceIndex = 0, int destinationIndex = 0)
+		{
+			if (destination == null)
+			{
+				throw new ArgumentNullException("destination");
+			}
+			if (length < 0)
+			{
+				throw new IndexOutOfRangeException("length");
+			}
+			if (sourceIndex < 0 || this.Length < sourceIndex + length)
+			{
+				throw new IndexOutOfRangeException("sourceIndex");
+			}
+			if (destinationIndex < 0 || destination.Length < destinationIndex + length)
+			{
+				throw new IndexOutOfRangeException("destinationIndex");
+			}
+
+			int offset = GetOffset(sourceIndex);
+			IntPtr pointer = IntPtr.Add(DataPointer, offset);
+			Marshal.Copy(pointer, destination, destinationIndex, length);
+		}
 	}
 }
