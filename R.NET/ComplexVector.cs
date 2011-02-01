@@ -28,14 +28,11 @@ namespace RDotNet
 				}
 				using (new ProtectedPointer(this))
 				{
-					byte[] data = new byte[Marshal.SizeOf(typeof(Complex))];
+					double[] data = new double[2];
 					int offset = GetOffset(index);
 					IntPtr pointer = IntPtr.Add(DataPointer, offset);
 					Marshal.Copy(pointer, data, 0, data.Length);
-
-					double real = BitConverter.ToDouble(data, 0);
-					double imaginary = BitConverter.ToDouble(data, sizeof(double));
-					return new Complex(real, imaginary);
+					return new Complex(data[0], data[1]);
 				}
 			}
 			set
@@ -46,14 +43,10 @@ namespace RDotNet
 				}
 				using (new ProtectedPointer(this))
 				{
-					byte[] real = BitConverter.GetBytes(value.Real);
-					byte[] imaginary = BitConverter.GetBytes(value.Imaginary);
-
+					double[] data = new double[] { value.Real, value.Imaginary };
 					int offset = GetOffset(index);
 					IntPtr pointer = IntPtr.Add(DataPointer, offset);
-					Marshal.Copy(real, 0, pointer, real.Length);
-					pointer = IntPtr.Add(pointer, real.Length);
-					Marshal.Copy(imaginary, 0, pointer, imaginary.Length);
+					Marshal.Copy(data, 0, pointer, data.Length);
 				}
 			}
 		}

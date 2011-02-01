@@ -26,14 +26,11 @@ namespace RDotNet
 				}
 				using (new ProtectedPointer(this))
 				{
-					byte[] data = new byte[DataSize];
-					IntPtr pointer = DataPointer;
+					double[] data = new double[1];
 					int offset = GetOffset(index);
-					for (int byteIndex = 0; byteIndex < data.Length; byteIndex++)
-					{
-						data[byteIndex] = Marshal.ReadByte(pointer, offset + byteIndex);
-					}
-					return BitConverter.ToDouble(data, 0);
+					IntPtr pointer = IntPtr.Add(DataPointer, offset);
+					Marshal.Copy(pointer, data, 0, data.Length);
+					return data[0];
 				}
 			}
 			set
@@ -44,13 +41,10 @@ namespace RDotNet
 				}
 				using (new ProtectedPointer(this))
 				{
-					byte[] data = BitConverter.GetBytes(value);
-					IntPtr pointer = DataPointer;
+					double[] data = new double[] { value };
 					int offset = GetOffset(index);
-					for (int byteIndex = 0; byteIndex < data.Length; byteIndex++)
-					{
-						Marshal.WriteByte(pointer, offset + byteIndex, data[byteIndex]);
-					}
+					IntPtr pointer = IntPtr.Add(DataPointer, offset);
+					Marshal.Copy(data, 0, pointer, data.Length);
 				}
 			}
 		}
@@ -89,6 +83,37 @@ namespace RDotNet
 		internal protected NumericVector(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{
+		}
+
+		/// <summary>
+		/// Copies the elements to the specified array.
+		/// </summary>
+		/// <param name="destination">The destination array.</param>
+		/// <param name="length">The length to copy.</param>
+		/// <param name="sourceIndex">The first index of the vector.</param>
+		/// <param name="destinationIndex">The first index of the destination array.</param>
+		public new void CopyTo(double[] destination, int length, int sourceIndex = 0, int destinationIndex = 0)
+		{
+			if (destination == null)
+			{
+				throw new ArgumentNullException("destination");
+			}
+			if (length < 0)
+			{
+				throw new IndexOutOfRangeException("length");
+			}
+			if (sourceIndex < 0 || this.Length < sourceIndex + length)
+			{
+				throw new IndexOutOfRangeException("sourceIndex");
+			}
+			if (destinationIndex < 0 || destination.Length < destinationIndex + length)
+			{
+				throw new IndexOutOfRangeException("destinationIndex");
+			}
+
+			int offset = GetOffset(sourceIndex);
+			IntPtr pointer = IntPtr.Add(DataPointer, offset);
+			Marshal.Copy(pointer, destination, destinationIndex, length);
 		}
 	}
 }
