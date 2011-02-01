@@ -214,5 +214,60 @@ namespace RDotNet
 		{
 			return DataSize * (columnIndex * RowCount + rowIndex);
 		}
+
+		/// <summary>
+		/// Copies the elements to the specified array.
+		/// </summary>
+		/// <param name="destination">The destination array.</param>
+		/// <param name="rowCount">The row length to copy.</param>
+		/// <param name="columnCount">The column length to copy.</param>
+		/// <param name="sourceRowIndex">The first row index of the vector.</param>
+		/// <param name="sourceColumnIndex">The first column index of the vector.</param>
+		/// <param name="destinationRowIndex">The first row index of the destination array.</param>
+		/// <param name="destinationColumnIndex">The first column index of the destination array.</param>
+		public void CopyTo(T[,] destination, int rowCount, int columnCount, int sourceRowIndex = 0, int sourceColumnIndex = 0, int destinationRowIndex = 0, int destinationColumnIndex = 0)
+		{
+			if (destination == null)
+			{
+				throw new ArgumentNullException("destination");
+			}
+			if (rowCount < 0)
+			{
+				throw new IndexOutOfRangeException("rowCount");
+			}
+			if (columnCount < 0)
+			{
+				throw new IndexOutOfRangeException("columnCount");
+			}
+			if (sourceRowIndex < 0 || this.RowCount < sourceRowIndex + rowCount)
+			{
+				throw new IndexOutOfRangeException("sourceRowIndex");
+			}
+			if (sourceColumnIndex < 0 || this.ColumnCount < sourceColumnIndex + columnCount)
+			{
+				throw new IndexOutOfRangeException("sourceColumnIndex");
+			}
+			if (destinationRowIndex < 0 || destination.GetLength(0) < destinationRowIndex + rowCount)
+			{
+				throw new IndexOutOfRangeException("destinationRowIndex");
+			}
+			if (destinationColumnIndex < 0 || destination.GetLength(1) < destinationColumnIndex + columnCount)
+			{
+				throw new IndexOutOfRangeException("destinationColumnIndex");
+			}
+
+			while (--rowCount >= 0)
+			{
+				int currentSourceRowIndex = sourceRowIndex++;
+				int currentDestinationRowIndex = destinationRowIndex++;
+				int currentColumnCount = columnCount;
+				int currentSourceColumnIndex = sourceColumnIndex;
+				int currentDestinationColumnIndex = destinationColumnIndex;
+				while (--currentColumnCount >= 0)
+				{
+					destination[currentDestinationRowIndex, currentDestinationColumnIndex++] = this[currentSourceRowIndex, currentSourceColumnIndex++];
+				}
+			}
+		}
 	}
 }
