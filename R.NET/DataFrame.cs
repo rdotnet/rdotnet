@@ -142,11 +142,20 @@ namespace RDotNet
 		{
 		}
 
+		/// <summary>
+		/// Gets the row at the specified index.
+		/// </summary>
+		/// <param name="rowIndex">The index.</param>
+		/// <returns>The row.</returns>
 		public DataFrameRow GetRow(int rowIndex)
 		{
 			return new DataFrameRow(this, rowIndex);
 		}
 
+		/// <summary>
+		/// Enumerates all the rows in the data frame.
+		/// </summary>
+		/// <returns>The collection of the rows.</returns>
 		public IEnumerable<DataFrameRow> GetRows()
 		{
 			int rowCount = RowCount;
