@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Dynamic;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
+using RDotNet.Dynamic;
 using RDotNet.Internals;
 
 namespace RDotNet
@@ -80,6 +83,11 @@ namespace RDotNet
 		internal protected GenericVector(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{
+		}
+
+		public override DynamicMetaObject GetMetaObject(Expression parameter)
+		{
+			return new ListDynamicMeta(parameter, this);
 		}
 	}
 }
