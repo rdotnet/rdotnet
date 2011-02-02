@@ -3,7 +3,7 @@
 namespace RDotNet.Internals
 {
 	[StructLayout(LayoutKind.Sequential)]
-	public struct sxpinfo
+	internal struct sxpinfo
 	{
 		private uint bits;
 
