@@ -5,3 +5,4 @@ glob:*.orig
 relre:bin/
 relre:obj/
 relre:publish/
+relre:Help/
