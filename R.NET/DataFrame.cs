@@ -51,7 +51,7 @@ namespace RDotNet
 		}
 
 		/// <summary>
-		/// Gets or sets the element at the specified index.
+		/// Gets or sets the element at the specified indexes.
 		/// </summary>
 		/// <param name="rowIndex">The row index.</param>
 		/// <param name="columnIndex">The column index.</param>
@@ -67,6 +67,46 @@ namespace RDotNet
 			{
 				DynamicVector column = this[columnIndex];
 				column[rowIndex] = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the element at the specified index and name.
+		/// </summary>
+		/// <param name="rowIndex">The row index.</param>
+		/// <param name="columnName">The column name.</param>
+		/// <returns>The element.</returns>
+		public object this[int rowIndex, string columnName]
+		{
+			get
+			{
+				DynamicVector column = this[columnName];
+				return column[rowIndex];
+			}
+			set
+			{
+				DynamicVector column = this[columnName];
+				column[rowIndex] = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the element at the specified names.
+		/// </summary>
+		/// <param name="rowName">The row name.</param>
+		/// <param name="columnName">The column name.</param>
+		/// <returns>The element.</returns>
+		public object this[string rowName, string columnName]
+		{
+			get
+			{
+				DynamicVector column = this[columnName];
+				return column[rowName];
+			}
+			set
+			{
+				DynamicVector column = this[columnName];
+				column[rowName] = value;
 			}
 		}
 
