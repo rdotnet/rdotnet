@@ -37,7 +37,8 @@ namespace RDotNet
 		{
 			get
 			{
-				return new Version(NativeMethods.GetDllVersion());
+				string version = Marshal.PtrToStringAnsi(NativeMethods.GetDllVersion());
+				return new Version(version);
 			}
 		}
 
