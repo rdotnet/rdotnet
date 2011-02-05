@@ -109,7 +109,7 @@ namespace RDotNet
 		{
 			get
 			{
-				SymbolicExpression dimnamesSymbol = Engine.CallPredefinedExpression(RDimnamesSymbolName);
+				SymbolicExpression dimnamesSymbol = Engine.GetPredefinedSymbol(RDimnamesSymbolName);
 				SymbolicExpression dimnames = GetAttribute(dimnamesSymbol);
 				if (dimnames == null)
 				{
@@ -135,7 +135,7 @@ namespace RDotNet
 		{
 			get
 			{
-				SymbolicExpression dimnamesSymbol = Engine.CallPredefinedExpression(RDimnamesSymbolName);
+				SymbolicExpression dimnamesSymbol = Engine.GetPredefinedSymbol(RDimnamesSymbolName);
 				SymbolicExpression dimnames = GetAttribute(dimnamesSymbol);
 				if (dimnames == null)
 				{

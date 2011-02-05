@@ -30,8 +30,6 @@ namespace RDotNet
 	{
 		private static readonly IDictionary<string, REngine> instances = new Dictionary<string, REngine>();
 
-		private readonly IDictionary<string, SymbolicExpression> predefinedExpressions;
-
 		/// <summary>
 		/// Gets the version of R.DLL.
 		/// </summary>
@@ -82,7 +80,7 @@ namespace RDotNet
 		{
 			get
 			{
-				return CallPredefinedExpression("R_GlobalEnv");
+				return GetPredefinedSymbol("R_GlobalEnv");
 			}
 		}
 
@@ -93,7 +91,7 @@ namespace RDotNet
 		{
 			get
 			{
-				return CallPredefinedExpression("R_NilValue");
+				return GetPredefinedSymbol("R_NilValue");
 			}
 		}
 
@@ -104,7 +102,7 @@ namespace RDotNet
 		{
 			get
 			{
-				return CallPredefinedExpression("R_UnboundValue");
+				return GetPredefinedSymbol("R_UnboundValue");
 			}
 		}
 
@@ -115,7 +113,6 @@ namespace RDotNet
 			string[] newArgs = Utility.AddFirst(id, args);
 			NativeMethods.Rf_initEmbeddedR(newArgs.Length, newArgs);
 
-			predefinedExpressions = new Dictionary<string, SymbolicExpression>();
 			isRunning = true;
 		}
 
@@ -345,27 +342,20 @@ namespace RDotNet
 				instances.Remove(ID);
 			}
 
-			if (predefinedExpressions != null)
-			{
-				foreach (SymbolicExpression e in predefinedExpressions.Values)
-				{
-					e.Dispose();
-				}
-				predefinedExpressions.Clear();
-			}
-
 			base.Dispose(disposing);
 		}
 
-		internal SymbolicExpression CallPredefinedExpression(string name)
+		public SymbolicExpression GetPredefinedSymbol(string name)
 		{
-			if (!predefinedExpressions.ContainsKey(name))
+			try
 			{
 				IntPtr pointer = GetProcAddress(this.handle, name);
-				SymbolicExpression expression = new SymbolicExpression(this, Marshal.ReadIntPtr(pointer));
-				predefinedExpressions.Add(name, expression);
+				return new SymbolicExpression(this, Marshal.ReadIntPtr(pointer));
 			}
-			return predefinedExpressions[name];
+			catch (Exception ex)
+			{
+				throw new ArgumentException(null, ex);
+			}
 		}
 
 		[DllImport("kernel32.dll")]
