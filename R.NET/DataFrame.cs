@@ -139,7 +139,7 @@ namespace RDotNet
 		{
 			get
 			{
-				SymbolicExpression rowNamesSymbol = Engine.CallPredefinedExpression(RRowNamesSymbolName);
+				SymbolicExpression rowNamesSymbol = Engine.GetPredefinedSymbol(RRowNamesSymbolName);
 				SymbolicExpression rowNames = GetAttribute(rowNamesSymbol);
 				if (rowNames == null)
 				{
