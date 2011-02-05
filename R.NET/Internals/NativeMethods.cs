@@ -16,8 +16,7 @@ namespace RDotNet.Internals
 		public static extern void Rf_endEmbeddedR(int fatal);
 
 		[DllImport(RDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "getDLLVersion")]
-		[return: MarshalAs(UnmanagedType.LPStr)]
-		public static extern string GetDllVersion();
+		public static extern IntPtr GetDllVersion();
 
 		[DllImport(RDllName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern IntPtr Rf_protect(IntPtr sexp);
