@@ -106,7 +106,7 @@ namespace RDotNet
 		/// <param name="engine">The engine.</param>
 		/// <param name="length">The length.</param>
 		/// <returns>The new vector.</returns>
-		public static RawVector CreateCharacterRawVector(this REngine engine, int length)
+		public static RawVector CreateRawVector(this REngine engine, int length)
 		{
 			if (engine == null)
 			{
@@ -220,7 +220,7 @@ namespace RDotNet
 		/// <param name="engine">The engine.</param>
 		/// <param name="vector">The values.</param>
 		/// <returns>The new vector.</returns>
-		public static RawVector CreateCharacterRawVector(this REngine engine, byte[] vector)
+		public static RawVector CreateRawVector(this REngine engine, byte[] vector)
 		{
 			if (engine == null)
 			{
@@ -340,7 +340,7 @@ namespace RDotNet
 		/// <param name="rowCount">The row size.</param>
 		/// <param name="columnCount">The column size.</param>
 		/// <returns>The new matrix.</returns>
-		public static RawMatrix CreateCharacterRawMatrix(this REngine engine, int rowCount, int columnCount)
+		public static RawMatrix CreateRawMatrix(this REngine engine, int rowCount, int columnCount)
 		{
 			if (engine == null)
 			{
@@ -454,7 +454,7 @@ namespace RDotNet
 		/// <param name="engine">The engine.</param>
 		/// <param name="matrix">The values.</param>
 		/// <returns>The new matrix.</returns>
-		public static RawMatrix CreateCharacterRawMatrix(this REngine engine, byte[,] matrix)
+		public static RawMatrix CreateRawMatrix(this REngine engine, byte[,] matrix)
 		{
 			if (engine == null)
 			{
