@@ -70,6 +70,7 @@ namespace RDotNet
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="rowCount">The row size.</param>
 		/// <param name="columnCount">The column size.</param>
+		/// <seealso cref="REngineExtension.CreateRawMatrix(REngine, int, int)"/>
 		public RawMatrix(REngine engine, int rowCount, int columnCount)
 			: base(engine, SymbolicExpressionType.RawVector, rowCount, columnCount)
 		{
@@ -80,11 +81,17 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="matrix">The values.</param>
-		public RawMatrix(REngine engine, byte[, ] matrix)
+		/// <seealso cref="REngineExtension.CreateRawMatrix(REngine, byte[,])"/>
+		public RawMatrix(REngine engine, byte[,] matrix)
 			: base(engine, SymbolicExpressionType.RawVector, matrix)
 		{
 		}
 
+		/// <summary>
+		/// Creates a new instance for a raw matrix.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a raw matrix.</param>
 		internal protected RawMatrix(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{

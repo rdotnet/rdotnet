@@ -3,6 +3,9 @@ using System.Numerics;
 
 namespace RDotNet
 {
+	/// <summary>
+	/// Provides extension methods for <see cref="REngine"/>.
+	/// </summary>
 	public static class REngineExtension
 	{
 		/// <summary>

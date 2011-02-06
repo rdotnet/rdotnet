@@ -65,6 +65,7 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="length">The length.</param>
+		/// <seealso cref="REngineExtension.CreateNumericVector(REngine, int)"/>
 		public NumericVector(REngine engine, int length)
 			: base(engine, SymbolicExpressionType.NumericVector, length)
 		{
@@ -75,11 +76,17 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="vector">The values.</param>
+		/// <seealso cref="REngineExtension.CreateNumericVector(REngine, double[])"/>
 		public NumericVector(REngine engine, double[] vector)
 			: base(engine, SymbolicExpressionType.NumericVector, vector)
 		{
 		}
 
+		/// <summary>
+		/// Creates a new instance for a numeric vector.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a numeric vector.</param>
 		internal protected NumericVector(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{

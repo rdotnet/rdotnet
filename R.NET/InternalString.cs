@@ -5,19 +5,37 @@ using RDotNet.Internals;
 
 namespace RDotNet
 {
+	/// <summary>
+	/// Internal string.
+	/// </summary>
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public class InternalString : SymbolicExpression
 	{
+		/// <summary>
+		/// Creates a new instance.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="pointer">The pointer to a string.</param>
 		public InternalString(REngine engine, IntPtr pointer)
 			: base(engine, pointer)
 		{
 		}
 
+		/// <summary>
+		/// Creates a new instance.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="s">The string</param>
 		public InternalString(REngine engine, string s)
 			: base(engine, NativeMethods.Rf_mkChar(s))
 		{
 		}
 
+		/// <summary>
+		/// Converts to the string into .NET Framework string.
+		/// </summary>
+		/// <param name="s">The R string.</param>
+		/// <returns>The .NET Framework string.</returns>
 		public static implicit operator string(InternalString s)
 		{
 			return s.ToString();

@@ -59,6 +59,11 @@ namespace RDotNet
 			}
 		}
 
+		/// <summary>
+		/// Creates new instance of SymbolicExpression.
+		/// </summary>
+		/// <param name="engine">The engine.</param>
+		/// <param name="pointer">The pointer.</param>
 		internal protected SymbolicExpression(REngine engine, IntPtr pointer)
 			: base(IntPtr.Zero, true)
 		{
@@ -67,6 +72,11 @@ namespace RDotNet
 			SetHandle(pointer);
 		}
 
+		/// <summary>
+		/// Gets the pointer.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns>The pointer.</returns>
 		public static explicit operator IntPtr(SymbolicExpression expression)
 		{
 			return expression.handle;
@@ -180,6 +190,10 @@ namespace RDotNet
 			NativeMethods.Rf_setAttrib((IntPtr)this, (IntPtr)symbol, (IntPtr)value);
 		}
 
+		/// <summary>
+		/// Prevents the expression from R's garbage collector.
+		/// </summary>
+		/// <seealso cref="SymbolicExpression.Unprotect"/>
 		public void Protect()
 		{
 			if (!IsInvalid)
@@ -189,6 +203,10 @@ namespace RDotNet
 			}
 		}
 
+		/// <summary>
+		/// Stops protection.
+		/// </summary>
+		/// <seealso cref="SymbolicExpression.Protect"/>
 		public void Unprotect()
 		{
 			if (!IsInvalid && IsProtected)

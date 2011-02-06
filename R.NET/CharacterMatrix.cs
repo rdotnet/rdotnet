@@ -75,6 +75,7 @@ namespace RDotNet
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="rowCount">The row size.</param>
 		/// <param name="columnCount">The column size.</param>
+		/// <seealso cref="REngineExtension.CreateCharacterMatrix(REngine, int, int)"/>
 		public CharacterMatrix(REngine engine, int rowCount, int columnCount)
 			: base(engine, SymbolicExpressionType.CharacterVector, rowCount, columnCount)
 		{
@@ -85,11 +86,17 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="matrix">The values.</param>
+		/// <seealso cref="REngineExtension.CreateCharacterMatrix(REngine, string[,])"/>
 		public CharacterMatrix(REngine engine, string[, ] matrix)
 			: base(engine, SymbolicExpressionType.CharacterVector, matrix)
 		{
 		}
 
+		/// <summary>
+		/// Creates a new instance for a string matrix.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a string matrix.</param>
 		internal protected CharacterMatrix(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{

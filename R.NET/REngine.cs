@@ -122,7 +122,7 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="id">ID.</param>
 		/// <param name="args">Arguments for initializing.</param>
-		/// <returns>Instance.</returns>
+		/// <returns>The engine.</returns>
 		public static REngine CreateInstance(string id, params string[] args)
 		{
 			if (id == null)
@@ -157,8 +157,8 @@ namespace RDotNet
 		/// <summary>
 		/// Gets a symbol defined in R environment.
 		/// </summary>
-		/// <param name="name">Symbol name you want.</param>
-		/// <returns>Symbol.</returns>
+		/// <param name="name">The name.</param>
+		/// <returns>The symbol.</returns>
 		public SymbolicExpression GetSymbol(string name)
 		{
 			if (name == null)
@@ -183,8 +183,8 @@ namespace RDotNet
 		/// <summary>
 		/// Defines a symbol in R environment.
 		/// </summary>
-		/// <param name="name"></param>
-		/// <param name="expression"></param>
+		/// <param name="name">The name.</param>
+		/// <param name="expression">The symbol.</param>
 		public void SetSymbol(string name, SymbolicExpression expression)
 		{
 			IntPtr installedName = NativeMethods.Rf_install(name);
@@ -204,7 +204,7 @@ namespace RDotNet
 		/// <summary>
 		/// Evaluates a statement in the given stream.
 		/// </summary>
-		/// <param name="statement">The statement.</param>
+		/// <param name="stream">The stream.</param>
 		/// <returns>Last evaluation.</returns>
 		public SymbolicExpression EagerEvaluate(Stream stream)
 		{
@@ -244,7 +244,7 @@ namespace RDotNet
 		/// <summary>
 		/// Evaluates a statement in the given stream.
 		/// </summary>
-		/// <param name="statement">The statement.</param>
+		/// <param name="stream">The stream.</param>
 		/// <returns>Each evaluation.</returns>
 		public IEnumerable<SymbolicExpression> Evaluate(Stream stream)
 		{
@@ -346,6 +346,11 @@ namespace RDotNet
 			base.Dispose(disposing);
 		}
 
+		/// <summary>
+		/// Gets the predefined symbol with the specified name.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <returns>The symbol.</returns>
 		public SymbolicExpression GetPredefinedSymbol(string name)
 		{
 			try

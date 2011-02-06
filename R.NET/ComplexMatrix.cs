@@ -76,6 +76,7 @@ namespace RDotNet
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="rowCount">The row size.</param>
 		/// <param name="columnCount">The column size.</param>
+		/// <seealso cref="REngineExtension.CreateComplexMatrix(REngine, int, int)"/>
 		public ComplexMatrix(REngine engine, int rowCount, int columnCount)
 			: base(engine, SymbolicExpressionType.ComplexVector, rowCount, columnCount)
 		{
@@ -86,11 +87,17 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="matrix">The values.</param>
+		/// <seealso cref="REngineExtension.CreateComplexMatrix(REngine, Complex[,])"/>
 		public ComplexMatrix(REngine engine, Complex[, ] matrix)
 			: base(engine, SymbolicExpressionType.CharacterVector, matrix)
 		{
 		}
 
+		/// <summary>
+		/// Creates a new instance for a complex number matrix.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a complex number matrix.</param>
 		internal protected ComplexMatrix(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{

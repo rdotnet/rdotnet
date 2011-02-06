@@ -81,6 +81,7 @@ namespace RDotNet
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="rowCount">The row size.</param>
 		/// <param name="columnCount">The column size.</param>
+		/// <seealso cref="REngineExtension.CreateNumericMatrix(REngine, int, int)"/>
 		public NumericMatrix(REngine engine, int rowCount, int columnCount)
 			: base(engine, SymbolicExpressionType.NumericVector, rowCount, columnCount)
 		{
@@ -91,11 +92,16 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="matrix">The values.</param>
+		/// <seealso cref="REngineExtension.CreateNumericMatrix(REngine, double[,])"/>
 		public NumericMatrix(REngine engine, double[, ] matrix)
 			: base(engine, SymbolicExpressionType.NumericVector, matrix)
 		{
 		}
-
+		/// <summary>
+		/// Creates a new instance for a numeric matrix.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a numeric matrix.</param>
 		internal protected NumericMatrix(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{
