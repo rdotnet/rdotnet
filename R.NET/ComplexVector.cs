@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using RDotNet.Internals;
@@ -30,7 +29,7 @@ namespace RDotNet
 				{
 					double[] data = new double[2];
 					int offset = GetOffset(index);
-					IntPtr pointer = IntPtr.Add(DataPointer, offset);
+					IntPtr pointer = Utility.OffsetPointer(DataPointer, offset);
 					Marshal.Copy(pointer, data, 0, data.Length);
 					return new Complex(data[0], data[1]);
 				}
@@ -45,7 +44,7 @@ namespace RDotNet
 				{
 					double[] data = new double[] { value.Real, value.Imaginary };
 					int offset = GetOffset(index);
-					IntPtr pointer = IntPtr.Add(DataPointer, offset);
+					IntPtr pointer = Utility.OffsetPointer(DataPointer, offset);
 					Marshal.Copy(data, 0, pointer, data.Length);
 				}
 			}

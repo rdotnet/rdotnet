@@ -28,7 +28,7 @@ namespace RDotNet
 				{
 					double[] data = new double[1];
 					int offset = GetOffset(index);
-					IntPtr pointer = IntPtr.Add(DataPointer, offset);
+					IntPtr pointer = Utility.OffsetPointer(DataPointer, offset);
 					Marshal.Copy(pointer, data, 0, data.Length);
 					return data[0];
 				}
@@ -43,7 +43,7 @@ namespace RDotNet
 				{
 					double[] data = new double[] { value };
 					int offset = GetOffset(index);
-					IntPtr pointer = IntPtr.Add(DataPointer, offset);
+					IntPtr pointer = Utility.OffsetPointer(DataPointer, offset);
 					Marshal.Copy(data, 0, pointer, data.Length);
 				}
 			}
@@ -119,7 +119,7 @@ namespace RDotNet
 			}
 
 			int offset = GetOffset(sourceIndex);
-			IntPtr pointer = IntPtr.Add(DataPointer, offset);
+			IntPtr pointer = Utility.OffsetPointer(DataPointer, offset);
 			Marshal.Copy(pointer, destination, destinationIndex, length);
 		}
 	}

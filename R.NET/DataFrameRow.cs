@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 
 namespace RDotNet
 {
 	/// <summary>
 	/// A data frame row.
 	/// </summary>
-	public class DataFrameRow : DynamicObject
+	public class DataFrameRow
 	{
 		/// <summary>
 		/// Gets and sets the value at the specified column.
@@ -75,34 +74,6 @@ namespace RDotNet
 		{
 			this.frame = frame;
 			this.rowIndex = rowIndex;
-		}
-
-		public override IEnumerable<string> GetDynamicMemberNames()
-		{
-			return DataFrame.ColumnNames;
-		}
-
-		public override bool TryGetMember(GetMemberBinder binder, out object result)
-		{
-			string[] columnNames = DataFrame.ColumnNames;
-			if (columnNames == null || Array.IndexOf(columnNames, binder.Name) < 0)
-			{
-				result = null;
-				return false;
-			}
-			result = this[binder.Name];
-			return true;
-		}
-
-		public override bool TrySetMember(SetMemberBinder binder, object value)
-		{
-			string[] columnNames = DataFrame.ColumnNames;
-			if (columnNames == null || Array.IndexOf(columnNames, binder.Name) < 0)
-			{
-				return false;
-			}
-			this[binder.Name] = value;
-			return true;
 		}
 	}
 }

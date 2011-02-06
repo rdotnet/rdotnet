@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RDotNet</RootNamespace>
     <AssemblyName>R.NET</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
@@ -79,23 +79,20 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Complex.cs" />
+    <Compile Include="ComplexFormatInfo.cs" />
     <Compile Include="ComplexVector.cs" />
     <Compile Include="CharacterMatrix.cs" />
     <Compile Include="ComplexMatrix.cs" />
     <Compile Include="DataFrame.cs" />
     <Compile Include="DataFrameRow.cs" />
     <Compile Include="DynamicVector.cs" />
-    <Compile Include="Dynamic\DataFrameDynamicMeta.cs" />
-    <Compile Include="Dynamic\SymbolicExpressionDynamicMeta.cs" />
-    <Compile Include="Dynamic\ListDynamicMeta.cs" />
     <Compile Include="GenericVector.cs" />
     <Compile Include="LogicalMatrix.cs" />
     <Compile Include="RawMatrix.cs" />

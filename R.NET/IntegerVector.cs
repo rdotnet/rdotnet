@@ -117,7 +117,7 @@ namespace RDotNet
 			}
 
 			int offset = GetOffset(sourceIndex);
-			IntPtr pointer = IntPtr.Add(DataPointer, offset);
+			IntPtr pointer = Utility.OffsetPointer(DataPointer, offset);
 			Marshal.Copy(pointer, destination, destinationIndex, length);
 		}
 	}

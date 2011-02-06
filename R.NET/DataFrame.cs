@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
-using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
-using RDotNet.Dynamic;
 
 namespace RDotNet
 {
@@ -208,11 +205,6 @@ namespace RDotNet
 			{
 				yield return GetRow(rowIndex);
 			}
-		}
-
-		public override DynamicMetaObject GetMetaObject(Expression parameter)
-		{
-			return new DataFrameDynamicMeta(parameter, this);
 		}
 	}
 }
