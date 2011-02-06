@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Numerics;
 using System.Runtime.InteropServices;
 using RDotNet.Internals;
 
@@ -151,7 +150,7 @@ namespace RDotNet
 		private static string ReadString(IntPtr pointer, int offset)
 		{
 			pointer = Marshal.ReadIntPtr(pointer, offset);
-			pointer = IntPtr.Add(pointer, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+			pointer = Utility.OffsetPointer(pointer, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
 			return Marshal.PtrToStringAnsi(pointer);
 		}
 
@@ -197,7 +196,7 @@ namespace RDotNet
 			byte[] real = BitConverter.GetBytes(value.Real);
 			byte[] imaginary = BitConverter.GetBytes(value.Imaginary);
 			Marshal.Copy(real, 0, pointer, real.Length);
-			pointer = IntPtr.Add(pointer, real.Length);
+			pointer = Utility.OffsetPointer(pointer, real.Length);
 			Marshal.Copy(imaginary, 0, pointer, imaginary.Length);
 		}
 	}
