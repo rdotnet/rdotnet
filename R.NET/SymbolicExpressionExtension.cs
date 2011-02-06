@@ -5,6 +5,9 @@ using RDotNet.Internals;
 
 namespace RDotNet
 {
+	/// <summary>
+	/// Provides extension methods for <see cref="SymbolicExpression"/>.
+	/// </summary>
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public static class SymbolicExpressionExtension
 	{

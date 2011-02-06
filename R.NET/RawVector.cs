@@ -70,11 +70,18 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="vector">The values.</param>
+		/// <seealso cref="REngineExtension.CreateRawVector(REngine, int)"/>
 		public RawVector(REngine engine, byte[] vector)
 			: base(engine, SymbolicExpressionType.RawVector, vector)
 		{
 		}
 
+		/// <summary>
+		/// Creates a new instance for a raw vector.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a raw vector.</param>
+		/// <seealso cref="REngineExtension.CreateRawVector(REngine, byte[])"/>
 		internal protected RawVector(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{

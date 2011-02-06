@@ -63,6 +63,7 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="length">The length.</param>
+		/// <seealso cref="REngineExtension.CreateLogicalVector(REngine, int)"/>
 		public LogicalVector(REngine engine, int length)
 			: base(engine, SymbolicExpressionType.LogicalVector, length)
 		{
@@ -73,11 +74,17 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="vector">The values.</param>
+		/// <seealso cref="REngineExtension.CreateLogicalVector(REngine, bool[])"/>
 		public LogicalVector(REngine engine, bool[] vector)
 			: base(engine, SymbolicExpressionType.LogicalVector, vector)
 		{
 		}
 
+		/// <summary>
+		/// Creates a new instance for a Boolean vector.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a Boolean vector.</param>
 		internal protected LogicalVector(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{

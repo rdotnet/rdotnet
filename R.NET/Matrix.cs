@@ -5,6 +5,10 @@ using RDotNet.Internals;
 
 namespace RDotNet
 {
+	/// <summary>
+	/// A matrix base.
+	/// </summary>
+	/// <typeparam name="T">The element type.</typeparam>
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public abstract class Matrix<T> : SymbolicExpression
 	{
@@ -173,6 +177,13 @@ namespace RDotNet
 			get;
 		}
 
+		/// <summary>
+		/// Creates a new matrix with the specified size.
+		/// </summary>
+		/// <param name="engine">The engine.</param>
+		/// <param name="type">The element type.</param>
+		/// <param name="rowCount">The size of row.</param>
+		/// <param name="columnCount">The size of column.</param>
 		protected Matrix(REngine engine, SymbolicExpressionType type, int rowCount, int columnCount)
 			: base(engine, NativeMethods.Rf_allocMatrix(type, rowCount, columnCount))
 		{
@@ -186,11 +197,13 @@ namespace RDotNet
 			}
 		}
 
+
 		/// <summary>
-		/// Creates a new IntegerVector with the specified values.
+		/// Creates a new matrix with the specified values.
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="length">The values.</param>
+		/// <param name="type">The element type.</param>
+		/// <param name="matrix">The values.</param>
 		public Matrix(REngine engine, SymbolicExpressionType type, T[, ] matrix)
 			: base(engine, NativeMethods.Rf_allocMatrix(type, matrix.GetLength(0), matrix.GetLength(1)))
 		{
@@ -205,11 +218,22 @@ namespace RDotNet
 			}
 		}
 
+		/// <summary>
+		/// Creates a new instance for a matrix.
+		/// </summary>
+		/// <param name="engine">The engine.</param>
+		/// <param name="coerced">The pointer to a matrix.</param>
 		protected Matrix(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{
 		}
 
+		/// <summary>
+		/// Gets the offset for the specified indexes.
+		/// </summary>
+		/// <param name="rowIndex">The index of row.</param>
+		/// <param name="columnIndex">The index of column.</param>
+		/// <returns>The offset.</returns>
 		protected int GetOffset(int rowIndex, int columnIndex)
 		{
 			return DataSize * (columnIndex * RowCount + rowIndex);

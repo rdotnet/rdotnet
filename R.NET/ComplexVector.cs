@@ -67,8 +67,9 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="length">The length.</param>
-		public ComplexVector(REngine engine, int size)
-			: base(engine, SymbolicExpressionType.ComplexVector, size)
+		/// <seealso cref="REngineExtension.CreateComplexVector(REngine, int)"/>
+		public ComplexVector(REngine engine, int length)
+			: base(engine, SymbolicExpressionType.ComplexVector, length)
 		{
 		}
 
@@ -77,11 +78,17 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="vector">The values.</param>
+		/// <seealso cref="REngineExtension.CreateComplexVector(REngine, Complex[])"/>
 		public ComplexVector(REngine engine, Complex[] vector)
 			: base(engine, SymbolicExpressionType.ComplexVector, vector)
 		{
 		}
 
+		/// <summary>
+		/// Creates a new instance for a complex number vector.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a complex number vector.</param>
 		internal protected ComplexVector(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{

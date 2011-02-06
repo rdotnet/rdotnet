@@ -4,8 +4,16 @@ using System.Dynamic;
 
 namespace RDotNet
 {
+	/// <summary>
+	/// A data frame row.
+	/// </summary>
 	public class DataFrameRow : DynamicObject
 	{
+		/// <summary>
+		/// Gets and sets the value at the specified column.
+		/// </summary>
+		/// <param name="index">The column index.</param>
+		/// <returns>The value.</returns>
 		public object this[int index]
 		{
 			get
@@ -20,6 +28,11 @@ namespace RDotNet
 			}
 		}
 
+		/// <summary>
+		/// Gets and sets the value at the specified column.
+		/// </summary>
+		/// <param name="name">The column name.</param>
+		/// <returns>The value.</returns>
 		public object this[string name]
 		{
 			get
@@ -35,6 +48,9 @@ namespace RDotNet
 		}
 
 		private DataFrame frame;
+		/// <summary>
+		/// Gets the data frame containing this row.
+		/// </summary>
 		public DataFrame DataFrame
 		{
 			get
@@ -44,6 +60,9 @@ namespace RDotNet
 		}
 
 		private int rowIndex;
+		/// <summary>
+		/// Gets the index of this row.
+		/// </summary>
 		public int RowIndex
 		{
 			get

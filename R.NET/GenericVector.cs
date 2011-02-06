@@ -80,6 +80,11 @@ namespace RDotNet
 			}
 		}
 
+		/// <summary>
+		/// Creates a new instance for a list.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a list.</param>
 		internal protected GenericVector(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{

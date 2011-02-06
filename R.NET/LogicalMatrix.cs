@@ -72,6 +72,7 @@ namespace RDotNet
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="rowCount">The row size.</param>
 		/// <param name="columnCount">The column size.</param>
+		/// <seealso cref="REngineExtension.CreateLogicalMatrix(REngine, int, int)"/>
 		public LogicalMatrix(REngine engine, int rowCount, int columnCount)
 			: base(engine, SymbolicExpressionType.LogicalVector, rowCount, columnCount)
 		{
@@ -82,11 +83,17 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="matrix">The values.</param>
+		/// <seealso cref="REngineExtension.CreateLogicalMatrix(REngine, bool[,])"/>
 		public LogicalMatrix(REngine engine, bool[, ] matrix)
 			: base(engine, SymbolicExpressionType.LogicalVector, matrix)
 		{
 		}
 
+		/// <summary>
+		/// Creates a new instance for a Boolean matrix.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a Boolean matrix.</param>
 		internal protected LogicalMatrix(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{

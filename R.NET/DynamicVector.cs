@@ -5,8 +5,23 @@ using RDotNet.Internals;
 
 namespace RDotNet
 {
+	/// <summary>
+	/// A collection of values.
+	/// </summary>
+	/// <remarks>
+	/// This vector cannot contain more than one types of values.
+	/// Consider to use another vector class instead.
+	/// </remarks>
 	public class DynamicVector : Vector<object>
 	{
+		/// <summary>
+		/// Gets or sets the element at the specified index.
+		/// </summary>
+		/// <remarks>
+		/// The value is converted into specific type.
+		/// </remarks>
+		/// <param name="index">The zero-based index of the element to get or set.</param>
+		/// <returns>The element at the specified index.</returns>
 		public override object this[int index]
 		{
 			get

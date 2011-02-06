@@ -177,6 +177,11 @@ namespace RDotNet
 			}
 		}
 
+		/// <summary>
+		/// Creates a new instance.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a data frame.</param>
 		internal protected DataFrame(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{

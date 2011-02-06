@@ -73,6 +73,7 @@ namespace RDotNet
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="rowCount">The row size.</param>
 		/// <param name="columnCount">The column size.</param>
+		/// <seealso cref="REngineExtension.CreateIntegerMatrix(REngine, int, int)"/>
 		public IntegerMatrix(REngine engine, int rowCount, int columnCount)
 			: base(engine, SymbolicExpressionType.IntegerVector, rowCount, columnCount)
 		{
@@ -83,11 +84,17 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="matrix">The values.</param>
+		/// <seealso cref="REngineExtension.CreateIntegerMatrix(REngine, int[,])"/>
 		public IntegerMatrix(REngine engine, int[, ] matrix)
 			: base(engine, SymbolicExpressionType.IntegerVector, matrix)
 		{
 		}
 
+		/// <summary>
+		/// Creates a new instance for an integer matrix.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to an integer matrix.</param>
 		internal protected IntegerMatrix(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{

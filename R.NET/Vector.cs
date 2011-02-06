@@ -6,6 +6,10 @@ using RDotNet.Internals;
 
 namespace RDotNet
 {
+	/// <summary>
+	/// A vector base.
+	/// </summary>
+	/// <typeparam name="T">The element type.</typeparam>
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public abstract class Vector<T> : SymbolicExpression, IEnumerable<T>
 	{
@@ -111,6 +115,12 @@ namespace RDotNet
 			get;
 		}
 
+		/// <summary>
+		/// Creates a new vector with the specified size.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="type">The element type.</param>
+		/// <param name="length">The length of vector.</param>
 		protected Vector(REngine engine, SymbolicExpressionType type, int length)
 			: base(engine, NativeMethods.Rf_allocVector(type, length))
 		{
@@ -120,6 +130,12 @@ namespace RDotNet
 			}
 		}
 
+		/// <summary>
+		/// Creates a new vector with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="type">The element type.</param>
+		/// <param name="vector">The elements of vector.</param>
 		protected Vector(REngine engine, SymbolicExpressionType type, T[] vector)
 			: base(engine, NativeMethods.Rf_allocVector(type, vector.Length))
 		{
@@ -129,6 +145,11 @@ namespace RDotNet
 			}
 		}
 
+		/// <summary>
+		/// Creates a new instance for a vector.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a vector.</param>
 		protected Vector(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{
@@ -166,6 +187,11 @@ namespace RDotNet
 			}
 		}
 
+		/// <summary>
+		/// Gets the offset for the specified index.
+		/// </summary>
+		/// <param name="index">The index.</param>
+		/// <returns>The offset.</returns>
 		protected int GetOffset(int index)
 		{
 			return DataSize * index;

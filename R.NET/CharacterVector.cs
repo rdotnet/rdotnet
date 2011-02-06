@@ -65,6 +65,7 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="length">The length.</param>
+		/// <seealso cref="REngineExtension.CreateCharacterVector(REngine, int)"/>
 		public CharacterVector(REngine engine, int length)
 			: base(engine, SymbolicExpressionType.CharacterVector, length)
 		{
@@ -75,11 +76,17 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="vector">The values.</param>
+		/// <seealso cref="REngineExtension.CreateCharacterVector(REngine, string[])"/>
 		public CharacterVector(REngine engine, string[] vector)
 			: base(engine, SymbolicExpressionType.CharacterVector, vector)
 		{
 		}
 
+		/// <summary>
+		/// Creates a new instance for a string vector.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a string vector.</param>
 		internal protected CharacterVector(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{
