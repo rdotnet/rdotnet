@@ -21,7 +21,7 @@
       <DocumentationSource sourceFile="R.NET.sln" xmlns="" />
     </DocumentationSources>
     <SyntaxFilters>CSharp, VisualBasic, CPlusPlus, FSharp</SyntaxFilters>
-    <FrameworkVersion>4.0.30319</FrameworkVersion>
+    <FrameworkVersion>3.5</FrameworkVersion>
     <KeepLogFile>True</KeepLogFile>
     <BuildLogFile>
     </BuildLogFile>
