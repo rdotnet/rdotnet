@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace RDotNet
 {
+	/// <summary>
+	/// A complex number.
+	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Complex
 	{
@@ -15,6 +18,9 @@ namespace RDotNet
 		public static readonly Complex Identity = new Complex(1, 0);
 		public static readonly Complex ImaginaryUnit = new Complex(0, 1);
 
+		/// <summary>
+		/// Gets the real part.
+		/// </summary>
 		public double Real
 		{
 			get
@@ -23,6 +29,9 @@ namespace RDotNet
 			}
 		}
 
+		/// <summary>
+		/// Gets the imaginary part.
+		/// </summary>
 		public double Imaginary
 		{
 			get
@@ -31,32 +40,62 @@ namespace RDotNet
 			}
 		}
 
+		/// <summary>
+		/// Creates a new complex number.
+		/// </summary>
+		/// <param name="real">The real part.</param>
+		/// <param name="imaginary">The imaginary part.</param>
 		public Complex(double real, double imaginary)
 		{
 			this.real = real;
 			this.imaginary = imaginary;
 		}
 
+		/// <summary>
+		/// Checks if the value is real.
+		/// </summary>
+		/// <param name="z">The value.</param>
+		/// <returns><c>True</c> if the number is a real number.</returns>
 		public static bool IsReal(Complex z)
 		{
 			return z.Imaginary == 0;
 		}
 
+		/// <summary>
+		/// Checks if the value is purely imaginary.
+		/// </summary>
+		/// <param name="z">The value.</param>
+		/// <returns><c>True</c> if the number is a purely imaginay number.</returns>
 		public static bool IsPurelyImaginary(Complex z)
 		{
 			return z.Real == 0 && z.Imaginary != 0;
 		}
 
+		/// <summary>
+		/// Checks if the value is <c>NaN</c>.
+		/// </summary>
+		/// <param name="z">The value.</param>
+		/// <returns><c>True</c> if the number is <c>NaN</c>.</returns>
 		public static bool IsNaN(Complex z)
 		{
 			return double.IsNaN(z.Real) || double.IsNaN(z.Imaginary);
 		}
 
+		/// <summary>
+		/// Checks if the value is infinite.
+		/// </summary>
+		/// <param name="z">The value.</param>
+		/// <returns><c>True</c> if the number is infinite.</returns>
 		public static bool IsInfinity(Complex z)
 		{
 			return double.IsInfinity(z.Real) || double.IsInfinity(z.Imaginary);
 		}
 
+		/// <summary>
+		/// Converts a real number into a complex structure.
+		/// </summary>
+		/// <param name="real">The real number.</param>
+		/// <returns>The complex number.</returns>
 		public static implicit operator Complex(double real)
 		{
 			return new Complex(real, 0);
@@ -72,6 +111,11 @@ namespace RDotNet
 			return new Complex(-z.Real, -z.Imaginary);
 		}
 
+		/// <summary>
+		/// Gets the conjugate complex number.
+		/// </summary>
+		/// <param name="z">The value.</param>
+		/// <returns>The conjugate complex number.</returns>
 		public static Complex operator ~(Complex z)
 		{
 			return new Complex(z.Real, -z.Imaginary);
