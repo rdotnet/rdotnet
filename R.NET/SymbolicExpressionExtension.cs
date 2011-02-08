@@ -11,8 +11,6 @@ namespace RDotNet
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public static class SymbolicExpressionExtension
 	{
-		private const string DimensionAttributeName = "dim";
-
 		/// <summary>
 		/// Gets whether the specified expression is list.
 		/// </summary>
@@ -223,9 +221,10 @@ namespace RDotNet
 			}
 
 			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.LogicalVector);
-			var vector = new LogicalVector(expression.Engine, coerced);
-			var matrix = new LogicalMatrix(expression.Engine, rowCount, columnCount);
-			FillMatrix(matrix, vector);
+			IntegerVector dim = new IntegerVector(expression.Engine, new int[] { rowCount, columnCount });
+			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(NativeMethods.RDimSymbolName);
+			var matrix = new LogicalMatrix(expression.Engine, coerced);
+			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;
 		}
 
@@ -264,9 +263,10 @@ namespace RDotNet
 			}
 
 			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.IntegerVector);
-			var vector = new IntegerVector(expression.Engine, coerced);
-			var matrix = new IntegerMatrix(expression.Engine, rowCount, columnCount);
-			FillMatrix(matrix, vector);
+			IntegerVector dim = new IntegerVector(expression.Engine, new int[] { rowCount, columnCount });
+			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(NativeMethods.RDimSymbolName);
+			var matrix = new IntegerMatrix(expression.Engine, coerced);
+			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;
 		}
 
@@ -305,9 +305,10 @@ namespace RDotNet
 			}
 
 			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.NumericVector);
-			var vector = new NumericVector(expression.Engine, coerced);
-			var matrix = new NumericMatrix(expression.Engine, rowCount, columnCount);
-			FillMatrix(matrix, vector);
+			IntegerVector dim = new IntegerVector(expression.Engine, new int[] { rowCount, columnCount });
+			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(NativeMethods.RDimSymbolName);
+			var matrix = new NumericMatrix(expression.Engine, coerced);
+			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;
 		}
 
@@ -346,9 +347,10 @@ namespace RDotNet
 			}
 
 			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.CharacterVector);
-			var vector = new CharacterVector(expression.Engine, coerced);
-			var matrix = new CharacterMatrix(expression.Engine, rowCount, columnCount);
-			FillMatrix(matrix, vector);
+			IntegerVector dim = new IntegerVector(expression.Engine, new int[] { rowCount, columnCount });
+			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(NativeMethods.RDimSymbolName);
+			var matrix = new CharacterMatrix(expression.Engine, coerced);
+			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;
 		}
 
@@ -387,9 +389,10 @@ namespace RDotNet
 			}
 
 			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.ComplexVector);
-			var vector = new ComplexVector(expression.Engine, coerced);
-			var matrix = new ComplexMatrix(expression.Engine, rowCount, columnCount);
-			FillMatrix(matrix, vector);
+			IntegerVector dim = new IntegerVector(expression.Engine, new int[] { rowCount, columnCount });
+			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(NativeMethods.RDimSymbolName);
+			var matrix = new ComplexMatrix(expression.Engine, coerced);
+			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;
 		}
 
@@ -428,31 +431,11 @@ namespace RDotNet
 			}
 
 			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.RawVector);
-			var vector = new RawVector(expression.Engine, coerced);
-			var matrix = new RawMatrix(expression.Engine, rowCount, columnCount);
-			FillMatrix(matrix, vector);
+			IntegerVector dim = new IntegerVector(expression.Engine, new int[] { rowCount, columnCount });
+			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(NativeMethods.RDimSymbolName);
+			var matrix = new RawMatrix(expression.Engine, coerced);
+			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;
-		}
-
-		private static void FillMatrix<T>(Matrix<T> matrix, Vector<T> vector)
-		{
-			int rowCount = matrix.RowCount;
-			int columnCount = matrix.ColumnCount;
-			int length = vector.Length;
-			for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
-			{
-				for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
-				{
-					int vectorIndex = columnIndex * columnCount + rowIndex;
-					if (vectorIndex >= length)
-					{
-						goto exitLoop;
-					}
-					matrix[rowIndex, columnIndex] = vector[vectorIndex];
-				}
-			}
-		exitLoop:
-			;
 		}
 	}
 }
