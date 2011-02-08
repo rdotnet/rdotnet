@@ -8,6 +8,9 @@ namespace RDotNet.Internals
 	internal static class NativeMethods
 	{
 		public const string RDllName = "R.dll";
+		public const string RDimSymbolName = "R_DimSymbol";
+		public const string RNamesSymbolName = "R_NamesSymbol";
+		public const string RDimnamesSymbolName = "R_DimNamesSymbol";
 
 		[DllImport(RDllName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int Rf_initEmbeddedR(int argc, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] argv);
