@@ -7,8 +7,12 @@ namespace RDotNet.Internals
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	internal static class NativeMethods
 	{
+#if MAC
+		public const string RDllName = "libR.dylib";
+#else
 		public const string RDllName = "R.dll";
-
+#endif
+		
 		[DllImport(RDllName, CallingConvention = CallingConvention.Cdecl)]
 		public static extern int Rf_initEmbeddedR(int argc, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] argv);
 

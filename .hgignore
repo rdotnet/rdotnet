@@ -1,6 +1,8 @@
 glob:*.suo
 glob:*.pdb
+glob:*.pidb
 glob:*.user
+glob:*.userprefs
 glob:*.orig
 relre:bin/
 relre:obj/

@@ -355,7 +355,11 @@ namespace RDotNet
 		{
 			try
 			{
+#if MAC
+				IntPtr pointer = dlsym(this.handle, name);
+#else
 				IntPtr pointer = GetProcAddress(this.handle, name);
+#endif
 				return new SymbolicExpression(this, Marshal.ReadIntPtr(pointer));
 			}
 			catch (Exception ex)
@@ -364,7 +368,12 @@ namespace RDotNet
 			}
 		}
 
+#if MAC
+		[DllImport("libdl.dylib")]
+		private static extern IntPtr dlsym(IntPtr handle, [MarshalAs(UnmanagedType.LPStr)] string symbol);
+#else
 		[DllImport("kernel32.dll")]
 		private static extern IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);
+#endif
 	}
 }
