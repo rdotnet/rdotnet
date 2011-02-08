@@ -63,7 +63,7 @@ namespace RDotNet
 				throw new ArgumentNullException("entryPoint");
 			}
 			
-#if MAC
+#if MAC || LINUX
 			IntPtr function = dlsym(this.handle, entryPoint);
 #else
 			IntPtr function = GetProcAddress(this.handle, entryPoint);
@@ -78,7 +78,7 @@ namespace RDotNet
 
 		protected override bool ReleaseHandle()
 		{
-#if MAC
+#if MAC || LINUX
 			return dlclose(this.handle);
 #else
 			return FreeLibrary(this.handle);
@@ -87,6 +87,10 @@ namespace RDotNet
 
 #if MAC
 		private const string LibraryPath = "DYLD_LIBRARY_PATH";
+		private const string DynamicLoadingLibraryName = "libdl.dylib";
+#elif LINUX
+		private const string LibraryPath = "LD_LIBRARY_PATH";
+		private const string DynamicLoadingLibraryName = "libdl.so";
 #endif
 
 		/// <summary>
@@ -101,7 +105,7 @@ namespace RDotNet
 		/// If this parameter is NULL, the function restores the default search order.
 		/// </param>
 		/// <returns>If the function succeeds, the return value is nonzero.</returns>
-#if MAC
+#if MAC || LINUX
 		public static bool SetDllDirectory(string dllDirectory)
 		{
 			if (dllDirectory == null)
@@ -139,7 +143,7 @@ namespace RDotNet
 		public static extern bool SetDllDirectory([MarshalAs(UnmanagedType.LPStr)] string dllDirectory);
 #endif
 		
-#if MAC
+#if MAC || LINUX
 		private static IntPtr LoadLibrary(string filename)
 		{
 			const int RTLD_LAZY = 0x1;
@@ -161,14 +165,14 @@ namespace RDotNet
 			return IntPtr.Zero;
 		}
 		
-		[DllImport("libdl.dylib")]
+		[DllImport(DynamicLoadingLibraryName)]
 		private static extern IntPtr dlopen([MarshalAs(UnmanagedType.LPStr)] string filename, int flag);
 
-		[DllImport("libdl.dylib")]
+		[DllImport(DynamicLoadingLibraryName)]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		private static extern bool dlclose(IntPtr handle);
 		
-		[DllImport("libdl.dylib")]
+		[DllImport(DynamicLoadingLibraryName)]
 		private static extern IntPtr dlsym(IntPtr handle, [MarshalAs(UnmanagedType.LPStr)] string symbol);
 #else	
 		[DllImport("kernel32.dll")]
