@@ -355,7 +355,7 @@ namespace RDotNet
 		{
 			try
 			{
-#if MAC
+#if MAC || LINUX
 				IntPtr pointer = dlsym(this.handle, name);
 #else
 				IntPtr pointer = GetProcAddress(this.handle, name);
@@ -370,6 +370,9 @@ namespace RDotNet
 
 #if MAC
 		[DllImport("libdl.dylib")]
+		private static extern IntPtr dlsym(IntPtr handle, [MarshalAs(UnmanagedType.LPStr)] string symbol);
+#elif LINUX
+		[DllImport("libdl.so")]
 		private static extern IntPtr dlsym(IntPtr handle, [MarshalAs(UnmanagedType.LPStr)] string symbol);
 #else
 		[DllImport("kernel32.dll")]
