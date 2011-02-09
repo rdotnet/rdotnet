@@ -24,7 +24,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			return NativeMethods.Rf_isList((IntPtr)expression);
+			return expression.Engine.Proxy.Rf_isList((IntPtr)expression);
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			return NativeMethods.Rf_isVector((IntPtr)expression);
+			return expression.Engine.Proxy.Rf_isVector((IntPtr)expression);
 		}
 
 		/// <summary>
@@ -80,7 +80,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, expression.Type);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, expression.Type);
 			return new DynamicVector(expression.Engine, coerced);
 		}
 
@@ -95,7 +95,7 @@ namespace RDotNet
 			{
 				return null;
 			}
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.LogicalVector);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.LogicalVector);
 			return new LogicalVector(expression.Engine, coerced);
 		}
 
@@ -110,7 +110,7 @@ namespace RDotNet
 			{
 				return null;
 			}
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.IntegerVector);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.IntegerVector);
 			return new IntegerVector(expression.Engine, coerced);
 		}
 
@@ -125,7 +125,7 @@ namespace RDotNet
 			{
 				return null;
 			}
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.NumericVector);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.NumericVector);
 			return new NumericVector(expression.Engine, coerced);
 		}
 
@@ -140,7 +140,7 @@ namespace RDotNet
 			{
 				return null;
 			}
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.CharacterVector);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.CharacterVector);
 			return new CharacterVector(expression.Engine, coerced);
 		}
 
@@ -155,7 +155,7 @@ namespace RDotNet
 			{
 				return null;
 			}
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.ComplexVector);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.ComplexVector);
 			return new ComplexVector(expression.Engine, coerced);
 		}
 
@@ -170,7 +170,7 @@ namespace RDotNet
 			{
 				return null;
 			}
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.RawVector);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.RawVector);
 			return new RawVector(expression.Engine, coerced);
 		}
 
@@ -185,7 +185,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			return NativeMethods.Rf_isMatrix((IntPtr)expression);
+			return expression.Engine.Proxy.Rf_isMatrix((IntPtr)expression);
 		}
 
 		/// <summary>
@@ -211,18 +211,18 @@ namespace RDotNet
 				}
 				else
 				{
-					rowCount = NativeMethods.Rf_nrows((IntPtr)expression);
-					columnCount = NativeMethods.Rf_ncols((IntPtr)expression);
+					rowCount = expression.Engine.Proxy.Rf_nrows((IntPtr)expression);
+					columnCount = expression.Engine.Proxy.Rf_ncols((IntPtr)expression);
 				}
 			}
 
 			if (columnCount == 0)
 			{
-				rowCount = NativeMethods.Rf_length((IntPtr)expression);
+				rowCount = expression.Engine.Proxy.Rf_length((IntPtr)expression);
 				columnCount = 1;
 			}
 
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.LogicalVector);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.LogicalVector);
 			var vector = new LogicalVector(expression.Engine, coerced);
 			var matrix = new LogicalMatrix(expression.Engine, rowCount, columnCount);
 			FillMatrix(matrix, vector);
@@ -252,18 +252,18 @@ namespace RDotNet
 				}
 				else
 				{
-					rowCount = NativeMethods.Rf_nrows((IntPtr)expression);
-					columnCount = NativeMethods.Rf_ncols((IntPtr)expression);
+					rowCount = expression.Engine.Proxy.Rf_nrows((IntPtr)expression);
+					columnCount = expression.Engine.Proxy.Rf_ncols((IntPtr)expression);
 				}
 			}
 
 			if (columnCount == 0)
 			{
-				rowCount = NativeMethods.Rf_length((IntPtr)expression);
+				rowCount = expression.Engine.Proxy.Rf_length((IntPtr)expression);
 				columnCount = 1;
 			}
 
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.IntegerVector);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.IntegerVector);
 			var vector = new IntegerVector(expression.Engine, coerced);
 			var matrix = new IntegerMatrix(expression.Engine, rowCount, columnCount);
 			FillMatrix(matrix, vector);
@@ -293,18 +293,18 @@ namespace RDotNet
 				}
 				else
 				{
-					rowCount = NativeMethods.Rf_nrows((IntPtr)expression);
-					columnCount = NativeMethods.Rf_ncols((IntPtr)expression);
+					rowCount = expression.Engine.Proxy.Rf_nrows((IntPtr)expression);
+					columnCount = expression.Engine.Proxy.Rf_ncols((IntPtr)expression);
 				}
 			}
 
 			if (columnCount == 0)
 			{
-				rowCount = NativeMethods.Rf_length((IntPtr)expression);
+				rowCount = expression.Engine.Proxy.Rf_length((IntPtr)expression);
 				columnCount = 1;
 			}
 
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.NumericVector);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.NumericVector);
 			var vector = new NumericVector(expression.Engine, coerced);
 			var matrix = new NumericMatrix(expression.Engine, rowCount, columnCount);
 			FillMatrix(matrix, vector);
@@ -334,18 +334,18 @@ namespace RDotNet
 				}
 				else
 				{
-					rowCount = NativeMethods.Rf_nrows((IntPtr)expression);
-					columnCount = NativeMethods.Rf_ncols((IntPtr)expression);
+					rowCount = expression.Engine.Proxy.Rf_nrows((IntPtr)expression);
+					columnCount = expression.Engine.Proxy.Rf_ncols((IntPtr)expression);
 				}
 			}
 
 			if (columnCount == 0)
 			{
-				rowCount = NativeMethods.Rf_length((IntPtr)expression);
+				rowCount = expression.Engine.Proxy.Rf_length((IntPtr)expression);
 				columnCount = 1;
 			}
 
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.CharacterVector);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.CharacterVector);
 			var vector = new CharacterVector(expression.Engine, coerced);
 			var matrix = new CharacterMatrix(expression.Engine, rowCount, columnCount);
 			FillMatrix(matrix, vector);
@@ -375,18 +375,18 @@ namespace RDotNet
 				}
 				else
 				{
-					rowCount = NativeMethods.Rf_nrows((IntPtr)expression);
-					columnCount = NativeMethods.Rf_ncols((IntPtr)expression);
+					rowCount = expression.Engine.Proxy.Rf_nrows((IntPtr)expression);
+					columnCount = expression.Engine.Proxy.Rf_ncols((IntPtr)expression);
 				}
 			}
 
 			if (columnCount == 0)
 			{
-				rowCount = NativeMethods.Rf_length((IntPtr)expression);
+				rowCount = expression.Engine.Proxy.Rf_length((IntPtr)expression);
 				columnCount = 1;
 			}
 
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.ComplexVector);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.ComplexVector);
 			var vector = new ComplexVector(expression.Engine, coerced);
 			var matrix = new ComplexMatrix(expression.Engine, rowCount, columnCount);
 			FillMatrix(matrix, vector);
@@ -416,18 +416,18 @@ namespace RDotNet
 				}
 				else
 				{
-					rowCount = NativeMethods.Rf_nrows((IntPtr)expression);
-					columnCount = NativeMethods.Rf_ncols((IntPtr)expression);
+					rowCount = expression.Engine.Proxy.Rf_nrows((IntPtr)expression);
+					columnCount = expression.Engine.Proxy.Rf_ncols((IntPtr)expression);
 				}
 			}
 
 			if (columnCount == 0)
 			{
-				rowCount = NativeMethods.Rf_length((IntPtr)expression);
+				rowCount = expression.Engine.Proxy.Rf_length((IntPtr)expression);
 				columnCount = 1;
 			}
 
-			IntPtr coerced = NativeMethods.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.RawVector);
+			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector((IntPtr)expression, SymbolicExpressionType.RawVector);
 			var vector = new RawVector(expression.Engine, coerced);
 			var matrix = new RawMatrix(expression.Engine, rowCount, columnCount);
 			FillMatrix(matrix, vector);

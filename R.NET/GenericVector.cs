@@ -62,7 +62,7 @@ namespace RDotNet
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="length">The length.</param>
 		public GenericVector(REngine engine, int length)
-			: base(engine, NativeMethods.Rf_allocList(length))
+			: base(engine, engine.Proxy.Rf_allocList(length))
 		{
 		}
 
@@ -72,7 +72,7 @@ namespace RDotNet
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="list">The values.</param>
 		public GenericVector(REngine engine, SymbolicExpression[] list)
-			: base(engine, NativeMethods.Rf_allocList(list.Length))
+			: base(engine, engine.Proxy.Rf_allocList(list.Length))
 		{
 			for (int index = 0; index < list.Length; index++)
 			{

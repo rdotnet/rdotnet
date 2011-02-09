@@ -27,7 +27,7 @@ namespace RDotNet
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="s">The string</param>
 		public InternalString(REngine engine, string s)
-			: base(engine, NativeMethods.Rf_mkChar(s))
+			: base(engine, engine.Proxy.Rf_mkChar(s))
 		{
 		}
 

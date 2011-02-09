@@ -91,7 +91,7 @@ namespace RDotNet
 		{
 			get
 			{
-				return NativeMethods.Rf_nrows(this.handle);
+				return Engine.Proxy.Rf_nrows(this.handle);
 			}
 		}
 
@@ -102,7 +102,7 @@ namespace RDotNet
 		{
 			get
 			{
-				return NativeMethods.Rf_ncols(this.handle);
+				return Engine.Proxy.Rf_ncols(this.handle);
 			}
 		}
 
@@ -185,7 +185,7 @@ namespace RDotNet
 		/// <param name="rowCount">The size of row.</param>
 		/// <param name="columnCount">The size of column.</param>
 		protected Matrix(REngine engine, SymbolicExpressionType type, int rowCount, int columnCount)
-			: base(engine, NativeMethods.Rf_allocMatrix(type, rowCount, columnCount))
+			: base(engine, engine.Proxy.Rf_allocMatrix(type, rowCount, columnCount))
 		{
 			if (rowCount <= 0)
 			{
@@ -205,7 +205,7 @@ namespace RDotNet
 		/// <param name="type">The element type.</param>
 		/// <param name="matrix">The values.</param>
 		public Matrix(REngine engine, SymbolicExpressionType type, T[, ] matrix)
-			: base(engine, NativeMethods.Rf_allocMatrix(type, matrix.GetLength(0), matrix.GetLength(1)))
+			: base(engine, engine.Proxy.Rf_allocMatrix(type, matrix.GetLength(0), matrix.GetLength(1)))
 		{
 			int rowCount = RowCount;
 			int columnCount = ColumnCount;
