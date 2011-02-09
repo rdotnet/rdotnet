@@ -88,7 +88,7 @@ namespace RDotNet
 		/// <returns>The names of attributes</returns>
 		public string[] GetAttributeNames()
 		{
-			int length = NativeMethods.Rf_length(sexp.attrib);
+			int length = Engine.Proxy.Rf_length(sexp.attrib);
 			var names = new string[length];
 			IntPtr pointer = sexp.attrib;
 			for (int index = 0; index < length; index++)
@@ -118,8 +118,8 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			IntPtr installedName = NativeMethods.Rf_install(attributeName);
-			IntPtr attribute = NativeMethods.Rf_getAttrib((IntPtr)this, installedName);
+			IntPtr installedName = Engine.Proxy.Rf_install(attributeName);
+			IntPtr attribute = Engine.Proxy.Rf_getAttrib((IntPtr)this, installedName);
 			if (attribute == (IntPtr)Engine.NilValue)
 			{
 				return null;
@@ -138,7 +138,7 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			IntPtr attribute = NativeMethods.Rf_getAttrib((IntPtr)this, (IntPtr)symbol);
+			IntPtr attribute = Engine.Proxy.Rf_getAttrib((IntPtr)this, (IntPtr)symbol);
 			if (attribute == (IntPtr)Engine.NilValue)
 			{
 				return null;
@@ -167,8 +167,8 @@ namespace RDotNet
 				value = Engine.NilValue;
 			}
 
-			IntPtr installedName = NativeMethods.Rf_install(attributeName);
-			NativeMethods.Rf_setAttrib((IntPtr)this, installedName, (IntPtr)value);
+			IntPtr installedName = Engine.Proxy.Rf_install(attributeName);
+			Engine.Proxy.Rf_setAttrib((IntPtr)this, installedName, (IntPtr)value);
 		}
 
 		internal void SetAttribute(SymbolicExpression symbol, SymbolicExpression value)
@@ -187,7 +187,7 @@ namespace RDotNet
 				value = Engine.NilValue;
 			}
 
-			NativeMethods.Rf_setAttrib((IntPtr)this, (IntPtr)symbol, (IntPtr)value);
+			Engine.Proxy.Rf_setAttrib((IntPtr)this, (IntPtr)symbol, (IntPtr)value);
 		}
 
 		/// <summary>
@@ -198,7 +198,7 @@ namespace RDotNet
 		{
 			if (!IsInvalid)
 			{
-				NativeMethods.Rf_protect(this.handle);
+				Engine.Proxy.Rf_protect(this.handle);
 				isProtected = true;
 			}
 		}
@@ -211,7 +211,7 @@ namespace RDotNet
 		{
 			if (!IsInvalid && IsProtected)
 			{
-				NativeMethods.Rf_unprotect_ptr(this.handle);
+				Engine.Proxy.Rf_unprotect_ptr(this.handle);
 				isProtected = false;
 			}
 		}

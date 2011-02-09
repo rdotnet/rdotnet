@@ -33,11 +33,11 @@ namespace RDotNet
 		/// <summary>
 		/// Gets the version of R.DLL.
 		/// </summary>
-		public static Version DllVersion
+		public Version DllVersion
 		{
 			get
 			{
-				string version = Marshal.PtrToStringAnsi(NativeMethods.GetDllVersion());
+				string version = Marshal.PtrToStringAnsi(Proxy.getDLLVersion());
 				return new Version(version);
 			}
 		}
@@ -106,13 +106,28 @@ namespace RDotNet
 				return GetPredefinedSymbol("R_UnboundValue");
 			}
 		}
+		
+		private readonly INativeMethodsProxy proxy;
+		internal INativeMethodsProxy Proxy
+		{
+			get
+			{
+				return proxy;
+			}
+		}
 
 		private REngine(string id, string[] args)
 			: base(NativeMethods.RDllName)
 		{
 			this.id = id;
+#if MAC || LINUX
+			this.proxy = new DelegateNativeMethods(this);
+#else
+			this.proxy = DirectNativeMethods.Instance;
+#endif
+			
 			string[] newArgs = Utility.AddFirst(id, args);
-			NativeMethods.Rf_initEmbeddedR(newArgs.Length, newArgs);
+			Proxy.Rf_initEmbeddedR(newArgs.Length, newArgs);
 
 			isRunning = true;
 		}
@@ -170,8 +185,8 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			IntPtr installedName = NativeMethods.Rf_install(name);
-			IntPtr value = NativeMethods.Rf_findVar(installedName, (IntPtr)GlobalEnvironment);
+			IntPtr installedName = Proxy.Rf_install(name);
+			IntPtr value = Proxy.Rf_findVar(installedName, (IntPtr)GlobalEnvironment);
 			if (value == (IntPtr)UnboundValue)
 			{
 				return null;
@@ -187,8 +202,8 @@ namespace RDotNet
 		/// <param name="expression">The symbol.</param>
 		public void SetSymbol(string name, SymbolicExpression expression)
 		{
-			IntPtr installedName = NativeMethods.Rf_install(name);
-			NativeMethods.Rf_setVar(installedName, (IntPtr)expression, (IntPtr)GlobalEnvironment);
+			IntPtr installedName = Proxy.Rf_install(name);
+			Proxy.Rf_setVar(installedName, (IntPtr)expression, (IntPtr)GlobalEnvironment);
 		}
 
 		/// <summary>
@@ -297,22 +312,22 @@ namespace RDotNet
 		private SymbolicExpression Parse(string statement, int statementCount, StringBuilder incompleteStatement)
 		{
 			incompleteStatement.Append(statement);
-			IntPtr s = NativeMethods.Rf_mkString(incompleteStatement.ToString());
+			IntPtr s = Proxy.Rf_mkString(incompleteStatement.ToString());
 
-			using (new ProtectedPointer(s))
+			using (new ProtectedPointer(this, s))
 			{
 				ParseStatus status;
-				IntPtr vector = NativeMethods.R_ParseVector(s, statementCount, out status, (IntPtr)NilValue);
+				IntPtr vector = Proxy.R_ParseVector(s, statementCount, out status, (IntPtr)NilValue);
 
 				switch (status)
 				{
 					case ParseStatus.OK:
 						incompleteStatement.Clear();
-						using (new ProtectedPointer(vector))
+						using (new ProtectedPointer(this, vector))
 						{
 							SEXPREC sexp = (SEXPREC)Marshal.PtrToStructure(vector, typeof(SEXPREC));
 							bool errorOccurred;
-							IntPtr result = NativeMethods.R_tryEval(sexp.listsxp.tagval, (IntPtr)GlobalEnvironment, out errorOccurred);
+							IntPtr result = Proxy.R_tryEval(sexp.listsxp.tagval, (IntPtr)GlobalEnvironment, out errorOccurred);
 							if (errorOccurred)
 							{
 								throw new ParseException();
@@ -331,7 +346,7 @@ namespace RDotNet
 
 		protected override bool ReleaseHandle()
 		{
-			NativeMethods.Rf_endEmbeddedR(0);
+			Proxy.Rf_endEmbeddedR(0);
 			return base.ReleaseHandle();
 		}
 
