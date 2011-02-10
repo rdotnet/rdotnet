@@ -4,8 +4,14 @@ using RDotNet.Internals;
 
 namespace RDotNet
 {
+	/// <summary>
+	/// An environment object.
+	/// </summary>
 	public class Environment : SymbolicExpression
 	{
+		/// <summary>
+		/// Gets the parental environment.
+		/// </summary>
 		public RDotNet.Environment Parent
 		{
 			get
@@ -16,7 +22,12 @@ namespace RDotNet
 			}
 		}
 
-		internal Environment(REngine engine, IntPtr pointer)
+		/// <summary>
+		/// Creates an environment object.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="pointer">The pointer to an environment.</param>
+		internal protected Environment(REngine engine, IntPtr pointer)
 			: base(engine, pointer)
 		{
 		}
