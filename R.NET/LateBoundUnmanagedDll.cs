@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
@@ -63,11 +61,7 @@ namespace RDotNet
 				throw new ArgumentNullException("entryPoint");
 			}
 			
-#if MAC || LINUX
-			IntPtr function = dlsym(this.handle, entryPoint);
-#else
-			IntPtr function = GetProcAddress(this.handle, entryPoint);
-#endif
+			IntPtr function = GetFunctionAddress(this.handle, entryPoint);
 			if (function == IntPtr.Zero)
 			{
 				throw new EntryPointNotFoundException();
@@ -78,11 +72,7 @@ namespace RDotNet
 
 		protected override bool ReleaseHandle()
 		{
-#if MAC || LINUX
-			return dlclose(this.handle);
-#else
 			return FreeLibrary(this.handle);
-#endif
 		}
 
 #if MAC
@@ -167,23 +157,24 @@ namespace RDotNet
 		
 		[DllImport(DynamicLoadingLibraryName)]
 		private static extern IntPtr dlopen([MarshalAs(UnmanagedType.LPStr)] string filename, int flag);
-
-		[DllImport(DynamicLoadingLibraryName)]
-		[return: MarshalAs(UnmanagedType.Bool)]
-		private static extern bool dlclose(IntPtr handle);
-		
-		[DllImport(DynamicLoadingLibraryName)]
-		private static extern IntPtr dlsym(IntPtr handle, [MarshalAs(UnmanagedType.LPStr)] string symbol);
 #else	
 		[DllImport("kernel32.dll")]
 		private static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
+#endif
 
+#if MAC || LINUX
+		[DllImport(DynamicLoadingLibraryName, EntryPoint = "dlclose")]
+#else
 		[DllImport("kernel32.dll")]
+#endif
 		[return: MarshalAs(UnmanagedType.Bool)]
 		private static extern bool FreeLibrary(IntPtr hModule);
 
-		[DllImport("kernel32.dll")]
-		private static extern IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);
+#if MAC || LINUX
+		[DllImport(DynamicLoadingLibraryName, EntryPoint = "dlsym")]
+#else
+		[DllImport("kernel32.dll", EntryPoint = "GetProcAddress")]
 #endif
+		private static extern IntPtr GetFunctionAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);
 	}
 }
