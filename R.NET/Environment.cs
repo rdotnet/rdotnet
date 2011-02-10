@@ -68,5 +68,19 @@ namespace RDotNet
 			IntPtr installedName = Engine.Proxy.Rf_install(name);
 			Engine.Proxy.Rf_setVar(installedName, (IntPtr)expression, (IntPtr)this);
 		}
+		
+		/// <summary>
+		/// Gets the symbol names defined in this environment.
+		/// </summary>
+		/// <param name="all">Including special functions or not.</param>
+		/// <returns>Symbol names.</returns>
+		public string[] GetSymbolNames(bool all = false)
+		{
+			CharacterVector symbolNames = new CharacterVector(Engine, Engine.Proxy.R_lsInternal((IntPtr)this, all));
+			int length = symbolNames.Length;
+			string[] copy = new string[length];
+			symbolNames.CopyTo(copy, length);
+			return copy;
+		}
 	}
 }

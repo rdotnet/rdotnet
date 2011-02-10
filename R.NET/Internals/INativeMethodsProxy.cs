@@ -9,7 +9,7 @@ namespace RDotNet.Internals
 		IntPtr Rf_protect(IntPtr sexp);
 		void Rf_unprotect(int count);
 		void Rf_unprotect_ptr(IntPtr sexp);
-		IntPtr Rf_install(string sexp);
+		IntPtr Rf_install(string s);
 		IntPtr Rf_mkString(string s);
 		IntPtr Rf_mkChar(string s);
 		IntPtr Rf_allocVector(SymbolicExpressionType type, int length);
@@ -31,6 +31,6 @@ namespace RDotNet.Internals
 		IntPtr Rf_setAttrib(IntPtr sexp, IntPtr name, IntPtr value);
 		bool Rf_isEnvironment(IntPtr sexp);
 		bool Rf_isExpression(IntPtr sexp);
+		IntPtr R_lsInternal(IntPtr environment, bool all);
 	}
 }
-
