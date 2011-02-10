@@ -10,7 +10,7 @@ namespace RDotNet.Dynamic
 	{
 		protected static readonly string[] Empty = new string[0];
 
-		public SymbolicExpressionDynamicMeta(Expression parameter, SymbolicExpression expression)
+		public SymbolicExpressionDynamicMeta(System.Linq.Expressions.Expression parameter, SymbolicExpression expression)
 			: base(parameter, BindingRestrictions.Empty, expression)
 		{
 		}
@@ -27,10 +27,10 @@ namespace RDotNet.Dynamic
 				return base.BindGetMember(binder);
 			}
 
-			Expression instance = Expression.Constant(Value, typeof(SymbolicExpression));
-			Expression name = Expression.Constant(binder.Name, typeof(string));
+			var instance = System.Linq.Expressions.Expression.Constant(Value, typeof(SymbolicExpression));
+			var name = System.Linq.Expressions.Expression.Constant(binder.Name, typeof(string));
 			MethodInfo getAttribute = typeof(SymbolicExpression).GetMethod("GetAttribute");
-			Expression call = Expression.Call(instance, getAttribute, name);
+			var call = System.Linq.Expressions.Expression.Call(instance, getAttribute, name);
 			return new DynamicMetaObject(call, BindingRestrictions.GetTypeRestriction(call, typeof(SymbolicExpression)));
 		}
 

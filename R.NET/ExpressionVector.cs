@@ -5,9 +5,9 @@ using System.Security.Permissions;
 namespace RDotNet
 {
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-	public class ExpressionVector : Vector<SymbolicExpression>
+	public class ExpressionVector : Vector<Expression>
 	{
-		public override SymbolicExpression this[int index]
+		public override Expression this[int index]
 		{
 			get
 			{
@@ -19,7 +19,7 @@ namespace RDotNet
 				{
 					int offset = GetOffset(index);
 					IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
-					return new SymbolicExpression(Engine, pointer);
+					return new Expression(Engine, pointer);
 				}
 			}
 			set
@@ -48,10 +48,10 @@ namespace RDotNet
 		}
 
 		/// <summary>
-		/// Creates a new instance for a string vector.
+		/// Creates a new instance for an expression vector.
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to a string vector.</param>
+		/// <param name="coerced">The pointer to an expression vector.</param>
 		internal ExpressionVector(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{

@@ -210,7 +210,7 @@ namespace RDotNet
 			}
 		}
 
-		public override DynamicMetaObject GetMetaObject(Expression parameter)
+		public override DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)
 		{
 			return new DataFrameDynamicMeta(parameter, this);
 		}

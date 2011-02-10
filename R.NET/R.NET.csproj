@@ -95,6 +95,8 @@
     <Compile Include="ComplexVector.cs" />
     <Compile Include="CharacterMatrix.cs" />
     <Compile Include="ComplexMatrix.cs" />
+    <Compile Include="Environment.cs" />
+    <Compile Include="Expression.cs" />
     <Compile Include="ExpressionVector.cs" />
     <Compile Include="DataFrame.cs" />
     <Compile Include="DataFrameRow.cs" />

@@ -90,11 +90,11 @@ namespace RDotNet
 		/// <summary>
 		/// Gets the global environment.
 		/// </summary>
-		public SymbolicExpression GlobalEnvironment
+		public RDotNet.Environment GlobalEnvironment
 		{
 			get
 			{
-				return GetPredefinedSymbol("R_GlobalEnv");
+				return GetPredefinedSymbol("R_GlobalEnv").AsEnvironment();
 			}
 		}
 
@@ -143,7 +143,7 @@ namespace RDotNet
 		
 		private INativeMethodsProxy GetDefaultProxy()
 		{
-			OperatingSystem os = Environment.OSVersion;
+			OperatingSystem os = System.Environment.OSVersion;
 			switch (os.Platform)
 			{
 				case PlatformID.Win32NT:

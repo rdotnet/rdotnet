@@ -22,12 +22,15 @@ namespace RDotNet.Internals
 		int Rf_ncols(IntPtr sexp);
 		IntPtr Rf_allocList(int length);
 		bool Rf_isList(IntPtr sexp);
+		IntPtr Rf_eval(IntPtr statement, IntPtr environment);
 		IntPtr R_tryEval(IntPtr statement, IntPtr environment, out bool errorOccurred);
 		IntPtr R_ParseVector(IntPtr statement, int statementCount, out ParseStatus status, IntPtr _);
 		IntPtr Rf_findVar(IntPtr name, IntPtr environment);
 		void Rf_setVar(IntPtr name, IntPtr value, IntPtr environment);
 		IntPtr Rf_getAttrib(IntPtr sexp, IntPtr name);
 		IntPtr Rf_setAttrib(IntPtr sexp, IntPtr name, IntPtr value);
+		bool Rf_isEnvironment(IntPtr sexp);
+		bool Rf_isExpression(IntPtr sexp);
 	}
 }
 
