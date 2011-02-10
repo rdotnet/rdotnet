@@ -240,7 +240,7 @@ namespace RDotNet
 			return other != null && this.handle == other.handle;
 		}
 
-		public virtual DynamicMetaObject GetMetaObject(Expression parameter)
+		public virtual DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)
 		{
 			return new SymbolicExpressionDynamicMeta(parameter, this);
 		}

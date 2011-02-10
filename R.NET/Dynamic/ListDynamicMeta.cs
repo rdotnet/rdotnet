@@ -11,7 +11,7 @@ namespace RDotNet.Dynamic
 	{
 		private static readonly Type[] IndexerNameType = new Type[] { typeof(string) };
 
-		public ListDynamicMeta(Expression parameter, GenericVector list)
+		public ListDynamicMeta(System.Linq.Expressions.Expression parameter, GenericVector list)
 			: base(parameter, list)
 		{
 		}
@@ -28,10 +28,10 @@ namespace RDotNet.Dynamic
 				return base.BindGetMember(binder);
 			}
 
-			Expression instance = Expression.Constant(Value, typeof(GenericVector));
-			Expression name = Expression.Constant(binder.Name, typeof(string));
+			var instance = System.Linq.Expressions.Expression.Constant(Value, typeof(GenericVector));
+			var name = System.Linq.Expressions.Expression.Constant(binder.Name, typeof(string));
 			PropertyInfo indexer = typeof(GenericVector).GetProperty("Item", IndexerNameType);
-			Expression call = Expression.Property(instance, indexer, name);
+			var call = System.Linq.Expressions.Expression.Property(instance, indexer, name);
 			return new DynamicMetaObject(call, BindingRestrictions.GetTypeRestriction(call, typeof(SymbolicExpression)));
 		}
 

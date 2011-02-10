@@ -437,5 +437,61 @@ namespace RDotNet
 			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;
 		}
+
+		/// <summary>
+		/// Specifies the expression is an <see cref="RDotNet.Environment"/> object or not.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns><c>True</c> if it is an environment.</returns>
+		public static bool IsEnvironment(this SymbolicExpression expression)
+		{
+			if (expression == null)
+			{
+				throw new ArgumentNullException();
+			}
+			return expression.Engine.Proxy.Rf_isEnvironment((IntPtr)expression);
+		}
+
+		/// <summary>
+		/// Gets the expression as an <see cref="RDotNet.Environment"/>.
+		/// </summary>
+		/// <param name="expression">The environment.</param>
+		/// <returns>The environment.</returns>
+		public static RDotNet.Environment AsEnvironment(this SymbolicExpression expression)
+		{
+			if (!expression.IsEnvironment())
+			{
+				return null;
+			}
+			return new RDotNet.Environment(expression.Engine, (IntPtr)expression);
+		}
+
+		/// <summary>
+		/// Specifies the expression is an <see cref="RDotNet.Expression"/> object or not.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns><c>True</c> if it is an expression.</returns>
+		public static bool IsExpression(this SymbolicExpression expression)
+		{
+			if (expression == null)
+			{
+				throw new ArgumentNullException();
+			}
+			return expression.Engine.Proxy.Rf_isExpression((IntPtr)expression);
+		}
+
+		/// <summary>
+		/// Gets the expression as an <see cref="RDotNet.Expression"/>.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns>The expression.</returns>
+		public static RDotNet.Expression AsExpression(this SymbolicExpression expression)
+		{
+			if (!expression.IsExpression())
+			{
+				return null;
+			}
+			return new RDotNet.Expression(expression.Engine, (IntPtr)expression);
+		}
 	}
 }

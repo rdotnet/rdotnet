@@ -101,6 +101,11 @@ namespace RDotNet.Internals
 		{
 			return _Rf_isList(sexp);
 		}
+
+		public IntPtr Rf_eval(IntPtr statement, IntPtr environment)
+		{
+			return _Rf_eval(statement, environment);
+		}
 		
 		public IntPtr R_tryEval(IntPtr statement, IntPtr environment, out bool errorOccurred)
 		{
@@ -130,6 +135,16 @@ namespace RDotNet.Internals
 		public IntPtr Rf_setAttrib(IntPtr sexp, IntPtr name, IntPtr value)
 		{
 			return _Rf_setAttrib(sexp, name, value);
+		}
+
+		public bool Rf_isEnvironment(IntPtr sexp)
+		{
+			return _Rf_isEnvironment(sexp);
+		}
+
+		public bool Rf_isExpression(IntPtr sexp)
+		{
+			return _Rf_isExpression(sexp);
 		}
 
 		[DllImport(NativeMethods.RDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Rf_initEmbeddedR")]
@@ -190,6 +205,9 @@ namespace RDotNet.Internals
 		private static extern bool _Rf_isList(IntPtr sexp);
 
 		[DllImport(NativeMethods.RDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "R_tryEval")]
+		private static extern IntPtr _Rf_eval(IntPtr statement, IntPtr environment);
+
+		[DllImport(NativeMethods.RDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "R_tryEval")]
 		private static extern IntPtr _R_tryEval(IntPtr statement, IntPtr environment, [MarshalAs(UnmanagedType.Bool)] out bool errorOccurred);
 
 		[DllImport(NativeMethods.RDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "R_ParseVector")]
@@ -206,6 +224,13 @@ namespace RDotNet.Internals
 
 		[DllImport(NativeMethods.RDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Rf_setAttrib")]
 		private static extern IntPtr _Rf_setAttrib(IntPtr sexp, IntPtr name, IntPtr value);
+
+		[DllImport(NativeMethods.RDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Rf_isEnvironment")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _Rf_isEnvironment(IntPtr sexp);
+
+		[DllImport(NativeMethods.RDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Rf_isExpression")]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private static extern bool _Rf_isExpression(IntPtr sexp);
 	}
 }
-

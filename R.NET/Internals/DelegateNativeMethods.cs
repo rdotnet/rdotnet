@@ -126,6 +126,12 @@ namespace RDotNet.Internals
 			return function(sexp);
 		}
 
+		public IntPtr Rf_eval(IntPtr statement, IntPtr environment)
+		{
+			var function = this.dll.GetFunction<_Rf_eval>("Rf_eval");
+			return function(statement, environment);
+		}
+
 		public IntPtr R_tryEval (IntPtr statement, IntPtr environment, out bool errorOccurred)
 		{
 			var function = this.dll.GetFunction<_R_tryEval>("R_tryEval");
@@ -160,6 +166,18 @@ namespace RDotNet.Internals
 		{
 			var function = this.dll.GetFunction<_Rf_setAttrib>("Rf_setAttrib");
 			return function(sexp, name, value);
+		}
+
+		public bool Rf_isEnvironment(IntPtr sexp)
+		{
+			var function = this.dll.GetFunction<_Rf_isEnvironment>("Rf_isEnvironment");
+			return function(sexp);
+		}
+
+		public bool Rf_isExpression(IntPtr sexp)
+		{
+			var function = this.dll.GetFunction<_Rf_isExpression>("Rf_isExpression");
+			return function(sexp);
 		}
 		
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -220,6 +238,9 @@ namespace RDotNet.Internals
 		private delegate bool _Rf_isList(IntPtr sexp);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		private delegate IntPtr _Rf_eval(IntPtr statement, IntPtr environment);
+
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		private delegate IntPtr _R_tryEval(IntPtr statement, IntPtr environment, [MarshalAs(UnmanagedType.Bool)] out bool errorOccurred);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -236,5 +257,13 @@ namespace RDotNet.Internals
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		private delegate IntPtr _Rf_setAttrib(IntPtr sexp, IntPtr name, IntPtr value);
+
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private delegate bool _Rf_isEnvironment(IntPtr sexp);
+
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		[return: MarshalAs(UnmanagedType.Bool)]
+		private delegate bool _Rf_isExpression(IntPtr sexp);
 	}
 }
