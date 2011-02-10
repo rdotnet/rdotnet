@@ -147,8 +147,8 @@ namespace RDotNet
 		/// <summary>
 		/// Gets an instance specified in the given ID.
 		/// </summary>
-		/// <param name="id"></param>
-		/// <returns></returns>
+		/// <param name="id">ID.</param>
+		/// <returns>The engine.</returns>
 		public static REngine GetInstanceFromID(string id)
 		{
 			return instances.ContainsKey(id) ? instances[id] : null;
