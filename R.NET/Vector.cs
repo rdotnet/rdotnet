@@ -64,7 +64,7 @@ namespace RDotNet
 		{
 			get
 			{
-				return NativeMethods.Rf_length(this.handle);
+				return Engine.Proxy.Rf_length(this.handle);
 			}
 		}
 
@@ -120,7 +120,7 @@ namespace RDotNet
 		/// <param name="type">The element type.</param>
 		/// <param name="length">The length of vector.</param>
 		protected Vector(REngine engine, SymbolicExpressionType type, int length)
-			: base(engine, NativeMethods.Rf_allocVector(type, length))
+			: base(engine, engine.Proxy.Rf_allocVector(type, length))
 		{
 			if (length <= 0)
 			{
@@ -135,7 +135,7 @@ namespace RDotNet
 		/// <param name="type">The element type.</param>
 		/// <param name="vector">The elements of vector.</param>
 		protected Vector(REngine engine, SymbolicExpressionType type, T[] vector)
-			: base(engine, NativeMethods.Rf_allocVector(type, vector.Length))
+			: base(engine, engine.Proxy.Rf_allocVector(type, vector.Length))
 		{
 			for (int index = 0; index < vector.Length; index++)
 			{

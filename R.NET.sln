@@ -26,6 +26,9 @@ Global
 		{0923E1A0-2032-4997-AB73-49E42C4034A9}.Release|x86.ActiveCfg = Release|x86
 		{0923E1A0-2032-4997-AB73-49E42C4034A9}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = R.NET\R.NET.csproj
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
