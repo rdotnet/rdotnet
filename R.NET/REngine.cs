@@ -99,6 +99,17 @@ namespace RDotNet
 		}
 
 		/// <summary>
+		/// Gets the root environment.
+		/// </summary>
+		public RDotNet.Environment EmptyEnvironment
+		{
+			get
+			{
+				return GetPredefinedSymbol("R_EmptyEnv").AsEnvironment();
+			}
+		}
+
+		/// <summary>
 		/// Gets the <c>NULL</c> value.
 		/// </summary>
 		public SymbolicExpression NilValue
@@ -194,40 +205,53 @@ namespace RDotNet
 		}
 
 		/// <summary>
-		/// Gets a symbol defined in R environment.
+		/// Gets a symbol defined in the global environment.
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <returns>The symbol.</returns>
 		public SymbolicExpression GetSymbol(string name)
 		{
-			if (name == null)
-			{
-				throw new ArgumentNullException();
-			}
-			if (name == string.Empty)
-			{
-				throw new ArgumentException();
-			}
-
-			IntPtr installedName = Proxy.Rf_install(name);
-			IntPtr value = Proxy.Rf_findVar(installedName, (IntPtr)GlobalEnvironment);
-			if (value == (IntPtr)UnboundValue)
-			{
-				return null;
-			}
-
-			return new SymbolicExpression(this, value);
+			return GlobalEnvironment.GetSymbol(name);
 		}
 
 		/// <summary>
-		/// Defines a symbol in R environment.
+		/// Gets a symbol defined in the global environment.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="environment">The environment. If <c>null</c> is passed, <see cref="GlobalEnvironment"/> is used.</param>
+		/// <returns>The symbol.</returns>
+		public SymbolicExpression GetSymbol(string name, RDotNet.Environment environment)
+		{
+			if (environment == null)
+			{
+				environment = GlobalEnvironment;
+			}
+			return environment.GetSymbol(name);
+		}
+
+		/// <summary>
+		/// Defines a symbol in the global environment.
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="expression">The symbol.</param>
 		public void SetSymbol(string name, SymbolicExpression expression)
 		{
-			IntPtr installedName = Proxy.Rf_install(name);
-			Proxy.Rf_setVar(installedName, (IntPtr)expression, (IntPtr)GlobalEnvironment);
+			GlobalEnvironment.SetSymbol(name, expression);
+		}
+
+		/// <summary>
+		/// Defines a symbol in the specified environment.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="expression">The symbol.</param>
+		/// <param name="environment">The environment. If <c>null</c> is passed, <see cref="GlobalEnvironment"/> is used.</param>
+		public void SetSymbol(string name, SymbolicExpression expression, RDotNet.Environment environment)
+		{
+			if (environment == null)
+			{
+				environment = GlobalEnvironment;
+			}
+			environment.SetSymbol(name, expression);
 		}
 
 		/// <summary>
