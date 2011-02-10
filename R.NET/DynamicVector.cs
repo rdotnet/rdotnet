@@ -119,7 +119,7 @@ namespace RDotNet
 		{
 		}
 
-		private static double ReadDouble(IntPtr pointer, int offset)
+		private double ReadDouble(IntPtr pointer, int offset)
 		{
 			byte[] data = new byte[sizeof(double)];
 			for (int byteIndex = 0; byteIndex < data.Length; byteIndex++)
@@ -129,7 +129,7 @@ namespace RDotNet
 			return BitConverter.ToDouble(data, 0);
 		}
 
-		private static void WriteDouble(double value, IntPtr pointer, int offset)
+		private void WriteDouble(double value, IntPtr pointer, int offset)
 		{
 			byte[] data = BitConverter.GetBytes(value);
 			for (int byteIndex = 0; byteIndex < data.Length; byteIndex++)
@@ -138,52 +138,52 @@ namespace RDotNet
 			}
 		}
 
-		private static int ReadInt32(IntPtr pointer, int offset)
+		private int ReadInt32(IntPtr pointer, int offset)
 		{
 			return Marshal.ReadInt32(pointer, offset);
 		}
 
-		private static void WriteInt32(int value, IntPtr pointer, int offset)
+		private void WriteInt32(int value, IntPtr pointer, int offset)
 		{
 			Marshal.WriteInt32(pointer, offset, value);
 		}
 
-		private static string ReadString(IntPtr pointer, int offset)
+		private string ReadString(IntPtr pointer, int offset)
 		{
 			pointer = Marshal.ReadIntPtr(pointer, offset);
 			pointer = IntPtr.Add(pointer, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
 			return Marshal.PtrToStringAnsi(pointer);
 		}
 
-		private static void WriteString(string value, IntPtr pointer, int offset)
+		private void WriteString(string value, IntPtr pointer, int offset)
 		{
-			IntPtr stringPointer = NativeMethods.Rf_mkChar(value);
+			IntPtr stringPointer = Engine.Proxy.Rf_mkChar(value);
 			Marshal.WriteIntPtr(pointer, offset, stringPointer);
 		}
 
-		private static bool ReadBoolean(IntPtr pointer, int offset)
+		private bool ReadBoolean(IntPtr pointer, int offset)
 		{
 			int data = Marshal.ReadInt32(pointer, offset);
 			return Convert.ToBoolean(data);
 		}
 
-		private static void WriteBoolean(bool value, IntPtr pointer, int offset)
+		private void WriteBoolean(bool value, IntPtr pointer, int offset)
 		{
 			int data = Convert.ToInt32(value);
 			Marshal.WriteInt32(pointer, offset, data);
 		}
 
-		private static byte ReadByte(IntPtr pointer, int offset)
+		private byte ReadByte(IntPtr pointer, int offset)
 		{
 			return Marshal.ReadByte(pointer, offset);
 		}
 
-		private static void WriteByte(byte value, IntPtr pointer, int offset)
+		private void WriteByte(byte value, IntPtr pointer, int offset)
 		{
 			Marshal.WriteByte(pointer, offset, value);
 		}
 
-		private static Complex ReadComplex(IntPtr pointer, int offset)
+		private Complex ReadComplex(IntPtr pointer, int offset)
 		{
 			byte[] data = new byte[Marshal.SizeOf(typeof(Complex))];
 			Marshal.Copy(pointer, data, 0, data.Length);
@@ -192,7 +192,7 @@ namespace RDotNet
 			return new Complex(real, imaginary);
 		}
 
-		private static void WriteComplex(Complex value, IntPtr pointer, int offset)
+		private void WriteComplex(Complex value, IntPtr pointer, int offset)
 		{
 			byte[] real = BitConverter.GetBytes(value.Real);
 			byte[] imaginary = BitConverter.GetBytes(value.Imaginary);

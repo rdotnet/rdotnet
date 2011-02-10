@@ -30,15 +30,28 @@ namespace RDotNet
 	{
 		private static readonly IDictionary<string, REngine> instances = new Dictionary<string, REngine>();
 
+#if !MAC && !LINUX
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		private delegate IntPtr _getDLLVersion();
+#endif
+
 		/// <summary>
 		/// Gets the version of R.DLL.
 		/// </summary>
-		public static Version DllVersion
+		public Version DllVersion
 		{
 			get
 			{
-				string version = Marshal.PtrToStringAnsi(NativeMethods.GetDllVersion());
+				// As R's version definitions are defined in #define preprocessor,
+				// C# cannot access them dynamically.
+				// But, on Win32 platform, we can get the version string via getDLLVersion function.
+#if MAC || LINUX
+				throw new NotImplementedException();
+#else
+				var getVersion = GetFunction<_getDLLVersion>("getDLLVersion");
+				string version = Marshal.PtrToStringAnsi(getVersion());
 				return new Version(version);
+#endif
 			}
 		}
 
@@ -106,15 +119,41 @@ namespace RDotNet
 				return GetPredefinedSymbol("R_UnboundValue");
 			}
 		}
+		
+		private readonly INativeMethodsProxy proxy;
+		internal INativeMethodsProxy Proxy
+		{
+			get
+			{
+				return proxy;
+			}
+		}
 
 		private REngine(string id, string[] args)
 			: base(NativeMethods.RDllName)
 		{
 			this.id = id;
+			this.proxy = GetDefaultProxy();
+			
 			string[] newArgs = Utility.AddFirst(id, args);
-			NativeMethods.Rf_initEmbeddedR(newArgs.Length, newArgs);
+			Proxy.Rf_initEmbeddedR(newArgs.Length, newArgs);
 
 			isRunning = true;
+		}
+		
+		private INativeMethodsProxy GetDefaultProxy()
+		{
+			OperatingSystem os = Environment.OSVersion;
+			switch (os.Platform)
+			{
+				case PlatformID.Win32NT:
+					return DirectNativeMethods.Instance;
+				case PlatformID.MacOSX:
+				case PlatformID.Unix:
+					return new DelegateNativeMethods(this);
+				default:
+					throw new NotSupportedException(os.ToString());
+			}
 		}
 
 		/// <summary>
@@ -170,8 +209,8 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			IntPtr installedName = NativeMethods.Rf_install(name);
-			IntPtr value = NativeMethods.Rf_findVar(installedName, (IntPtr)GlobalEnvironment);
+			IntPtr installedName = Proxy.Rf_install(name);
+			IntPtr value = Proxy.Rf_findVar(installedName, (IntPtr)GlobalEnvironment);
 			if (value == (IntPtr)UnboundValue)
 			{
 				return null;
@@ -187,8 +226,8 @@ namespace RDotNet
 		/// <param name="expression">The symbol.</param>
 		public void SetSymbol(string name, SymbolicExpression expression)
 		{
-			IntPtr installedName = NativeMethods.Rf_install(name);
-			NativeMethods.Rf_setVar(installedName, (IntPtr)expression, (IntPtr)GlobalEnvironment);
+			IntPtr installedName = Proxy.Rf_install(name);
+			Proxy.Rf_setVar(installedName, (IntPtr)expression, (IntPtr)GlobalEnvironment);
 		}
 
 		/// <summary>
@@ -297,22 +336,22 @@ namespace RDotNet
 		private SymbolicExpression Parse(string statement, int statementCount, StringBuilder incompleteStatement)
 		{
 			incompleteStatement.Append(statement);
-			IntPtr s = NativeMethods.Rf_mkString(incompleteStatement.ToString());
+			IntPtr s = Proxy.Rf_mkString(incompleteStatement.ToString());
 
-			using (new ProtectedPointer(s))
+			using (new ProtectedPointer(this, s))
 			{
 				ParseStatus status;
-				IntPtr vector = NativeMethods.R_ParseVector(s, statementCount, out status, (IntPtr)NilValue);
+				IntPtr vector = Proxy.R_ParseVector(s, statementCount, out status, (IntPtr)NilValue);
 
 				switch (status)
 				{
 					case ParseStatus.OK:
 						incompleteStatement.Clear();
-						using (new ProtectedPointer(vector))
+						using (new ProtectedPointer(this, vector))
 						{
 							SEXPREC sexp = (SEXPREC)Marshal.PtrToStructure(vector, typeof(SEXPREC));
 							bool errorOccurred;
-							IntPtr result = NativeMethods.R_tryEval(sexp.listsxp.tagval, (IntPtr)GlobalEnvironment, out errorOccurred);
+							IntPtr result = Proxy.R_tryEval(sexp.listsxp.tagval, (IntPtr)GlobalEnvironment, out errorOccurred);
 							if (errorOccurred)
 							{
 								throw new ParseException();
@@ -331,7 +370,7 @@ namespace RDotNet
 
 		protected override bool ReleaseHandle()
 		{
-			NativeMethods.Rf_endEmbeddedR(0);
+			Proxy.Rf_endEmbeddedR(0);
 			return base.ReleaseHandle();
 		}
 
@@ -355,7 +394,7 @@ namespace RDotNet
 		{
 			try
 			{
-				IntPtr pointer = GetProcAddress(this.handle, name);
+				IntPtr pointer = GetSymbolPointer(this.handle, name);
 				return new SymbolicExpression(this, Marshal.ReadIntPtr(pointer));
 			}
 			catch (Exception ex)
@@ -364,7 +403,13 @@ namespace RDotNet
 			}
 		}
 
-		[DllImport("kernel32.dll")]
-		private static extern IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);
+#if MAC
+		[DllImport("libdl.dylib", EntryPoint = "dlsym")]
+#elif LINUX
+		[DllImport("libdl.so", EntryPoint = "dlsym")]
+#else
+		[DllImport("kernel32.dll", EntryPoint = "GetProcAddress")]
+#endif
+		private static extern IntPtr GetSymbolPointer(IntPtr handle, [MarshalAs(UnmanagedType.LPStr)] string symbol);
 	}
 }

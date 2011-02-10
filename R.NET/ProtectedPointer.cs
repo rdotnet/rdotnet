@@ -8,17 +8,22 @@ namespace RDotNet
 	internal class ProtectedPointer : IDisposable
 	{
 		private readonly IntPtr sexp;
+		private readonly REngine engine;
 
-		public ProtectedPointer(IntPtr sexp)
+		public ProtectedPointer(REngine engine, IntPtr sexp)
 		{
 			this.sexp = sexp;
-			NativeMethods.Rf_protect(this.sexp);
+			this.engine = engine;
+			
+			engine.Proxy.Rf_protect(this.sexp);
 		}
 
 		public ProtectedPointer(SymbolicExpression sexp)
 		{
 			this.sexp = (IntPtr)sexp;
-			NativeMethods.Rf_protect(this.sexp);
+			this.engine = sexp.Engine;
+			
+			engine.Proxy.Rf_protect(this.sexp);
 		}
 
 		public static implicit operator IntPtr(ProtectedPointer p)
@@ -28,7 +33,7 @@ namespace RDotNet
 
 		public void Dispose()
 		{
-			NativeMethods.Rf_unprotect_ptr(this.sexp);
+			this.engine.Proxy.Rf_unprotect_ptr(this.sexp);
 		}
 	}
 }
