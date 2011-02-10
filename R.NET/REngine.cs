@@ -30,6 +30,11 @@ namespace RDotNet
 	{
 		private static readonly IDictionary<string, REngine> instances = new Dictionary<string, REngine>();
 
+#if !MAC && !LINUX
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		private delegate IntPtr _getDLLVersion();
+#endif
+
 		/// <summary>
 		/// Gets the version of R.DLL.
 		/// </summary>
@@ -37,8 +42,16 @@ namespace RDotNet
 		{
 			get
 			{
-				string version = Marshal.PtrToStringAnsi(Proxy.getDLLVersion());
+				// As R's version definitions are defined in #define preprocessor,
+				// C# cannot access them dynamically.
+				// But, on Win32 platform, we can get the version string via getDLLVersion function.
+#if MAC || LINUX
+				throw new NotImplementedException();
+#else
+				var getVersion = GetFunction<_getDLLVersion>("getDLLVersion");
+				string version = Marshal.PtrToStringAnsi(getVersion());
 				return new Version(version);
+#endif
 			}
 		}
 
@@ -120,16 +133,27 @@ namespace RDotNet
 			: base(NativeMethods.RDllName)
 		{
 			this.id = id;
-#if MAC || LINUX
-			this.proxy = new DelegateNativeMethods(this);
-#else
-			this.proxy = DirectNativeMethods.Instance;
-#endif
+			this.proxy = GetDefaultProxy();
 			
 			string[] newArgs = Utility.AddFirst(id, args);
 			Proxy.Rf_initEmbeddedR(newArgs.Length, newArgs);
 
 			isRunning = true;
+		}
+		
+		private INativeMethodsProxy GetDefaultProxy()
+		{
+			OperatingSystem os = Environment.OSVersion;
+			switch (os.Platform)
+			{
+				case PlatformID.Win32NT:
+					return DirectNativeMethods.Instance;
+				case PlatformID.MacOSX:
+				case PlatformID.Unix:
+					return new DelegateNativeMethods(this);
+				default:
+					throw new NotSupportedException(os.ToString());
+			}
 		}
 
 		/// <summary>
@@ -370,11 +394,7 @@ namespace RDotNet
 		{
 			try
 			{
-#if MAC || LINUX
-				IntPtr pointer = dlsym(this.handle, name);
-#else
-				IntPtr pointer = GetProcAddress(this.handle, name);
-#endif
+				IntPtr pointer = GetSymbolPointer(this.handle, name);
 				return new SymbolicExpression(this, Marshal.ReadIntPtr(pointer));
 			}
 			catch (Exception ex)
@@ -384,14 +404,12 @@ namespace RDotNet
 		}
 
 #if MAC
-		[DllImport("libdl.dylib")]
-		private static extern IntPtr dlsym(IntPtr handle, [MarshalAs(UnmanagedType.LPStr)] string symbol);
+		[DllImport("libdl.dylib", EntryPoint = "dlsym")]
 #elif LINUX
-		[DllImport("libdl.so")]
-		private static extern IntPtr dlsym(IntPtr handle, [MarshalAs(UnmanagedType.LPStr)] string symbol);
+		[DllImport("libdl.so", EntryPoint = "dlsym")]
 #else
-		[DllImport("kernel32.dll")]
-		private static extern IntPtr GetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);
+		[DllImport("kernel32.dll", EntryPoint = "GetProcAddress")]
 #endif
+		private static extern IntPtr GetSymbolPointer(IntPtr handle, [MarshalAs(UnmanagedType.LPStr)] string symbol);
 	}
 }

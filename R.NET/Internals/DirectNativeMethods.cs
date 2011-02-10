@@ -23,11 +23,6 @@ namespace RDotNet.Internals
 			return _Rf_initEmbeddedR(argc, argv);
 		}
 		
-		public IntPtr getDLLVersion()
-		{
-			return _getDllVersion();
-		}
-		
 		public IntPtr Rf_protect(IntPtr sexp)
 		{
 			return _Rf_protect(sexp);
@@ -142,9 +137,6 @@ namespace RDotNet.Internals
 
 		[DllImport(NativeMethods.RDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Rf_endEmbeddedR")]
 		private static extern void _Rf_endEmbeddedR(int fatal);
-
-		[DllImport(NativeMethods.RDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "getDLLVersion")]
-		private static extern IntPtr _getDllVersion();
 
 		[DllImport(NativeMethods.RDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "Rf_protect")]
 		private static extern IntPtr _Rf_protect(IntPtr sexp);

@@ -6,7 +6,6 @@ namespace RDotNet.Internals
 	{
 		int Rf_initEmbeddedR(int argc, string[] argv);
 		void Rf_endEmbeddedR(int fatal);
-		IntPtr getDLLVersion();
 		IntPtr Rf_protect(IntPtr sexp);
 		void Rf_unprotect(int count);
 		void Rf_unprotect_ptr(IntPtr sexp);
