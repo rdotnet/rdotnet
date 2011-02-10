@@ -341,17 +341,16 @@ namespace RDotNet
 			using (new ProtectedPointer(this, s))
 			{
 				ParseStatus status;
-				IntPtr vector = Proxy.R_ParseVector(s, statementCount, out status, (IntPtr)NilValue);
+				ExpressionVector vector = new ExpressionVector(this, Proxy.R_ParseVector(s, -1, out status, (IntPtr)NilValue));
 
 				switch (status)
 				{
 					case ParseStatus.OK:
 						incompleteStatement.Clear();
-						using (new ProtectedPointer(this, vector))
+						using (new ProtectedPointer(vector))
 						{
-							SEXPREC sexp = (SEXPREC)Marshal.PtrToStructure(vector, typeof(SEXPREC));
 							bool errorOccurred;
-							IntPtr result = Proxy.R_tryEval(sexp.listsxp.tagval, (IntPtr)GlobalEnvironment, out errorOccurred);
+							IntPtr result = Proxy.R_tryEval((IntPtr)vector.First(), (IntPtr)GlobalEnvironment, out errorOccurred);
 							if (errorOccurred)
 							{
 								throw new ParseException();
