@@ -30,12 +30,6 @@ namespace RDotNet.Internals
 			function(fatal);
 		}
 
-		public IntPtr getDLLVersion ()
-		{
-			var function = this.dll.GetFunction<_getDllVersion>("getDLLVersion");
-			return function();
-		}
-
 		public IntPtr Rf_protect (IntPtr sexp)
 		{
 			var function = this.dll.GetFunction<_Rf_protect>("Rf_protect");
@@ -173,9 +167,6 @@ namespace RDotNet.Internals
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		private delegate void _Rf_endEmbeddedR(int fatal);
-
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-		private delegate IntPtr _getDllVersion();
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		private delegate IntPtr _Rf_protect(IntPtr sexp);
