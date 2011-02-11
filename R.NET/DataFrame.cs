@@ -45,7 +45,7 @@ namespace RDotNet
 				using (new ProtectedPointer(this))
 				{
 					int offset = GetOffset(columnIndex);
-					Marshal.WriteIntPtr(DataPointer, offset, (IntPtr)(value ?? Engine.NilValue));
+					Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
 				}
 			}
 		}

@@ -33,7 +33,7 @@ namespace RDotNet
 				throw new ArgumentException(null, "environment");
 			}
 
-			return new SymbolicExpression(Engine, Engine.Proxy.Rf_eval((IntPtr)this, (IntPtr)environment));
+			return new SymbolicExpression(Engine, Engine.Proxy.Rf_eval(this.handle, environment.DangerousGetHandle()));
 		}
 
 		/// <summary>
@@ -54,7 +54,7 @@ namespace RDotNet
 			}
 
 			bool errorOccurred;
-			IntPtr pointer = Engine.Proxy.R_tryEval((IntPtr)this, (IntPtr)environment, out errorOccurred);
+			IntPtr pointer = Engine.Proxy.R_tryEval(this.handle, environment.DangerousGetHandle(), out errorOccurred);
 			result = errorOccurred ? null : new SymbolicExpression(Engine, pointer);
 			return !errorOccurred;
 		}

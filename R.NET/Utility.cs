@@ -11,5 +11,15 @@ namespace RDotNet
 			Array.Copy(array, 0, newArray, 1, array.Length);
 			return newArray;
 		}
+
+		internal static bool CheckNil(this REngine engine, IntPtr pointer)
+		{
+			return engine.NilValue.DangerousGetHandle() == pointer;
+		}
+
+		internal static bool CheckUnbound(this REngine engine, IntPtr pointer)
+		{
+			return engine.UnboundValue.DangerousGetHandle() == pointer;
+		}
 	}
 }

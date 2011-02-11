@@ -18,7 +18,7 @@ namespace RDotNet
 			{
 				SEXPREC sexp = (SEXPREC)Marshal.PtrToStructure(this.handle, typeof(SEXPREC));
 				IntPtr parent = sexp.envsxp.enclos;
-				return parent == (IntPtr)Engine.NilValue ? null : new RDotNet.Environment(Engine, parent);
+				return Engine.CheckNil(parent) ? null : new RDotNet.Environment(Engine, parent);
 			}
 		}
 
@@ -49,8 +49,8 @@ namespace RDotNet
 			}
 
 			IntPtr installedName = Engine.Proxy.Rf_install(name);
-			IntPtr value = Engine.Proxy.Rf_findVar(installedName, (IntPtr)this);
-			if (value == (IntPtr)Engine.UnboundValue)
+			IntPtr value = Engine.Proxy.Rf_findVar(installedName, this.handle);
+			if (Engine.CheckUnbound(value))
 			{
 				return null;
 			}
@@ -66,7 +66,7 @@ namespace RDotNet
 		public void SetSymbol(string name, SymbolicExpression expression)
 		{
 			IntPtr installedName = Engine.Proxy.Rf_install(name);
-			Engine.Proxy.Rf_setVar(installedName, (IntPtr)expression, (IntPtr)this);
+			Engine.Proxy.Rf_setVar(installedName, expression.DangerousGetHandle(), this.handle);
 		}
 		
 		/// <summary>
@@ -76,7 +76,7 @@ namespace RDotNet
 		/// <returns>Symbol names.</returns>
 		public string[] GetSymbolNames(bool all = false)
 		{
-			CharacterVector symbolNames = new CharacterVector(Engine, Engine.Proxy.R_lsInternal((IntPtr)this, all));
+			CharacterVector symbolNames = new CharacterVector(Engine, Engine.Proxy.R_lsInternal(this.handle, all));
 			int length = symbolNames.Length;
 			string[] copy = new string[length];
 			symbolNames.CopyTo(copy, length);
