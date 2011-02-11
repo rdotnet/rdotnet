@@ -373,13 +373,12 @@ namespace RDotNet
 						incompleteStatement.Clear();
 						using (new ProtectedPointer(vector))
 						{
-							bool errorOccurred;
-							IntPtr result = Proxy.R_tryEval((IntPtr)vector.First(), (IntPtr)GlobalEnvironment, out errorOccurred);
-							if (errorOccurred)
+							SymbolicExpression result;
+							if (!vector.First().TryEvaluate(GlobalEnvironment, out result))
 							{
 								throw new ParseException();
 							}
-							return new SymbolicExpression(this, result);
+							return result;
 						}
 					case ParseStatus.Incomplete:
 						return null;
