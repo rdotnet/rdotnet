@@ -105,6 +105,8 @@
     <Compile Include="Dynamic\SymbolicExpressionDynamicMeta.cs" />
     <Compile Include="Dynamic\ListDynamicMeta.cs" />
     <Compile Include="GenericVector.cs" />
+    <Compile Include="Internals\DelegateNativeMethods.generated.cs" />
+    <Compile Include="Internals\DirectNativeMethods.generated.cs" />
     <Compile Include="LogicalMatrix.cs" />
     <Compile Include="RawMatrix.cs" />
     <Compile Include="NumericMatrix.cs" />
@@ -139,6 +141,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
