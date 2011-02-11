@@ -77,6 +77,7 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="expression">The expression.</param>
 		/// <returns>The pointer.</returns>
+		[Obsolete("Will be removed. Use DangerousGetHandle() method.")]
 		public static explicit operator IntPtr(SymbolicExpression expression)
 		{
 			return expression.handle;
@@ -119,8 +120,8 @@ namespace RDotNet
 			}
 
 			IntPtr installedName = Engine.Proxy.Rf_install(attributeName);
-			IntPtr attribute = Engine.Proxy.Rf_getAttrib((IntPtr)this, installedName);
-			if (attribute == (IntPtr)Engine.NilValue)
+			IntPtr attribute = Engine.Proxy.Rf_getAttrib(this.handle, installedName);
+			if (Engine.CheckNil(attribute))
 			{
 				return null;
 			}
@@ -138,8 +139,8 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			IntPtr attribute = Engine.Proxy.Rf_getAttrib((IntPtr)this, (IntPtr)symbol);
-			if (attribute == (IntPtr)Engine.NilValue)
+			IntPtr attribute = Engine.Proxy.Rf_getAttrib(this.handle, symbol.handle);
+			if (Engine.CheckNil(attribute))
 			{
 				return null;
 			}
@@ -168,7 +169,7 @@ namespace RDotNet
 			}
 
 			IntPtr installedName = Engine.Proxy.Rf_install(attributeName);
-			Engine.Proxy.Rf_setAttrib((IntPtr)this, installedName, (IntPtr)value);
+			Engine.Proxy.Rf_setAttrib(this.handle, installedName, value.handle);
 		}
 
 		internal void SetAttribute(SymbolicExpression symbol, SymbolicExpression value)
@@ -187,7 +188,7 @@ namespace RDotNet
 				value = Engine.NilValue;
 			}
 
-			Engine.Proxy.Rf_setAttrib((IntPtr)this, (IntPtr)symbol, (IntPtr)value);
+			Engine.Proxy.Rf_setAttrib(this.handle, symbol.handle, value.handle);
 		}
 
 		/// <summary>

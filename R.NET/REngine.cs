@@ -365,7 +365,7 @@ namespace RDotNet
 			using (new ProtectedPointer(this, s))
 			{
 				ParseStatus status;
-				ExpressionVector vector = new ExpressionVector(this, Proxy.R_ParseVector(s, -1, out status, (IntPtr)NilValue));
+				ExpressionVector vector = new ExpressionVector(this, Proxy.R_ParseVector(s, -1, out status, NilValue.DangerousGetHandle()));
 
 				switch (status)
 				{

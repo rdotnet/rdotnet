@@ -43,7 +43,7 @@ namespace RDotNet
 					SymbolicExpression s = value == null ? Engine.NilValue : new InternalString(Engine, value);
 					using (new ProtectedPointer(s))
 					{
-						Marshal.WriteIntPtr(DataPointer, offset, (IntPtr)s);
+						Marshal.WriteIntPtr(DataPointer, offset, s.DangerousGetHandle());
 					}
 				}
 			}

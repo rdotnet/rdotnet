@@ -20,7 +20,7 @@ namespace RDotNet
 
 		public ProtectedPointer(SymbolicExpression sexp)
 		{
-			this.sexp = (IntPtr)sexp;
+			this.sexp = sexp.DangerousGetHandle();
 			this.engine = sexp.Engine;
 			
 			engine.Proxy.Rf_protect(this.sexp);
