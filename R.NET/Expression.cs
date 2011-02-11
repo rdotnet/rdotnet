@@ -24,6 +24,15 @@ namespace RDotNet
 		/// <returns>The evaluation result.</returns>
 		public SymbolicExpression Evaluate(RDotNet.Environment environment)
 		{
+			if (environment == null)
+			{
+				throw new ArgumentNullException("environment");
+			}
+			if (this.Engine != environment.Engine)
+			{
+				throw new ArgumentException(null, "environment");
+			}
+
 			return new SymbolicExpression(Engine, Engine.Proxy.Rf_eval((IntPtr)this, (IntPtr)environment));
 		}
 
@@ -35,15 +44,19 @@ namespace RDotNet
 		/// <returns><c>True</c> if the evaluation succeeded.</returns>
 		public bool TryEvaluate(RDotNet.Environment environment, out SymbolicExpression result)
 		{
+			if (environment == null)
+			{
+				throw new ArgumentNullException("environment");
+			}
+			if (this.Engine != environment.Engine)
+			{
+				throw new ArgumentException(null, "environment");
+			}
+
 			bool errorOccurred;
 			IntPtr pointer = Engine.Proxy.R_tryEval((IntPtr)this, (IntPtr)environment, out errorOccurred);
-			if (errorOccurred)
-			{
-				result = null;
-				return false;
-			}
-			result = new SymbolicExpression(Engine, pointer);
-			return true;
+			result = errorOccurred ? null : new SymbolicExpression(Engine, pointer);
+			return !errorOccurred;
 		}
 	}
 }
