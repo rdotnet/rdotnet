@@ -55,6 +55,11 @@ namespace RDotNet
 				return null;
 			}
 
+			SEXPREC sexp = (SEXPREC)Marshal.PtrToStructure(value, typeof(SEXPREC));
+			if (sexp.sxpinfo.type == SymbolicExpressionType.Promise)
+			{
+				value = Engine.Proxy.Rf_eval(value, this.handle);
+			}
 			return new SymbolicExpression(Engine, value);
 		}
 
