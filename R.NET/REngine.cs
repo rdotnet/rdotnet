@@ -110,6 +110,17 @@ namespace RDotNet
 		}
 
 		/// <summary>
+		/// Gets the base environment.
+		/// </summary>
+		public RDotNet.Environment BaseNamespace
+		{
+			get
+			{
+				return GetPredefinedSymbol("R_BaseNamespace").AsEnvironment();
+			}
+		}
+
+		/// <summary>
 		/// Gets the <c>NULL</c> value.
 		/// </summary>
 		public SymbolicExpression NilValue
