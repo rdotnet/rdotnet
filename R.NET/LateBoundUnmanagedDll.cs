@@ -100,7 +100,7 @@ namespace RDotNet
 		{
 			if (dllDirectory == null)
 			{
-				Environment.SetEnvironmentVariable(LibraryPath, DefaultSearchPath, EnvironmentVariableTarget.Process);
+				System.Environment.SetEnvironmentVariable(LibraryPath, DefaultSearchPath, EnvironmentVariableTarget.Process);
 			}
 			else if (dllDirectory == string.Empty)
 			{
@@ -112,7 +112,7 @@ namespace RDotNet
 				{
 					return false;
 				}
-				string path = Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
+				string path = System.Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
 				if (string.IsNullOrEmpty(path))
 				{
 					path = dllDirectory;
@@ -121,12 +121,12 @@ namespace RDotNet
 				{
 					path = dllDirectory + Path.PathSeparator + path;
 				}
-				Environment.SetEnvironmentVariable(LibraryPath, path, EnvironmentVariableTarget.Process);
+				System.Environment.SetEnvironmentVariable(LibraryPath, path, EnvironmentVariableTarget.Process);
 			}
 			return true;
 		}
 				
-		private static readonly string DefaultSearchPath = Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
+		private static readonly string DefaultSearchPath = System.Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
 #else
 		[DllImport("kernel32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
@@ -143,7 +143,7 @@ namespace RDotNet
 				return dlopen(filename, RTLD_LAZY);
 			}
 			
-			string[] searchPaths = (Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process) ?? "").Split(Path.PathSeparator);
+			string[] searchPaths = (System.Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process) ?? "").Split(Path.PathSeparator);
 			foreach (string directory in searchPaths)
 			{
 				string path = Path.Combine(directory, filename);
