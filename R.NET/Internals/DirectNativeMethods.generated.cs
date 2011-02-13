@@ -13,6 +13,48 @@ namespace RDotNet.Internals {
 	
 	internal partial class DirectNativeMethods {
 		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.NativeMethods.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_isLanguage")]
+private static extern System.Boolean _Rf_isLanguage(System.IntPtr sexp);
+		
+		public bool Rf_isLanguage(System.IntPtr sexp) {
+			return DirectNativeMethods._Rf_isLanguage(  sexp);
+		}
+		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.NativeMethods.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_isFunction")]
+private static extern System.Boolean _Rf_isFunction(System.IntPtr sexp);
+		
+		public bool Rf_isFunction(System.IntPtr sexp) {
+			return DirectNativeMethods._Rf_isFunction(  sexp);
+		}
+		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.NativeMethods.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "R_lsInternal")]
+private static extern System.IntPtr _R_lsInternal(System.IntPtr environment, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.Bool)] System.Boolean all);
+		
+		public System.IntPtr R_lsInternal(System.IntPtr environment, bool all) {
+			return DirectNativeMethods._R_lsInternal(  environment,   all);
+		}
+		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.NativeMethods.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_applyClosure")]
+private static extern System.IntPtr _Rf_applyClosure(System.IntPtr call, System.IntPtr value, System.IntPtr arguments, System.IntPtr environment, System.IntPtr suppliedEnvironment);
+		
+		public System.IntPtr Rf_applyClosure(System.IntPtr call, System.IntPtr value, System.IntPtr arguments, System.IntPtr environment, System.IntPtr suppliedEnvironment) {
+			return DirectNativeMethods._Rf_applyClosure(  call,   value,   arguments,   environment,   suppliedEnvironment);
+		}
+		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.NativeMethods.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_VectorToPairList")]
+private static extern System.IntPtr _Rf_VectorToPairList(System.IntPtr sexp);
+		
+		public System.IntPtr Rf_VectorToPairList(System.IntPtr sexp) {
+			return DirectNativeMethods._Rf_VectorToPairList(  sexp);
+		}
+		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.NativeMethods.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_allocSExp")]
+private static extern System.IntPtr _Rf_allocSExp(RDotNet.Internals.SymbolicExpressionType type);
+		
+		public System.IntPtr Rf_allocSExp(RDotNet.Internals.SymbolicExpressionType type) {
+			return DirectNativeMethods._Rf_allocSExp(  type);
+		}
+		
 [System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.NativeMethods.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_initEmbeddedR")]
 private static extern System.Int32 _Rf_initEmbeddedR(System.Int32 argc, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] System.String[] argv);
 		
@@ -202,11 +244,11 @@ private static extern System.Boolean _Rf_isExpression(System.IntPtr sexp);
 			return DirectNativeMethods._Rf_isExpression(  sexp);
 		}
 		
-[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.NativeMethods.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "R_lsInternal")]
-private static extern System.IntPtr _R_lsInternal(System.IntPtr environment, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.Bool)] System.Boolean all);
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.NativeMethods.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_isSymbol")]
+private static extern System.Boolean _Rf_isSymbol(System.IntPtr sexp);
 		
-		public System.IntPtr R_lsInternal(System.IntPtr environment, bool all) {
-			return DirectNativeMethods._R_lsInternal(  environment,   all);
+		public bool Rf_isSymbol(System.IntPtr sexp) {
+			return DirectNativeMethods._Rf_isSymbol(  sexp);
 		}
 	}
 }

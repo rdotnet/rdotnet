@@ -92,6 +92,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Closure.cs" />
     <Compile Include="ComplexVector.cs" />
     <Compile Include="CharacterMatrix.cs" />
     <Compile Include="ComplexMatrix.cs" />
@@ -104,10 +105,13 @@
     <Compile Include="Dynamic\DataFrameDynamicMeta.cs" />
     <Compile Include="Dynamic\SymbolicExpressionDynamicMeta.cs" />
     <Compile Include="Dynamic\ListDynamicMeta.cs" />
+    <Compile Include="Function.cs" />
     <Compile Include="GenericVector.cs" />
     <Compile Include="Internals\DelegateNativeMethods.generated.cs" />
     <Compile Include="Internals\DirectNativeMethods.generated.cs" />
+    <Compile Include="Language.cs" />
     <Compile Include="LogicalMatrix.cs" />
+    <Compile Include="Pairlist.cs" />
     <Compile Include="RawMatrix.cs" />
     <Compile Include="NumericMatrix.cs" />
     <Compile Include="IntegerMatrix.cs" />
@@ -124,6 +128,7 @@
     <Compile Include="ParseException.cs" />
     <Compile Include="ProtectedPointer.cs" />
     <Compile Include="REngineExtension.cs" />
+    <Compile Include="Symbol.cs" />
     <Compile Include="SymbolicExpression.cs" />
     <Compile Include="Internals\SEXPREC.cs" />
     <Compile Include="Internals\SymbolicExpressionType.cs" />

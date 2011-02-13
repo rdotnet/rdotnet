@@ -90,6 +90,15 @@ namespace RDotNet
 		{
 		}
 
+		/// <summary>
+		/// Converts into a <see cref="RDotNet.Pairlist"/>.
+		/// </summary>
+		/// <returns>The pairlist.</returns>
+		public Pairlist ToPairlist()
+		{
+			return new Pairlist(Engine, Engine.Proxy.Rf_VectorToPairList(this.handle));
+		}
+
 		public override DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)
 		{
 			return new ListDynamicMeta(parameter, this);

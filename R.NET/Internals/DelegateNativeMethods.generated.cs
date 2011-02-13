@@ -14,6 +14,54 @@ namespace RDotNet.Internals {
 	internal partial class DelegateNativeMethods {
 		
 		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate bool _Rf_isLanguage(System.IntPtr sexp);
+		
+		public bool Rf_isLanguage(System.IntPtr sexp) {
+			var function = this.dll.GetFunction<_Rf_isLanguage>("Rf_isLanguage");
+			return function(  sexp);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate bool _Rf_isFunction(System.IntPtr sexp);
+		
+		public bool Rf_isFunction(System.IntPtr sexp) {
+			var function = this.dll.GetFunction<_Rf_isFunction>("Rf_isFunction");
+			return function(  sexp);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate System.IntPtr _R_lsInternal(System.IntPtr environment, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.Bool)] bool all);
+		
+		public System.IntPtr R_lsInternal(System.IntPtr environment, bool all) {
+			var function = this.dll.GetFunction<_R_lsInternal>("R_lsInternal");
+			return function(  environment,   all);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate System.IntPtr _Rf_applyClosure(System.IntPtr call, System.IntPtr value, System.IntPtr arguments, System.IntPtr environment, System.IntPtr suppliedEnvironment);
+		
+		public System.IntPtr Rf_applyClosure(System.IntPtr call, System.IntPtr value, System.IntPtr arguments, System.IntPtr environment, System.IntPtr suppliedEnvironment) {
+			var function = this.dll.GetFunction<_Rf_applyClosure>("Rf_applyClosure");
+			return function(  call,   value,   arguments,   environment,   suppliedEnvironment);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate System.IntPtr _Rf_VectorToPairList(System.IntPtr sexp);
+		
+		public System.IntPtr Rf_VectorToPairList(System.IntPtr sexp) {
+			var function = this.dll.GetFunction<_Rf_VectorToPairList>("Rf_VectorToPairList");
+			return function(  sexp);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate System.IntPtr _Rf_allocSExp(RDotNet.Internals.SymbolicExpressionType type);
+		
+		public System.IntPtr Rf_allocSExp(RDotNet.Internals.SymbolicExpressionType type) {
+			var function = this.dll.GetFunction<_Rf_allocSExp>("Rf_allocSExp");
+			return function(  type);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
 		delegate int _Rf_initEmbeddedR(int argc, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] string[] argv);
 		
 		public int Rf_initEmbeddedR(int argc, string[] argv) {
@@ -230,11 +278,11 @@ namespace RDotNet.Internals {
 		}
 		
 		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
-		delegate System.IntPtr _R_lsInternal(System.IntPtr environment, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.Bool)] bool all);
+		delegate bool _Rf_isSymbol(System.IntPtr sexp);
 		
-		public System.IntPtr R_lsInternal(System.IntPtr environment, bool all) {
-			var function = this.dll.GetFunction<_R_lsInternal>("R_lsInternal");
-			return function(  environment,   all);
+		public bool Rf_isSymbol(System.IntPtr sexp) {
+			var function = this.dll.GetFunction<_Rf_isSymbol>("Rf_isSymbol");
+			return function(  sexp);
 		}
 	}
 }
