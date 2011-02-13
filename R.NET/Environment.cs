@@ -16,7 +16,7 @@ namespace RDotNet
 		{
 			get
 			{
-				SEXPREC sexp = (SEXPREC)Marshal.PtrToStructure(this.handle, typeof(SEXPREC));
+				SEXPREC sexp = GetInternalStructure();
 				IntPtr parent = sexp.envsxp.enclos;
 				return Engine.CheckNil(parent) ? null : new RDotNet.Environment(Engine, parent);
 			}

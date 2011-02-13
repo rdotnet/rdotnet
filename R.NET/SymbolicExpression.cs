@@ -83,6 +83,11 @@ namespace RDotNet
 			return expression.handle;
 		}
 
+		internal SEXPREC GetInternalStructure()
+		{
+			return (SEXPREC)Marshal.PtrToStructure(this.handle, typeof(SEXPREC));
+		}
+
 		/// <summary>
 		/// Gets all value names.
 		/// </summary>

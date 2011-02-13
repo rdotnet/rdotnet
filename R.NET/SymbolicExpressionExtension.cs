@@ -493,5 +493,95 @@ namespace RDotNet
 			}
 			return new RDotNet.Expression(expression.Engine, expression.DangerousGetHandle());
 		}
+
+		/// <summary>
+		/// Specifies the expression is a symbol object or not.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns><c>True</c> if it is a symbol.</returns>
+		public static bool IsSymbol(this SymbolicExpression expression)
+		{
+			if (expression == null)
+			{
+				throw new ArgumentNullException();
+			}
+			return expression.Engine.Proxy.Rf_isSymbol(expression.DangerousGetHandle());
+		}
+
+		/// <summary>
+		/// Gets the expression as a symbol.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns>The symbol.</returns>
+		public static Symbol AsSymbol(this SymbolicExpression expression)
+		{
+			if (!expression.IsSymbol())
+			{
+				return null;
+			}
+			return new Symbol(expression.Engine, expression.DangerousGetHandle());
+		}
+
+		/// <summary>
+		/// Specifies the expression is a language object or not.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns><c>True</c> if it is a language.</returns>
+		public static bool IsLanguage(this SymbolicExpression expression)
+		{
+			if (expression == null)
+			{
+				throw new ArgumentNullException();
+			}
+			return expression.Engine.Proxy.Rf_isLanguage(expression.DangerousGetHandle());
+		}
+
+		/// <summary>
+		/// Gets the expression as a language.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns>The language.</returns>
+		public static Language AsLanguage(this SymbolicExpression expression)
+		{
+			if (!expression.IsLanguage())
+			{
+				return null;
+			}
+			return new Language(expression.Engine, expression.DangerousGetHandle());
+		}
+
+		/// <summary>
+		/// Specifies the expression is a function object or not.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns><c>True</c> if it is a function.</returns>
+		public static bool IsFunction(this SymbolicExpression expression)
+		{
+			if (expression == null)
+			{
+				throw new ArgumentNullException();
+			}
+			return expression.Engine.Proxy.Rf_isFunction(expression.DangerousGetHandle());
+		}
+
+		/// <summary>
+		/// Gets the expression as a function.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns>The function.</returns>
+		public static Function AsFunction(this SymbolicExpression expression)
+		{
+			switch (expression.Type)
+			{
+				case SymbolicExpressionType.Closure:
+					return new Closure(expression.Engine, expression.DangerousGetHandle());
+				case SymbolicExpressionType.BuiltinFunction:
+					throw new NotImplementedException();
+				case SymbolicExpressionType.SpecialFunction:
+					throw new NotImplementedException();
+				default:
+					throw new ArgumentException();
+			}
+		}
 	}
 }

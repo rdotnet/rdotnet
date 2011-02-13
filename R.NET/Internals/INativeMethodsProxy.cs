@@ -31,6 +31,12 @@ namespace RDotNet.Internals
 		IntPtr Rf_setAttrib(IntPtr sexp, IntPtr name, IntPtr value);
 		bool Rf_isEnvironment(IntPtr sexp);
 		bool Rf_isExpression(IntPtr sexp);
+		bool Rf_isSymbol(IntPtr sexp);
+		bool Rf_isLanguage(IntPtr sexp);
+		bool Rf_isFunction(IntPtr sexp);
 		IntPtr R_lsInternal(IntPtr environment, bool all);
+		IntPtr Rf_applyClosure(IntPtr call, IntPtr value, IntPtr arguments, IntPtr environment, IntPtr suppliedEnvironment);
+		IntPtr Rf_VectorToPairList(IntPtr sexp);
+		IntPtr Rf_allocSExp(SymbolicExpressionType type);
 	}
 }
