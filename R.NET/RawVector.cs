@@ -72,8 +72,9 @@ namespace RDotNet
 		/// <param name="vector">The values.</param>
 		/// <seealso cref="REngineExtension.CreateRawVector(REngine, int)"/>
 		public RawVector(REngine engine, byte[] vector)
-			: base(engine, SymbolicExpressionType.RawVector, vector)
+			: base(engine, SymbolicExpressionType.RawVector, vector.Length)
 		{
+			Marshal.Copy(vector, 0, DataPointer, vector.Length);
 		}
 
 		/// <summary>
