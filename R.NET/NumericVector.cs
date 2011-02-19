@@ -78,8 +78,9 @@ namespace RDotNet
 		/// <param name="vector">The values.</param>
 		/// <seealso cref="REngineExtension.CreateNumericVector(REngine, double[])"/>
 		public NumericVector(REngine engine, double[] vector)
-			: base(engine, SymbolicExpressionType.NumericVector, vector)
+			: base(engine, SymbolicExpressionType.NumericVector, vector.Length)
 		{
+			Marshal.Copy(vector, 0, DataPointer, vector.Length);
 		}
 
 		/// <summary>
