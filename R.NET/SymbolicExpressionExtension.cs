@@ -222,7 +222,7 @@ namespace RDotNet
 
 			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector(expression.DangerousGetHandle(), SymbolicExpressionType.LogicalVector);
 			IntegerVector dim = new IntegerVector(expression.Engine, new int[] { rowCount, columnCount });
-			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(NativeMethods.RDimSymbolName);
+			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(Constants.RDimSymbolName);
 			var matrix = new LogicalMatrix(expression.Engine, coerced);
 			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;
@@ -264,7 +264,7 @@ namespace RDotNet
 
 			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector(expression.DangerousGetHandle(), SymbolicExpressionType.IntegerVector);
 			IntegerVector dim = new IntegerVector(expression.Engine, new int[] { rowCount, columnCount });
-			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(NativeMethods.RDimSymbolName);
+			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(Constants.RDimSymbolName);
 			var matrix = new IntegerMatrix(expression.Engine, coerced);
 			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;
@@ -306,7 +306,7 @@ namespace RDotNet
 
 			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector(expression.DangerousGetHandle(), SymbolicExpressionType.NumericVector);
 			IntegerVector dim = new IntegerVector(expression.Engine, new int[] { rowCount, columnCount });
-			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(NativeMethods.RDimSymbolName);
+			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(Constants.RDimSymbolName);
 			var matrix = new NumericMatrix(expression.Engine, coerced);
 			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;
@@ -348,7 +348,7 @@ namespace RDotNet
 
 			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector(expression.DangerousGetHandle(), SymbolicExpressionType.CharacterVector);
 			IntegerVector dim = new IntegerVector(expression.Engine, new int[] { rowCount, columnCount });
-			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(NativeMethods.RDimSymbolName);
+			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(Constants.RDimSymbolName);
 			var matrix = new CharacterMatrix(expression.Engine, coerced);
 			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;
@@ -390,7 +390,7 @@ namespace RDotNet
 
 			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector(expression.DangerousGetHandle(), SymbolicExpressionType.ComplexVector);
 			IntegerVector dim = new IntegerVector(expression.Engine, new int[] { rowCount, columnCount });
-			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(NativeMethods.RDimSymbolName);
+			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(Constants.RDimSymbolName);
 			var matrix = new ComplexMatrix(expression.Engine, coerced);
 			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;
@@ -432,7 +432,7 @@ namespace RDotNet
 
 			IntPtr coerced = expression.Engine.Proxy.Rf_coerceVector(expression.DangerousGetHandle(), SymbolicExpressionType.RawVector);
 			IntegerVector dim = new IntegerVector(expression.Engine, new int[] { rowCount, columnCount });
-			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(NativeMethods.RDimSymbolName);
+			SymbolicExpression dimSymbol = expression.Engine.GetPredefinedSymbol(Constants.RDimSymbolName);
 			var matrix = new RawMatrix(expression.Engine, coerced);
 			matrix.SetAttribute(dimSymbol, dim);
 			return matrix;

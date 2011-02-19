@@ -1,6 +1,6 @@
 ﻿namespace RDotNet.Internals
 {
-	internal static class NativeMethods
+	internal static class Constants
 	{
 #if MAC
 		public const string RDllName = "libR.dylib";

@@ -152,7 +152,7 @@ namespace RDotNet
 		}
 
 		private REngine(string id, string[] args)
-			: base(NativeMethods.RDllName)
+			: base(Constants.RDllName)
 		{
 			this.id = id;
 			this.proxy = GetDefaultProxy();

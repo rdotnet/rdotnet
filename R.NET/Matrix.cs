@@ -111,7 +111,7 @@ namespace RDotNet
 		{
 			get
 			{
-				SymbolicExpression dimnamesSymbol = Engine.GetPredefinedSymbol(NativeMethods.RDimnamesSymbolName);
+				SymbolicExpression dimnamesSymbol = Engine.GetPredefinedSymbol(Constants.RDimnamesSymbolName);
 				SymbolicExpression dimnames = GetAttribute(dimnamesSymbol);
 				if (dimnames == null)
 				{
@@ -137,7 +137,7 @@ namespace RDotNet
 		{
 			get
 			{
-				SymbolicExpression dimnamesSymbol = Engine.GetPredefinedSymbol(NativeMethods.RDimnamesSymbolName);
+				SymbolicExpression dimnamesSymbol = Engine.GetPredefinedSymbol(Constants.RDimnamesSymbolName);
 				SymbolicExpression dimnames = GetAttribute(dimnamesSymbol);
 				if (dimnames == null)
 				{
