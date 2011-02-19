@@ -66,7 +66,7 @@ namespace RDotNet
 
 			GenericVector arguments = new GenericVector(Engine, args);
 			CharacterVector names = new CharacterVector(Engine, Arguments.Select(arg => arg.PrintName).ToArray());
-			arguments.SetAttribute(Engine.GetPredefinedSymbol("R_NamesSymbol"), names);
+			arguments.SetAttribute(Engine.GetPredefinedSymbol(Constants.RNamesSymbolName), names);
 
 			IntPtr newEnvironment = Engine.Proxy.Rf_allocSExp(SymbolicExpressionType.Environment);
 			IntPtr result = Engine.Proxy.Rf_applyClosure(Body.DangerousGetHandle(), this.handle, arguments.ToPairlist().DangerousGetHandle(), Environment.DangerousGetHandle(), newEnvironment);

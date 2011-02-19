@@ -75,7 +75,7 @@ namespace RDotNet
 		{
 			get
 			{
-				SymbolicExpression namesSymbol = Engine.GetPredefinedSymbol(NativeMethods.RNamesSymbolName);
+				SymbolicExpression namesSymbol = Engine.GetPredefinedSymbol(Constants.RNamesSymbolName);
 				SymbolicExpression names = GetAttribute(namesSymbol);
 				if (names == null)
 				{
