@@ -23,7 +23,7 @@ namespace RDotNet.Tools
 			string internalsDirectory = Path.Combine(coreDirectory, "Internals");
 			string[] sourceFiles = new string[] {
 				Path.Combine(internalsDirectory, "INativeMethodsProxy.cs"),
-				Path.Combine(internalsDirectory, "NativeMethods.cs"),
+				Path.Combine(internalsDirectory, "Constants.cs"),
 				Path.Combine(internalsDirectory, "SymbolicExpressionType.cs"),
 				Path.Combine(internalsDirectory, "ParseStatus.cs"),
 			};

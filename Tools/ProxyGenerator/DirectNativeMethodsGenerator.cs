@@ -77,7 +77,7 @@ namespace RDotNet.Tools
 
 		private static CodeSnippetTypeMember CreateExternMethod(MethodInfo method)
 		{
-			string declaration = string.Format(@"[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.NativeMethods.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = ""{0}"")]
+			string declaration = string.Format(@"[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = ""{0}"")]
 private static extern {1} _{0}({2});",
 				method.Name,
 				method.ReturnType.GetReturnTypeString(),
@@ -85,7 +85,7 @@ private static extern {1} _{0}({2});",
 			);
 			CodeSnippetTypeMember m = new CodeSnippetTypeMember(declaration);
 			CodeAttributeDeclaration attribute = new CodeAttributeDeclaration(new CodeTypeReference(typeof(DllImportAttribute)));
-			attribute.Arguments.Add(new CodeAttributeArgument(new CodeFieldReferenceExpression(new CodeVariableReferenceExpression("RDotNet.Internals.NativeMethods"), "RDllName")));
+			attribute.Arguments.Add(new CodeAttributeArgument(new CodeFieldReferenceExpression(new CodeVariableReferenceExpression("RDotNet.Internals.Constants"), "RDllName")));
 			attribute.Arguments.Add(new CodeAttributeArgument("CallingConvention", new CodeFieldReferenceExpression(new CodeVariableReferenceExpression(typeof(CallingConvention).FullName), CallingConvention.Cdecl.ToString())));
 			attribute.Arguments.Add(new CodeAttributeArgument("EntryPoint", new CodePrimitiveExpression(method.Name)));
 			m.CustomAttributes.Add(attribute);
