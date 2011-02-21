@@ -62,6 +62,22 @@ namespace RDotNet.Internals {
 		}
 		
 		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate System.IntPtr _Rf_cons(System.IntPtr sexp, System.IntPtr next);
+		
+		public System.IntPtr Rf_cons(System.IntPtr sexp, System.IntPtr next) {
+			var function = this.dll.GetFunction<_Rf_cons>("Rf_cons");
+			return function(  sexp,   next);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate System.IntPtr _Rf_lcons(System.IntPtr sexp, System.IntPtr next);
+		
+		public System.IntPtr Rf_lcons(System.IntPtr sexp, System.IntPtr next) {
+			var function = this.dll.GetFunction<_Rf_lcons>("Rf_lcons");
+			return function(  sexp,   next);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
 		delegate int _Rf_initEmbeddedR(int argc, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] string[] argv);
 		
 		public int Rf_initEmbeddedR(int argc, string[] argv) {

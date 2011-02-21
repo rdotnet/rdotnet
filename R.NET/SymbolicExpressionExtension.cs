@@ -576,9 +576,9 @@ namespace RDotNet
 				case SymbolicExpressionType.Closure:
 					return new Closure(expression.Engine, expression.DangerousGetHandle());
 				case SymbolicExpressionType.BuiltinFunction:
-					throw new NotImplementedException();
+					return new BuiltinFunction(expression.Engine, expression.DangerousGetHandle());
 				case SymbolicExpressionType.SpecialFunction:
-					throw new NotImplementedException();
+					return new SpecialFunction(expression.Engine, expression.DangerousGetHandle());
 				default:
 					throw new ArgumentException();
 			}
