@@ -38,5 +38,7 @@ namespace RDotNet.Internals
 		IntPtr Rf_applyClosure(IntPtr call, IntPtr value, IntPtr arguments, IntPtr environment, IntPtr suppliedEnvironment);
 		IntPtr Rf_VectorToPairList(IntPtr sexp);
 		IntPtr Rf_allocSExp(SymbolicExpressionType type);
+		IntPtr Rf_cons(IntPtr sexp, IntPtr next);
+		IntPtr Rf_lcons(IntPtr sexp, IntPtr next);
 	}
 }

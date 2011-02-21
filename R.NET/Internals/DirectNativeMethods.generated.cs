@@ -55,6 +55,20 @@ private static extern System.IntPtr _Rf_allocSExp(RDotNet.Internals.SymbolicExpr
 			return DirectNativeMethods._Rf_allocSExp(  type);
 		}
 		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_cons")]
+private static extern System.IntPtr _Rf_cons(System.IntPtr sexp, System.IntPtr next);
+		
+		public System.IntPtr Rf_cons(System.IntPtr sexp, System.IntPtr next) {
+			return DirectNativeMethods._Rf_cons(  sexp,   next);
+		}
+		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_lcons")]
+private static extern System.IntPtr _Rf_lcons(System.IntPtr sexp, System.IntPtr next);
+		
+		public System.IntPtr Rf_lcons(System.IntPtr sexp, System.IntPtr next) {
+			return DirectNativeMethods._Rf_lcons(  sexp,   next);
+		}
+		
 [System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_initEmbeddedR")]
 private static extern System.Int32 _Rf_initEmbeddedR(System.Int32 argc, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] System.String[] argv);
 		
