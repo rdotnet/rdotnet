@@ -64,7 +64,7 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The engine.</param>
 		/// <param name="pointer">The pointer.</param>
-		public SymbolicExpression(REngine engine, IntPtr pointer)
+		internal protected SymbolicExpression(REngine engine, IntPtr pointer)
 			: base(IntPtr.Zero, true)
 		{
 			this.engine = engine;
