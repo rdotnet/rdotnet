@@ -272,7 +272,7 @@ namespace RDotNet
 		/// <returns>Last evaluation.</returns>
 		public SymbolicExpression EagerEvaluate(string statement)
 		{
-			return Evaluate(statement).Last();
+			return Evaluate(statement).LastOrDefault();
 		}
 
 		/// <summary>
@@ -282,7 +282,7 @@ namespace RDotNet
 		/// <returns>Last evaluation.</returns>
 		public SymbolicExpression EagerEvaluate(Stream stream)
 		{
-			return Evaluate(stream).Last();
+			return Evaluate(stream).LastOrDefault();
 		}
 
 		/// <summary>
@@ -305,7 +305,7 @@ namespace RDotNet
 				{
 					foreach (string segment in Segment(line))
 					{
-						SymbolicExpression result = Parse(segment, 1, incompleteStatement);
+						SymbolicExpression result = Parse(segment, incompleteStatement);
 						if (result != null)
 						{
 							yield return result;
@@ -339,7 +339,7 @@ namespace RDotNet
 				{
 					foreach (string segment in Segment(line))
 					{
-						SymbolicExpression result = Parse(segment, 1, incompleteStatement);
+						SymbolicExpression result = Parse(segment, incompleteStatement);
 						if (result != null)
 						{
 							yield return result;
@@ -368,7 +368,7 @@ namespace RDotNet
 			}
 		}
 
-		private SymbolicExpression Parse(string statement, int statementCount, StringBuilder incompleteStatement)
+		private SymbolicExpression Parse(string statement, StringBuilder incompleteStatement)
 		{
 			incompleteStatement.Append(statement);
 			IntPtr s = Proxy.Rf_mkString(incompleteStatement.ToString());
@@ -377,6 +377,10 @@ namespace RDotNet
 			{
 				ParseStatus status;
 				ExpressionVector vector = new ExpressionVector(this, Proxy.R_ParseVector(s, -1, out status, NilValue.DangerousGetHandle()));
+				if (vector.Length == 0)
+				{
+					return null;
+				}
 
 				switch (status)
 				{
