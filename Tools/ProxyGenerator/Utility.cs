@@ -8,6 +8,9 @@ namespace RDotNet.Tools
 {
 	internal static class Utility
 	{
+		public const string CodeFileExtension = ".cs";
+		public const string GeneratedCodeFileExtension = ".generated" + CodeFileExtension;
+
 		public static string GetFullNameWithoutDirection(this Type type)
 		{
 			string name = type.FullName;

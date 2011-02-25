@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;MAC</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -97,6 +97,14 @@
     <Compile Include="CharacterMatrix.cs" />
     <Compile Include="ComplexMatrix.cs" />
     <Compile Include="BuiltinFunction.cs" />
+    <Compile Include="Devices\CharacterDeviceAdapter.cs" />
+    <Compile Include="Devices\ConsoleDevice.cs" />
+    <Compile Include="Devices\ICharacterDevice.cs" />
+    <Compile Include="Internals\RStart.cs" />
+    <Compile Include="Internals\ConsoleOutputType.cs" />
+    <Compile Include="Internals\BusyType.cs" />
+    <Compile Include="Internals\SaveActions.cs" />
+    <Compile Include="Internals\YesNoCancel.cs" />
     <Compile Include="SpecialFunction.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="Expression.cs" />

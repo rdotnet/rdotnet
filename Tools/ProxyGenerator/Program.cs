@@ -26,6 +26,11 @@ namespace RDotNet.Tools
 				Path.Combine(internalsDirectory, "Constants.cs"),
 				Path.Combine(internalsDirectory, "SymbolicExpressionType.cs"),
 				Path.Combine(internalsDirectory, "ParseStatus.cs"),
+				Path.Combine(internalsDirectory, "BusyType.cs"),
+				Path.Combine(internalsDirectory, "ConsoleOutputType.cs"),
+				Path.Combine(internalsDirectory, "SaveActions.cs"),
+				Path.Combine(internalsDirectory, "YesNoCancel.cs"),
+				Path.Combine(internalsDirectory, "RStart.cs"),
 			};
 
 			using (CSharpCodeProvider provider = new CSharpCodeProvider())

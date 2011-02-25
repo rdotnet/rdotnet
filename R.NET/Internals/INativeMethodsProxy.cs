@@ -40,5 +40,11 @@ namespace RDotNet.Internals
 		IntPtr Rf_allocSExp(SymbolicExpressionType type);
 		IntPtr Rf_cons(IntPtr sexp, IntPtr next);
 		IntPtr Rf_lcons(IntPtr sexp, IntPtr next);
+		void R_DefParams(out RStart start);
+		void R_SetParams(ref RStart start);
+		void R_set_command_line_arguments(int argc, string[] argv);
+		void R_common_command_line(ref int argc, string[] argv, ref RStart start);
+		void R_setStartTime();
+		void setup_Rmainloop();
 	}
 }
