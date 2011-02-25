@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
+using RDotNet.Devices;
 using RDotNet.Internals;
 
 namespace RDotNet
@@ -151,14 +152,40 @@ namespace RDotNet
 			}
 		}
 
+		private readonly CharacterDeviceAdapter adapter;
+
 		private REngine(string id, string[] args)
 			: base(Constants.RDllName)
 		{
 			this.id = id;
 			this.proxy = GetDefaultProxy();
+			this.adapter = null;
 			
-			string[] newArgs = Utility.AddFirst(id, args);
+			string[] newArgs = Utility.AddFirst(id, args ?? new string[0]);
 			Proxy.Rf_initEmbeddedR(newArgs.Length, newArgs);
+
+			isRunning = true;
+		}
+
+		private REngine(string id, string[] args, CharacterDeviceAdapter adapter)
+			: base(Constants.RDllName)
+		{
+
+			this.id = id;
+			this.proxy = GetDefaultProxy();
+			this.adapter = adapter;
+
+			string[] newArgs = Utility.AddFirst(id, args ?? new string[0]);
+			int argc = newArgs.Length;
+
+			Proxy.R_setStartTime();
+			RStart start;
+			Proxy.R_DefParams(out start);
+			adapter.Install(this, ref start);
+			Proxy.R_common_command_line(ref argc, newArgs, ref start);
+			Proxy.R_set_command_line_arguments(newArgs.Length, newArgs);
+			Proxy.R_SetParams(ref start);
+			Proxy.setup_Rmainloop();
 
 			isRunning = true;
 		}
@@ -184,7 +211,7 @@ namespace RDotNet
 		/// <param name="id">ID.</param>
 		/// <param name="args">Arguments for initializing.</param>
 		/// <returns>The engine.</returns>
-		public static REngine CreateInstance(string id, params string[] args)
+		public static REngine CreateInstance(string id, string[] args = null)
 		{
 			if (id == null)
 			{
@@ -203,6 +230,67 @@ namespace RDotNet
 			instances.Add(id, engine);
 
 			return engine;
+		}
+
+		/// <summary>
+		/// Creates a new instance that handles R.DLL.
+		/// </summary>
+		/// <param name="id">ID.</param>
+		/// <param name="args">Arguments for initializing.</param>
+		/// <param name="adapter">The IO device adapter.</param>
+		/// <returns>The engine.</returns>
+		private static REngine CreateInstance(string id, string[] args, CharacterDeviceAdapter adapter)
+		{
+			if (adapter == null)
+			{
+				return CreateInstance(id, args);
+			}
+
+			if (id == null)
+			{
+				throw new ArgumentNullException();
+			}
+			if (id == string.Empty)
+			{
+				throw new ArgumentException();
+			}
+			if (instances.ContainsKey(id))
+			{
+				throw new ArgumentException();
+			}
+
+			REngine engine = new REngine(id, args, adapter);
+			instances.Add(id, engine);
+
+			return engine;
+		}
+
+		/// <summary>
+		/// Creates a new instance that handles R.DLL.
+		/// </summary>
+		/// <param name="id">ID.</param>
+		/// <param name="device">The IO device.</param>
+		/// <returns>The engine.</returns>
+		public static REngine CreateInstance(string id, ICharacterDevice device)
+		{
+			return CreateInstance(id, null, device);
+		}
+
+		/// <summary>
+		/// Creates a new instance that handles R.DLL.
+		/// </summary>
+		/// <param name="id">ID.</param>
+		/// <param name="args">Arguments for initializing.</param>
+		/// <param name="device">The IO device.</param>
+		/// <returns>The engine.</returns>
+		public static REngine CreateInstance(string id, string[] args, ICharacterDevice device)
+		{
+			if (device == null)
+			{
+				return CreateInstance(id, args);
+			}
+			CharacterDeviceAdapter adapter = new CharacterDeviceAdapter(device);
+			return CreateInstance(id, args, adapter);
 		}
 
 		/// <summary>
@@ -417,6 +505,10 @@ namespace RDotNet
 			if (ID != null && instances.ContainsKey(ID))
 			{
 				instances.Remove(ID);
+			}
+			if (adapter != null)
+			{
+				adapter.Dispose();
 			}
 
 			base.Dispose(disposing);
