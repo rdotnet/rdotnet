@@ -213,6 +213,12 @@ namespace RDotNet
 		/// <returns>The engine.</returns>
 		public static REngine CreateInstance(string id, string[] args = null)
 		{
+			PlatformID platform = System.Environment.OSVersion.Platform;
+			if (platform != PlatformID.MacOSX && platform != PlatformID.Unix)
+			{
+				return CreateInstance(id, args, new ConsoleDevice());
+			}
+
 			if (id == null)
 			{
 				throw new ArgumentNullException();
