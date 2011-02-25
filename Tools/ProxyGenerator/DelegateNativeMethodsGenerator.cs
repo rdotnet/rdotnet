@@ -67,6 +67,10 @@ namespace RDotNet.Tools
 					{
 						argument.Direction = FieldDirection.Out;
 					}
+					else if (parameter.ParameterType.IsByRef)
+					{
+						argument.Direction = FieldDirection.Ref;
+					}
 					return argument;
 				}
 			).ToArray();
@@ -105,6 +109,10 @@ namespace RDotNet.Tools
 			{
 				p.Direction = FieldDirection.Out;
 			}
+			else if (parameter.ParameterType.IsByRef)
+			{
+				p.Direction = FieldDirection.Ref;
+			}
 			if (parameter.ParameterType == typeof(bool))
 			{
 				CodeAttributeDeclaration attribute = new CodeAttributeDeclaration(new CodeTypeReference(typeof(MarshalAsAttribute)));
@@ -133,6 +141,10 @@ namespace RDotNet.Tools
 			if (parameter.IsOut)
 			{
 				p.Direction = FieldDirection.Out;
+			}
+			else if (parameter.ParameterType.IsByRef)
+			{
+				p.Direction = FieldDirection.Ref;
 			}
 			proxy.Parameters.Add(p);
 		}

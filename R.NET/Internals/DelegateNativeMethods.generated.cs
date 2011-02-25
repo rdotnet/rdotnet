@@ -78,6 +78,54 @@ namespace RDotNet.Internals {
 		}
 		
 		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate void _R_DefParams(out RDotNet.Internals.RStart start);
+		
+		public void R_DefParams(out RDotNet.Internals.RStart start) {
+			var function = this.dll.GetFunction<_R_DefParams>("R_DefParams");
+			function(out   start);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate void _R_SetParams(ref RDotNet.Internals.RStart start);
+		
+		public void R_SetParams(ref RDotNet.Internals.RStart start) {
+			var function = this.dll.GetFunction<_R_SetParams>("R_SetParams");
+			function(ref   start);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate void _R_set_command_line_arguments(int argc, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] string[] argv);
+		
+		public void R_set_command_line_arguments(int argc, string[] argv) {
+			var function = this.dll.GetFunction<_R_set_command_line_arguments>("R_set_command_line_arguments");
+			function(  argc,   argv);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate void _R_common_command_line(ref int argc, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] string[] argv, ref RDotNet.Internals.RStart start);
+		
+		public void R_common_command_line(ref int argc, string[] argv, ref RDotNet.Internals.RStart start) {
+			var function = this.dll.GetFunction<_R_common_command_line>("R_common_command_line");
+			function(ref   argc,   argv, ref   start);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate void _R_setStartTime();
+		
+		public void R_setStartTime() {
+			var function = this.dll.GetFunction<_R_setStartTime>("R_setStartTime");
+			function();
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate void _setup_Rmainloop();
+		
+		public void setup_Rmainloop() {
+			var function = this.dll.GetFunction<_setup_Rmainloop>("setup_Rmainloop");
+			function();
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
 		delegate int _Rf_initEmbeddedR(int argc, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] string[] argv);
 		
 		public int Rf_initEmbeddedR(int argc, string[] argv) {

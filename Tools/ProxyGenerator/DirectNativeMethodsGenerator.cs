@@ -53,6 +53,10 @@ namespace RDotNet.Tools
 					{
 						argument.Direction = FieldDirection.Out;
 					}
+					else if (parameter.ParameterType.IsByRef)
+					{
+						argument.Direction = FieldDirection.Ref;
+					}
 					return argument;
 				}
 			).ToArray();
@@ -112,6 +116,10 @@ private static extern {1} _{0}({2});",
 			{
 				builder.Append("out ");
 			}
+			else if (parameter.ParameterType.IsByRef)
+			{
+				builder.Append("ref ");
+			}
 
 			builder.Append(parameter.ParameterType.GetFullNameWithoutDirection()).Append(' ');
 			builder.Append(parameter.Name);
@@ -125,6 +133,10 @@ private static extern {1} _{0}({2});",
 			if (parameter.IsOut)
 			{
 				p.Direction = FieldDirection.Out;
+			}
+			else if (parameter.ParameterType.IsByRef)
+			{
+				p.Direction = FieldDirection.Ref;
 			}
 			proxy.Parameters.Add(p);
 		}

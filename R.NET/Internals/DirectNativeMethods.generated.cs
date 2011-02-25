@@ -69,6 +69,48 @@ private static extern System.IntPtr _Rf_lcons(System.IntPtr sexp, System.IntPtr 
 			return DirectNativeMethods._Rf_lcons(  sexp,   next);
 		}
 		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "R_DefParams")]
+private static extern void _R_DefParams(out RDotNet.Internals.RStart start);
+		
+		public void R_DefParams(out RDotNet.Internals.RStart start) {
+			DirectNativeMethods._R_DefParams(out   start);
+		}
+		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "R_SetParams")]
+private static extern void _R_SetParams(ref RDotNet.Internals.RStart start);
+		
+		public void R_SetParams(ref RDotNet.Internals.RStart start) {
+			DirectNativeMethods._R_SetParams(ref   start);
+		}
+		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "R_set_command_line_arguments")]
+private static extern void _R_set_command_line_arguments(System.Int32 argc, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] System.String[] argv);
+		
+		public void R_set_command_line_arguments(int argc, string[] argv) {
+			DirectNativeMethods._R_set_command_line_arguments(  argc,   argv);
+		}
+		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "R_common_command_line")]
+private static extern void _R_common_command_line(ref System.Int32 argc, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] System.String[] argv, ref RDotNet.Internals.RStart start);
+		
+		public void R_common_command_line(ref int argc, string[] argv, ref RDotNet.Internals.RStart start) {
+			DirectNativeMethods._R_common_command_line(ref   argc,   argv, ref   start);
+		}
+		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "R_setStartTime")]
+private static extern void _R_setStartTime();
+		
+		public void R_setStartTime() {
+			DirectNativeMethods._R_setStartTime();
+		}
+		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "setup_Rmainloop")]
+private static extern void _setup_Rmainloop();
+		
+		public void setup_Rmainloop() {
+			DirectNativeMethods._setup_Rmainloop();
+		}
+		
 [System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_initEmbeddedR")]
 private static extern System.Int32 _Rf_initEmbeddedR(System.Int32 argc, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] System.String[] argv);
 		
