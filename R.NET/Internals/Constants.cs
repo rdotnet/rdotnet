@@ -6,7 +6,7 @@
 		public const string RDllName = "libR.dylib";
 #elif LINUX
 		public const string RDllName = "libR.so";
-#else
+#elif WINDOWS
 		public const string RDllName = "R.dll";
 #endif
 		public const string RDimSymbolName = "R_DimSymbol";

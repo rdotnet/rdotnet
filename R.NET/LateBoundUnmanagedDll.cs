@@ -127,7 +127,7 @@ namespace RDotNet
 		}
 				
 		private static readonly string DefaultSearchPath = System.Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
-#else
+#elif WINDOWS
 		[DllImport("kernel32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		public static extern bool SetDllDirectory([MarshalAs(UnmanagedType.LPStr)] string dllDirectory);
@@ -157,14 +157,14 @@ namespace RDotNet
 		
 		[DllImport(DynamicLoadingLibraryName)]
 		private static extern IntPtr dlopen([MarshalAs(UnmanagedType.LPStr)] string filename, int flag);
-#else	
+#elif WINDOWS
 		[DllImport("kernel32.dll")]
 		private static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
 #endif
 
 #if MAC || LINUX
 		[DllImport(DynamicLoadingLibraryName, EntryPoint = "dlclose")]
-#else
+#elif WINDOWS
 		[DllImport("kernel32.dll")]
 #endif
 		[return: MarshalAs(UnmanagedType.Bool)]
@@ -172,7 +172,7 @@ namespace RDotNet
 
 #if MAC || LINUX
 		[DllImport(DynamicLoadingLibraryName, EntryPoint = "dlsym")]
-#else
+#elif WINDOWS
 		[DllImport("kernel32.dll", EntryPoint = "GetProcAddress")]
 #endif
 		private static extern IntPtr GetFunctionAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);

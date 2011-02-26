@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if WINDOWS
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -32,7 +33,6 @@ namespace RDotNet.Devices
 
 		internal void Install(REngine engine, ref RStart start)
 		{
-#if !MAC && !LINUX
 			string rhome = Marshal.PtrToStringAnsi(engine.GetFunction<getValue>("get_R_HOME")());
 			rhome = ConvertSeparator(rhome);
 			start.rhome = Marshal.StringToHGlobalAnsi(rhome);
@@ -47,10 +47,8 @@ namespace RDotNet.Devices
 			start.ShowMessage = this.ShowMessage;
 			start.YesNoCancel = this.Ask;
 			start.Busy = this.Busy;
-#endif
 		}
 
-#if !MAC && !LINUX
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		private delegate IntPtr getValue();
 
@@ -58,7 +56,6 @@ namespace RDotNet.Devices
 		{
 			return path.Replace(Path.DirectorySeparatorChar, '/');
 		}
-#endif
 
 		public void Dispose()
 		{
@@ -101,3 +98,4 @@ namespace RDotNet.Devices
 		}
 	}
 }
+#endif

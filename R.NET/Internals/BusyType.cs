@@ -1,4 +1,5 @@
-﻿namespace RDotNet.Internals
+﻿#if WINDOWS
+namespace RDotNet.Internals
 {
 	/// <summary>
 	/// Type of R's working.
@@ -15,3 +16,4 @@
 		ExtendedComputation = 1,
 	}
 }
+#endif
