@@ -221,7 +221,14 @@ namespace RDotNet
 		/// <returns>The engine.</returns>
 		public static REngine CreateInstance(string id, string[] args = null)
 		{
-#if MAC || LINUX
+#if WINDOWS
+			// 64bit of setup_Rmainloop function fails.
+			if (!System.Environment.Is64BitProcess)
+			{
+				return CreateInstance(id, args, new ConsoleDevice());
+			}
+#endif
+
 			if (id == null)
 			{
 				throw new ArgumentNullException();
@@ -239,9 +246,6 @@ namespace RDotNet
 			instances.Add(id, engine);
 
 			return engine;
-#elif WINDOWS
-			return CreateInstance(id, args, new ConsoleDevice());
-#endif
 		}
 
 #if WINDOWS
