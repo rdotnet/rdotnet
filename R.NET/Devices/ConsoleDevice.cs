@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if WINDOWS
+using System;
 using System.Text;
 using RDotNet.Internals;
 
@@ -53,3 +54,4 @@ namespace RDotNet.Devices
 		}
 	}
 }
+#endif

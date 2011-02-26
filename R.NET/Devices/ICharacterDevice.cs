@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿#if WINDOWS
+using System.Text;
 using RDotNet.Internals;
 
 namespace RDotNet.Devices
@@ -54,3 +55,4 @@ namespace RDotNet.Devices
 		void Busy(BusyType which);
 	}
 }
+#endif

@@ -5,7 +5,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
+#if WINDOWS
 using RDotNet.Devices;
+#endif
 using RDotNet.Internals;
 
 namespace RDotNet
@@ -31,7 +33,7 @@ namespace RDotNet
 	{
 		private static readonly IDictionary<string, REngine> instances = new Dictionary<string, REngine>();
 
-#if !MAC && !LINUX
+#if WINDOWS
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		private delegate IntPtr _getDLLVersion();
 #endif
@@ -48,7 +50,7 @@ namespace RDotNet
 				// But, on Win32 platform, we can get the version string via getDLLVersion function.
 #if MAC || LINUX
 				throw new NotImplementedException();
-#else
+#elif WINDOWS
 				var getVersion = GetFunction<_getDLLVersion>("getDLLVersion");
 				string version = Marshal.PtrToStringAnsi(getVersion());
 				return new Version(version);
@@ -152,14 +154,18 @@ namespace RDotNet
 			}
 		}
 
+#if WINDOWS
 		private readonly CharacterDeviceAdapter adapter;
+#endif
 
 		private REngine(string id, string[] args)
 			: base(Constants.RDllName)
 		{
 			this.id = id;
 			this.proxy = GetDefaultProxy();
+#if WINDOWS
 			this.adapter = null;
+#endif
 			
 			string[] newArgs = Utility.AddFirst(id, args ?? new string[0]);
 			Proxy.Rf_initEmbeddedR(newArgs.Length, newArgs);
@@ -167,6 +173,7 @@ namespace RDotNet
 			isRunning = true;
 		}
 
+#if WINDOWS
 		private REngine(string id, string[] args, CharacterDeviceAdapter adapter)
 			: base(Constants.RDllName)
 		{
@@ -189,6 +196,7 @@ namespace RDotNet
 
 			isRunning = true;
 		}
+#endif
 		
 		private INativeMethodsProxy GetDefaultProxy()
 		{
@@ -213,12 +221,7 @@ namespace RDotNet
 		/// <returns>The engine.</returns>
 		public static REngine CreateInstance(string id, string[] args = null)
 		{
-			PlatformID platform = System.Environment.OSVersion.Platform;
-			if (platform != PlatformID.MacOSX && platform != PlatformID.Unix)
-			{
-				return CreateInstance(id, args, new ConsoleDevice());
-			}
-
+#if MAC || LINUX
 			if (id == null)
 			{
 				throw new ArgumentNullException();
@@ -236,8 +239,12 @@ namespace RDotNet
 			instances.Add(id, engine);
 
 			return engine;
+#elif WINDOWS
+			return CreateInstance(id, args, new ConsoleDevice());
+#endif
 		}
 
+#if WINDOWS
 		/// <summary>
 		/// Creates a new instance that handles R.DLL.
 		/// </summary>
@@ -298,6 +305,7 @@ namespace RDotNet
 			CharacterDeviceAdapter adapter = new CharacterDeviceAdapter(device);
 			return CreateInstance(id, args, adapter);
 		}
+#endif
 
 		/// <summary>
 		/// Gets an instance specified in the given ID.
@@ -512,10 +520,12 @@ namespace RDotNet
 			{
 				instances.Remove(ID);
 			}
+#if WINDOWS
 			if (adapter != null)
 			{
 				adapter.Dispose();
 			}
+#endif
 
 			base.Dispose(disposing);
 		}
@@ -542,7 +552,7 @@ namespace RDotNet
 		[DllImport("libdl.dylib", EntryPoint = "dlsym")]
 #elif LINUX
 		[DllImport("libdl.so", EntryPoint = "dlsym")]
-#else
+#elif WINDOWS
 		[DllImport("kernel32.dll", EntryPoint = "GetProcAddress")]
 #endif
 		private static extern IntPtr GetSymbolPointer(IntPtr handle, [MarshalAs(UnmanagedType.LPStr)] string symbol);
