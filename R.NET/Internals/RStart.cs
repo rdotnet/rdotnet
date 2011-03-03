@@ -2,6 +2,8 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
+using size_t = System.UIntPtr;
+
 namespace RDotNet.Internals
 {
 	[StructLayout(LayoutKind.Sequential)]
@@ -23,11 +25,11 @@ namespace RDotNet.Internals
 		public bool DebugInitFile;
 		public StartupRestoreAction RestoreAction;
 		public StartupSaveAction SaveAction;
-		public uint vsize;
-		public uint nsize;
-		public uint max_vsize;
-		public uint max_nsize;
-		public uint ppsize;
+		private size_t vsize;
+		private size_t nsize;
+		private size_t max_vsize;
+		private size_t max_nsize;
+		private size_t ppsize;
 		[MarshalAs(UnmanagedType.Bool)]
 		public bool NoRenviron;
 #if WINDOWS
