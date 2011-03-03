@@ -221,13 +221,11 @@ namespace RDotNet
 		/// <returns>The engine.</returns>
 		public static REngine CreateInstance(string id, string[] args = null)
 		{
-#if WINDOWS
-			// 64bit of setup_Rmainloop function fails.
-			if (!System.Environment.Is64BitProcess)
+			PlatformID platform = System.Environment.OSVersion.Platform;
+			if (platform != PlatformID.Win32NT)
 			{
 				return CreateInstance(id, args, new ConsoleDevice());
 			}
-#endif
 
 			if (id == null)
 			{
