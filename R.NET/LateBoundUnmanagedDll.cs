@@ -70,6 +70,21 @@ namespace RDotNet
 			return Marshal.GetDelegateForFunctionPointer(function, typeof(TDelegate)) as TDelegate;
 		}
 
+		/// <summary>
+		/// Gets the handle of the specified entry.
+		/// </summary>
+		/// <param name="entryPoint">The name of function.</param>
+		/// <returns>The handle.</returns>
+		public IntPtr DangerousGetHandle(string entryPoint)
+		{
+			if (entryPoint == null)
+			{
+				throw new ArgumentNullException("entryPoint");
+			}
+			
+			return GetFunctionAddress(this.handle, entryPoint);
+		}
+
 		protected override bool ReleaseHandle()
 		{
 			return FreeLibrary(this.handle);
