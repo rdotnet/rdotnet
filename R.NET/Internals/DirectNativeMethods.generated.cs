@@ -111,6 +111,13 @@ private static extern void _setup_Rmainloop();
 			DirectNativeMethods._setup_Rmainloop();
 		}
 		
+[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_initialize_R")]
+private static extern System.Int32 _Rf_initialize_R(System.Int32 ac, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] System.String[] argv);
+		
+		public int Rf_initialize_R(int ac, string[] argv) {
+			return DirectNativeMethods._Rf_initialize_R(  ac,   argv);
+		}
+		
 [System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = "Rf_initEmbeddedR")]
 private static extern System.Int32 _Rf_initEmbeddedR(System.Int32 argc, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] System.String[] argv);
 		

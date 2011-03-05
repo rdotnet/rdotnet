@@ -1,5 +1,4 @@
-﻿#if WINDOWS
-namespace RDotNet.Internals
+﻿namespace RDotNet.Internals
 {
 	/// <summary>
 	/// User's decision.
@@ -20,4 +19,3 @@ namespace RDotNet.Internals
 		Cancel = 0,
 	}
 }
-#endif

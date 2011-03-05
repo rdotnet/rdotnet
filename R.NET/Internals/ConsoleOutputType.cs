@@ -1,5 +1,4 @@
-﻿#if WINDOWS
-namespace RDotNet.Internals
+﻿namespace RDotNet.Internals
 {
 	/// <summary>
 	/// Specifies console to output.
@@ -12,4 +11,3 @@ namespace RDotNet.Internals
 		None = 0,
 	}
 }
-#endif

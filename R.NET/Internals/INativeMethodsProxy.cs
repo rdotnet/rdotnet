@@ -46,5 +46,6 @@ namespace RDotNet.Internals
 		void R_common_command_line(ref int argc, string[] argv, ref RStart start);
 		void R_setStartTime();
 		void setup_Rmainloop();
+		int Rf_initialize_R(int ac, string[] argv);
 	}
 }

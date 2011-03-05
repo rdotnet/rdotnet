@@ -51,6 +51,103 @@ namespace RDotNet.Internals
 		[MarshalAs(UnmanagedType.FunctionPtr)]
 		internal blah7 WriteConsoleEx;
 #endif
+		
+		private static readonly ulong EnvironmentDependentMaxSize = System.Environment.Is64BitProcess ? ulong.MaxValue : uint.MaxValue;
+		
+		/// <summary>
+		/// Gets and sets the minimum heap memory size in bytes. 
+		/// </summary>
+		internal ulong MinMemorySize
+		{
+			get
+			{
+				return vsize.ToUInt64();
+			}
+			set
+			{
+				if (value > EnvironmentDependentMaxSize)
+				{
+					throw new ArgumentOutOfRangeException();
+				}
+				vsize = new UIntPtr(value);
+			}
+		}
+		
+		/// <summary>
+		/// Gets and sets the minimum number of cons cells. 
+		/// </summary>
+		internal ulong MinCellSize
+		{
+			get
+			{
+				return nsize.ToUInt64();
+			}
+			set
+			{
+				if (value > EnvironmentDependentMaxSize)
+				{
+					throw new ArgumentOutOfRangeException();
+				}
+				nsize = new UIntPtr(value);
+			}
+		}
+		
+		/// <summary>
+		/// Gets and sets the first heap memory size. 
+		/// </summary>
+		internal ulong MaxMemorySize
+		{
+			get
+			{
+				return max_vsize.ToUInt64();
+			}
+			set
+			{
+				if (value > EnvironmentDependentMaxSize)
+				{
+					throw new ArgumentOutOfRangeException();
+				}
+				max_vsize = new UIntPtr(value);
+			}
+		}
+		
+		/// <summary>
+		/// Gets and sets the maximum number of cons cells. 
+		/// </summary>
+		internal ulong MaxCellSize
+		{
+			get
+			{
+				return max_nsize.ToUInt64();
+			}
+			set
+			{
+				if (value > EnvironmentDependentMaxSize)
+				{
+					throw new ArgumentOutOfRangeException();
+				}
+				max_nsize = new UIntPtr(value);
+			}
+		}
+		
+		/// <summary>
+		/// Gets and sets the maximum number of protected pointers in the stack. 
+		/// </summary>
+		internal ulong ProtectedPointerStackSize
+		{
+			get
+			{
+				return ppsize.ToUInt64();
+			}
+			set
+			{
+				if (value > EnvironmentDependentMaxSize)
+				{
+					throw new ArgumentOutOfRangeException();
+				}
+				ppsize = new UIntPtr(value);
+			}
+		}
 	}
 
 #if WINDOWS
@@ -76,5 +173,41 @@ namespace RDotNet.Internals
 		RTerminal,
 		LinkDll,
 	}
+#elif MAC || LINUX
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void ptr_R_Suicide([In] [MarshalAs(UnmanagedType.LPStr)] string message);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void ptr_R_ShowMessage([In] [MarshalAs(UnmanagedType.LPStr)] string message);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal delegate bool ptr_R_ReadConsole([In] [MarshalAs(UnmanagedType.LPStr)] string prompt, [MarshalAs(UnmanagedType.LPStr)] StringBuilder buffer, int length, [MarshalAs(UnmanagedType.Bool)] bool history);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void ptr_R_WriteConsole([In] [MarshalAs(UnmanagedType.LPStr)] string buffer, int length);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void ptr_R_WriteConsoleEx([In] [MarshalAs(UnmanagedType.LPStr)] string buffer, int length, ConsoleOutputType outputType);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void ptr_R_ResetConsole();
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void ptr_R_FlushConsole();
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void ptr_R_ClearerrConsole();
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void ptr_R_Busy(BusyType which);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void ptr_R_CleanUp(StartupSaveAction saveAction, int status, [MarshalAs(UnmanagedType.Bool)] bool runLast);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal delegate bool ptr_R_ShowFiles(int count, [In] [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] files, [In] [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] headers, [In] [MarshalAs(UnmanagedType.LPStr)] string title, [MarshalAs(UnmanagedType.Bool)] bool delete, [In] [MarshalAs(UnmanagedType.LPStr)] string pager);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal delegate int ptr_R_ChooseFile([MarshalAs(UnmanagedType.Bool)] bool create, StringBuilder buffer, int length);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void ptr_R_EditFile([MarshalAs(UnmanagedType.LPStr)] string file);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate IntPtr ptr_R_loadhistory(IntPtr call, IntPtr operation, IntPtr args, IntPtr environment);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate IntPtr ptr_R_savehistory(IntPtr call, IntPtr operation, IntPtr args, IntPtr environment);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate IntPtr ptr_R_addhistory(IntPtr call, IntPtr operation, IntPtr args, IntPtr environment);
 #endif
 }

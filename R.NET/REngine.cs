@@ -5,9 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
-#if WINDOWS
 using RDotNet.Devices;
-#endif
 using RDotNet.Internals;
 
 namespace RDotNet
@@ -144,7 +142,7 @@ namespace RDotNet
 				return GetPredefinedSymbol("R_UnboundValue");
 			}
 		}
-		
+
 		private readonly INativeMethodsProxy proxy;
 		internal INativeMethodsProxy Proxy
 		{
@@ -154,26 +152,21 @@ namespace RDotNet
 			}
 		}
 
-#if WINDOWS
 		private readonly CharacterDeviceAdapter adapter;
-#endif
 
 		private REngine(string id, string[] args)
 			: base(Constants.RDllName)
 		{
 			this.id = id;
 			this.proxy = GetDefaultProxy();
-#if WINDOWS
 			this.adapter = null;
-#endif
-			
+
 			string[] newArgs = Utility.AddFirst(id, args ?? new string[0]);
 			Proxy.Rf_initEmbeddedR(newArgs.Length, newArgs);
 
 			isRunning = true;
 		}
 
-#if WINDOWS
 		private REngine(string id, string[] args, CharacterDeviceAdapter adapter)
 			: base(Constants.RDllName)
 		{
@@ -196,8 +189,28 @@ namespace RDotNet
 
 			isRunning = true;
 		}
-#endif
-		
+
+		private REngine(string id, OutputMode output, CharacterDeviceAdapter adapter)
+			: base(Constants.RDllName)
+		{
+			this.id = id;
+			this.proxy = GetDefaultProxy();
+			this.adapter = adapter;
+
+			Proxy.R_setStartTime();
+			Proxy.Rf_initialize_R(1, new string[] { id });
+			RStart start;
+			Proxy.R_DefParams(out start);
+			adapter.Install(this, ref start);
+			start.R_Quiet = (output & OutputMode.Quiet) == OutputMode.Quiet;
+			start.R_Slave = (output & OutputMode.Slave) == OutputMode.Slave;
+			start.R_Verbose = (output & OutputMode.Verbose) == OutputMode.Verbose;
+			Proxy.R_SetParams(ref start);
+			Proxy.setup_Rmainloop();
+
+			isRunning = true;
+		}
+
 		private INativeMethodsProxy GetDefaultProxy()
 		{
 			OperatingSystem os = System.Environment.OSVersion;
@@ -218,13 +231,11 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="id">ID.</param>
 		/// <param name="args">Arguments for initializing.</param>
+		/// <param name="device">The IO device.</param>
 		/// <returns>The engine.</returns>
-		public static REngine CreateInstance(string id, string[] args = null)
+		[Obsolete]
+		public static REngine CreateInstance(string id, string[] args, ICharacterDevice device = null)
 		{
-#if WINDOWS
-			PlatformID platform = System.Environment.OSVersion.Platform;
-			return CreateInstance(id, args, new ConsoleDevice());
-#elif MAC || LINUX
 			if (id == null)
 			{
 				throw new ArgumentNullException();
@@ -238,28 +249,22 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			REngine engine = new REngine(id, args);
+			CharacterDeviceAdapter adapter = new CharacterDeviceAdapter(device ?? new ConsoleDevice());
+			REngine engine = new REngine(id, args, adapter);
 			instances.Add(id, engine);
 
 			return engine;
-#endif
 		}
 
-#if WINDOWS
 		/// <summary>
 		/// Creates a new instance that handles R.DLL.
 		/// </summary>
 		/// <param name="id">ID.</param>
-		/// <param name="args">Arguments for initializing.</param>
-		/// <param name="adapter">The IO device adapter.</param>
+		/// <param name="output">The output mode.</param>
+		/// <param name="device">The IO device.</param>
 		/// <returns>The engine.</returns>
-		private static REngine CreateInstance(string id, string[] args, CharacterDeviceAdapter adapter)
+		public static REngine CreateInstance(string id, OutputMode output = OutputMode.None, ICharacterDevice device = null)
 		{
-			if (adapter == null)
-			{
-				return CreateInstance(id, args);
-			}
-
 			if (id == null)
 			{
 				throw new ArgumentNullException();
@@ -273,7 +278,8 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			REngine engine = new REngine(id, args, adapter);
+			CharacterDeviceAdapter adapter = new CharacterDeviceAdapter(device ?? new ConsoleDevice());
+			REngine engine = new REngine(id, output, adapter);
 			instances.Add(id, engine);
 
 			return engine;
@@ -287,26 +293,8 @@ namespace RDotNet
 		/// <returns>The engine.</returns>
 		public static REngine CreateInstance(string id, ICharacterDevice device)
 		{
-			return CreateInstance(id, null, device);
+			return CreateInstance(id, OutputMode.None, device);
 		}
-
-		/// <summary>
-		/// Creates a new instance that handles R.DLL.
-		/// </summary>
-		/// <param name="id">ID.</param>
-		/// <param name="args">Arguments for initializing.</param>
-		/// <param name="device">The IO device.</param>
-		/// <returns>The engine.</returns>
-		public static REngine CreateInstance(string id, string[] args, ICharacterDevice device)
-		{
-			if (device == null)
-			{
-				return CreateInstance(id, args);
-			}
-			CharacterDeviceAdapter adapter = new CharacterDeviceAdapter(device);
-			return CreateInstance(id, args, adapter);
-		}
-#endif
 
 		/// <summary>
 		/// Gets an instance specified in the given ID.
@@ -508,6 +496,16 @@ namespace RDotNet
 			}
 		}
 
+		/// <summary>
+		/// Sets the command line arguments.
+		/// </summary>
+		/// <param name="args">The arguments.</param>
+		public void SetCommandLineArguments(string[] args)
+		{
+			string[] newArgs = Utility.AddFirst(ID, args);
+			Proxy.R_set_command_line_arguments(newArgs.Length, newArgs);
+		}
+
 		protected override bool ReleaseHandle()
 		{
 			Proxy.Rf_endEmbeddedR(0);
@@ -521,12 +519,10 @@ namespace RDotNet
 			{
 				instances.Remove(ID);
 			}
-#if WINDOWS
 			if (adapter != null)
 			{
 				adapter.Dispose();
 			}
-#endif
 
 			base.Dispose(disposing);
 		}
