@@ -179,6 +179,7 @@ namespace RDotNet
 			int argc = newArgs.Length;
 
 			Proxy.R_setStartTime();
+			Proxy.Rf_initialize_R(argc, newArgs);
 			RStart start;
 			Proxy.R_DefParams(out start);
 			adapter.Install(this, ref start);
