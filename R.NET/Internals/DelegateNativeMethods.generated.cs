@@ -126,6 +126,14 @@ namespace RDotNet.Internals {
 		}
 		
 		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
+		delegate int _Rf_initialize_R(int ac, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] string[] argv);
+		
+		public int Rf_initialize_R(int ac, string[] argv) {
+			var function = this.dll.GetFunction<_Rf_initialize_R>("Rf_initialize_R");
+			return function(  ac,   argv);
+		}
+		
+		[System.Runtime.InteropServices.UnmanagedFunctionPointerAttribute(System.Runtime.InteropServices.CallingConvention.Cdecl)]
 		delegate int _Rf_initEmbeddedR(int argc, [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPArray, ArraySubType=System.Runtime.InteropServices.UnmanagedType.LPStr)] string[] argv);
 		
 		public int Rf_initEmbeddedR(int argc, string[] argv) {

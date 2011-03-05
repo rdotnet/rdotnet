@@ -100,6 +100,7 @@
     <Compile Include="Devices\CharacterDeviceAdapter.cs" />
     <Compile Include="Devices\ConsoleDevice.cs" />
     <Compile Include="Devices\ICharacterDevice.cs" />
+    <Compile Include="Internals\OutputMode.cs" />
     <Compile Include="Internals\RStart.cs" />
     <Compile Include="Internals\ConsoleOutputType.cs" />
     <Compile Include="Internals\BusyType.cs" />
