@@ -90,6 +90,12 @@ namespace RDotNet
 			return FreeLibrary(this.handle);
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			SetHandleAsInvalid();
+			base.Dispose(disposing);
+		}
+
 #if MAC
 		private const string LibraryPath = "DYLD_LIBRARY_PATH";
 		private const string DynamicLoadingLibraryName = "libdl.dylib";
