@@ -43,6 +43,10 @@ namespace RDotNet
 		{
 			get
 			{
+				if (IsInvalid)
+				{
+					throw new InvalidOperationException();
+				}
 				// As R's version definitions are defined in #define preprocessor,
 				// C# cannot access them dynamically.
 				// But, on Win32 platform, we can get the version string via getDLLVersion function.
@@ -64,7 +68,6 @@ namespace RDotNet
 			}
 		}
 
-		private bool isRunning;
 		/// <summary>
 		/// Gets whether this instance is running.
 		/// </summary>
@@ -72,7 +75,7 @@ namespace RDotNet
 		{
 			get
 			{
-				return isRunning;
+				return Proxy != null;
 			}
 		}
 
@@ -95,6 +98,10 @@ namespace RDotNet
 		{
 			get
 			{
+				if (IsInvalid)
+				{
+					throw new InvalidOperationException();
+				}
 				return GetPredefinedSymbol("R_GlobalEnv").AsEnvironment();
 			}
 		}
@@ -106,6 +113,10 @@ namespace RDotNet
 		{
 			get
 			{
+				if (IsInvalid)
+				{
+					throw new InvalidOperationException();
+				}
 				return GetPredefinedSymbol("R_EmptyEnv").AsEnvironment();
 			}
 		}
@@ -117,6 +128,10 @@ namespace RDotNet
 		{
 			get
 			{
+				if (IsInvalid)
+				{
+					throw new InvalidOperationException();
+				}
 				return GetPredefinedSymbol("R_BaseNamespace").AsEnvironment();
 			}
 		}
@@ -128,6 +143,10 @@ namespace RDotNet
 		{
 			get
 			{
+				if (IsInvalid)
+				{
+					throw new InvalidOperationException();
+				}
 				return GetPredefinedSymbol("R_NilValue");
 			}
 		}
@@ -139,11 +158,15 @@ namespace RDotNet
 		{
 			get
 			{
+				if (IsInvalid)
+				{
+					throw new InvalidOperationException();
+				}
 				return GetPredefinedSymbol("R_UnboundValue");
 			}
 		}
 
-		private readonly INativeMethodsProxy proxy;
+		private INativeMethodsProxy proxy;
 		internal INativeMethodsProxy Proxy
 		{
 			get
@@ -163,8 +186,6 @@ namespace RDotNet
 
 			string[] newArgs = Utility.AddFirst(id, args ?? new string[0]);
 			Proxy.Rf_initEmbeddedR(newArgs.Length, newArgs);
-
-			isRunning = true;
 		}
 
 		private REngine(string id, string[] args, CharacterDeviceAdapter adapter)
@@ -187,8 +208,6 @@ namespace RDotNet
 			Proxy.R_set_command_line_arguments(newArgs.Length, newArgs);
 			Proxy.R_SetParams(ref start);
 			Proxy.setup_Rmainloop();
-
-			isRunning = true;
 		}
 
 		private REngine(string id, OutputMode output, CharacterDeviceAdapter adapter)
@@ -208,8 +227,6 @@ namespace RDotNet
 			start.R_Verbose = (output & OutputMode.Verbose) == OutputMode.Verbose;
 			Proxy.R_SetParams(ref start);
 			Proxy.setup_Rmainloop();
-
-			isRunning = true;
 		}
 
 		private INativeMethodsProxy GetDefaultProxy()
@@ -314,6 +331,10 @@ namespace RDotNet
 		/// <returns>The symbol.</returns>
 		public SymbolicExpression GetSymbol(string name)
 		{
+			if (IsInvalid)
+			{
+				throw new InvalidOperationException();
+			}
 			return GlobalEnvironment.GetSymbol(name);
 		}
 
@@ -325,6 +346,10 @@ namespace RDotNet
 		/// <returns>The symbol.</returns>
 		public SymbolicExpression GetSymbol(string name, RDotNet.Environment environment)
 		{
+			if (IsInvalid)
+			{
+				throw new InvalidOperationException();
+			}
 			if (environment == null)
 			{
 				environment = GlobalEnvironment;
@@ -339,6 +364,10 @@ namespace RDotNet
 		/// <param name="expression">The symbol.</param>
 		public void SetSymbol(string name, SymbolicExpression expression)
 		{
+			if (IsInvalid)
+			{
+				throw new InvalidOperationException();
+			}
 			GlobalEnvironment.SetSymbol(name, expression);
 		}
 
@@ -350,6 +379,10 @@ namespace RDotNet
 		/// <param name="environment">The environment. If <c>null</c> is passed, <see cref="GlobalEnvironment"/> is used.</param>
 		public void SetSymbol(string name, SymbolicExpression expression, RDotNet.Environment environment)
 		{
+			if (IsInvalid)
+			{
+				throw new InvalidOperationException();
+			}
 			if (environment == null)
 			{
 				environment = GlobalEnvironment;
@@ -364,6 +397,10 @@ namespace RDotNet
 		/// <returns>Last evaluation.</returns>
 		public SymbolicExpression EagerEvaluate(string statement)
 		{
+			if (IsInvalid)
+			{
+				throw new InvalidOperationException();
+			}
 			return Evaluate(statement).LastOrDefault();
 		}
 
@@ -374,6 +411,10 @@ namespace RDotNet
 		/// <returns>Last evaluation.</returns>
 		public SymbolicExpression EagerEvaluate(Stream stream)
 		{
+			if (IsInvalid)
+			{
+				throw new InvalidOperationException();
+			}
 			return Evaluate(stream).LastOrDefault();
 		}
 
@@ -384,6 +425,10 @@ namespace RDotNet
 		/// <returns>Each evaluation.</returns>
 		public IEnumerable<SymbolicExpression> Evaluate(string statement)
 		{
+			if (IsInvalid)
+			{
+				throw new InvalidOperationException();
+			}
 			if (statement == null)
 			{
 				throw new ArgumentNullException();
@@ -414,6 +459,10 @@ namespace RDotNet
 		/// <returns>Each evaluation.</returns>
 		public IEnumerable<SymbolicExpression> Evaluate(Stream stream)
 		{
+			if (IsInvalid)
+			{
+				throw new InvalidOperationException();
+			}
 			if (stream == null)
 			{
 				throw new ArgumentNullException();
@@ -503,6 +552,10 @@ namespace RDotNet
 		/// <param name="args">The arguments.</param>
 		public void SetCommandLineArguments(string[] args)
 		{
+			if (IsInvalid)
+			{
+				throw new InvalidOperationException();
+			}
 			string[] newArgs = Utility.AddFirst(ID, args);
 			Proxy.R_set_command_line_arguments(newArgs.Length, newArgs);
 		}
@@ -515,7 +568,7 @@ namespace RDotNet
 
 		protected override void Dispose(bool disposing)
 		{
-			isRunning = false;
+			proxy = null;
 			if (ID != null && instances.ContainsKey(ID))
 			{
 				instances.Remove(ID);
@@ -535,6 +588,10 @@ namespace RDotNet
 		/// <returns>The symbol.</returns>
 		public SymbolicExpression GetPredefinedSymbol(string name)
 		{
+			if (IsInvalid)
+			{
+				throw new InvalidOperationException();
+			}
 			try
 			{
 				IntPtr pointer = GetSymbolPointer(this.handle, name);
