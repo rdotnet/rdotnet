@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using RDotNet.Internals;
@@ -68,6 +69,17 @@ namespace RDotNet
 		/// <seealso cref="REngineExtension.CreateNumericVector(REngine, int)"/>
 		public NumericVector(REngine engine, int length)
 			: base(engine, SymbolicExpressionType.NumericVector, length)
+		{
+		}
+
+		/// <summary>
+		/// Creates a new NumericVector with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="vector">The values.</param>
+		/// <seealso cref="REngineExtension.CreateNumericVector(REngine, IEnumerable{double})"/>
+		public NumericVector(REngine engine, IEnumerable<double> vector)
+			: base(engine, SymbolicExpressionType.NumericVector, vector)
 		{
 		}
 

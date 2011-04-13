@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using RDotNet.Dynamic;
@@ -71,13 +71,9 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="list">The values.</param>
-		public GenericVector(REngine engine, SymbolicExpression[] list)
-			: base(engine, engine.Proxy.Rf_allocVector(SymbolicExpressionType.List, list.Length))
+		public GenericVector(REngine engine, IEnumerable<SymbolicExpression> list)
+			: base(engine, SymbolicExpressionType.List, list)
 		{
-			for (int index = 0; index < list.Length; index++)
-			{
-				this[index] = list[index];
-			}
 		}
 
 		/// <summary>

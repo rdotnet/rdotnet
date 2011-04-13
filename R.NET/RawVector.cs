@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using RDotNet.Internals;
@@ -62,6 +63,17 @@ namespace RDotNet
 		/// <param name="length">The length.</param>
 		public RawVector(REngine engine, int length)
 			: base(engine, SymbolicExpressionType.RawVector, length)
+		{
+		}
+
+		/// <summary>
+		/// Creates a new RawVector with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="vector">The values.</param>
+		/// <seealso cref="REngineExtension.CreateRawVector(REngine, IEnumerable{byte})"/>
+		public RawVector(REngine engine, IEnumerable<byte> vector)
+			: base(engine, SymbolicExpressionType.RawVector, vector)
 		{
 		}
 
