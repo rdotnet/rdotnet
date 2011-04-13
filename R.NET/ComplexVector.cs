@@ -78,8 +78,8 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="vector">The values.</param>
-		/// <seealso cref="REngineExtension.CreateComplexVector(REngine, Complex[])"/>
-		public ComplexVector(REngine engine, Complex[] vector)
+		/// <seealso cref="REngineExtension.CreateComplexVector(REngine, IEnumerable{Complex})"/>
+		public ComplexVector(REngine engine, IEnumerable<Complex> vector)
 			: base(engine, SymbolicExpressionType.ComplexVector, vector)
 		{
 		}

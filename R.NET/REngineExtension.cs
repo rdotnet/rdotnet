@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace RDotNet
@@ -128,7 +129,7 @@ namespace RDotNet
 		/// <param name="engine">The engine.</param>
 		/// <param name="vector">The values.</param>
 		/// <returns>The new vector.</returns>
-		public static CharacterVector CreateCharacterVector(this REngine engine, string[] vector)
+		public static CharacterVector CreateCharacterVector(this REngine engine, IEnumerable<string> vector)
 		{
 			if (engine == null)
 			{
@@ -147,7 +148,7 @@ namespace RDotNet
 		/// <param name="engine">The engine.</param>
 		/// <param name="vector">The values.</param>
 		/// <returns>The new vector.</returns>
-		public static ComplexVector CreateComplexVector(this REngine engine, Complex[] vector)
+		public static ComplexVector CreateComplexVector(this REngine engine, IEnumerable<Complex> vector)
 		{
 			if (engine == null)
 			{
@@ -166,7 +167,7 @@ namespace RDotNet
 		/// <param name="engine">The engine.</param>
 		/// <param name="vector">The values.</param>
 		/// <returns>The new vector.</returns>
-		public static IntegerVector CreateIntegerVector(this REngine engine, int[] vector)
+		public static IntegerVector CreateIntegerVector(this REngine engine, IEnumerable<int> vector)
 		{
 			if (engine == null)
 			{
@@ -185,7 +186,7 @@ namespace RDotNet
 		/// <param name="engine">The engine.</param>
 		/// <param name="vector">The values.</param>
 		/// <returns>The new vector.</returns>
-		public static LogicalVector CreateLogicalVector(this REngine engine, bool[] vector)
+		public static LogicalVector CreateLogicalVector(this REngine engine, IEnumerable<bool> vector)
 		{
 			if (engine == null)
 			{
@@ -204,7 +205,7 @@ namespace RDotNet
 		/// <param name="engine">The engine.</param>
 		/// <param name="vector">The values.</param>
 		/// <returns>The new vector.</returns>
-		public static NumericVector CreateNumericVector(this REngine engine, double[] vector)
+		public static NumericVector CreateNumericVector(this REngine engine, IEnumerable<double> vector)
 		{
 			if (engine == null)
 			{
@@ -223,7 +224,7 @@ namespace RDotNet
 		/// <param name="engine">The engine.</param>
 		/// <param name="vector">The values.</param>
 		/// <returns>The new vector.</returns>
-		public static RawVector CreateRawVector(this REngine engine, byte[] vector)
+		public static RawVector CreateRawVector(this REngine engine, IEnumerable<byte> vector)
 		{
 			if (engine == null)
 			{

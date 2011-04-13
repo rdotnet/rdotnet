@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using RDotNet.Internals;
@@ -74,8 +75,8 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="vector">The values.</param>
-		/// <seealso cref="REngineExtension.CreateLogicalVector(REngine, bool[])"/>
-		public LogicalVector(REngine engine, bool[] vector)
+		/// <seealso cref="REngineExtension.CreateLogicalVector(REngine, IEnumerable{bool})"/>
+		public LogicalVector(REngine engine, IEnumerable<bool> vector)
 			: base(engine, SymbolicExpressionType.LogicalVector, vector)
 		{
 		}

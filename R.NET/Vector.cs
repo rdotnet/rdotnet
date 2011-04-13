@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using RDotNet.Internals;
@@ -126,6 +127,8 @@ namespace RDotNet
 			{
 				throw new ArgumentOutOfRangeException("length");
 			}
+			byte[] empty = new byte[length * DataSize];
+			Marshal.Copy(empty, 0, DataPointer, empty.Length);
 		}
 
 		/// <summary>
@@ -134,12 +137,13 @@ namespace RDotNet
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="type">The element type.</param>
 		/// <param name="vector">The elements of vector.</param>
-		protected Vector(REngine engine, SymbolicExpressionType type, T[] vector)
-			: base(engine, engine.Proxy.Rf_allocVector(type, vector.Length))
+		protected Vector(REngine engine, SymbolicExpressionType type, IEnumerable<T> vector)
+			: base(engine, engine.Proxy.Rf_allocVector(type, vector.Count()))
 		{
-			for (int index = 0; index < vector.Length; index++)
+			int index = 0;
+			foreach (var element in vector)
 			{
-				this[index] = vector[index];
+				this[index++] = element;
 			}
 		}
 
