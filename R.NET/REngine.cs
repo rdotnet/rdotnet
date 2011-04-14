@@ -560,14 +560,13 @@ namespace RDotNet
 			Proxy.R_set_command_line_arguments(newArgs.Length, newArgs);
 		}
 
-		protected override bool ReleaseHandle()
-		{
-			Proxy.Rf_endEmbeddedR(0);
-			return base.ReleaseHandle();
-		}
-
 		protected override void Dispose(bool disposing)
 		{
+			if (disposing)
+			{
+				Proxy.Rf_endEmbeddedR(0);
+			}
+
 			proxy = null;
 			if (ID != null && instances.ContainsKey(ID))
 			{
