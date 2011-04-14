@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
@@ -92,7 +92,13 @@ namespace RDotNet
 
 		protected override void Dispose(bool disposing)
 		{
-			SetHandleAsInvalid();
+			if (disposing)
+			{
+				if (FreeLibrary(this.handle))
+				{
+					SetHandleAsInvalid();
+				}
+			}
 			base.Dispose(disposing);
 		}
 
@@ -188,6 +194,7 @@ namespace RDotNet
 #elif WINDOWS
 		[DllImport("kernel32.dll")]
 #endif
+		[ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
 		[return: MarshalAs(UnmanagedType.Bool)]
 		private static extern bool FreeLibrary(IntPtr hModule);
 
