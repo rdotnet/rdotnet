@@ -18,20 +18,10 @@ namespace RDotNet.Tools
 			// Enforces messages appeared in the generated files in English.
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
 
-			string coreDirectory = args[0];
+			string interfaceType = args[0];
 			string deployDirectory = args[1];
-			string internalsDirectory = Path.Combine(coreDirectory, "Internals");
-			string[] sourceFiles = new string[] {
-				Path.Combine(internalsDirectory, "INativeMethodsProxy.cs"),
-				Path.Combine(internalsDirectory, "Constants.cs"),
-				Path.Combine(internalsDirectory, "SymbolicExpressionType.cs"),
-				Path.Combine(internalsDirectory, "ParseStatus.cs"),
-				Path.Combine(internalsDirectory, "BusyType.cs"),
-				Path.Combine(internalsDirectory, "ConsoleOutputType.cs"),
-				Path.Combine(internalsDirectory, "SaveActions.cs"),
-				Path.Combine(internalsDirectory, "YesNoCancel.cs"),
-				Path.Combine(internalsDirectory, "RStart.cs"),
-			};
+			string[] sourceFiles = new string[args.Length - 2];
+			Array.Copy(args, 2, sourceFiles, 0, sourceFiles.Length);
 
 			using (CSharpCodeProvider provider = new CSharpCodeProvider())
 			{
@@ -52,7 +42,7 @@ namespace RDotNet.Tools
 				};
 
 				Type generatorInterface = typeof(IProxyGenerator);
-				Type proxyInterface = assembly.GetType("RDotNet.Internals.INativeMethodsProxy");
+				Type proxyInterface = assembly.GetType(interfaceType);
 				var generatorTypes = Assembly.GetAssembly(generatorInterface).GetTypes().Where(type => type.GetInterfaces().Contains(generatorInterface));
 				foreach (Type generatorType in generatorTypes)
 				{
