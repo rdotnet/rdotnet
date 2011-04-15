@@ -175,7 +175,7 @@ namespace RDotNet
 			}
 		}
 
-		private readonly CharacterDeviceAdapter adapter;
+		private CharacterDeviceAdapter adapter;
 
 		private REngine(string id, string[] args)
 			: base(Constants.RDllName)
@@ -562,19 +562,23 @@ namespace RDotNet
 
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing)
-			{
-				Proxy.Rf_endEmbeddedR(0);
-			}
-
-			proxy = null;
-			if (ID != null && instances.ContainsKey(ID))
+			if (instances.ContainsKey(ID))
 			{
 				instances.Remove(ID);
 			}
-			if (adapter != null)
+
+			if (IsRunning)
 			{
-				adapter.Dispose();
+				if (disposing)
+				{
+					Proxy.Rf_endEmbeddedR(0);
+				}
+				proxy = null;
+				if (adapter != null)
+				{
+					adapter.Dispose();
+					adapter = null;
+				}
 			}
 
 			base.Dispose(disposing);
