@@ -12,7 +12,7 @@ namespace RDotNet.Tools
 		public CodeCompileUnit GenerateProxy(string proxyTypeName, Type proxyInterface)
 		{
 			CodeCompileUnit compileUnit = new CodeCompileUnit();
-			CodeNamespace name = new CodeNamespace("RDotNet.Internals");
+			CodeNamespace name = new CodeNamespace(proxyInterface.Namespace);
 			compileUnit.Namespaces.Add(name);
 
 			CodeTypeDeclaration type = new CodeTypeDeclaration(proxyTypeName);
@@ -81,7 +81,7 @@ namespace RDotNet.Tools
 
 		private static CodeSnippetTypeMember CreateExternMethod(MethodInfo method)
 		{
-			string declaration = string.Format(@"[System.Runtime.InteropServices.DllImportAttribute(RDotNet.Internals.Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = ""{0}"")]
+			string declaration = string.Format(@"[System.Runtime.InteropServices.DllImportAttribute(Constants.RDllName, CallingConvention = System.Runtime.InteropServices.CallingConvention.Cdecl, EntryPoint = ""{0}"")]
 private static extern {1} _{0}({2});",
 				method.Name,
 				method.ReturnType.GetReturnTypeString(),

@@ -12,7 +12,7 @@ namespace RDotNet.Tools
 		public CodeCompileUnit GenerateProxy(string proxyTypeName, Type proxyInterface)
 		{
 			CodeCompileUnit compileUnit = new CodeCompileUnit();
-			CodeNamespace name = new CodeNamespace("RDotNet.Internals");
+			CodeNamespace name = new CodeNamespace(proxyInterface.Namespace);
 			compileUnit.Namespaces.Add(name);
 
 			CodeTypeDeclaration type = new CodeTypeDeclaration(proxyTypeName);
