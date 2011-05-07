@@ -7,6 +7,7 @@ namespace RDotNet
 	/// <summary>
 	/// Thrown when an engine comes to an error.
 	/// </summary>
+	[Serializable]
 	public class ParseException : ApplicationException
 	{
 		private const string StatusFieldName = "status";
