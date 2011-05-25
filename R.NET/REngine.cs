@@ -176,6 +176,7 @@ namespace RDotNet
 		}
 
 		private CharacterDeviceAdapter adapter;
+		private RStart start;
 
 		private REngine(string id, string[] args)
 			: base(Constants.RDllName)
@@ -201,7 +202,6 @@ namespace RDotNet
 
 			Proxy.R_setStartTime();
 			Proxy.Rf_initialize_R(argc, newArgs);
-			RStart start;
 			Proxy.R_DefParams(out start);
 			adapter.Install(this, ref start);
 			Proxy.R_common_command_line(ref argc, newArgs, ref start);
@@ -219,7 +219,6 @@ namespace RDotNet
 
 			Proxy.R_setStartTime();
 			Proxy.Rf_initialize_R(1, new string[] { id });
-			RStart start;
 			Proxy.R_DefParams(out start);
 			adapter.Install(this, ref start);
 			start.R_Quiet = (output & OutputMode.Quiet) == OutputMode.Quiet;
