@@ -193,6 +193,8 @@ namespace RDotNet
 			{
 				throw new ArgumentOutOfRangeException("columnCount");
 			}
+			byte[] empty = new byte[rowCount * columnCount * DataSize];
+			Marshal.Copy(empty, 0, DataPointer, empty.Length);
 		}
 
 
