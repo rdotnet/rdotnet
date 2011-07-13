@@ -49,7 +49,7 @@ namespace RDotNet
 						case SymbolicExpressionType.ComplexVector:
 							return ReadComplex(pointer, offset);
 						default:
-							throw new NotImplementedException();
+							return ReadSymbolicExpression(pointer, offset);
 					}
 				}
 			}
@@ -84,7 +84,8 @@ namespace RDotNet
 							WriteComplex((Complex)value, pointer, offset);
 							return;
 						default:
-							throw new NotImplementedException();
+							WriteSymbolicExpression((SymbolicExpression)value, pointer, offset);
+							return;
 					}
 				}
 			}
@@ -109,7 +110,7 @@ namespace RDotNet
 					case SymbolicExpressionType.ComplexVector:
 						return Marshal.SizeOf(typeof(Complex));
 					default:
-						throw new NotImplementedException();
+						return Marshal.SizeOf(typeof(IntPtr));
 				}
 			}
 		}
@@ -199,6 +200,17 @@ namespace RDotNet
 			Marshal.Copy(real, 0, pointer, real.Length);
 			pointer = IntPtr.Add(pointer, real.Length);
 			Marshal.Copy(imaginary, 0, pointer, imaginary.Length);
+		}
+
+		private SymbolicExpression ReadSymbolicExpression(IntPtr pointer, int offset)
+		{
+			IntPtr sexp = IntPtr.Add(pointer, offset);
+			return new SymbolicExpression(Engine, sexp);
+		}
+
+		private void WriteSymbolicExpression(SymbolicExpression sexp, IntPtr pointer, int offset)
+		{
+			Marshal.WriteIntPtr(pointer, offset, sexp.DangerousGetHandle());
 		}
 	}
 }
