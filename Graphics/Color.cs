@@ -9,10 +9,10 @@ namespace RDotNet.Graphics
 	[StructLayout(LayoutKind.Sequential)]
 	public struct Color : IEquatable<Color>
 	{
-		private byte alpha;
-		private byte blue;
-		private byte green;
 		private byte red;
+		private byte green;
+		private byte blue;
+		private byte alpha;
 
 		/// <summary>
 		/// Gets and sets the alpha value.
