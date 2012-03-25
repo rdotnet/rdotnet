@@ -17,8 +17,9 @@ namespace RDotNet
 	/// <example>This example generates and outputs five random numbers from standard normal distribution.
 	/// <code>
 	/// Environment.SetEnvironmentVariable("PATH", @"C:\Program Files\R\R-2.12.0\bin\i386");
-	/// using (REngine engine = REngine.CreateInstance("R.dll", "RDotNet", null))
+	/// using (REngine engine = REngine.CreateInstance("RDotNet"))
 	/// {
+	///   engine.Initialize();
 	///	NumericVector random = engine.Evaluate("rnorm(5, 0, 1)").AsNumeric();
 	///	foreach (double r in random)
 	///	{
