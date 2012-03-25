@@ -7,29 +7,28 @@ namespace RDotNet
 	/// <summary>
 	/// An environment object.
 	/// </summary>
-	public class Environment : SymbolicExpression
+	public class REnvironment : SymbolicExpression
 	{
-		/// <summary>
-		/// Gets the parental environment.
-		/// </summary>
-		public RDotNet.Environment Parent
-		{
-			get
-			{
-				SEXPREC sexp = GetInternalStructure();
-				IntPtr parent = sexp.envsxp.enclos;
-				return Engine.CheckNil(parent) ? null : new RDotNet.Environment(Engine, parent);
-			}
-		}
-
 		/// <summary>
 		/// Creates an environment object.
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="pointer">The pointer to an environment.</param>
-		internal protected Environment(REngine engine, IntPtr pointer)
+		protected internal REnvironment(REngine engine, IntPtr pointer)
 			: base(engine, pointer)
+		{}
+
+		/// <summary>
+		/// Gets the parental environment.
+		/// </summary>
+		public REnvironment Parent
 		{
+			get
+			{
+				SEXPREC sexp = GetInternalStructure();
+				IntPtr parent = sexp.envsxp.enclos;
+				return Engine.CheckNil(parent) ? null : new REnvironment(Engine, parent);
+			}
 		}
 
 		/// <summary>
@@ -48,17 +47,17 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			IntPtr installedName = Engine.Proxy.Rf_install(name);
-			IntPtr value = Engine.Proxy.Rf_findVar(installedName, this.handle);
+			IntPtr installedName = Engine.GetFunction<Rf_install>("Rf_install")(name);
+			IntPtr value = Engine.GetFunction<Rf_findVar>("Rf_findVar")(installedName, handle);
 			if (Engine.CheckUnbound(value))
 			{
 				return null;
 			}
 
-			SEXPREC sexp = (SEXPREC)Marshal.PtrToStructure(value, typeof(SEXPREC));
+			var sexp = (SEXPREC)Marshal.PtrToStructure(value, typeof(SEXPREC));
 			if (sexp.sxpinfo.type == SymbolicExpressionType.Promise)
 			{
-				value = Engine.Proxy.Rf_eval(value, this.handle);
+				value = Engine.GetFunction<Rf_eval>("Rf_eval")(value, handle);
 			}
 			return new SymbolicExpression(Engine, value);
 		}
@@ -70,10 +69,10 @@ namespace RDotNet
 		/// <param name="expression">The symbol.</param>
 		public void SetSymbol(string name, SymbolicExpression expression)
 		{
-			IntPtr installedName = Engine.Proxy.Rf_install(name);
-			Engine.Proxy.Rf_setVar(installedName, expression.DangerousGetHandle(), this.handle);
+			IntPtr installedName = Engine.GetFunction<Rf_install>("Rf_install")(name);
+			Engine.GetFunction<Rf_setVar>("Rf_setVar")(installedName, expression.DangerousGetHandle(), handle);
 		}
-		
+
 		/// <summary>
 		/// Gets the symbol names defined in this environment.
 		/// </summary>
@@ -81,9 +80,9 @@ namespace RDotNet
 		/// <returns>Symbol names.</returns>
 		public string[] GetSymbolNames(bool all = false)
 		{
-			CharacterVector symbolNames = new CharacterVector(Engine, Engine.Proxy.R_lsInternal(this.handle, all));
+			var symbolNames = new CharacterVector(Engine, Engine.GetFunction<R_lsInternal>("R_lsInternal")(handle, all));
 			int length = symbolNames.Length;
-			string[] copy = new string[length];
+			var copy = new string[length];
 			symbolNames.CopyTo(copy, length);
 			return copy;
 		}

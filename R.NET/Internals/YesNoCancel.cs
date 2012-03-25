@@ -9,10 +9,12 @@
 		/// User agreed.
 		/// </summary>
 		Yes = 1,
+
 		/// <summary>
 		/// User disagreed.
 		/// </summary>
 		No = -1,
+
 		/// <summary>
 		/// User abandoned to answer.
 		/// </summary>

@@ -7,6 +7,7 @@ using System.Security.Permissions;
 using System.Text;
 using RDotNet.Devices;
 using RDotNet.Internals;
+using RDotNet.NativeLibrary;
 
 namespace RDotNet
 {
@@ -15,10 +16,10 @@ namespace RDotNet
 	/// </summary>
 	/// <example>This example generates and outputs five random numbers from standard normal distribution.
 	/// <code>
-	/// REngine.SetDllDirectory(@"C:\Program Files\R\R-2.12.0\bin\i386");
-	/// using (REngine engine = REngine.CreateInstance("RDotNet"))
+	/// Environment.SetEnvironmentVariable("PATH", @"C:\Program Files\R\R-2.12.0\bin\i386");
+	/// using (REngine engine = REngine.CreateInstance("R.dll", "RDotNet", null))
 	/// {
-	///	NumericVector random = engine.EagerEvaluate("rnorm(5, 0, 1)").AsNumeric();
+	///	NumericVector random = engine.Evaluate("rnorm(5, 0, 1)").AsNumeric();
 	///	foreach (double r in random)
 	///	{
 	///		Console.Write(r + " ");
@@ -27,45 +28,21 @@ namespace RDotNet
 	/// </code>
 	/// </example>
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-	public class REngine : LateBoundUnmanagedDll
+	public class REngine : UnmanagedDll
 	{
-		private static readonly IDictionary<string, REngine> instances = new Dictionary<string, REngine>();
+		private static readonly ICharacterDevice DefaultDevice = new ConsoleDevice();
+		private static readonly Dictionary<string, REngine> instances = new Dictionary<string, REngine>();
 
-#if WINDOWS
-		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-		private delegate IntPtr _getDLLVersion();
-#endif
+		private readonly string id;
+		private CharacterDeviceAdapter adapter;
+		private bool isRunning;
+		private StartupParameter parameter;
 
-		/// <summary>
-		/// Gets the version of R.DLL.
-		/// </summary>
-		public Version DllVersion
+		private REngine(string id, string dll)
+			: base(dll)
 		{
-			get
-			{
-				if (IsInvalid)
-				{
-					throw new InvalidOperationException();
-				}
-				// As R's version definitions are defined in #define preprocessor,
-				// C# cannot access them dynamically.
-				// But, on Win32 platform, we can get the version string via getDLLVersion function.
-#if MAC || LINUX
-				throw new NotImplementedException();
-#elif WINDOWS
-				var getVersion = GetFunction<_getDLLVersion>("getDLLVersion");
-				string version = Marshal.PtrToStringAnsi(getVersion());
-				return new Version(version);
-#endif
-			}
-		}
-
-		public override bool IsInvalid
-		{
-			get
-			{
-				return !IsRunning || base.IsInvalid;
-			}
+			this.id = id;
+			this.isRunning = false;
 		}
 
 		/// <summary>
@@ -73,32 +50,44 @@ namespace RDotNet
 		/// </summary>
 		public bool IsRunning
 		{
+			get { return this.isRunning; }
+		}
+
+		/// <summary>
+		/// Gets the version of R.DLL.
+		/// </summary>
+		public string DllVersion
+		{
 			get
 			{
-				return Proxy != null;
+				// As R's version definitions are defined in #define preprocessor,
+				// C# cannot access them dynamically.
+				// But, on Win32 platform, we can get the version string via getDLLVersion function.
+				if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+				{
+					throw new NotImplementedException();
+				}
+				var getVersion = GetFunction<_getDLLVersion>("getDLLVersion");
+				return Marshal.PtrToStringAnsi(getVersion());
 			}
 		}
 
-		private readonly string id;
 		/// <summary>
 		/// Gets the ID of this instance.
 		/// </summary>
 		public string ID
 		{
-			get
-			{
-				return id;
-			}
+			get { return this.id; }
 		}
 
 		/// <summary>
 		/// Gets the global environment.
 		/// </summary>
-		public RDotNet.Environment GlobalEnvironment
+		public REnvironment GlobalEnvironment
 		{
 			get
 			{
-				if (IsInvalid)
+				if (!IsRunning)
 				{
 					throw new InvalidOperationException();
 				}
@@ -109,11 +98,11 @@ namespace RDotNet
 		/// <summary>
 		/// Gets the root environment.
 		/// </summary>
-		public RDotNet.Environment EmptyEnvironment
+		public REnvironment EmptyEnvironment
 		{
 			get
 			{
-				if (IsInvalid)
+				if (!IsRunning)
 				{
 					throw new InvalidOperationException();
 				}
@@ -124,11 +113,11 @@ namespace RDotNet
 		/// <summary>
 		/// Gets the base environment.
 		/// </summary>
-		public RDotNet.Environment BaseNamespace
+		public REnvironment BaseNamespace
 		{
 			get
 			{
-				if (IsInvalid)
+				if (!IsRunning)
 				{
 					throw new InvalidOperationException();
 				}
@@ -143,7 +132,7 @@ namespace RDotNet
 		{
 			get
 			{
-				if (IsInvalid)
+				if (!IsRunning)
 				{
 					throw new InvalidOperationException();
 				}
@@ -158,7 +147,7 @@ namespace RDotNet
 		{
 			get
 			{
-				if (IsInvalid)
+				if (!IsRunning)
 				{
 					throw new InvalidOperationException();
 				}
@@ -166,151 +155,46 @@ namespace RDotNet
 			}
 		}
 
-		private INativeMethodsProxy proxy;
-		internal INativeMethodsProxy Proxy
-		{
-			get
-			{
-				return proxy;
-			}
-		}
-
-		private CharacterDeviceAdapter adapter;
-		private RStart start;
-
-		private REngine(string id, string[] args)
-			: base(Constants.RDllName)
-		{
-			this.id = id;
-			this.proxy = GetDefaultProxy();
-			this.adapter = null;
-
-			string[] newArgs = Utility.AddFirst(id, args ?? new string[0]);
-			Proxy.Rf_initEmbeddedR(newArgs.Length, newArgs);
-		}
-
-		private REngine(string id, string[] args, CharacterDeviceAdapter adapter)
-			: base(Constants.RDllName)
-		{
-
-			this.id = id;
-			this.proxy = GetDefaultProxy();
-			this.adapter = adapter;
-
-			string[] newArgs = Utility.AddFirst(id, args ?? new string[0]);
-			int argc = newArgs.Length;
-
-			Proxy.R_setStartTime();
-			Proxy.Rf_initialize_R(argc, newArgs);
-			Proxy.R_DefParams(out start);
-			adapter.Install(this, ref start);
-			Proxy.R_common_command_line(ref argc, newArgs, ref start);
-			Proxy.R_set_command_line_arguments(newArgs.Length, newArgs);
-			Proxy.R_SetParams(ref start);
-			Proxy.setup_Rmainloop();
-		}
-
-		private REngine(string id, OutputMode output, CharacterDeviceAdapter adapter)
-			: base(Constants.RDllName)
-		{
-			this.id = id;
-			this.proxy = GetDefaultProxy();
-			this.adapter = adapter;
-
-			Proxy.R_setStartTime();
-			Proxy.Rf_initialize_R(1, new string[] { id });
-			Proxy.R_DefParams(out start);
-			adapter.Install(this, ref start);
-			start.R_Quiet = (output & OutputMode.Quiet) == OutputMode.Quiet;
-			start.R_Slave = (output & OutputMode.Slave) == OutputMode.Slave;
-			start.R_Verbose = (output & OutputMode.Verbose) == OutputMode.Verbose;
-			Proxy.R_SetParams(ref start);
-			Proxy.setup_Rmainloop();
-		}
-
-		private INativeMethodsProxy GetDefaultProxy()
-		{
-			OperatingSystem os = System.Environment.OSVersion;
-			switch (os.Platform)
-			{
-				case PlatformID.Win32NT:
-					return DirectNativeMethods.Instance;
-				case PlatformID.MacOSX:
-				case PlatformID.Unix:
-					return new DelegateNativeMethods(this);
-				default:
-					throw new NotSupportedException(os.ToString());
-			}
-		}
-
 		/// <summary>
 		/// Creates a new instance that handles R.DLL.
 		/// </summary>
 		/// <param name="id">ID.</param>
-		/// <param name="args">Arguments for initializing.</param>
-		/// <param name="device">The IO device.</param>
+		/// <param name="dll">The core dll of R.</param>
 		/// <returns>The engine.</returns>
-		[Obsolete]
-		public static REngine CreateInstance(string id, string[] args, ICharacterDevice device = null)
+		public static REngine CreateInstance(string id, string dll = null)
 		{
 			if (id == null)
 			{
-				throw new ArgumentNullException();
+				throw new ArgumentNullException("id", "Empty ID is not allowed.");
 			}
 			if (id == string.Empty)
 			{
-				throw new ArgumentException();
+				throw new ArgumentException("Empty ID is not allowed.", "id");
 			}
 			if (instances.ContainsKey(id))
 			{
 				throw new ArgumentException();
 			}
-
-			CharacterDeviceAdapter adapter = new CharacterDeviceAdapter(device ?? new ConsoleDevice());
-			REngine engine = new REngine(id, args, adapter);
+			if (dll == null)
+			{
+				switch (Environment.OSVersion.Platform)
+				{
+					case PlatformID.Win32NT:
+						dll = "R.dll";
+						break;
+					case PlatformID.MacOSX:
+						dll = "libR.dylib";
+						break;
+					case PlatformID.Unix:
+						dll = "libR.so";
+						break;
+					default:
+						throw new NotSupportedException();
+				}
+			}
+			var engine = new REngine(id, dll);
 			instances.Add(id, engine);
-
 			return engine;
-		}
-
-		/// <summary>
-		/// Creates a new instance that handles R.DLL.
-		/// </summary>
-		/// <param name="id">ID.</param>
-		/// <param name="output">The output mode.</param>
-		/// <param name="device">The IO device.</param>
-		/// <returns>The engine.</returns>
-		public static REngine CreateInstance(string id, OutputMode output = OutputMode.None, ICharacterDevice device = null)
-		{
-			if (id == null)
-			{
-				throw new ArgumentNullException();
-			}
-			if (id == string.Empty)
-			{
-				throw new ArgumentException();
-			}
-			if (instances.ContainsKey(id))
-			{
-				throw new ArgumentException();
-			}
-
-			CharacterDeviceAdapter adapter = new CharacterDeviceAdapter(device ?? new ConsoleDevice());
-			REngine engine = new REngine(id, output, adapter);
-			instances.Add(id, engine);
-
-			return engine;
-		}
-
-		/// <summary>
-		/// Creates a new instance that handles R.DLL.
-		/// </summary>
-		/// <param name="id">ID.</param>
-		/// <param name="device">The IO device.</param>
-		/// <returns>The engine.</returns>
-		public static REngine CreateInstance(string id, ICharacterDevice device)
-		{
-			return CreateInstance(id, OutputMode.None, device);
 		}
 
 		/// <summary>
@@ -320,7 +204,35 @@ namespace RDotNet
 		/// <returns>The engine.</returns>
 		public static REngine GetInstanceFromID(string id)
 		{
-			return instances.ContainsKey(id) ? instances[id] : null;
+			REngine engine;
+			instances.TryGetValue(id, out engine);
+			return engine;
+		}
+
+		/// <summary>
+		/// Initializes R process.
+		/// </summary>
+		/// <param name="parameter">The startup parameter.</param>
+		/// <param name="device">The IO device.</param>
+		public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null)
+		{
+			this.parameter = parameter ?? new StartupParameter();
+			this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
+			GetFunction<R_setStartTime>("R_setStartTime")();
+			GetFunction<Rf_initialize_R>("Rf_initialize_R")(1, new[] { ID });
+			this.adapter.Install(this, this.parameter);
+			switch (Environment.OSVersion.Platform)
+			{
+				case PlatformID.Win32NT:
+					GetFunction<R_SetParams_Windows>("R_SetParams")(ref this.parameter.start);
+					break;
+				case PlatformID.MacOSX:
+				case PlatformID.Unix:
+					GetFunction<R_SetParams_Unix>("R_SetParams")(ref this.parameter.start.Common);
+					break;
+			}
+			GetFunction<setup_Rmainloop>("setup_Rmainloop")();
+			this.isRunning = true;
 		}
 
 		/// <summary>
@@ -330,7 +242,7 @@ namespace RDotNet
 		/// <returns>The symbol.</returns>
 		public SymbolicExpression GetSymbol(string name)
 		{
-			if (IsInvalid)
+			if (!IsRunning)
 			{
 				throw new InvalidOperationException();
 			}
@@ -343,9 +255,9 @@ namespace RDotNet
 		/// <param name="name">The name.</param>
 		/// <param name="environment">The environment. If <c>null</c> is passed, <see cref="GlobalEnvironment"/> is used.</param>
 		/// <returns>The symbol.</returns>
-		public SymbolicExpression GetSymbol(string name, RDotNet.Environment environment)
+		public SymbolicExpression GetSymbol(string name, REnvironment environment)
 		{
-			if (IsInvalid)
+			if (!IsRunning)
 			{
 				throw new InvalidOperationException();
 			}
@@ -363,7 +275,7 @@ namespace RDotNet
 		/// <param name="expression">The symbol.</param>
 		public void SetSymbol(string name, SymbolicExpression expression)
 		{
-			if (IsInvalid)
+			if (!IsRunning)
 			{
 				throw new InvalidOperationException();
 			}
@@ -376,9 +288,9 @@ namespace RDotNet
 		/// <param name="name">The name.</param>
 		/// <param name="expression">The symbol.</param>
 		/// <param name="environment">The environment. If <c>null</c> is passed, <see cref="GlobalEnvironment"/> is used.</param>
-		public void SetSymbol(string name, SymbolicExpression expression, RDotNet.Environment environment)
+		public void SetSymbol(string name, SymbolicExpression expression, REnvironment environment)
 		{
-			if (IsInvalid)
+			if (!IsRunning)
 			{
 				throw new InvalidOperationException();
 			}
@@ -394,13 +306,13 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="statement">The statement.</param>
 		/// <returns>Last evaluation.</returns>
-		public SymbolicExpression EagerEvaluate(string statement)
+		public SymbolicExpression Evaluate(string statement)
 		{
-			if (IsInvalid)
+			if (!IsRunning)
 			{
 				throw new InvalidOperationException();
 			}
-			return Evaluate(statement).LastOrDefault();
+			return Defer(statement).LastOrDefault();
 		}
 
 		/// <summary>
@@ -408,13 +320,13 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="stream">The stream.</param>
 		/// <returns>Last evaluation.</returns>
-		public SymbolicExpression EagerEvaluate(Stream stream)
+		public SymbolicExpression Evaluate(Stream stream)
 		{
-			if (IsInvalid)
+			if (!IsRunning)
 			{
 				throw new InvalidOperationException();
 			}
-			return Evaluate(stream).LastOrDefault();
+			return Defer(stream).LastOrDefault();
 		}
 
 		/// <summary>
@@ -422,9 +334,9 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="statement">The statement.</param>
 		/// <returns>Each evaluation.</returns>
-		public IEnumerable<SymbolicExpression> Evaluate(string statement)
+		private IEnumerable<SymbolicExpression> Defer(string statement)
 		{
-			if (IsInvalid)
+			if (!IsRunning)
 			{
 				throw new InvalidOperationException();
 			}
@@ -435,7 +347,7 @@ namespace RDotNet
 
 			using (TextReader reader = new StringReader(statement))
 			{
-				StringBuilder incompleteStatement = new StringBuilder();
+				var incompleteStatement = new StringBuilder();
 				string line;
 				while ((line = reader.ReadLine()) != null)
 				{
@@ -456,9 +368,9 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="stream">The stream.</param>
 		/// <returns>Each evaluation.</returns>
-		public IEnumerable<SymbolicExpression> Evaluate(Stream stream)
+		public IEnumerable<SymbolicExpression> Defer(Stream stream)
 		{
-			if (IsInvalid)
+			if (!IsRunning)
 			{
 				throw new InvalidOperationException();
 			}
@@ -473,7 +385,7 @@ namespace RDotNet
 
 			using (TextReader reader = new StreamReader(stream))
 			{
-				StringBuilder incompleteStatement = new StringBuilder();
+				var incompleteStatement = new StringBuilder();
 				string line;
 				while ((line = reader.ReadLine()) != null)
 				{
@@ -511,12 +423,12 @@ namespace RDotNet
 		private SymbolicExpression Parse(string statement, StringBuilder incompleteStatement)
 		{
 			incompleteStatement.Append(statement);
-			IntPtr s = Proxy.Rf_mkString(incompleteStatement.ToString());
+			IntPtr s = GetFunction<Rf_mkString>("Rf_mkString")(incompleteStatement.ToString());
 
 			using (new ProtectedPointer(this, s))
 			{
 				ParseStatus status;
-				ExpressionVector vector = new ExpressionVector(this, Proxy.R_ParseVector(s, -1, out status, NilValue.DangerousGetHandle()));
+				var vector = new ExpressionVector(this, GetFunction<R_ParseVector>("R_ParseVector")(s, -1, out status, NilValue.DangerousGetHandle()));
 				if (vector.Length == 0)
 				{
 					return null;
@@ -551,35 +463,28 @@ namespace RDotNet
 		/// <param name="args">The arguments.</param>
 		public void SetCommandLineArguments(string[] args)
 		{
-			if (IsInvalid)
+			if (!IsRunning)
 			{
 				throw new InvalidOperationException();
 			}
 			string[] newArgs = Utility.AddFirst(ID, args);
-			Proxy.R_set_command_line_arguments(newArgs.Length, newArgs);
+			GetFunction<R_set_command_line_arguments>("R_set_command_line_arguments")(newArgs.Length, newArgs);
 		}
 
 		protected override void Dispose(bool disposing)
 		{
-			if (instances.ContainsKey(ID))
+			this.isRunning = false;
+			instances.Remove(ID);
+			if (disposing)
 			{
-				instances.Remove(ID);
+				GetFunction<Rf_endEmbeddedR>("Rf_endEmbeddedR")(0);
 			}
-
-			if (IsRunning)
+			if (this.adapter != null)
 			{
-				if (disposing)
-				{
-					Proxy.Rf_endEmbeddedR(0);
-				}
-				proxy = null;
-				if (adapter != null)
-				{
-					adapter.Dispose();
-					adapter = null;
-				}
+				this.adapter.Dispose();
+				this.adapter = null;
 			}
-
+			GC.KeepAlive(this.parameter);
 			base.Dispose(disposing);
 		}
 
@@ -590,13 +495,13 @@ namespace RDotNet
 		/// <returns>The symbol.</returns>
 		public SymbolicExpression GetPredefinedSymbol(string name)
 		{
-			if (IsInvalid)
+			if (!IsRunning)
 			{
 				throw new InvalidOperationException();
 			}
 			try
 			{
-				IntPtr pointer = GetSymbolPointer(this.handle, name);
+				IntPtr pointer = DangerousGetHandle(name);
 				return new SymbolicExpression(this, Marshal.ReadIntPtr(pointer));
 			}
 			catch (Exception ex)
@@ -605,13 +510,11 @@ namespace RDotNet
 			}
 		}
 
-#if MAC
-		[DllImport("libdl.dylib", EntryPoint = "dlsym")]
-#elif LINUX
-		[DllImport("libdl.so", EntryPoint = "dlsym")]
-#elif WINDOWS
-		[DllImport("kernel32.dll", EntryPoint = "GetProcAddress")]
-#endif
-		private static extern IntPtr GetSymbolPointer(IntPtr handle, [MarshalAs(UnmanagedType.LPStr)] string symbol);
+		#region Nested type: _getDLLVersion
+
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		private delegate IntPtr _getDLLVersion();
+
+		#endregion
 	}
 }

@@ -13,6 +13,47 @@ namespace RDotNet
 	public class RawVector : Vector<byte>
 	{
 		/// <summary>
+		/// Creates a new RawVector with the specified length.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="length">The length.</param>
+		public RawVector(REngine engine, int length)
+			: base(engine, SymbolicExpressionType.RawVector, length)
+		{}
+
+		/// <summary>
+		/// Creates a new RawVector with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="vector">The values.</param>
+		/// <seealso cref="REngineExtension.CreateRawVector(REngine, IEnumerable{byte})"/>
+		public RawVector(REngine engine, IEnumerable<byte> vector)
+			: base(engine, SymbolicExpressionType.RawVector, vector)
+		{}
+
+		/// <summary>
+		/// Creates a new RawVector with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="vector">The values.</param>
+		/// <seealso cref="REngineExtension.CreateRawVector(REngine, int)"/>
+		public RawVector(REngine engine, byte[] vector)
+			: base(engine, SymbolicExpressionType.RawVector, vector.Length)
+		{
+			Marshal.Copy(vector, 0, DataPointer, vector.Length);
+		}
+
+		/// <summary>
+		/// Creates a new instance for a raw vector.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a raw vector.</param>
+		/// <seealso cref="REngineExtension.CreateRawVector(REngine, byte[])"/>
+		protected internal RawVector(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
+		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the element to get or set.</param>
@@ -50,54 +91,7 @@ namespace RDotNet
 		/// </summary>
 		protected override int DataSize
 		{
-			get
-			{
-				return sizeof(byte);
-			}
-		}
-
-		/// <summary>
-		/// Creates a new RawVector with the specified length.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="length">The length.</param>
-		public RawVector(REngine engine, int length)
-			: base(engine, SymbolicExpressionType.RawVector, length)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new RawVector with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="vector">The values.</param>
-		/// <seealso cref="REngineExtension.CreateRawVector(REngine, IEnumerable{byte})"/>
-		public RawVector(REngine engine, IEnumerable<byte> vector)
-			: base(engine, SymbolicExpressionType.RawVector, vector)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new RawVector with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="vector">The values.</param>
-		/// <seealso cref="REngineExtension.CreateRawVector(REngine, int)"/>
-		public RawVector(REngine engine, byte[] vector)
-			: base(engine, SymbolicExpressionType.RawVector, vector.Length)
-		{
-			Marshal.Copy(vector, 0, DataPointer, vector.Length);
-		}
-
-		/// <summary>
-		/// Creates a new instance for a raw vector.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to a raw vector.</param>
-		/// <seealso cref="REngineExtension.CreateRawVector(REngine, byte[])"/>
-		internal protected RawVector(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
+			get { return sizeof(byte); }
 		}
 
 		/// <summary>
@@ -117,7 +111,7 @@ namespace RDotNet
 			{
 				throw new IndexOutOfRangeException("length");
 			}
-			if (sourceIndex < 0 || this.Length < sourceIndex + length)
+			if (sourceIndex < 0 || Length < sourceIndex + length)
 			{
 				throw new IndexOutOfRangeException("sourceIndex");
 			}

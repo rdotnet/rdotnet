@@ -14,6 +14,10 @@ namespace RDotNet
 	/// </remarks>
 	public class DynamicVector : Vector<object>
 	{
+		protected internal DynamicVector(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
 		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
@@ -115,14 +119,9 @@ namespace RDotNet
 			}
 		}
 
-		internal protected DynamicVector(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
-		}
-
 		private double ReadDouble(IntPtr pointer, int offset)
 		{
-			byte[] data = new byte[sizeof(double)];
+			var data = new byte[sizeof(double)];
 			for (int byteIndex = 0; byteIndex < data.Length; byteIndex++)
 			{
 				data[byteIndex] = Marshal.ReadByte(pointer, offset + byteIndex);
@@ -158,7 +157,7 @@ namespace RDotNet
 
 		private void WriteString(string value, IntPtr pointer, int offset)
 		{
-			IntPtr stringPointer = Engine.Proxy.Rf_mkChar(value);
+			IntPtr stringPointer = Engine.GetFunction<Rf_mkChar>("Rf_mkChar")(value);
 			Marshal.WriteIntPtr(pointer, offset, stringPointer);
 		}
 
@@ -186,7 +185,7 @@ namespace RDotNet
 
 		private Complex ReadComplex(IntPtr pointer, int offset)
 		{
-			byte[] data = new byte[Marshal.SizeOf(typeof(Complex))];
+			var data = new byte[Marshal.SizeOf(typeof(Complex))];
 			Marshal.Copy(pointer, data, 0, data.Length);
 			double real = BitConverter.ToDouble(data, 0);
 			double imaginary = BitConverter.ToDouble(data, sizeof(double));

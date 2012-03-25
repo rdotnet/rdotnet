@@ -21,7 +21,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -40,7 +40,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -59,7 +59,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -78,7 +78,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -97,7 +97,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -116,7 +116,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -135,7 +135,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -154,7 +154,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -173,7 +173,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -192,7 +192,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -211,7 +211,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -230,7 +230,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -250,7 +250,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -270,7 +270,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -290,7 +290,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -310,7 +310,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -330,7 +330,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -350,7 +350,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -369,7 +369,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -388,7 +388,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -407,7 +407,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -426,7 +426,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -445,7 +445,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}
@@ -464,7 +464,7 @@ namespace RDotNet
 			{
 				throw new ArgumentNullException();
 			}
-			if (engine.IsInvalid)
+			if (!engine.IsRunning)
 			{
 				throw new ArgumentException();
 			}

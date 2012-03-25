@@ -13,6 +13,36 @@ namespace RDotNet
 	public class ComplexMatrix : Matrix<Complex>
 	{
 		/// <summary>
+		/// Creates a new empty ComplexMatrix with the specified size.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="rowCount">The row size.</param>
+		/// <param name="columnCount">The column size.</param>
+		/// <seealso cref="REngineExtension.CreateComplexMatrix(REngine, int, int)"/>
+		public ComplexMatrix(REngine engine, int rowCount, int columnCount)
+			: base(engine, SymbolicExpressionType.ComplexVector, rowCount, columnCount)
+		{}
+
+		/// <summary>
+		/// Creates a new ComplexMatrix with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="matrix">The values.</param>
+		/// <seealso cref="REngineExtension.CreateComplexMatrix(REngine, Complex[,])"/>
+		public ComplexMatrix(REngine engine, Complex[,] matrix)
+			: base(engine, SymbolicExpressionType.CharacterVector, matrix)
+		{}
+
+		/// <summary>
+		/// Creates a new instance for a complex number matrix.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a complex number matrix.</param>
+		protected internal ComplexMatrix(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
+		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
 		/// <param name="rowIndex">The zero-based rowIndex index of the element to get or set.</param>
@@ -32,7 +62,7 @@ namespace RDotNet
 				}
 				using (new ProtectedPointer(this))
 				{
-					double[] data = new double[2];
+					var data = new double[2];
 					int offset = GetOffset(rowIndex, columnIndex);
 					IntPtr pointer = IntPtr.Add(DataPointer, offset);
 					Marshal.Copy(pointer, data, 0, data.Length);
@@ -51,7 +81,7 @@ namespace RDotNet
 				}
 				using (new ProtectedPointer(this))
 				{
-					double[] data = new double[] { value.Real, value.Imaginary };
+					var data = new[] { value.Real, value.Imaginary };
 					int offset = GetOffset(rowIndex, columnIndex);
 					IntPtr pointer = IntPtr.Add(DataPointer, offset);
 					Marshal.Copy(data, 0, pointer, data.Length);
@@ -64,43 +94,7 @@ namespace RDotNet
 		/// </summary>
 		protected override int DataSize
 		{
-			get
-			{
-				return Marshal.SizeOf(typeof(Complex));
-			}
-		}
-
-		/// <summary>
-		/// Creates a new empty ComplexMatrix with the specified size.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="rowCount">The row size.</param>
-		/// <param name="columnCount">The column size.</param>
-		/// <seealso cref="REngineExtension.CreateComplexMatrix(REngine, int, int)"/>
-		public ComplexMatrix(REngine engine, int rowCount, int columnCount)
-			: base(engine, SymbolicExpressionType.ComplexVector, rowCount, columnCount)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new ComplexMatrix with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="matrix">The values.</param>
-		/// <seealso cref="REngineExtension.CreateComplexMatrix(REngine, Complex[,])"/>
-		public ComplexMatrix(REngine engine, Complex[, ] matrix)
-			: base(engine, SymbolicExpressionType.CharacterVector, matrix)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new instance for a complex number matrix.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to a complex number matrix.</param>
-		internal protected ComplexMatrix(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
+			get { return Marshal.SizeOf(typeof(Complex)); }
 		}
 	}
 }
