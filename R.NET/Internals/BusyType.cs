@@ -9,6 +9,7 @@
 		/// Terminated states of business.
 		/// </summary>
 		None = 0,
+
 		/// <summary>
 		/// Embarks on an extended computation
 		/// </summary>

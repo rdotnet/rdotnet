@@ -13,55 +13,6 @@ namespace RDotNet
 	public class NumericVector : Vector<double>
 	{
 		/// <summary>
-		/// Gets or sets the element at the specified index.
-		/// </summary>
-		/// <param name="index">The zero-based index of the element to get or set.</param>
-		/// <returns>The element at the specified index.</returns>
-		public override double this[int index]
-		{
-			get
-			{
-				if (index < 0 || Length <= index)
-				{
-					throw new ArgumentOutOfRangeException();
-				}
-				using (new ProtectedPointer(this))
-				{
-					double[] data = new double[1];
-					int offset = GetOffset(index);
-					IntPtr pointer = IntPtr.Add(DataPointer, offset);
-					Marshal.Copy(pointer, data, 0, data.Length);
-					return data[0];
-				}
-			}
-			set
-			{
-				if (index < 0 || Length <= index)
-				{
-					throw new ArgumentOutOfRangeException();
-				}
-				using (new ProtectedPointer(this))
-				{
-					double[] data = new double[] { value };
-					int offset = GetOffset(index);
-					IntPtr pointer = IntPtr.Add(DataPointer, offset);
-					Marshal.Copy(data, 0, pointer, data.Length);
-				}
-			}
-		}
-
-		/// <summary>
-		/// Gets the size of a real number in byte.
-		/// </summary>
-		protected override int DataSize
-		{
-			get
-			{
-				return sizeof(double);
-			}
-		}
-
-		/// <summary>
 		/// Creates a new empty NumericVector with the specified length.
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
@@ -69,8 +20,7 @@ namespace RDotNet
 		/// <seealso cref="REngineExtension.CreateNumericVector(REngine, int)"/>
 		public NumericVector(REngine engine, int length)
 			: base(engine, SymbolicExpressionType.NumericVector, length)
-		{
-		}
+		{}
 
 		/// <summary>
 		/// Creates a new NumericVector with the specified values.
@@ -80,8 +30,7 @@ namespace RDotNet
 		/// <seealso cref="REngineExtension.CreateNumericVector(REngine, IEnumerable{double})"/>
 		public NumericVector(REngine engine, IEnumerable<double> vector)
 			: base(engine, SymbolicExpressionType.NumericVector, vector)
-		{
-		}
+		{}
 
 		/// <summary>
 		/// Creates a new NumericVector with the specified values.
@@ -100,9 +49,54 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="coerced">The pointer to a numeric vector.</param>
-		internal protected NumericVector(REngine engine, IntPtr coerced)
+		protected internal NumericVector(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
+		{}
+
+		/// <summary>
+		/// Gets or sets the element at the specified index.
+		/// </summary>
+		/// <param name="index">The zero-based index of the element to get or set.</param>
+		/// <returns>The element at the specified index.</returns>
+		public override double this[int index]
 		{
+			get
+			{
+				if (index < 0 || Length <= index)
+				{
+					throw new ArgumentOutOfRangeException();
+				}
+				using (new ProtectedPointer(this))
+				{
+					var data = new double[1];
+					int offset = GetOffset(index);
+					IntPtr pointer = IntPtr.Add(DataPointer, offset);
+					Marshal.Copy(pointer, data, 0, data.Length);
+					return data[0];
+				}
+			}
+			set
+			{
+				if (index < 0 || Length <= index)
+				{
+					throw new ArgumentOutOfRangeException();
+				}
+				using (new ProtectedPointer(this))
+				{
+					var data = new[] { value };
+					int offset = GetOffset(index);
+					IntPtr pointer = IntPtr.Add(DataPointer, offset);
+					Marshal.Copy(data, 0, pointer, data.Length);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the size of a real number in byte.
+		/// </summary>
+		protected override int DataSize
+		{
+			get { return sizeof(double); }
 		}
 
 		/// <summary>
@@ -122,7 +116,7 @@ namespace RDotNet
 			{
 				throw new IndexOutOfRangeException("length");
 			}
-			if (sourceIndex < 0 || this.Length < sourceIndex + length)
+			if (sourceIndex < 0 || Length < sourceIndex + length)
 			{
 				throw new IndexOutOfRangeException("sourceIndex");
 			}

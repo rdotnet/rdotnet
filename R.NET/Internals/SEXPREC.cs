@@ -11,82 +11,52 @@ namespace RDotNet.Internals
 
 		public sxpinfo sxpinfo
 		{
-			get
-			{
-				return header.sxpinfo;
-			}
+			get { return this.header.sxpinfo; }
 		}
 
 		public IntPtr attrib
 		{
-			get
-			{
-				return header.attrib;
-			}
+			get { return this.header.attrib; }
 		}
 
 		public IntPtr gengc_next_node
 		{
-			get
-			{
-				return header.gengc_next_node;
-			}
+			get { return this.header.gengc_next_node; }
 		}
 
 		public IntPtr gengc_prev_node
 		{
-			get
-			{
-				return header.gengc_prev_node;
-			}
+			get { return this.header.gengc_prev_node; }
 		}
 
 		internal primsxp primsxp
 		{
-			get
-			{
-				return u.primsxp;
-			}
+			get { return this.u.primsxp; }
 		}
 
 		internal symsxp symsxp
 		{
-			get
-			{
-				return u.symsxp;
-			}
+			get { return this.u.symsxp; }
 		}
 
 		internal listsxp listsxp
 		{
-			get
-			{
-				return u.listsxp;
-			}
+			get { return this.u.listsxp; }
 		}
 
 		internal envsxp envsxp
 		{
-			get
-			{
-				return u.envsxp;
-			}
+			get { return this.u.envsxp; }
 		}
 
 		internal closxp closxp
 		{
-			get
-			{
-				return u.closxp;
-			}
+			get { return this.u.closxp; }
 		}
 
 		internal promsxp promsxp
 		{
-			get
-			{
-				return u.promsxp;
-			}
+			get { return this.u.promsxp; }
 		}
 	}
 
@@ -95,14 +65,19 @@ namespace RDotNet.Internals
 	{
 		[FieldOffset(0)]
 		internal primsxp primsxp;
+
 		[FieldOffset(0)]
 		internal symsxp symsxp;
+
 		[FieldOffset(0)]
 		internal listsxp listsxp;
+
 		[FieldOffset(0)]
 		internal envsxp envsxp;
+
 		[FieldOffset(0)]
 		internal closxp closxp;
+
 		[FieldOffset(0)]
 		internal promsxp promsxp;
 	}
@@ -150,7 +125,6 @@ namespace RDotNet.Internals
 		public IntPtr formals;
 		public IntPtr body;
 		public IntPtr env;
-
 	}
 
 	[StructLayout(LayoutKind.Sequential)]

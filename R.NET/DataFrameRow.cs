@@ -9,6 +9,15 @@ namespace RDotNet
 	/// </summary>
 	public class DataFrameRow : DynamicObject
 	{
+		private DataFrame frame;
+		private int rowIndex;
+
+		public DataFrameRow(DataFrame frame, int rowIndex)
+		{
+			this.frame = frame;
+			this.rowIndex = rowIndex;
+		}
+
 		/// <summary>
 		/// Gets and sets the value at the specified column.
 		/// </summary>
@@ -47,34 +56,20 @@ namespace RDotNet
 			}
 		}
 
-		private DataFrame frame;
 		/// <summary>
 		/// Gets the data frame containing this row.
 		/// </summary>
 		public DataFrame DataFrame
 		{
-			get
-			{
-				return this.frame;
-			}
+			get { return this.frame; }
 		}
 
-		private int rowIndex;
 		/// <summary>
 		/// Gets the index of this row.
 		/// </summary>
 		public int RowIndex
 		{
-			get
-			{
-				return this.rowIndex;
-			}
-		}
-
-		public DataFrameRow(DataFrame frame, int rowIndex)
-		{
-			this.frame = frame;
-			this.rowIndex = rowIndex;
+			get { return this.rowIndex; }
 		}
 
 		public override IEnumerable<string> GetDynamicMemberNames()

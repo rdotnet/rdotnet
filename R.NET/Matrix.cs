@@ -13,16 +13,64 @@ namespace RDotNet
 	public abstract class Matrix<T> : SymbolicExpression
 	{
 		/// <summary>
+		/// Creates a new matrix with the specified size.
+		/// </summary>
+		/// <param name="engine">The engine.</param>
+		/// <param name="type">The element type.</param>
+		/// <param name="rowCount">The size of row.</param>
+		/// <param name="columnCount">The size of column.</param>
+		protected Matrix(REngine engine, SymbolicExpressionType type, int rowCount, int columnCount)
+			: base(engine, engine.GetFunction<Rf_allocMatrix>("Rf_allocMatrix")(type, rowCount, columnCount))
+		{
+			if (rowCount <= 0)
+			{
+				throw new ArgumentOutOfRangeException("rowCount");
+			}
+			if (columnCount <= 0)
+			{
+				throw new ArgumentOutOfRangeException("columnCount");
+			}
+			var empty = new byte[rowCount * columnCount * DataSize];
+			Marshal.Copy(empty, 0, DataPointer, empty.Length);
+		}
+
+
+		/// <summary>
+		/// Creates a new matrix with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="type">The element type.</param>
+		/// <param name="matrix">The values.</param>
+		public Matrix(REngine engine, SymbolicExpressionType type, T[,] matrix)
+			: base(engine, engine.GetFunction<Rf_allocMatrix>("Rf_allocMatrix")(type, matrix.GetLength(0), matrix.GetLength(1)))
+		{
+			int rowCount = RowCount;
+			int columnCount = ColumnCount;
+			for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
+			{
+				for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
+				{
+					this[rowIndex, columnIndex] = matrix[rowIndex, columnIndex];
+				}
+			}
+		}
+
+		/// <summary>
+		/// Creates a new instance for a matrix.
+		/// </summary>
+		/// <param name="engine">The engine.</param>
+		/// <param name="coerced">The pointer to a matrix.</param>
+		protected Matrix(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
+		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
 		/// <param name="rowIndex">The zero-based row index of the element to get or set.</param>
 		/// <param name="columnIndex">The zero-based column index of the element to get or set.</param>
 		/// <returns>The element at the specified index.</returns>
-		public abstract T this[int rowIndex, int columnIndex]
-		{
-			get;
-			set;
-		}
+		public abstract T this[int rowIndex, int columnIndex] { get; set; }
 
 		/// <summary>
 		/// Gets or sets the element at the specified names.
@@ -87,10 +135,7 @@ namespace RDotNet
 		/// </summary>
 		public int RowCount
 		{
-			get
-			{
-				return Engine.Proxy.Rf_nrows(this.handle);
-			}
+			get { return Engine.GetFunction<Rf_nrows>("Rf_nrows")(handle); }
 		}
 
 		/// <summary>
@@ -98,10 +143,7 @@ namespace RDotNet
 		/// </summary>
 		public int ColumnCount
 		{
-			get
-			{
-				return Engine.Proxy.Rf_ncols(this.handle);
-			}
+			get { return Engine.GetFunction<Rf_ncols>("Rf_ncols")(handle); }
 		}
 
 		/// <summary>
@@ -111,7 +153,7 @@ namespace RDotNet
 		{
 			get
 			{
-				SymbolicExpression dimnamesSymbol = Engine.GetPredefinedSymbol(Constants.RDimnamesSymbolName);
+				SymbolicExpression dimnamesSymbol = Engine.GetPredefinedSymbol("R_DimNamesSymbol");
 				SymbolicExpression dimnames = GetAttribute(dimnamesSymbol);
 				if (dimnames == null)
 				{
@@ -124,7 +166,7 @@ namespace RDotNet
 				}
 
 				int length = rowNames.Length;
-				string[] result = new string[length];
+				var result = new string[length];
 				rowNames.CopyTo(result, length);
 				return result;
 			}
@@ -137,7 +179,7 @@ namespace RDotNet
 		{
 			get
 			{
-				SymbolicExpression dimnamesSymbol = Engine.GetPredefinedSymbol(Constants.RDimnamesSymbolName);
+				SymbolicExpression dimnamesSymbol = Engine.GetPredefinedSymbol("R_DimNamesSymbol");
 				SymbolicExpression dimnames = GetAttribute(dimnamesSymbol);
 				if (dimnames == null)
 				{
@@ -150,7 +192,7 @@ namespace RDotNet
 				}
 
 				int length = columnNames.Length;
-				string[] result = new string[length];
+				var result = new string[length];
 				columnNames.CopyTo(result, length);
 				return result;
 			}
@@ -161,72 +203,13 @@ namespace RDotNet
 		/// </summary>
 		protected IntPtr DataPointer
 		{
-			get
-			{
-				return IntPtr.Add(this.handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
-			}
+			get { return IntPtr.Add(handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC))); }
 		}
 
 		/// <summary>
 		/// Gets the size of an element in byte.
 		/// </summary>
-		protected abstract int DataSize
-		{
-			get;
-		}
-
-		/// <summary>
-		/// Creates a new matrix with the specified size.
-		/// </summary>
-		/// <param name="engine">The engine.</param>
-		/// <param name="type">The element type.</param>
-		/// <param name="rowCount">The size of row.</param>
-		/// <param name="columnCount">The size of column.</param>
-		protected Matrix(REngine engine, SymbolicExpressionType type, int rowCount, int columnCount)
-			: base(engine, engine.Proxy.Rf_allocMatrix(type, rowCount, columnCount))
-		{
-			if (rowCount <= 0)
-			{
-				throw new ArgumentOutOfRangeException("rowCount");
-			}
-			if (columnCount <= 0)
-			{
-				throw new ArgumentOutOfRangeException("columnCount");
-			}
-			byte[] empty = new byte[rowCount * columnCount * DataSize];
-			Marshal.Copy(empty, 0, DataPointer, empty.Length);
-		}
-
-
-		/// <summary>
-		/// Creates a new matrix with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="type">The element type.</param>
-		/// <param name="matrix">The values.</param>
-		public Matrix(REngine engine, SymbolicExpressionType type, T[, ] matrix)
-			: base(engine, engine.Proxy.Rf_allocMatrix(type, matrix.GetLength(0), matrix.GetLength(1)))
-		{
-			int rowCount = RowCount;
-			int columnCount = ColumnCount;
-			for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
-			{
-				for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
-				{
-					this[rowIndex, columnIndex] = matrix[rowIndex, columnIndex];
-				}
-			}
-		}
-
-		/// <summary>
-		/// Creates a new instance for a matrix.
-		/// </summary>
-		/// <param name="engine">The engine.</param>
-		/// <param name="coerced">The pointer to a matrix.</param>
-		protected Matrix(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
-		}
+		protected abstract int DataSize { get; }
 
 		/// <summary>
 		/// Gets the offset for the specified indexes.
@@ -263,11 +246,11 @@ namespace RDotNet
 			{
 				throw new IndexOutOfRangeException("columnCount");
 			}
-			if (sourceRowIndex < 0 || this.RowCount < sourceRowIndex + rowCount)
+			if (sourceRowIndex < 0 || RowCount < sourceRowIndex + rowCount)
 			{
 				throw new IndexOutOfRangeException("sourceRowIndex");
 			}
-			if (sourceColumnIndex < 0 || this.ColumnCount < sourceColumnIndex + columnCount)
+			if (sourceColumnIndex < 0 || ColumnCount < sourceColumnIndex + columnCount)
 			{
 				throw new IndexOutOfRangeException("sourceColumnIndex");
 			}

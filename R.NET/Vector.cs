@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -15,15 +16,53 @@ namespace RDotNet
 	public abstract class Vector<T> : SymbolicExpression, IEnumerable<T>
 	{
 		/// <summary>
+		/// Creates a new vector with the specified size.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="type">The element type.</param>
+		/// <param name="length">The length of vector.</param>
+		protected Vector(REngine engine, SymbolicExpressionType type, int length)
+			: base(engine, engine.GetFunction<Rf_allocVector>("Rf_allocVector")(type, length))
+		{
+			if (length <= 0)
+			{
+				throw new ArgumentOutOfRangeException("length");
+			}
+			var empty = new byte[length * DataSize];
+			Marshal.Copy(empty, 0, DataPointer, empty.Length);
+		}
+
+		/// <summary>
+		/// Creates a new vector with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="type">The element type.</param>
+		/// <param name="vector">The elements of vector.</param>
+		protected Vector(REngine engine, SymbolicExpressionType type, IEnumerable<T> vector)
+			: base(engine, engine.GetFunction<Rf_allocVector>("Rf_allocVector")(type, vector.Count()))
+		{
+			int index = 0;
+			foreach (T element in vector)
+			{
+				this[index++] = element;
+			}
+		}
+
+		/// <summary>
+		/// Creates a new instance for a vector.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a vector.</param>
+		protected Vector(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
+		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the element to get or set.</param>
 		/// <returns>The element at the specified index.</returns>
-		public abstract T this[int index]
-		{
-			get;
-			set;
-		}
+		public abstract T this[int index] { get; set; }
 
 		/// <summary>
 		/// Gets or sets the element at the specified name.
@@ -63,10 +102,7 @@ namespace RDotNet
 		/// </summary>
 		public int Length
 		{
-			get
-			{
-				return Engine.Proxy.Rf_length(this.handle);
-			}
+			get { return Engine.GetFunction<Rf_length>("Rf_length")(handle); }
 		}
 
 		/// <summary>
@@ -76,7 +112,7 @@ namespace RDotNet
 		{
 			get
 			{
-				SymbolicExpression namesSymbol = Engine.GetPredefinedSymbol(Constants.RNamesSymbolName);
+				SymbolicExpression namesSymbol = Engine.GetPredefinedSymbol("R_NamesSymbol");
 				SymbolicExpression names = GetAttribute(namesSymbol);
 				if (names == null)
 				{
@@ -89,7 +125,7 @@ namespace RDotNet
 				}
 
 				int length = namesVector.Length;
-				string[] result = new string[length];
+				var result = new string[length];
 				namesVector.CopyTo(result, length);
 				return result;
 			}
@@ -100,62 +136,30 @@ namespace RDotNet
 		/// </summary>
 		protected IntPtr DataPointer
 		{
-			get
-			{
-				return IntPtr.Add(this.handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
-			}
+			get { return IntPtr.Add(handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC))); }
 		}
 
 		/// <summary>
 		/// Gets the size of an element in byte.
 		/// </summary>
-		protected abstract int DataSize
-		{
-			get;
-		}
+		protected abstract int DataSize { get; }
 
-		/// <summary>
-		/// Creates a new vector with the specified size.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="type">The element type.</param>
-		/// <param name="length">The length of vector.</param>
-		protected Vector(REngine engine, SymbolicExpressionType type, int length)
-			: base(engine, engine.Proxy.Rf_allocVector(type, length))
-		{
-			if (length <= 0)
-			{
-				throw new ArgumentOutOfRangeException("length");
-			}
-			byte[] empty = new byte[length * DataSize];
-			Marshal.Copy(empty, 0, DataPointer, empty.Length);
-		}
+		#region IEnumerable<T> Members
 
-		/// <summary>
-		/// Creates a new vector with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="type">The element type.</param>
-		/// <param name="vector">The elements of vector.</param>
-		protected Vector(REngine engine, SymbolicExpressionType type, IEnumerable<T> vector)
-			: base(engine, engine.Proxy.Rf_allocVector(type, vector.Count()))
+		public IEnumerator<T> GetEnumerator()
 		{
-			int index = 0;
-			foreach (var element in vector)
+			for (int index = 0; index < Length; index++)
 			{
-				this[index++] = element;
+				yield return this[index];
 			}
 		}
 
-		/// <summary>
-		/// Creates a new instance for a vector.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to a vector.</param>
-		protected Vector(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
+		IEnumerator IEnumerable.GetEnumerator()
 		{
+			return GetEnumerator();
 		}
+
+		#endregion
 
 		/// <summary>
 		/// Copies the elements to the specified array.
@@ -174,7 +178,7 @@ namespace RDotNet
 			{
 				throw new IndexOutOfRangeException("length");
 			}
-			if (sourceIndex < 0 || this.Length < sourceIndex + length)
+			if (sourceIndex < 0 || Length < sourceIndex + length)
 			{
 				throw new IndexOutOfRangeException("sourceIndex");
 			}
@@ -197,19 +201,6 @@ namespace RDotNet
 		protected int GetOffset(int index)
 		{
 			return DataSize * index;
-		}
-
-		public IEnumerator<T> GetEnumerator()
-		{
-			for (int index = 0; index < Length; index++)
-			{
-				yield return this[index];
-			}
-		}
-
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
 		}
 	}
 }

@@ -16,6 +16,47 @@ namespace RDotNet
 	public class IntegerVector : Vector<int>
 	{
 		/// <summary>
+		/// Creates a new empty IntegerVector with the specified length.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="length">The length.</param>
+		/// <seealso cref="REngineExtension.CreateIntegerVector(REngine, int)"/>
+		public IntegerVector(REngine engine, int length)
+			: base(engine, SymbolicExpressionType.IntegerVector, length)
+		{}
+
+		/// <summary>
+		/// Creates a new IntegerVector with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="vector">The values.</param>
+		/// <seealso cref="REngineExtension.CreateIntegerVector(REngine, IEnumerable{int})"/>
+		public IntegerVector(REngine engine, IEnumerable<int> vector)
+			: base(engine, SymbolicExpressionType.IntegerVector, vector)
+		{}
+
+		/// <summary>
+		/// Creates a new IntegerVector with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="vector">The values.</param>
+		/// <seealso cref="REngineExtension.CreateIntegerVector(REngine, int[])"/>
+		public IntegerVector(REngine engine, int[] vector)
+			: base(engine, SymbolicExpressionType.IntegerVector, vector.Length)
+		{
+			Marshal.Copy(vector, 0, DataPointer, vector.Length);
+		}
+
+		/// <summary>
+		/// Creates a new instance for an integer vector.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to an integer vector.</param>
+		protected internal IntegerVector(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
+		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the element to get or set.</param>
@@ -53,54 +94,7 @@ namespace RDotNet
 		/// </summary>
 		protected override int DataSize
 		{
-			get
-			{
-				return sizeof(int);
-			}
-		}
-
-		/// <summary>
-		/// Creates a new empty IntegerVector with the specified length.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="length">The length.</param>
-		/// <seealso cref="REngineExtension.CreateIntegerVector(REngine, int)"/>
-		public IntegerVector(REngine engine, int length)
-			: base(engine, SymbolicExpressionType.IntegerVector, length)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new IntegerVector with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="vector">The values.</param>
-		/// <seealso cref="REngineExtension.CreateIntegerVector(REngine, IEnumerable{int})"/>
-		public IntegerVector(REngine engine, IEnumerable<int> vector)
-			: base(engine, SymbolicExpressionType.IntegerVector, vector)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new IntegerVector with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="vector">The values.</param>
-		/// <seealso cref="REngineExtension.CreateIntegerVector(REngine, int[])"/>
-		public IntegerVector(REngine engine, int[] vector)
-			: base(engine, SymbolicExpressionType.IntegerVector, vector.Length)
-		{
-			Marshal.Copy(vector, 0, DataPointer, vector.Length);
-		}
-
-		/// <summary>
-		/// Creates a new instance for an integer vector.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to an integer vector.</param>
-		internal protected IntegerVector(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
+			get { return sizeof(int); }
 		}
 
 		/// <summary>
@@ -120,7 +114,7 @@ namespace RDotNet
 			{
 				throw new IndexOutOfRangeException("length");
 			}
-			if (sourceIndex < 0 || this.Length < sourceIndex + length)
+			if (sourceIndex < 0 || Length < sourceIndex + length)
 			{
 				throw new IndexOutOfRangeException("sourceIndex");
 			}

@@ -15,6 +15,36 @@ namespace RDotNet
 	public class IntegerMatrix : Matrix<int>
 	{
 		/// <summary>
+		/// Creates a new empty IntegerMatrix with the specified size.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="rowCount">The row size.</param>
+		/// <param name="columnCount">The column size.</param>
+		/// <seealso cref="REngineExtension.CreateIntegerMatrix(REngine, int, int)"/>
+		public IntegerMatrix(REngine engine, int rowCount, int columnCount)
+			: base(engine, SymbolicExpressionType.IntegerVector, rowCount, columnCount)
+		{}
+
+		/// <summary>
+		/// Creates a new IntegerMatrix with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="matrix">The values.</param>
+		/// <seealso cref="REngineExtension.CreateIntegerMatrix(REngine, int[,])"/>
+		public IntegerMatrix(REngine engine, int[,] matrix)
+			: base(engine, SymbolicExpressionType.IntegerVector, matrix)
+		{}
+
+		/// <summary>
+		/// Creates a new instance for an integer matrix.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to an integer matrix.</param>
+		protected internal IntegerMatrix(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
+		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
 		/// <param name="rowIndex">The zero-based rowIndex index of the element to get or set.</param>
@@ -61,43 +91,7 @@ namespace RDotNet
 		/// </summary>
 		protected override int DataSize
 		{
-			get
-			{
-				return sizeof(int);
-			}
-		}
-
-		/// <summary>
-		/// Creates a new empty IntegerMatrix with the specified size.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="rowCount">The row size.</param>
-		/// <param name="columnCount">The column size.</param>
-		/// <seealso cref="REngineExtension.CreateIntegerMatrix(REngine, int, int)"/>
-		public IntegerMatrix(REngine engine, int rowCount, int columnCount)
-			: base(engine, SymbolicExpressionType.IntegerVector, rowCount, columnCount)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new IntegerMatrix with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="matrix">The values.</param>
-		/// <seealso cref="REngineExtension.CreateIntegerMatrix(REngine, int[,])"/>
-		public IntegerMatrix(REngine engine, int[, ] matrix)
-			: base(engine, SymbolicExpressionType.IntegerVector, matrix)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new instance for an integer matrix.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to an integer matrix.</param>
-		internal protected IntegerMatrix(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
+			get { return sizeof(int); }
 		}
 	}
 }

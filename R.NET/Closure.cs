@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.InteropServices;
 using RDotNet.Internals;
 
 namespace RDotNet
@@ -10,6 +9,15 @@ namespace RDotNet
 	/// </summary>
 	public class Closure : Function
 	{
+		/// <summary>
+		/// Creates a closure object.
+		/// </summary>
+		/// <param name="engine">The engine.</param>
+		/// <param name="pointer">The pointer.</param>
+		protected internal Closure(REngine engine, IntPtr pointer)
+			: base(engine, pointer)
+		{}
+
 		/// <summary>
 		/// Gets the arguments list.
 		/// </summary>
@@ -37,23 +45,13 @@ namespace RDotNet
 		/// <summary>
 		/// Gets the environment.
 		/// </summary>
-		public RDotNet.Environment Environment
+		public REnvironment Environment
 		{
 			get
 			{
 				SEXPREC sexp = GetInternalStructure();
-				return new RDotNet.Environment(Engine, sexp.closxp.env);
+				return new REnvironment(Engine, sexp.closxp.env);
 			}
-		}
-
-		/// <summary>
-		/// Creates a closure object.
-		/// </summary>
-		/// <param name="engine">The engine.</param>
-		/// <param name="pointer">The pointer.</param>
-		internal protected Closure(REngine engine, IntPtr pointer)
-			: base(engine, pointer)
-		{
 		}
 
 		public override SymbolicExpression Invoke(SymbolicExpression[] args)
@@ -64,12 +62,12 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			GenericVector arguments = new GenericVector(Engine, args);
-			CharacterVector names = new CharacterVector(Engine, Arguments.Select(arg => arg.PrintName).ToArray());
-			arguments.SetAttribute(Engine.GetPredefinedSymbol(Constants.RNamesSymbolName), names);
+			var arguments = new GenericVector(Engine, args);
+			var names = new CharacterVector(Engine, Arguments.Select(arg => arg.PrintName).ToArray());
+			arguments.SetAttribute(Engine.GetPredefinedSymbol("R_NamesSymbol"), names);
 
-			IntPtr newEnvironment = Engine.Proxy.Rf_allocSExp(SymbolicExpressionType.Environment);
-			IntPtr result = Engine.Proxy.Rf_applyClosure(Body.DangerousGetHandle(), this.handle, arguments.ToPairlist().DangerousGetHandle(), Environment.DangerousGetHandle(), newEnvironment);
+			IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>("Rf_allocSExp")(SymbolicExpressionType.Environment);
+			IntPtr result = Engine.GetFunction<Rf_applyClosure>("Rf_applyClosure")(Body.DangerousGetHandle(), handle, arguments.ToPairlist().DangerousGetHandle(), Environment.DangerousGetHandle(), newEnvironment);
 			return new SymbolicExpression(Engine, result);
 		}
 	}

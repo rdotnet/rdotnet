@@ -9,82 +9,52 @@ namespace RDotNet.Internals
 
 		public SymbolicExpressionType type
 		{
-			get
-			{
-				return (SymbolicExpressionType)(this.bits & 31u);
-			}
+			get { return (SymbolicExpressionType)(this.bits & 31u); }
 		}
 
 		public uint obj
 		{
-			get
-			{
-				return (uint)((this.bits & 32u) / 32);
-			}
+			get { return ((this.bits & 32u) / 32); }
 		}
 
 		public uint named
 		{
-			get
-			{
-				return (uint)((this.bits & 192u) / 64);
-			}
+			get { return ((this.bits & 192u) / 64); }
 		}
 
 		public uint gp
 		{
-			get
-			{
-				return (uint)((this.bits & 16776960u) / 256);
-			}
+			get { return ((this.bits & 16776960u) / 256); }
 		}
 
 		public uint mark
 		{
-			get
-			{
-				return (uint)((this.bits & 16777216u) / 16777216);
-			}
+			get { return ((this.bits & 16777216u) / 16777216); }
 		}
 
 		public uint debug
 		{
-			get
-			{
-				return (uint)((this.bits & 33554432u) / 33554432);
-			}
+			get { return ((this.bits & 33554432u) / 33554432); }
 		}
 
 		public uint trace
 		{
-			get
-			{
-				return (uint)((this.bits & 67108864u) / 67108864);
-			}
+			get { return ((this.bits & 67108864u) / 67108864); }
 		}
 
 		public uint spare
 		{
-			get
-			{
-				return (uint)((this.bits & 134217728u) / 134217728);
-			}
+			get { return ((this.bits & 134217728u) / 134217728); }
 		}
 
 		public uint gcgen
 		{
-			get
-			{
-				return (uint)((this.bits & 268435456u) / 268435456);
-			}
+			get { return ((this.bits & 268435456u) / 268435456); }
 		}
 
 		public uint gccls
 		{
-			get
-			{
-				return (uint)((this.bits & 3758096384u) / 536870912);
-			}
+			get { return ((this.bits & 3758096384u) / 536870912); }
 		}
 	}
 }

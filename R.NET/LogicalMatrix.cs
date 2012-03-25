@@ -12,6 +12,36 @@ namespace RDotNet
 	public class LogicalMatrix : Matrix<bool>
 	{
 		/// <summary>
+		/// Creates a new empty LogicalMatrix with the specified size.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="rowCount">The row size.</param>
+		/// <param name="columnCount">The column size.</param>
+		/// <seealso cref="REngineExtension.CreateLogicalMatrix(REngine, int, int)"/>
+		public LogicalMatrix(REngine engine, int rowCount, int columnCount)
+			: base(engine, SymbolicExpressionType.LogicalVector, rowCount, columnCount)
+		{}
+
+		/// <summary>
+		/// Creates a new LogicalMatrix with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="matrix">The values.</param>
+		/// <seealso cref="REngineExtension.CreateLogicalMatrix(REngine, bool[,])"/>
+		public LogicalMatrix(REngine engine, bool[,] matrix)
+			: base(engine, SymbolicExpressionType.LogicalVector, matrix)
+		{}
+
+		/// <summary>
+		/// Creates a new instance for a Boolean matrix.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a Boolean matrix.</param>
+		protected internal LogicalMatrix(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
+		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
 		/// <param name="rowIndex">The zero-based rowIndex index of the element to get or set.</param>
@@ -60,43 +90,7 @@ namespace RDotNet
 		/// </summary>
 		protected override int DataSize
 		{
-			get
-			{
-				return sizeof(int);
-			}
-		}
-
-		/// <summary>
-		/// Creates a new empty LogicalMatrix with the specified size.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="rowCount">The row size.</param>
-		/// <param name="columnCount">The column size.</param>
-		/// <seealso cref="REngineExtension.CreateLogicalMatrix(REngine, int, int)"/>
-		public LogicalMatrix(REngine engine, int rowCount, int columnCount)
-			: base(engine, SymbolicExpressionType.LogicalVector, rowCount, columnCount)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new LogicalMatrix with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="matrix">The values.</param>
-		/// <seealso cref="REngineExtension.CreateLogicalMatrix(REngine, bool[,])"/>
-		public LogicalMatrix(REngine engine, bool[, ] matrix)
-			: base(engine, SymbolicExpressionType.LogicalVector, matrix)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new instance for a Boolean matrix.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to a Boolean matrix.</param>
-		internal protected LogicalMatrix(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
+			get { return sizeof(int); }
 		}
 	}
 }

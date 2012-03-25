@@ -12,8 +12,7 @@ namespace RDotNet.Dynamic
 
 		public SymbolicExpressionDynamicMeta(System.Linq.Expressions.Expression parameter, SymbolicExpression expression)
 			: base(parameter, BindingRestrictions.Empty, expression)
-		{
-		}
+		{}
 
 		public override IEnumerable<string> GetDynamicMemberNames()
 		{
@@ -27,10 +26,10 @@ namespace RDotNet.Dynamic
 				return base.BindGetMember(binder);
 			}
 
-			var instance = System.Linq.Expressions.Expression.Constant(Value, typeof(SymbolicExpression));
-			var name = System.Linq.Expressions.Expression.Constant(binder.Name, typeof(string));
+			ConstantExpression instance = System.Linq.Expressions.Expression.Constant(Value, typeof(SymbolicExpression));
+			ConstantExpression name = System.Linq.Expressions.Expression.Constant(binder.Name, typeof(string));
 			MethodInfo getAttribute = typeof(SymbolicExpression).GetMethod("GetAttribute");
-			var call = System.Linq.Expressions.Expression.Call(instance, getAttribute, name);
+			MethodCallExpression call = System.Linq.Expressions.Expression.Call(instance, getAttribute, name);
 			return new DynamicMetaObject(call, BindingRestrictions.GetTypeRestriction(call, typeof(SymbolicExpression)));
 		}
 

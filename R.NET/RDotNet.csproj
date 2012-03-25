@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RDotNet</RootNamespace>
-    <AssemblyName>R.NET</AssemblyName>
+    <AssemblyName>RDotNet</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -31,7 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Release\R.NET.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\RDotNet.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -54,7 +54,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <DocumentationFile>bin\x86\Release\R.NET.XML</DocumentationFile>
+    <DocumentationFile>bin\x86\Release\RDotNet.xml</DocumentationFile>
     <DebugType>none</DebugType>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -77,7 +77,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <DocumentationFile>bin\x64\Release\R.NET.XML</DocumentationFile>
+    <DocumentationFile>bin\x64\Release\RDotNet.xml</DocumentationFile>
     <DebugType>none</DebugType>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -101,11 +101,16 @@
     <Compile Include="Devices\ConsoleDevice.cs" />
     <Compile Include="Devices\NullCharacterDevice.cs" />
     <Compile Include="Devices\ICharacterDevice.cs" />
+    <Compile Include="Internals\Delegates.cs" />
     <Compile Include="Internals\OutputMode.cs" />
-    <Compile Include="Internals\RStart.cs" />
+    <Compile Include="Internals\Unix\RStart.cs" />
     <Compile Include="Internals\ConsoleOutputType.cs" />
     <Compile Include="Internals\BusyType.cs" />
     <Compile Include="Internals\SaveActions.cs" />
+    <Compile Include="Internals\Unix\Delegates.cs" />
+    <Compile Include="Internals\Windows\Delegates.cs" />
+    <Compile Include="Internals\Windows\RStart.cs" />
+    <Compile Include="Internals\Windows\UiMode.cs" />
     <Compile Include="Internals\YesNoCancel.cs" />
     <Compile Include="SpecialFunction.cs" />
     <Compile Include="Environment.cs" />
@@ -119,8 +124,6 @@
     <Compile Include="Dynamic\ListDynamicMeta.cs" />
     <Compile Include="Function.cs" />
     <Compile Include="GenericVector.cs" />
-    <Compile Include="Internals\DelegateNativeMethods.generated.cs" />
-    <Compile Include="Internals\DirectNativeMethods.generated.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="LogicalMatrix.cs" />
     <Compile Include="Pairlist.cs" />
@@ -130,16 +133,15 @@
     <Compile Include="Matrix.cs" />
     <Compile Include="InternalString.cs" />
     <Compile Include="Internals\SEXPREC_HEADER.cs" />
-    <Compile Include="LateBoundUnmanagedDll.cs" />
     <Compile Include="RawVector.cs" />
     <Compile Include="Internals\ParseStatus.cs" />
     <Compile Include="NumericVector.cs" />
     <Compile Include="IntegerVector.cs" />
-    <Compile Include="Internals\Constants.cs" />
     <Compile Include="Internals\VECTOR_SEXPREC.cs" />
     <Compile Include="ParseException.cs" />
     <Compile Include="ProtectedPointer.cs" />
     <Compile Include="REngineExtension.cs" />
+    <Compile Include="StartupParameter.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="SymbolicExpression.cs" />
     <Compile Include="Internals\SEXPREC.cs" />
@@ -152,10 +154,14 @@
     <Compile Include="Vector.cs" />
     <Compile Include="LogicalVector.cs" />
     <Compile Include="CharacterVector.cs" />
-    <Compile Include="Internals\DirectNativeMethods.cs" />
-    <Compile Include="Internals\DelegateNativeMethods.cs" />
-    <Compile Include="Internals\INativeMethodsProxy.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj">
+      <Project>{2A089A59-0F22-4484-B442-0FE8BDA10879}</Project>
+      <Name>RDotNet.NativeLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

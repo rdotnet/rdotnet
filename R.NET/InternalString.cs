@@ -18,8 +18,7 @@ namespace RDotNet
 		/// <param name="pointer">The pointer to a string.</param>
 		public InternalString(REngine engine, IntPtr pointer)
 			: base(engine, pointer)
-		{
-		}
+		{}
 
 		/// <summary>
 		/// Creates a new instance.
@@ -27,9 +26,8 @@ namespace RDotNet
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="s">The string</param>
 		public InternalString(REngine engine, string s)
-			: base(engine, engine.Proxy.Rf_mkChar(s))
-		{
-		}
+			: base(engine, engine.GetFunction<Rf_mkChar>("Rf_mkChar")(s))
+		{}
 
 		/// <summary>
 		/// Converts to the string into .NET Framework string.
@@ -43,7 +41,7 @@ namespace RDotNet
 
 		public override string ToString()
 		{
-			IntPtr pointer = IntPtr.Add(this.handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+			IntPtr pointer = IntPtr.Add(handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
 			return Marshal.PtrToStringAnsi(pointer);
 		}
 	}

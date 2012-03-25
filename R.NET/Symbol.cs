@@ -10,6 +10,15 @@ namespace RDotNet
 	public class Symbol : SymbolicExpression
 	{
 		/// <summary>
+		/// Creates a symbol.
+		/// </summary>
+		/// <param name="engine">The engine.</param>
+		/// <param name="pointer">The pointer.</param>
+		protected internal Symbol(REngine engine, IntPtr pointer)
+			: base(engine, pointer)
+		{}
+
+		/// <summary>
 		/// Gets and sets the name.
 		/// </summary>
 		public string PrintName
@@ -23,7 +32,7 @@ namespace RDotNet
 			{
 				IntPtr pointer = (value == null ? Engine.NilValue : new InternalString(Engine, value)).DangerousGetHandle();
 				int offset = GetOffsetOf("pname");
-				Marshal.WriteIntPtr(this.handle, offset, pointer);
+				Marshal.WriteIntPtr(handle, offset, pointer);
 			}
 		}
 
@@ -57,16 +66,6 @@ namespace RDotNet
 				}
 				return new SymbolicExpression(Engine, sexp.symsxp.value);
 			}
-		}
-		
-		/// <summary>
-		/// Creates a symbol.
-		/// </summary>
-		/// <param name="engine">The engine.</param>
-		/// <param name="pointer">The pointer.</param>
-		internal protected Symbol(REngine engine, IntPtr pointer)
-			: base(engine, pointer)
-		{
 		}
 
 		private static int GetOffsetOf(string fieldName)
