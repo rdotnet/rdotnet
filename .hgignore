@@ -1,10 +1,15 @@
-glob:*.suo
-glob:*.pdb
-glob:*.pidb
-glob:*.user
-glob:*.userprefs
-glob:*.orig
-relre:bin/
-relre:obj/
-relre:publish/
-relre:Help/
+syntax: glob
+*.suo
+*.pdb
+*.pidb
+*.user
+*.userprefs
+*.orig
+*.VisualState.xml
+TestResult.xml
+
+syntax: regexp
+bin/
+obj/
+publish/
+Help/

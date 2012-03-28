@@ -4,26 +4,35 @@ namespace RDotNet.Graphics
 {
 	public struct Size : IEquatable<Size>
 	{
-		private double width;
 		private double height;
-
-		public double Width
-		{
-			get { return this.width; }
-			set { this.width = value; }
-		}
-		
-		public double Height
-		{
-			get { return this.height; }
-			set { this.height = value; }
-		}
+		private double width;
 
 		public Size(double width, double height)
 		{
 			this.width = width;
 			this.height = height;
 		}
+
+		public double Width
+		{
+			get { return this.width; }
+			set { this.width = value; }
+		}
+
+		public double Height
+		{
+			get { return this.height; }
+			set { this.height = value; }
+		}
+
+		#region IEquatable<Size> Members
+
+		public bool Equals(Size other)
+		{
+			return (this == other);
+		}
+
+		#endregion
 
 		public static bool operator ==(Size size1, Size size2)
 		{
@@ -45,15 +54,10 @@ namespace RDotNet.Graphics
 		{
 			if (obj is Size)
 			{
-				Size size = (Size)obj;
+				var size = (Size)obj;
 				return (this == size);
 			}
 			return false;
-		}
-
-		public bool Equals(Size other)
-		{
-			return (this == other);
 		}
 	}
 }

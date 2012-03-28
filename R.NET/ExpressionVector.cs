@@ -7,6 +7,15 @@ namespace RDotNet
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public class ExpressionVector : Vector<Expression>
 	{
+		/// <summary>
+		/// Creates a new instance for an expression vector.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to an expression vector.</param>
+		internal ExpressionVector(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
 		public override Expression this[int index]
 		{
 			get
@@ -41,20 +50,7 @@ namespace RDotNet
 		/// </summary>
 		protected override int DataSize
 		{
-			get
-			{
-				return Marshal.SizeOf(typeof(IntPtr));
-			}
-		}
-
-		/// <summary>
-		/// Creates a new instance for an expression vector.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to an expression vector.</param>
-		internal ExpressionVector(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
+			get { return Marshal.SizeOf(typeof(IntPtr)); }
 		}
 	}
 }

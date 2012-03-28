@@ -87,16 +87,12 @@
     <Compile Include="Enum.cs" />
     <Compile Include="GraphicsContext.cs" />
     <Compile Include="Internals\Constants.cs" />
-    <Compile Include="Internals\DelegateNativeMethods.cs" />
-    <Compile Include="Internals\DelegateNativeMethods.generated.cs" />
-    <Compile Include="Internals\DirectNativeMethods.cs" />
-    <Compile Include="Internals\DirectNativeMethods.generated.cs" />
     <Compile Include="Internals\GEcontext.cs" />
     <Compile Include="Internals\DevDesc.cs" />
     <Compile Include="GraphicsDeviceEventArgs.cs" />
     <Compile Include="GraphicsDevice.cs" />
     <Compile Include="Internals\GEDevDesc.cs" />
-    <Compile Include="Internals\INativeMethodsProxy.cs" />
+    <Compile Include="Internals\Delegates.cs" />
     <Compile Include="Raster.cs" />
     <Compile Include="MetricsInfo.cs" />
     <Compile Include="Point.cs" />
@@ -108,9 +104,13 @@
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\R.NET\R.NET.csproj">
+    <ProjectReference Include="..\R.NET\RDotNet.csproj">
       <Project>{0923E1A0-2032-4997-AB73-49E42C4034A9}</Project>
-      <Name>R.NET</Name>
+      <Name>RDotNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj">
+      <Project>{2A089A59-0F22-4484-B442-0FE8BDA10879}</Project>
+      <Name>RDotNet.NativeLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

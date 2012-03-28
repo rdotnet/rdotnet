@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
-using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using RDotNet.Dynamic;
@@ -15,6 +14,15 @@ namespace RDotNet
 	public class DataFrame : Vector<DynamicVector>
 	{
 		private const string RRowNamesSymbolName = "R_RowNamesSymbol";
+
+		/// <summary>
+		/// Creates a new instance.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a data frame.</param>
+		protected internal DataFrame(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
 
 		/// <summary>
 		/// Gets or sets the column at the specified index as a vector.
@@ -115,10 +123,7 @@ namespace RDotNet
 		/// </summary>
 		public int RowCount
 		{
-			get
-			{
-				return ColumnCount == 0 ? 0 : this[0].Length;
-			}
+			get { return ColumnCount == 0 ? 0 : this[0].Length; }
 		}
 
 		/// <summary>
@@ -126,10 +131,7 @@ namespace RDotNet
 		/// </summary>
 		public int ColumnCount
 		{
-			get
-			{
-				return Length;
-			}
+			get { return Length; }
 		}
 
 		/// <summary>
@@ -152,7 +154,7 @@ namespace RDotNet
 				}
 
 				int length = rowNamesVector.Length;
-				string[] result = new string[length];
+				var result = new string[length];
 				rowNamesVector.CopyTo(result, length);
 				return result;
 			}
@@ -163,28 +165,12 @@ namespace RDotNet
 		/// </summary>
 		public string[] ColumnNames
 		{
-			get
-			{
-				return Names;
-			}
+			get { return Names; }
 		}
 
 		protected override int DataSize
 		{
-			get
-			{
-				return Marshal.SizeOf(typeof(IntPtr));
-			}
-		}
-
-		/// <summary>
-		/// Creates a new instance.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to a data frame.</param>
-		internal protected DataFrame(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
+			get { return Marshal.SizeOf(typeof(IntPtr)); }
 		}
 
 		/// <summary>

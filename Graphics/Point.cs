@@ -7,6 +7,12 @@ namespace RDotNet.Graphics
 		private double x;
 		private double y;
 
+		public Point(double x, double y)
+		{
+			this.x = x;
+			this.y = y;
+		}
+
 		public double X
 		{
 			get { return this.x; }
@@ -19,11 +25,14 @@ namespace RDotNet.Graphics
 			set { this.y = value; }
 		}
 
-		public Point(double x, double y)
+		#region IEquatable<Point> Members
+
+		public bool Equals(Point other)
 		{
-			this.x = x;
-			this.y = y;
+			return (this == other);
 		}
+
+		#endregion
 
 		public static bool operator ==(Point p1, Point p2)
 		{
@@ -45,15 +54,10 @@ namespace RDotNet.Graphics
 		{
 			if (obj is Point)
 			{
-				Point point = (Point)obj;
+				var point = (Point)obj;
 				return (this == point);
 			}
 			return false;
-		}
-
-		public bool Equals(Point other)
-		{
-			return (this == other);
 		}
 	}
 }

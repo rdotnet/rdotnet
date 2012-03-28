@@ -15,6 +15,33 @@ namespace RDotNet
 	public class GenericVector : Vector<SymbolicExpression>
 	{
 		/// <summary>
+		/// Creates a new empty GenericVector with the specified length.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="length">The length.</param>
+		public GenericVector(REngine engine, int length)
+			: base(engine, engine.GetFunction<Rf_allocVector>("Rf_allocVector")(SymbolicExpressionType.List, length))
+		{}
+
+		/// <summary>
+		/// Creates a new GenericVector with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="list">The values.</param>
+		public GenericVector(REngine engine, IEnumerable<SymbolicExpression> list)
+			: base(engine, SymbolicExpressionType.List, list)
+		{}
+
+		/// <summary>
+		/// Creates a new instance for a list.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a list.</param>
+		protected internal GenericVector(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
+		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the element to get or set.</param>
@@ -50,40 +77,7 @@ namespace RDotNet
 
 		protected override int DataSize
 		{
-			get
-			{
-				return Marshal.SizeOf(typeof(IntPtr));
-			}
-		}
-
-		/// <summary>
-		/// Creates a new empty GenericVector with the specified length.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="length">The length.</param>
-		public GenericVector(REngine engine, int length)
-			: base(engine, engine.Proxy.Rf_allocVector(SymbolicExpressionType.List, length))
-		{
-		}
-
-		/// <summary>
-		/// Creates a new GenericVector with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="list">The values.</param>
-		public GenericVector(REngine engine, IEnumerable<SymbolicExpression> list)
-			: base(engine, SymbolicExpressionType.List, list)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new instance for a list.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to a list.</param>
-		internal protected GenericVector(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
+			get { return Marshal.SizeOf(typeof(IntPtr)); }
 		}
 
 		/// <summary>
@@ -92,7 +86,7 @@ namespace RDotNet
 		/// <returns>The pairlist.</returns>
 		public Pairlist ToPairlist()
 		{
-			return new Pairlist(Engine, Engine.Proxy.Rf_VectorToPairList(this.handle));
+			return new Pairlist(Engine, Engine.GetFunction<Rf_VectorToPairList>("Rf_VectorToPairList")(handle));
 		}
 
 		public override DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)

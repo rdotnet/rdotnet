@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using RDotNet.Internals;
@@ -11,25 +12,23 @@ namespace RDotNet
 	public class Pairlist : SymbolicExpression, IEnumerable<Symbol>
 	{
 		/// <summary>
-		/// Gets the number of nodes.
-		/// </summary>
-		public int Count
-		{
-			get
-			{
-				return Engine.Proxy.Rf_length(this.handle);
-			}
-		}
-
-		/// <summary>
 		/// Creates a pairlist.
 		/// </summary>
 		/// <param name="engine">The engine</param>
 		/// <param name="pointer">The pointer.</param>
-		internal protected Pairlist(REngine engine, IntPtr pointer)
+		protected internal Pairlist(REngine engine, IntPtr pointer)
 			: base(engine, pointer)
+		{}
+
+		/// <summary>
+		/// Gets the number of nodes.
+		/// </summary>
+		public int Count
 		{
+			get { return Engine.GetFunction<Rf_length>("Rf_length")(handle); }
 		}
+
+		#region IEnumerable<Symbol> Members
 
 		public IEnumerator<Symbol> GetEnumerator()
 		{
@@ -42,9 +41,11 @@ namespace RDotNet
 			}
 		}
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		IEnumerator IEnumerable.GetEnumerator()
 		{
 			return GetEnumerator();
 		}
+
+		#endregion
 	}
 }

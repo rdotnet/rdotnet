@@ -1,17 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using RDotNet.Graphics.Internals;
 using System.Runtime.InteropServices;
+using RDotNet.Graphics.Internals;
 
 namespace RDotNet.Graphics
 {
 	public class DeviceDescription : SafeHandle
 	{
+		public DeviceDescription()
+			: base(IntPtr.Zero, true)
+		{
+			IntPtr pointer = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(DevDesc)));
+			Marshal.StructureToPtr(new DevDesc(), pointer, true);
+			SetHandle(pointer);
+		}
+
+		internal DeviceDescription(IntPtr pointer)
+			: base(IntPtr.Zero, true)
+		{
+			SetHandle(pointer);
+		}
+
 		public override bool IsInvalid
 		{
-			get { return this.handle == IntPtr.Zero; }
+			get { return handle == IntPtr.Zero; }
 		}
 
 		public Rectangle Bounds
@@ -33,6 +44,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public Rectangle ClipBounds
 		{
 			get
@@ -52,6 +64,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public double CharOffsetX
 		{
 			get
@@ -68,6 +81,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public double CharOffsetY
 		{
 			get
@@ -84,6 +98,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public double LineBiasY
 		{
 			get
@@ -100,6 +115,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public double InchesPerRasterX
 		{
 			get
@@ -116,6 +132,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public double InchesPerRasterY
 		{
 			get
@@ -132,6 +149,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public double CharacterSizeInRasterX
 		{
 			get
@@ -148,6 +166,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public double CharacterSizeInRasterY
 		{
 			get
@@ -164,6 +183,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public double Gamma
 		{
 			get
@@ -180,6 +200,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public bool IsGammaModifiable
 		{
 			get
@@ -196,6 +217,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public bool IsClippable
 		{
 			get
@@ -212,6 +234,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public Adjustment Adjustment
 		{
 			get
@@ -228,6 +251,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public double StartFontSize
 		{
 			get
@@ -244,6 +268,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public Color StartForeground
 		{
 			get
@@ -260,6 +285,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public Color StartBackground
 		{
 			get
@@ -276,6 +302,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public int StartFont
 		{
 			get
@@ -292,6 +319,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public double StartGamma
 		{
 			get
@@ -308,6 +336,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public bool DisplayListOn
 		{
 			get
@@ -324,6 +353,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		public bool IsTextRotatedInContour
 		{
 			get
@@ -340,6 +370,7 @@ namespace RDotNet.Graphics
 				Copy(ref dd);
 			}
 		}
+
 		protected IntPtr DeviceSpecific
 		{
 			get
@@ -357,34 +388,20 @@ namespace RDotNet.Graphics
 			}
 		}
 
-		public DeviceDescription()
-			: base(IntPtr.Zero, true)
-		{
-			IntPtr pointer = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(DevDesc)));
-			Marshal.StructureToPtr(new DevDesc(), pointer, true);
-			SetHandle(pointer);
-		}
-
-		internal DeviceDescription(IntPtr pointer)
-			: base(IntPtr.Zero, true)
-		{
-			SetHandle(pointer);
-		}
-
 		internal void Copy(ref DevDesc dd)
 		{
-			Marshal.StructureToPtr(dd, this.handle, false);
+			Marshal.StructureToPtr(dd, handle, false);
 		}
 
 		protected override bool ReleaseHandle()
 		{
-			Marshal.FreeHGlobal(this.handle);
+			Marshal.FreeHGlobal(handle);
 			return true;
 		}
 
 		internal void GetDescription(out DevDesc dd)
 		{
-			dd = (DevDesc)Marshal.PtrToStructure(this.handle, typeof(DevDesc));
+			dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 		}
 
 		protected override void Dispose(bool disposing)

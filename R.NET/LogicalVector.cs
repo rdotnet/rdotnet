@@ -13,6 +13,35 @@ namespace RDotNet
 	public class LogicalVector : Vector<bool>
 	{
 		/// <summary>
+		/// Creates a new empty LogicalVector with the specified length.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="length">The length.</param>
+		/// <seealso cref="REngineExtension.CreateLogicalVector(REngine, int)"/>
+		public LogicalVector(REngine engine, int length)
+			: base(engine, SymbolicExpressionType.LogicalVector, length)
+		{}
+
+		/// <summary>
+		/// Creates a new LogicalVector with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="vector">The values.</param>
+		/// <seealso cref="REngineExtension.CreateLogicalVector(REngine, IEnumerable{bool})"/>
+		public LogicalVector(REngine engine, IEnumerable<bool> vector)
+			: base(engine, SymbolicExpressionType.LogicalVector, vector)
+		{}
+
+		/// <summary>
+		/// Creates a new instance for a Boolean vector.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a Boolean vector.</param>
+		protected internal LogicalVector(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
+		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
 		/// <param name="index">The zero-based index of the element to get or set.</param>
@@ -57,38 +86,6 @@ namespace RDotNet
 				// Boolean is int internally.
 				return sizeof(int);
 			}
-		}
-
-		/// <summary>
-		/// Creates a new empty LogicalVector with the specified length.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="length">The length.</param>
-		/// <seealso cref="REngineExtension.CreateLogicalVector(REngine, int)"/>
-		public LogicalVector(REngine engine, int length)
-			: base(engine, SymbolicExpressionType.LogicalVector, length)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new LogicalVector with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="vector">The values.</param>
-		/// <seealso cref="REngineExtension.CreateLogicalVector(REngine, IEnumerable{bool})"/>
-		public LogicalVector(REngine engine, IEnumerable<bool> vector)
-			: base(engine, SymbolicExpressionType.LogicalVector, vector)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new instance for a Boolean vector.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to a Boolean vector.</param>
-		internal protected LogicalVector(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
 		}
 	}
 }

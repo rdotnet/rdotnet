@@ -1,0 +1,9 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Debug" />
+  <Config name="Debug" binpathtype="Auto">
+    <assembly path="RDotNet.Tests\bin\Debug\RDotNet.Tests.dll" />
+  </Config>
+  <Config name="Release" binpathtype="Auto">
+    <assembly path="RDotNet.Tests\bin\Release\RDotNet.Tests.dll" />
+  </Config>
+</NUnitProject>

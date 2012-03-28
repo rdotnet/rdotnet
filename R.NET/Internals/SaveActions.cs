@@ -9,10 +9,12 @@
 		/// Not restoring.
 		/// </summary>
 		NoRestore = 0,
+
 		/// <summary>
 		/// Restoring.
 		/// </summary>
 		Restore = 1,
+
 		/// <summary>
 		/// The default value.
 		/// </summary>
@@ -28,18 +30,22 @@
 		/// The default value.
 		/// </summary>
 		Default = 2,
+
 		/// <summary>
 		/// No saving.
 		/// </summary>
 		NoSave = 3,
+
 		/// <summary>
 		/// Saving.
 		/// </summary>
 		Save = 4,
+
 		/// <summary>
 		/// Asking user.
 		/// </summary>
 		Ask = 5,
+
 		/// <summary>
 		/// Terminates without any actions.
 		/// </summary>

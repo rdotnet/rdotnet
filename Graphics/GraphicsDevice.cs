@@ -55,37 +55,20 @@ namespace RDotNet.Graphics
 			}
 			this.engine = engine;
 
-			INativeMethodsProxy proxy = GetProxy(engine);
-
-			proxy.R_GE_checkVersionOrDie(Constants.R_GE_version);
-			proxy.R_CheckDeviceAvailable();
+			engine.GetFunction<R_GE_checkVersionOrDie>("R_GE_checkVersionOrDie")(Constants.R_GE_version);
+			engine.GetFunction<R_CheckDeviceAvailable>("R_CheckDeviceAvailable")();
 			bool oldSuspended = GetInterruptsSuspended(engine);
 			SetInterruptsSuspended(engine, true);
 
 			DeviceDescription description = CreateDefaultDescription();
 			SetMethod(description);
-			IntPtr gdd = proxy.GEcreateDevDesc(description.DangerousGetHandle());
-			proxy.GEaddDevice2(gdd, Name);
+			IntPtr gdd = engine.GetFunction<GEcreateDevDesc>("GEcreateDevDesc")(description.DangerousGetHandle());
+			engine.GetFunction<GEaddDevice2>("GEaddDevice2")(gdd, Name);
 
 			SetInterruptsSuspended(engine, oldSuspended);
 			if (GetInterruptsPending(engine) && !GetInterruptsSuspended(engine))
 			{
-				proxy.Rf_onintr();
-			}
-		}
-
-		private static INativeMethodsProxy GetProxy(REngine engine)
-		{
-			OperatingSystem os = System.Environment.OSVersion;
-			switch (os.Platform)
-			{
-				case PlatformID.Win32NT:
-					return DirectNativeMethods.Instance;
-				case PlatformID.MacOSX:
-				case PlatformID.Unix:
-					return new DelegateNativeMethods(engine);
-				default:
-					throw new NotSupportedException(os.ToString());
+				engine.GetFunction<Rf_onintr>("Rf_onintr")();
 			}
 		}
 

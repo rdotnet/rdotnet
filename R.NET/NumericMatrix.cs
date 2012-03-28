@@ -12,6 +12,36 @@ namespace RDotNet
 	public class NumericMatrix : Matrix<double>
 	{
 		/// <summary>
+		/// Creates a new empty NumericMatrix with the specified size.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="rowCount">The row size.</param>
+		/// <param name="columnCount">The column size.</param>
+		/// <seealso cref="REngineExtension.CreateNumericMatrix(REngine, int, int)"/>
+		public NumericMatrix(REngine engine, int rowCount, int columnCount)
+			: base(engine, SymbolicExpressionType.NumericVector, rowCount, columnCount)
+		{}
+
+		/// <summary>
+		/// Creates a new NumericMatrix with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="matrix">The values.</param>
+		/// <seealso cref="REngineExtension.CreateNumericMatrix(REngine, double[,])"/>
+		public NumericMatrix(REngine engine, double[,] matrix)
+			: base(engine, SymbolicExpressionType.NumericVector, matrix)
+		{}
+
+		/// <summary>
+		/// Creates a new instance for a numeric matrix.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a numeric matrix.</param>
+		protected internal NumericMatrix(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
+		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
 		/// <param name="rowIndex">The zero-based rowIndex index of the element to get or set.</param>
@@ -31,7 +61,7 @@ namespace RDotNet
 				}
 				using (new ProtectedPointer(this))
 				{
-					byte[] data = new byte[DataSize];
+					var data = new byte[DataSize];
 					IntPtr pointer = DataPointer;
 					int offset = GetOffset(rowIndex, columnIndex);
 					for (int byteIndex = 0; byteIndex < data.Length; byteIndex++)
@@ -69,42 +99,7 @@ namespace RDotNet
 		/// </summary>
 		protected override int DataSize
 		{
-			get
-			{
-				return sizeof(double);
-			}
-		}
-
-		/// <summary>
-		/// Creates a new empty NumericMatrix with the specified size.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="rowCount">The row size.</param>
-		/// <param name="columnCount">The column size.</param>
-		/// <seealso cref="REngineExtension.CreateNumericMatrix(REngine, int, int)"/>
-		public NumericMatrix(REngine engine, int rowCount, int columnCount)
-			: base(engine, SymbolicExpressionType.NumericVector, rowCount, columnCount)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new NumericMatrix with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="matrix">The values.</param>
-		/// <seealso cref="REngineExtension.CreateNumericMatrix(REngine, double[,])"/>
-		public NumericMatrix(REngine engine, double[, ] matrix)
-			: base(engine, SymbolicExpressionType.NumericVector, matrix)
-		{
-		}
-		/// <summary>
-		/// Creates a new instance for a numeric matrix.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to a numeric matrix.</param>
-		internal protected NumericMatrix(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
+			get { return sizeof(double); }
 		}
 	}
 }

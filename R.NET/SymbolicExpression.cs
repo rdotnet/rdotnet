@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Dynamic;
-using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using RDotNet.Dynamic;
@@ -14,57 +13,17 @@ namespace RDotNet
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public class SymbolicExpression : SafeHandle, IEquatable<SymbolicExpression>, IDynamicMetaObjectProvider
 	{
-		public override bool IsInvalid
-		{
-			get
-			{
-				return IsClosed || this.handle == IntPtr.Zero;
-			}
-		}
-
 		private readonly REngine engine;
-		/// <summary>
-		/// Gets the <see cref="REngine"/> to which this expression belongs.
-		/// </summary>
-		public REngine Engine
-		{
-			get
-			{
-				return engine;
-			}
-		}
-
-		private bool isProtected;
-		/// <summary>
-		/// Gets whether this expression is protected from the garbage collection.
-		/// </summary>
-		public bool IsProtected
-		{
-			get
-			{
-				return isProtected;
-			}
-		}
-
 		private readonly SEXPREC sexp;
 
-		/// <summary>
-		/// Gets the <see cref="SymbolicExpressionType"/>.
-		/// </summary>
-		public SymbolicExpressionType Type
-		{
-			get
-			{
-				return sexp.sxpinfo.type;
-			}
-		}
+		private bool isProtected;
 
 		/// <summary>
 		/// Creates new instance of SymbolicExpression.
 		/// </summary>
 		/// <param name="engine">The engine.</param>
 		/// <param name="pointer">The pointer.</param>
-		internal protected SymbolicExpression(REngine engine, IntPtr pointer)
+		protected internal SymbolicExpression(REngine engine, IntPtr pointer)
 			: base(IntPtr.Zero, true)
 		{
 			this.engine = engine;
@@ -72,20 +31,56 @@ namespace RDotNet
 			SetHandle(pointer);
 		}
 
-		/// <summary>
-		/// Gets the pointer.
-		/// </summary>
-		/// <param name="expression">The expression.</param>
-		/// <returns>The pointer.</returns>
-		[Obsolete("Will be removed. Use DangerousGetHandle() method.")]
-		public static explicit operator IntPtr(SymbolicExpression expression)
+		public override bool IsInvalid
 		{
-			return expression.handle;
+			get { return IsClosed || handle == IntPtr.Zero; }
 		}
+
+		/// <summary>
+		/// Gets the <see cref="REngine"/> to which this expression belongs.
+		/// </summary>
+		public REngine Engine
+		{
+			get { return this.engine; }
+		}
+
+		/// <summary>
+		/// Gets whether this expression is protected from the garbage collection.
+		/// </summary>
+		public bool IsProtected
+		{
+			get { return this.isProtected; }
+		}
+
+		/// <summary>
+		/// Gets the <see cref="SymbolicExpressionType"/>.
+		/// </summary>
+		public SymbolicExpressionType Type
+		{
+			get { return this.sexp.sxpinfo.type; }
+		}
+
+		#region IDynamicMetaObjectProvider Members
+
+		public virtual DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)
+		{
+			return new SymbolicExpressionDynamicMeta(parameter, this);
+		}
+
+		#endregion
+
+		#region IEquatable<SymbolicExpression> Members
+
+		public bool Equals(SymbolicExpression other)
+		{
+			return other != null && handle == other.handle;
+		}
+
+		#endregion
 
 		internal SEXPREC GetInternalStructure()
 		{
-			return (SEXPREC)Marshal.PtrToStructure(this.handle, typeof(SEXPREC));
+			return (SEXPREC)Marshal.PtrToStructure(handle, typeof(SEXPREC));
 		}
 
 		/// <summary>
@@ -94,15 +89,15 @@ namespace RDotNet
 		/// <returns>The names of attributes</returns>
 		public string[] GetAttributeNames()
 		{
-			int length = Engine.Proxy.Rf_length(sexp.attrib);
+			int length = Engine.GetFunction<Rf_length>("Rf_length")(this.sexp.attrib);
 			var names = new string[length];
-			IntPtr pointer = sexp.attrib;
+			IntPtr pointer = this.sexp.attrib;
 			for (int index = 0; index < length; index++)
 			{
-				SEXPREC node = (SEXPREC)Marshal.PtrToStructure(pointer, typeof(SEXPREC));
-				SEXPREC attribute = (SEXPREC)Marshal.PtrToStructure(node.listsxp.tagval, typeof(SEXPREC));
+				var node = (SEXPREC)Marshal.PtrToStructure(pointer, typeof(SEXPREC));
+				var attribute = (SEXPREC)Marshal.PtrToStructure(node.listsxp.tagval, typeof(SEXPREC));
 				IntPtr name = attribute.symsxp.pname;
-				names[index] = (string)new InternalString(Engine, name);
+				names[index] = new InternalString(Engine, name);
 				pointer = node.listsxp.cdrval;
 			}
 			return names;
@@ -124,8 +119,8 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			IntPtr installedName = Engine.Proxy.Rf_install(attributeName);
-			IntPtr attribute = Engine.Proxy.Rf_getAttrib(this.handle, installedName);
+			IntPtr installedName = Engine.GetFunction<Rf_install>("Rf_install")(attributeName);
+			IntPtr attribute = Engine.GetFunction<Rf_getAttrib>("Rf_getAttrib")(handle, installedName);
 			if (Engine.CheckNil(attribute))
 			{
 				return null;
@@ -144,7 +139,7 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			IntPtr attribute = Engine.Proxy.Rf_getAttrib(this.handle, symbol.handle);
+			IntPtr attribute = Engine.GetFunction<Rf_getAttrib>("Rf_getAttrib")(handle, symbol.handle);
 			if (Engine.CheckNil(attribute))
 			{
 				return null;
@@ -173,8 +168,8 @@ namespace RDotNet
 				value = Engine.NilValue;
 			}
 
-			IntPtr installedName = Engine.Proxy.Rf_install(attributeName);
-			Engine.Proxy.Rf_setAttrib(this.handle, installedName, value.handle);
+			IntPtr installedName = Engine.GetFunction<Rf_install>("Rf_install")(attributeName);
+			Engine.GetFunction<Rf_setAttrib>("Rf_setAttrib")(handle, installedName, value.handle);
 		}
 
 		internal void SetAttribute(SymbolicExpression symbol, SymbolicExpression value)
@@ -193,7 +188,7 @@ namespace RDotNet
 				value = Engine.NilValue;
 			}
 
-			Engine.Proxy.Rf_setAttrib(this.handle, symbol.handle, value.handle);
+			Engine.GetFunction<Rf_setAttrib>("Rf_setAttrib")(handle, symbol.handle, value.handle);
 		}
 
 		/// <summary>
@@ -204,8 +199,8 @@ namespace RDotNet
 		{
 			if (!IsInvalid)
 			{
-				Engine.Proxy.Rf_protect(this.handle);
-				isProtected = true;
+				Engine.GetFunction<Rf_protect>("Rf_protect")(handle);
+				this.isProtected = true;
 			}
 		}
 
@@ -217,8 +212,8 @@ namespace RDotNet
 		{
 			if (!IsInvalid && IsProtected)
 			{
-				Engine.Proxy.Rf_unprotect_ptr(this.handle);
-				isProtected = false;
+				Engine.GetFunction<Rf_unprotect_ptr>("Rf_unprotect_ptr")(handle);
+				this.isProtected = false;
 			}
 		}
 
@@ -233,22 +228,12 @@ namespace RDotNet
 
 		public override int GetHashCode()
 		{
-			return this.handle.GetHashCode();
+			return handle.GetHashCode();
 		}
 
 		public override bool Equals(object obj)
 		{
 			return Equals(obj as SymbolicExpression);
-		}
-
-		public bool Equals(SymbolicExpression other)
-		{
-			return other != null && this.handle == other.handle;
-		}
-
-		public virtual DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)
-		{
-			return new SymbolicExpressionDynamicMeta(parameter, this);
 		}
 	}
 }

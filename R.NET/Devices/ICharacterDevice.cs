@@ -1,5 +1,4 @@
-﻿using System.Text;
-using RDotNet.Internals;
+﻿using RDotNet.Internals;
 
 namespace RDotNet.Devices
 {
@@ -40,32 +39,57 @@ namespace RDotNet.Devices
 		/// <param name="which">The state.</param>
 		void Busy(BusyType which);
 
-#if WINDOWS		/// <summary>		/// Callback function.		/// </summary>		void Callback();
-		/// <summary>		/// Asks user's decision.		/// </summary>		/// <param name="question">The question.</param>		/// <returns>User's decision.</returns>		YesNoCancel Ask(string question);	#elif MAC || LINUX
+		/// <summary>
+		/// Callback function.
+		/// </summary>
+		void Callback();
+
+		/// <summary>
+		/// Asks user's decision.
+		/// </summary>
+		/// <param name="question">The question.</param>
+		/// <returns>User's decision.</returns>
+		YesNoCancel Ask(string question);
+
 		/// <summary>
 		/// Abort R environment itself as soon as possible.
 		/// </summary>
+		/// <remarks>
+		/// Only Unix.
+		/// </remarks>
 		/// <param name="message">The message.</param>
 		void Suicide(string message);
 
 		/// <summary>
 		/// Clear the console.
 		/// </summary>
+		/// <remarks>
+		/// Only Unix.
+		/// </remarks>
 		void ResetConsole();
 
 		/// <summary>
 		/// Flush the console.
 		/// </summary>
+		/// <remarks>
+		/// Only Unix.
+		/// </remarks>
 		void FlushConsole();
 
 		/// <summary>
 		/// Clear the error console.
 		/// </summary>
+		/// <remarks>
+		/// Only Unix.
+		/// </remarks>
 		void ClearErrorConsole();
 
 		/// <summary>
 		/// Invokes any actions which occur at system termination.
 		/// </summary>
+		/// <remarks>
+		/// Only Unix.
+		/// </remarks>
 		/// <param name="saveAction">The save type.</param>
 		/// <param name="status">Exit code.</param>
 		/// <param name="runLast">Whether R should execute <code>.Last</code>.</param>
@@ -74,6 +98,9 @@ namespace RDotNet.Devices
 		/// <summary>
 		/// Displays the contents of files. 
 		/// </summary>
+		/// <remarks>
+		/// Only Unix.
+		/// </remarks>
 		/// <param name="files">The file paths.</param>
 		/// <param name="headers">The header before the contents is printed.</param>
 		/// <param name="title">The window title.</param>
@@ -85,21 +112,31 @@ namespace RDotNet.Devices
 		/// <summary>
 		/// Chooses a file.
 		/// </summary>
+		/// <remarks>
+		/// Only Unix.
+		/// </remarks>
 		/// <param name="create">To be created.</param>
 		/// <returns>The length of input.</returns>
 		string ChooseFile(bool create);
 
+		/// <remarks>
+		/// Only Unix.
+		/// </remarks>
 		void EditFile(string file);
 
-		SymbolicExpression LoadHistory(Language call, SymbolicExpression operation, Pairlist args, RDotNet.Environment environment);
+		/// <remarks>
+		/// Only Unix.
+		/// </remarks>
+		SymbolicExpression LoadHistory(Language call, SymbolicExpression operation, Pairlist args, REnvironment environment);
 
-		SymbolicExpression SaveHistory(Language call, SymbolicExpression operation, Pairlist args, RDotNet.Environment environment);
+		/// <remarks>
+		/// Only Unix.
+		/// </remarks>
+		SymbolicExpression SaveHistory(Language call, SymbolicExpression operation, Pairlist args, REnvironment environment);
 
-		SymbolicExpression AddHistory(Language call, SymbolicExpression operation, Pairlist args, RDotNet.Environment environment);
-
-#endif
-
+		/// <remarks>
+		/// Only Unix.
+		/// </remarks>
+		SymbolicExpression AddHistory(Language call, SymbolicExpression operation, Pairlist args, REnvironment environment);
 	}
-
 }
-

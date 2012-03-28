@@ -14,6 +14,10 @@ namespace RDotNet
 	/// </remarks>
 	public class DynamicVector : Vector<object>
 	{
+		protected internal DynamicVector(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
 		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
@@ -49,7 +53,7 @@ namespace RDotNet
 						case SymbolicExpressionType.ComplexVector:
 							return ReadComplex(pointer, offset);
 						default:
-							throw new NotImplementedException();
+							return ReadSymbolicExpression(pointer, offset);
 					}
 				}
 			}
@@ -84,7 +88,8 @@ namespace RDotNet
 							WriteComplex((Complex)value, pointer, offset);
 							return;
 						default:
-							throw new NotImplementedException();
+							WriteSymbolicExpression((SymbolicExpression)value, pointer, offset);
+							return;
 					}
 				}
 			}
@@ -109,19 +114,14 @@ namespace RDotNet
 					case SymbolicExpressionType.ComplexVector:
 						return Marshal.SizeOf(typeof(Complex));
 					default:
-						throw new NotImplementedException();
+						return Marshal.SizeOf(typeof(IntPtr));
 				}
 			}
 		}
 
-		internal protected DynamicVector(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
-		}
-
 		private double ReadDouble(IntPtr pointer, int offset)
 		{
-			byte[] data = new byte[sizeof(double)];
+			var data = new byte[sizeof(double)];
 			for (int byteIndex = 0; byteIndex < data.Length; byteIndex++)
 			{
 				data[byteIndex] = Marshal.ReadByte(pointer, offset + byteIndex);
@@ -157,7 +157,7 @@ namespace RDotNet
 
 		private void WriteString(string value, IntPtr pointer, int offset)
 		{
-			IntPtr stringPointer = Engine.Proxy.Rf_mkChar(value);
+			IntPtr stringPointer = Engine.GetFunction<Rf_mkChar>("Rf_mkChar")(value);
 			Marshal.WriteIntPtr(pointer, offset, stringPointer);
 		}
 
@@ -185,7 +185,7 @@ namespace RDotNet
 
 		private Complex ReadComplex(IntPtr pointer, int offset)
 		{
-			byte[] data = new byte[Marshal.SizeOf(typeof(Complex))];
+			var data = new byte[Marshal.SizeOf(typeof(Complex))];
 			Marshal.Copy(pointer, data, 0, data.Length);
 			double real = BitConverter.ToDouble(data, 0);
 			double imaginary = BitConverter.ToDouble(data, sizeof(double));
@@ -199,6 +199,17 @@ namespace RDotNet
 			Marshal.Copy(real, 0, pointer, real.Length);
 			pointer = IntPtr.Add(pointer, real.Length);
 			Marshal.Copy(imaginary, 0, pointer, imaginary.Length);
+		}
+
+		private SymbolicExpression ReadSymbolicExpression(IntPtr pointer, int offset)
+		{
+			IntPtr sexp = IntPtr.Add(pointer, offset);
+			return new SymbolicExpression(Engine, sexp);
+		}
+
+		private void WriteSymbolicExpression(SymbolicExpression sexp, IntPtr pointer, int offset)
+		{
+			Marshal.WriteIntPtr(pointer, offset, sexp.DangerousGetHandle());
 		}
 	}
 }

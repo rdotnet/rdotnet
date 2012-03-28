@@ -9,12 +9,11 @@ namespace RDotNet.Dynamic
 {
 	public class DataFrameDynamicMeta : SymbolicExpressionDynamicMeta
 	{
-		private static readonly Type[] IndexerNameType = new Type[] { typeof(string) };
+		private static readonly Type[] IndexerNameType = new[] { typeof(string) };
 
 		public DataFrameDynamicMeta(System.Linq.Expressions.Expression parameter, DataFrame frame)
 			: base(parameter, frame)
-		{
-		}
+		{}
 
 		public override IEnumerable<string> GetDynamicMemberNames()
 		{
@@ -28,10 +27,10 @@ namespace RDotNet.Dynamic
 				return base.BindGetMember(binder);
 			}
 
-			var instance = System.Linq.Expressions.Expression.Constant(Value, typeof(DataFrame));
-			var name = System.Linq.Expressions.Expression.Constant(binder.Name, typeof(string));
+			ConstantExpression instance = System.Linq.Expressions.Expression.Constant(Value, typeof(DataFrame));
+			ConstantExpression name = System.Linq.Expressions.Expression.Constant(binder.Name, typeof(string));
 			PropertyInfo indexer = typeof(DataFrame).GetProperty("Item", IndexerNameType);
-			var call = System.Linq.Expressions.Expression.Property(instance, indexer, name);
+			IndexExpression call = System.Linq.Expressions.Expression.Property(instance, indexer, name);
 			return new DynamicMetaObject(call, BindingRestrictions.GetTypeRestriction(call, typeof(DynamicVector)));
 		}
 
