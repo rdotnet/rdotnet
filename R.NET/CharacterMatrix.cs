@@ -12,6 +12,36 @@ namespace RDotNet
 	public class CharacterMatrix : Matrix<string>
 	{
 		/// <summary>
+		/// Creates a new empty CharacterMatrix with the specified size.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="rowCount">The row size.</param>
+		/// <param name="columnCount">The column size.</param>
+		/// <seealso cref="REngineExtension.CreateCharacterMatrix(REngine, int, int)"/>
+		public CharacterMatrix(REngine engine, int rowCount, int columnCount)
+			: base(engine, SymbolicExpressionType.CharacterVector, rowCount, columnCount)
+		{}
+
+		/// <summary>
+		/// Creates a new CharacterMatrix with the specified values.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="matrix">The values.</param>
+		/// <seealso cref="REngineExtension.CreateCharacterMatrix(REngine, string[,])"/>
+		public CharacterMatrix(REngine engine, string[,] matrix)
+			: base(engine, SymbolicExpressionType.CharacterVector, matrix)
+		{}
+
+		/// <summary>
+		/// Creates a new instance for a string matrix.
+		/// </summary>
+		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+		/// <param name="coerced">The pointer to a string matrix.</param>
+		protected internal CharacterMatrix(REngine engine, IntPtr coerced)
+			: base(engine, coerced)
+		{}
+
+		/// <summary>
 		/// Gets or sets the element at the specified index.
 		/// </summary>
 		/// <param name="rowIndex">The zero-based rowIndex index of the element to get or set.</param>
@@ -63,43 +93,7 @@ namespace RDotNet
 		/// </summary>
 		protected override int DataSize
 		{
-			get
-			{
-				return Marshal.SizeOf(typeof(IntPtr));
-			}
-		}
-
-		/// <summary>
-		/// Creates a new empty CharacterMatrix with the specified size.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="rowCount">The row size.</param>
-		/// <param name="columnCount">The column size.</param>
-		/// <seealso cref="REngineExtension.CreateCharacterMatrix(REngine, int, int)"/>
-		public CharacterMatrix(REngine engine, int rowCount, int columnCount)
-			: base(engine, SymbolicExpressionType.CharacterVector, rowCount, columnCount)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new CharacterMatrix with the specified values.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="matrix">The values.</param>
-		/// <seealso cref="REngineExtension.CreateCharacterMatrix(REngine, string[,])"/>
-		public CharacterMatrix(REngine engine, string[, ] matrix)
-			: base(engine, SymbolicExpressionType.CharacterVector, matrix)
-		{
-		}
-
-		/// <summary>
-		/// Creates a new instance for a string matrix.
-		/// </summary>
-		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-		/// <param name="coerced">The pointer to a string matrix.</param>
-		internal protected CharacterMatrix(REngine engine, IntPtr coerced)
-			: base(engine, coerced)
-		{
+			get { return Marshal.SizeOf(typeof(IntPtr)); }
 		}
 	}
 }

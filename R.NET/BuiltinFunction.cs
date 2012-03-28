@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using RDotNet.Internals;
 
 namespace RDotNet
 {
@@ -13,21 +14,20 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The engine.</param>
 		/// <param name="pointer">The pointer.</param>
-		internal protected BuiltinFunction(REngine engine, IntPtr pointer)
+		protected internal BuiltinFunction(REngine engine, IntPtr pointer)
 			: base(engine, pointer)
-		{
-		}
+		{}
 
 		public override SymbolicExpression Invoke(SymbolicExpression[] args)
 		{
 			IntPtr argument = Engine.NilValue.DangerousGetHandle();
-			foreach (var arg in args.Reverse())
+			foreach (SymbolicExpression arg in args.Reverse())
 			{
-				argument = Engine.Proxy.Rf_cons(arg.DangerousGetHandle(), argument);
+				argument = Engine.GetFunction<Rf_cons>("Rf_cons")(arg.DangerousGetHandle(), argument);
 			}
-			IntPtr call = Engine.Proxy.Rf_lcons(this.handle, argument);
+			IntPtr call = Engine.GetFunction<Rf_lcons>("Rf_lcons")(handle, argument);
 
-			IntPtr result = Engine.Proxy.Rf_eval(call, Engine.GlobalEnvironment.DangerousGetHandle());
+			IntPtr result = Engine.GetFunction<Rf_eval>("Rf_eval")(call, Engine.GlobalEnvironment.DangerousGetHandle());
 			return new SymbolicExpression(Engine, result);
 		}
 	}

@@ -14,8 +14,7 @@ namespace RDotNet
 		/// <param name="pointer">The pointer.</param>
 		protected Function(REngine engine, IntPtr pointer)
 			: base(engine, pointer)
-		{
-		}
+		{}
 
 		/// <summary>
 		/// Executes the function.

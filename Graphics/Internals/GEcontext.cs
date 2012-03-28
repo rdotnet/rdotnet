@@ -17,6 +17,7 @@ namespace RDotNet.Graphics.Internals
 		internal double ps;
 		internal double lineheight;
 		internal FontFace fontface;
+
 		[MarshalAs(UnmanagedType.ByValTStr, SizeConst = 201)]
 		internal string fontfamily;
 	}

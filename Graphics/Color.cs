@@ -68,7 +68,7 @@ namespace RDotNet.Graphics
 
 		public static Color FromUInt32(uint abgr)
 		{
-			Color color = new Color();
+			var color = new Color();
 			color.alpha = (byte)((abgr & 0xFF000000u) >> 24);
 			color.blue = (byte)((abgr & 0x00FF0000u) >> 16);
 			color.green = (byte)((abgr & 0x0000FF00u) >> 8);
@@ -78,7 +78,7 @@ namespace RDotNet.Graphics
 
 		public static Color FromBgr(byte blue, byte green, byte red)
 		{
-			Color color = new Color();
+			var color = new Color();
 			color.alpha = byte.MaxValue;
 			color.blue = blue;
 			color.green = green;
@@ -88,7 +88,7 @@ namespace RDotNet.Graphics
 
 		public static Color FromAbgr(byte alpha, byte blue, byte green, byte red)
 		{
-			Color color = new Color();
+			var color = new Color();
 			color.alpha = alpha;
 			color.blue = blue;
 			color.green = green;
@@ -120,7 +120,7 @@ namespace RDotNet.Graphics
 		{
 			if (obj is Color)
 			{
-				Color color = (Color)obj;
+				var color = (Color)obj;
 				return (this == color);
 			}
 			return false;

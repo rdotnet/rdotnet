@@ -21,7 +21,7 @@ namespace RDotNet.Graphics
 
 			int width = raster.Width;
 			int height = raster.Height;
-			IntegerMatrix matrix = new IntegerMatrix(engine, height, width);
+			var matrix = new IntegerMatrix(engine, height, width);
 			for (int x = 0; x < width; x++)
 			{
 				for (int y = 0; y < height; y++)

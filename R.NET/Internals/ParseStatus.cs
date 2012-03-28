@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RDotNet.Internals
+﻿namespace RDotNet.Internals
 {
 	/// <summary>
 	/// Parsing status enumeration.
@@ -11,18 +9,22 @@ namespace RDotNet.Internals
 		/// The default value.
 		/// </summary>
 		Null,
+
 		/// <summary>
 		/// No error.
 		/// </summary>
 		OK,
+
 		/// <summary>
 		/// Statement is incomplete.
 		/// </summary>
 		Incomplete,
+
 		/// <summary>
 		/// Error occurred.
 		/// </summary>
 		Error,
+
 		/// <summary>
 		/// EOF.
 		/// </summary>

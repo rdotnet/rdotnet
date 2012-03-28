@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using RDotNet.Internals;
 
 namespace RDotNet.Devices
@@ -10,6 +9,8 @@ namespace RDotNet.Devices
 	/// </summary>
 	public class ConsoleDevice : ICharacterDevice
 	{
+		#region ICharacterDevice Members
+
 		public string ReadConsole(string prompt, int capacity, bool history)
 		{
 			Console.Write(prompt);
@@ -26,14 +27,11 @@ namespace RDotNet.Devices
 			Console.Write(message);
 		}
 
-		public void Busy(Internals.BusyType which)
-		{
-		}
-		
-#if WINDOWS
+		public void Busy(BusyType which)
+		{}
+
 		public void Callback()
-		{
-		}
+		{}
 
 		public YesNoCancel Ask(string question)
 		{
@@ -53,31 +51,31 @@ namespace RDotNet.Devices
 			}
 			return default(YesNoCancel);
 		}
-#elif MAC || LINUX
+
 		public void Suicide(string message)
 		{
 			Console.Error.WriteLine(message);
 			CleanUp(StartupSaveAction.Suicide, 2, false);
 		}
-		
+
 		public void ResetConsole()
 		{
 			Console.Clear();
 		}
-		
+
 		public void FlushConsole()
 		{
 			Console.Write(string.Empty);
 		}
-		
+
 		public void ClearErrorConsole()
 		{
 			Console.Clear();
 		}
-		
+
 		public void CleanUp(StartupSaveAction saveAction, int status, bool runLast)
 		{
-			System.Environment.Exit(status);
+			Environment.Exit(status);
 		}
 
 		public bool ShowFiles(string[] files, string[] headers, string title, bool delete, string pager)
@@ -101,7 +99,7 @@ namespace RDotNet.Devices
 			}
 			return true;
 		}
-		
+
 		public string ChooseFile(bool create)
 		{
 			string path = Console.ReadLine();
@@ -119,25 +117,25 @@ namespace RDotNet.Devices
 			}
 			return null;
 		}
-		
+
 		public void EditFile(string file)
-		{
-		}
-		
-		public SymbolicExpression LoadHistory(Language call, SymbolicExpression operation, Pairlist args, RDotNet.Environment environment)
-		{
-			return environment.Engine.NilValue;
-		}
-		
-		public SymbolicExpression SaveHistory(Language call, SymbolicExpression operation, Pairlist args, RDotNet.Environment environment)
+		{}
+
+		public SymbolicExpression LoadHistory(Language call, SymbolicExpression operation, Pairlist args, REnvironment environment)
 		{
 			return environment.Engine.NilValue;
 		}
-		
-		public SymbolicExpression AddHistory(Language call, SymbolicExpression operation, Pairlist args, RDotNet.Environment environment)
+
+		public SymbolicExpression SaveHistory(Language call, SymbolicExpression operation, Pairlist args, REnvironment environment)
 		{
 			return environment.Engine.NilValue;
 		}
-#endif
+
+		public SymbolicExpression AddHistory(Language call, SymbolicExpression operation, Pairlist args, REnvironment environment)
+		{
+			return environment.Engine.NilValue;
+		}
+
+		#endregion
 	}
 }
