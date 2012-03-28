@@ -86,11 +86,11 @@
     <Compile Include="DeviceDescription.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="GraphicsContext.cs" />
-    <Compile Include="Internals\Constants.cs" />
+    <Compile Include="IGraphicsDevice.cs" />
     <Compile Include="Internals\GEcontext.cs" />
     <Compile Include="Internals\DevDesc.cs" />
     <Compile Include="GraphicsDeviceEventArgs.cs" />
-    <Compile Include="GraphicsDevice.cs" />
+    <Compile Include="GraphicsDeviceAdapter.cs" />
     <Compile Include="Internals\GEDevDesc.cs" />
     <Compile Include="Internals\Delegates.cs" />
     <Compile Include="Raster.cs" />
