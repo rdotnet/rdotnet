@@ -96,11 +96,6 @@ namespace RDotNet.Graphics
 			return color;
 		}
 
-		public static explicit operator int(Color color)
-		{
-			return (color.Alpha << 24) & (color.Blue << 16) & (color.Green << 8) & color.Red;
-		}
-
 		public static bool operator ==(Color c1, Color c2)
 		{
 			return c1.Alpha == c2.Alpha && c1.Blue == c2.Blue && c1.Green == c2.Green && c1.Red == c2.Red;
@@ -113,7 +108,7 @@ namespace RDotNet.Graphics
 
 		public override int GetHashCode()
 		{
-			return (int)this;
+			return (Alpha << 24) | (Blue << 16) | (Green << 8) | Red;
 		}
 
 		public override bool Equals(object obj)

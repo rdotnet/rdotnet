@@ -352,9 +352,9 @@ namespace RDotNet
 				string line;
 				while ((line = reader.ReadLine()) != null)
 				{
-					foreach (string segment in Segment(line))
+					foreach (var segment in Segment(line))
 					{
-						SymbolicExpression result = Parse(segment, incompleteStatement);
+						var result = Parse(segment, incompleteStatement);
 						if (result != null)
 						{
 							yield return result;
@@ -390,9 +390,9 @@ namespace RDotNet
 				string line;
 				while ((line = reader.ReadLine()) != null)
 				{
-					foreach (string segment in Segment(line))
+					foreach (var segment in Segment(line))
 					{
-						SymbolicExpression result = Parse(segment, incompleteStatement);
+						var result = Parse(segment, incompleteStatement);
 						if (result != null)
 						{
 							yield return result;
@@ -404,8 +404,8 @@ namespace RDotNet
 
 		private static IEnumerable<string> Segment(string line)
 		{
-			string[] segments = line.Split(';');
-			for (int index = 0; index < segments.Length; index++)
+			var segments = line.Split(';');
+			for (var index = 0; index < segments.Length; index++)
 			{
 				if (index == segments.Length - 1)
 				{
@@ -424,7 +424,7 @@ namespace RDotNet
 		private SymbolicExpression Parse(string statement, StringBuilder incompleteStatement)
 		{
 			incompleteStatement.Append(statement);
-			IntPtr s = GetFunction<Rf_mkString>("Rf_mkString")(incompleteStatement.ToString());
+			var s = GetFunction<Rf_mkString>("Rf_mkString")(incompleteStatement.ToString());
 
 			using (new ProtectedPointer(this, s))
 			{
@@ -451,7 +451,7 @@ namespace RDotNet
 					case ParseStatus.Incomplete:
 						return null;
 					default:
-						string errorStatement = incompleteStatement.ToString();
+						var errorStatement = incompleteStatement.ToString();
 						incompleteStatement.Clear();
 						throw new ParseException(status, errorStatement);
 				}
@@ -468,7 +468,7 @@ namespace RDotNet
 			{
 				throw new InvalidOperationException();
 			}
-			string[] newArgs = Utility.AddFirst(ID, args);
+			var newArgs = Utility.AddFirst(ID, args);
 			GetFunction<R_set_command_line_arguments>("R_set_command_line_arguments")(newArgs.Length, newArgs);
 		}
 
@@ -502,7 +502,7 @@ namespace RDotNet
 			}
 			try
 			{
-				IntPtr pointer = DangerousGetHandle(name);
+				var pointer = DangerousGetHandle(name);
 				return new SymbolicExpression(this, Marshal.ReadIntPtr(pointer));
 			}
 			catch (Exception ex)

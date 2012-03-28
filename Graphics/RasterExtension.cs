@@ -19,18 +19,23 @@ namespace RDotNet.Graphics
 				throw new ArgumentNullException("raster");
 			}
 
-			int width = raster.Width;
-			int height = raster.Height;
+			var width = raster.Width;
+			var height = raster.Height;
 			var matrix = new IntegerMatrix(engine, height, width);
-			for (int x = 0; x < width; x++)
+			for (var x = 0; x < width; x++)
 			{
-				for (int y = 0; y < height; y++)
+				for (var y = 0; y < height; y++)
 				{
-					matrix[x, y] = (int)raster[x, y];
+					matrix[x, y] = ToInteger(raster[x, y]);
 				}
 			}
 
 			return matrix;
+		}
+
+		private static int ToInteger(Color color)
+		{
+			return (color.Alpha << 24) | (color.Blue << 16) | (color.Green << 8) | color.Red;
 		}
 	}
 }

@@ -9,9 +9,10 @@ namespace RDotNet.Graphics
 		public DeviceDescription()
 			: base(IntPtr.Zero, true)
 		{
-			IntPtr pointer = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(DevDesc)));
+			var pointer = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(DevDesc)));
 			Marshal.StructureToPtr(new DevDesc(), pointer, true);
 			SetHandle(pointer);
+			SetDefaultParameter();
 		}
 
 		internal DeviceDescription(IntPtr pointer)
@@ -29,19 +30,15 @@ namespace RDotNet.Graphics
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return new Rectangle(dd.left, dd.bottom, dd.right - dd.left, dd.top - dd.bottom);
 			}
 			set
 			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.left = value.Left;
-				dd.right = value.Right;
-				dd.bottom = value.Bottom;
-				dd.top = value.Top;
-				Copy(ref dd);
+				WriteDouble("left", value.Left);
+				WriteDouble("right", value.Right);
+				WriteDouble("bottom", value.Bottom);
+				WriteDouble("top", value.Top);
 			}
 		}
 
@@ -49,19 +46,15 @@ namespace RDotNet.Graphics
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return new Rectangle(dd.clipLeft, dd.clipBottom, dd.clipRight - dd.clipLeft, dd.clipTop - dd.clipBottom);
 			}
 			set
 			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.clipLeft = value.Left;
-				dd.clipRight = value.Right;
-				dd.clipBottom = value.Bottom;
-				dd.clipTop = value.Top;
-				Copy(ref dd);
+				WriteDouble("clipLeft", value.Left);
+				WriteDouble("clipRight", value.Right);
+				WriteDouble("clipBottom", value.Bottom);
+				WriteDouble("clipTop", value.Top);
 			}
 		}
 
@@ -69,328 +62,268 @@ namespace RDotNet.Graphics
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.xCharOffset;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.xCharOffset = value;
-				Copy(ref dd);
-			}
+			set { WriteDouble("xCharOffset", value); }
 		}
 
 		public double CharOffsetY
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.yCharOffset;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.yCharOffset = value;
-				Copy(ref dd);
-			}
+			set { WriteDouble("yCharOffset", value); }
 		}
 
 		public double LineBiasY
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.yLineBias;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.yLineBias = value;
-				Copy(ref dd);
-			}
+			set { WriteDouble("yLineBias", value); }
 		}
 
 		public double InchesPerRasterX
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.ipr[0];
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.ipr[0] = value;
-				Copy(ref dd);
-			}
+			set { WriteDoubleArray("ipr", 0, value); }
 		}
 
 		public double InchesPerRasterY
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.ipr[1];
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.ipr[1] = value;
-				Copy(ref dd);
-			}
+			set { WriteDoubleArray("ipr", 1, value); }
 		}
 
 		public double CharacterSizeInRasterX
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.cra[0];
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.cra[0] = value;
-				Copy(ref dd);
-			}
+			set { WriteDoubleArray("cra", 0, value); }
 		}
 
 		public double CharacterSizeInRasterY
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.cra[1];
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.cra[1] = value;
-				Copy(ref dd);
-			}
+			set { WriteDoubleArray("cra", 1, value); }
 		}
 
 		public double Gamma
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.gamma;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.gamma = value;
-				Copy(ref dd);
-			}
+			set { WriteDouble("gamma", value); }
 		}
 
 		public bool IsGammaModifiable
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.canChangeGamma;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.canChangeGamma = value;
-				Copy(ref dd);
-			}
+			set { WriteBoolean("canChangeGamma", value); }
 		}
 
 		public bool IsClippable
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.canClip;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.canClip = value;
-				Copy(ref dd);
-			}
+			set { WriteBoolean("canClip", value); }
 		}
 
 		public Adjustment Adjustment
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.canHAdj;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.canHAdj = value;
-				Copy(ref dd);
-			}
+			set { WriteInt32Enum("canHAdj", value); }
 		}
 
 		public double StartFontSize
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.startps;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.startps = value;
-				Copy(ref dd);
-			}
+			set { WriteDouble("startps", value); }
 		}
 
 		public Color StartForeground
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.startcol;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.startcol = value;
-				Copy(ref dd);
-			}
+			set { WriteColor("startcol", value); }
 		}
 
 		public Color StartBackground
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.startfill;
 			}
-			set
+			set { WriteColor("startfill", value); }
+		}
+
+		public LineType StartLineType
+		{
+			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.startfill = value;
-				Copy(ref dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
+				return dd.startlty;
 			}
+			set { WriteInt32Enum("startlty", value); }
 		}
 
 		public int StartFont
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.startfont;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.startfont = value;
-				Copy(ref dd);
-			}
+			set { WriteInt32("startfont", value); }
 		}
 
 		public double StartGamma
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.startgamma;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.startgamma = value;
-				Copy(ref dd);
-			}
+			set { WriteDouble("startgamma", value); }
 		}
 
 		public bool DisplayListOn
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.displayListOn;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.displayListOn = value;
-				Copy(ref dd);
-			}
+			set { WriteBoolean("displayListOn", value); }
 		}
 
 		public bool IsTextRotatedInContour
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.useRotatedTextInContour;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.useRotatedTextInContour = value;
-				Copy(ref dd);
-			}
+			set { WriteBoolean("useRotatedTextInContour", value); }
 		}
 
 		protected IntPtr DeviceSpecific
 		{
 			get
 			{
-				DevDesc dd;
-				GetDescription(out dd);
+				var dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
 				return dd.deviceSpecific;
 			}
-			set
-			{
-				DevDesc dd;
-				GetDescription(out dd);
-				dd.deviceSpecific = value;
-				Copy(ref dd);
-			}
+			set { WriteIntPtr("deviceSpecific", value); }
 		}
 
-		internal void Copy(ref DevDesc dd)
+		private void SetDefaultParameter()
 		{
-			Marshal.StructureToPtr(dd, handle, false);
+			StartForeground = Colors.Black;
+			StartBackground = Colors.White;
+			StartLineType = LineType.Solid;
+			StartFont = 1;
+			StartFontSize = 12.0;
+			StartGamma = 1.0;
+			CharOffsetX = 0.4900;
+			CharOffsetY = 0.3333;
+			CharacterSizeInRasterX = 9.0;
+			CharacterSizeInRasterY = 12.0;
+			InchesPerRasterX = 1.0 / 72.0;
+			InchesPerRasterY = 1.0 / 72.0;
+			LineBiasY = 0.20;
+			IsClippable = true;
+			Adjustment = Adjustment.All;
+			IsGammaModifiable = false;
+			DisplayListOn = false;
+		}
+
+		private void WriteDouble(string fieldName, double value)
+		{
+			var bytes = BitConverter.GetBytes(value);
+			var offset = Marshal.OffsetOf(typeof(DevDesc), fieldName).ToInt32();
+			Marshal.Copy(bytes, 0, IntPtr.Add(handle, offset), bytes.Length);
+		}
+
+		private void WriteDoubleArray(string fieldName, int index, double value)
+		{
+			var bytes = BitConverter.GetBytes(value);
+			var offset = Marshal.OffsetOf(typeof(DevDesc), fieldName).ToInt32() + sizeof(double) * index;
+			Marshal.Copy(bytes, 0, IntPtr.Add(handle, offset), bytes.Length);
+		}
+
+		private void WriteBoolean(string fieldName, bool value)
+		{
+			var bytes = BitConverter.GetBytes(Convert.ToInt32(value));
+			var offset = Marshal.OffsetOf(typeof(DevDesc), fieldName).ToInt32();
+			Marshal.Copy(bytes, 0, IntPtr.Add(handle, offset), bytes.Length);
+		}
+
+		private void WriteInt32Enum(string fieldName, Enum value)
+		{
+			var bytes = BitConverter.GetBytes(Convert.ToInt32(value));
+			var offset = Marshal.OffsetOf(typeof(DevDesc), fieldName).ToInt32();
+			Marshal.Copy(bytes, 0, IntPtr.Add(handle, offset), bytes.Length);
+		}
+
+		private void WriteColor(string fieldName, Color value)
+		{
+			var bytes = BitConverter.GetBytes(value.GetHashCode());
+			var offset = Marshal.OffsetOf(typeof(DevDesc), fieldName).ToInt32();
+			Marshal.Copy(bytes, 0, IntPtr.Add(handle, offset), bytes.Length);
+		}
+
+		private void WriteInt32(string fieldName, int value)
+		{
+			var offset = Marshal.OffsetOf(typeof(DevDesc), fieldName).ToInt32();
+			Marshal.WriteInt32(handle, offset, value);
+		}
+
+		private void WriteIntPtr(string fieldName, IntPtr value)
+		{
+			var offset = Marshal.OffsetOf(typeof(DevDesc), fieldName).ToInt32();
+			Marshal.WriteIntPtr(handle, offset, value);
 		}
 
 		protected override bool ReleaseHandle()
@@ -399,15 +332,10 @@ namespace RDotNet.Graphics
 			return true;
 		}
 
-		internal void GetDescription(out DevDesc dd)
+		internal void SetMethod(string fieldName, Delegate d)
 		{
-			dd = (DevDesc)Marshal.PtrToStructure(handle, typeof(DevDesc));
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			SetHandleAsInvalid();
-			base.Dispose(disposing);
+			var pointer = Marshal.GetFunctionPointerForDelegate(d);
+			WriteIntPtr(fieldName, pointer);
 		}
 	}
 }
