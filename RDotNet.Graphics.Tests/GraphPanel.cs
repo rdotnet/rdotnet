@@ -39,12 +39,13 @@ namespace RDotNet.Graphics.Tests
 
 		void IGraphicsDevice.DrawCircle(Point center, double radius, GraphicsContext context, DeviceDescription description)
 		{
+			var diameter = (float)(2 * radius);
+			var point = ConvertPointF(center);
 			var color = ConvertColor(context.Foreground);
-			var rectangle = ConvertRectangle(description.Bounds);
 			using (var g = CreateGraphics())
 			using (var pen = new Pen(color))
 			{
-				g.DrawEllipse(pen, rectangle);
+				g.DrawEllipse(pen, (float)(point.X - radius), (float)(point.Y - radius), diameter, diameter);
 			}
 		}
 
