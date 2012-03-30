@@ -9,6 +9,7 @@ namespace RDotNet.Graphics
 	internal class GraphicsDeviceAdapter
 	{
 		private readonly IGraphicsDevice device;
+		private DeviceDescription description;
 		private REngine engine;
 
 		public GraphicsDeviceAdapter(IGraphicsDevice device)
@@ -46,9 +47,9 @@ namespace RDotNet.Graphics
 			var oldSuspended = GetInterruptsSuspended(engine);
 			SetInterruptsSuspended(engine, true);
 
-			var description = new DeviceDescription();
-			SetMethod(description);
-			var gdd = engine.GetFunction<GEcreateDevDesc>("GEcreateDevDesc")(description.DangerousGetHandle());
+			this.description = new DeviceDescription();
+			SetMethod(this.description);
+			var gdd = engine.GetFunction<GEcreateDevDesc>("GEcreateDevDesc")(this.description.DangerousGetHandle());
 			engine.GetFunction<GEaddDevice2>("GEaddDevice2")(gdd, this.device.Name);
 
 			SetInterruptsSuspended(engine, oldSuspended);
@@ -106,27 +107,23 @@ namespace RDotNet.Graphics
 
 		private void Activate(IntPtr pDevDesc)
 		{
-			var description = new DeviceDescription(pDevDesc);
-			this.device.OnActivated(description);
+			this.device.OnActivated(this.description);
 		}
 
 		private void Deactivate(IntPtr pDevDesc)
 		{
-			var description = new DeviceDescription(pDevDesc);
-			this.device.OnDeactivated(description);
+			this.device.OnDeactivated(this.description);
 		}
 
 		private void NewPage(IntPtr gc, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
 			var context = new GraphicsContext(gc);
-			this.device.OnNewPageRequested(context, description);
+			this.device.OnNewPageRequested(context, this.description);
 		}
 
 		private void Resize(out double left, out double right, out double bottom, out double top, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
-			var rectangle = this.device.OnResized(description);
+			var rectangle = this.device.OnResized(this.description);
 			left = rectangle.Left;
 			right = rectangle.Right;
 			bottom = rectangle.Bottom;
@@ -135,48 +132,42 @@ namespace RDotNet.Graphics
 
 		private void Close(IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
-			this.device.OnClosed(description);
+			this.device.OnClosed(this.description);
 		}
 
 		private bool ConfirmNewFrame(IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
-			return this.device.ConfirmNewFrame(description);
+			return this.device.ConfirmNewFrame(this.description);
 		}
 
 		private void ChangeMode(int mode, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
 			if (mode == 0)
 			{
-				this.device.OnDrawStarted(description);
+				this.device.OnDrawStarted(this.description);
 			}
 			else if (mode == 1)
 			{
-				this.device.OnDrawStopped(description);
+				this.device.OnDrawStopped(this.description);
 			}
 		}
 
 		private void DrawCircle(double x, double y, double r, IntPtr gc, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
 			var context = new GraphicsContext(gc);
 			var center = new Point(x, y);
-			this.device.DrawCircle(center, r, context, description);
+			this.device.DrawCircle(center, r, context, this.description);
 		}
 
 		private void Clip(double x0, double x1, double y0, double y1, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
 			var rectangle = new Rectangle(Math.Min(x0, x1), Math.Min(y0, y1), Math.Abs(x0 - x1), Math.Abs(y0 - y1));
-			this.device.Clip(rectangle, description);
+			this.device.Clip(rectangle, this.description);
 		}
 
 		private bool GetLocation(out double x, out double y, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
-			var location = this.device.GetLocation(description);
+			var location = this.device.GetLocation(this.description);
 			if (!location.HasValue)
 			{
 				x = default(double);
@@ -192,18 +183,16 @@ namespace RDotNet.Graphics
 
 		private void DrawLine(double x1, double y1, double x2, double y2, IntPtr gc, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
 			var context = new GraphicsContext(gc);
 			var source = new Point(x1, y1);
 			var destination = new Point(x2, y2);
-			this.device.DrawLine(source, destination, context, description);
+			this.device.DrawLine(source, destination, context, this.description);
 		}
 
 		private void GetMetricInfo(int c, IntPtr gc, out double ascent, out double descent, out double width, IntPtr dd)
 		{
 			var context = new GraphicsContext(gc);
-			var description = new DeviceDescription(dd);
-			var metric = this.device.GetMetricInfo(c, context, description);
+			var metric = this.device.GetMetricInfo(c, context, this.description);
 			ascent = metric.Ascent;
 			descent = metric.Descent;
 			width = metric.Width;
@@ -211,39 +200,34 @@ namespace RDotNet.Graphics
 
 		private void DrawPolygon(int n, IntPtr x, IntPtr y, IntPtr gc, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
 			var context = new GraphicsContext(gc);
 			var points = GetPoints(n, x, y);
-			this.device.DrawPolygon(points, context, description);
+			this.device.DrawPolygon(points, context, this.description);
 		}
 
 		private void DrawPolyline(int n, IntPtr x, IntPtr y, IntPtr gc, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
 			var context = new GraphicsContext(gc);
 			var points = GetPoints(n, x, y);
-			this.device.DrawPolyline(points, context, description);
+			this.device.DrawPolyline(points, context, this.description);
 		}
 
 		private void DrawRectangle(double x0, double y0, double x1, double y1, IntPtr gc, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
 			var context = new GraphicsContext(gc);
 			var rectangle = new Rectangle(Math.Min(x0, x1), Math.Min(y0, y1), Math.Abs(x0 - x1), Math.Abs(y0 - y1));
-			this.device.DrawRectangle(rectangle, context, description);
+			this.device.DrawRectangle(rectangle, context, this.description);
 		}
 
 		private void DrawPath(IntPtr x, IntPtr y, int npoly, IntPtr nper, bool winding, IntPtr gc, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
 			var context = new GraphicsContext(gc);
 			var points = GetPoints(x, y, npoly, nper);
-			this.device.DrawPath(points, winding, context, description);
+			this.device.DrawPath(points, winding, context, this.description);
 		}
 
 		private void DrawRaster(IntPtr raster, int w, int h, double x, double y, double width, double height, double rot, bool interpolate, IntPtr gc, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
 			var context = new GraphicsContext(gc);
 			var output = new Raster(w, h);
 			unchecked
@@ -257,28 +241,25 @@ namespace RDotNet.Graphics
 					}
 				}
 			}
-			this.device.DrawRaster(output, new Rectangle(x, y, width, height), rot, interpolate, context, description);
+			this.device.DrawRaster(output, new Rectangle(x, y, width, height), rot, interpolate, context, this.description);
 		}
 
 		private IntPtr Capture(IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
-			var raster = this.device.Capture(description);
+			var raster = this.device.Capture(this.description);
 			return Engine.CreateIntegerMatrix(raster).DangerousGetHandle();
 		}
 
 		private double MeasureWidth(string str, IntPtr gc, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
 			var context = new GraphicsContext(gc);
-			return this.device.MeasureWidth(str, context, description);
+			return this.device.MeasureWidth(str, context, this.description);
 		}
 
 		private void DrawText(double x, double y, string str, double rot, double hadj, IntPtr gc, IntPtr dd)
 		{
-			var description = new DeviceDescription(dd);
 			var context = new GraphicsContext(gc);
-			this.device.DrawText(str, new Point(x, y), rot, hadj, context, description);
+			this.device.DrawText(str, new Point(x, y), rot, hadj, context, this.description);
 		}
 
 		private IntPtr GetEvent(IntPtr sexp, string s)

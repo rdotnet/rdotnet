@@ -15,12 +15,6 @@ namespace RDotNet.Graphics
 			SetDefaultParameter();
 		}
 
-		internal DeviceDescription(IntPtr pointer)
-			: base(IntPtr.Zero, true)
-		{
-			SetHandle(pointer);
-		}
-
 		public override bool IsInvalid
 		{
 			get { return handle == IntPtr.Zero; }
