@@ -129,4 +129,7 @@ namespace RDotNet.Internals
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate IntPtr Rf_lcons(IntPtr sexp, IntPtr next);
+
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void R_gc();
 }

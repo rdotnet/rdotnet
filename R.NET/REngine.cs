@@ -237,6 +237,14 @@ namespace RDotNet
 		}
 
 		/// <summary>
+		/// Forces garbage collection.
+		/// </summary>
+		public void ForceGarbageCollection()
+		{
+			GetFunction<R_gc>("R_gc")();
+		}
+
+		/// <summary>
 		/// Gets a symbol defined in the global environment.
 		/// </summary>
 		/// <param name="name">The name.</param>

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 
 namespace RDotNet.Tests
 {
@@ -59,6 +60,21 @@ namespace RDotNet.Tests
 		{
 			var engine = REngine.GetInstanceFromID(EngineName);
 			Assert.That(engine.NilValue.DangerousGetHandle(), Is.EqualTo(engine.Evaluate("NULL").DangerousGetHandle()));
+		}
+
+		[Test]
+		public void TestGC()
+		{
+			var engine = REngine.GetInstanceFromID(EngineName);
+			var memoryInitial = engine.Evaluate("memory.size()").AsNumeric().First();
+			engine.Evaluate("x <- numeric(5000000)");  // About 40 MB (should be larger than startup memory size)
+			engine.ForceGarbageCollection();
+			var memoryAfterAlloc = engine.Evaluate("memory.size()").AsNumeric().First();
+			Assert.That(memoryAfterAlloc, Is.GreaterThan(memoryInitial));  // x should not be collected.
+			engine.Evaluate("rm(x)");
+			engine.ForceGarbageCollection();
+			var memoryAfterGC = engine.Evaluate("memory.size()").AsNumeric().First();
+			Assert.That(memoryAfterGC, Is.LessThan(memoryAfterAlloc));  // x should be collected.
 		}
 	}
 }
