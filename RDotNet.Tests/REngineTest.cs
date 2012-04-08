@@ -7,13 +7,14 @@ namespace RDotNet.Tests
 	class REngineTest
 	{
 		private const string EngineName = "RDotNetTest";
+		private readonly MockDevice device = new MockDevice();
 
 		[TestFixtureSetUp]
 		public void SetUpEngine()
 		{
 			Helper.SetEnvironmentVariables();
 			var engine = REngine.CreateInstance(EngineName);
-			engine.Initialize();
+			engine.Initialize(device: device);
 		}
 
 		[TestFixtureTearDown]
@@ -31,6 +32,7 @@ namespace RDotNet.Tests
 		{
 			var engine = REngine.GetInstanceFromID(EngineName);
 			engine.Evaluate("rm(list=ls())");
+			this.device.Initialize();
 		}
 
 		[Test]
@@ -75,6 +77,22 @@ namespace RDotNet.Tests
 			engine.ForceGarbageCollection();
 			var memoryAfterGC = engine.Evaluate("memory.size()").AsNumeric().First();
 			Assert.That(memoryAfterGC, Is.LessThan(memoryAfterAlloc));  // x should be collected.
+		}
+
+		[Test]
+		public void TestReadConsole()
+		{
+			var engine = REngine.GetInstanceFromID(EngineName);
+			this.device.Input = "Hello, World!";
+			Assert.That(engine.Evaluate("readline()").AsCharacter()[0], Is.EqualTo(this.device.Input));
+		}
+
+		[Test]
+		public void TestWriteConsole()
+		{
+			var engine = REngine.GetInstanceFromID(EngineName);
+			engine.Evaluate("print(NULL)");
+			Assert.That(this.device.GetString(), Is.EqualTo("NULL\n"));
 		}
 	}
 }
