@@ -178,7 +178,7 @@ namespace RDotNet
 			}
 			if (dll == null)
 			{
-				switch (Environment.OSVersion.Platform)
+				switch (NativeUtility.GetPlatform())
 				{
 					case PlatformID.Win32NT:
 						dll = "R.dll";

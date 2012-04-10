@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Microsoft.Win32;
 
 namespace RDotNet.Tests
 {
@@ -7,31 +8,39 @@ namespace RDotNet.Tests
 	{
 		internal static void SetEnvironmentVariables()
 		{
+			var rhome = Environment.GetEnvironmentVariable("R_HOME");
+			var currentPath = Environment.GetEnvironmentVariable("PATH");
 			switch (Environment.OSVersion.Platform)
 			{
 				case PlatformID.Win32NT:
-					Environment.SetEnvironmentVariable("PATH", FindRPathFromRegistry());
+					Environment.SetEnvironmentVariable("PATH", FindRPathFromRegistry() + Path.PathSeparator + currentPath);
 					break;
 				case PlatformID.MacOSX:
-					Environment.SetEnvironmentVariable("R_HOME", "/Library/Frameworks/R.framework/R");
-					Environment.SetEnvironmentVariable("PATH", "/Library/Frameworks/R.framework/Libraries");
+					if (string.IsNullOrEmpty(rhome))
+					{
+						Environment.SetEnvironmentVariable("R_HOME", "/Library/Frameworks/R.framework/Resources");
+					}
+					Environment.SetEnvironmentVariable("PATH", "/Library/Frameworks/R.framework/Libraries" + Path.PathSeparator + currentPath);
 					break;
 				case PlatformID.Unix:
-					Environment.SetEnvironmentVariable("R_HOME", "/usr/lib/R");
-					Environment.SetEnvironmentVariable("PATH", "/usr/lib");
+					if (string.IsNullOrEmpty(rhome))
+					{
+						Environment.SetEnvironmentVariable("R_HOME", "/usr/lib/R");
+					}
+					Environment.SetEnvironmentVariable("PATH", "/usr/lib" + Path.PathSeparator + currentPath);
 					break;
 			}
 		}
 
 		internal static string FindRPathFromRegistry()
 		{
-			Microsoft.Win32.RegistryKey rCore = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
+			var rCore = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
 			if (rCore == null)
 			{
 				throw new ApplicationException("Registry key is not found.");
 			}
-			bool is64Bit = Environment.Is64BitProcess;
-			Microsoft.Win32.RegistryKey r = rCore.OpenSubKey(is64Bit ? "R64" : "R");
+			var is64Bit = Environment.Is64BitProcess;
+			var r = rCore.OpenSubKey(is64Bit ? "R64" : "R");
 			if (r == null)
 			{
 				throw new ApplicationException("Registry key is not found.");
