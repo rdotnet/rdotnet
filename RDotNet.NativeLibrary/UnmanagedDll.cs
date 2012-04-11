@@ -129,7 +129,7 @@ namespace RDotNet.NativeLibrary
 		/// </param>
 		/// <returns>If the function succeeds, the return value is nonzero.</returns>
 		[Obsolete("Set environment variable 'PATH' instead.")]
-#if MAC || LINUX
+#if UNIX
 		public static bool SetDllDirectory(string dllDirectory)
 		{
 			if (dllDirectory == null)
@@ -159,7 +159,8 @@ namespace RDotNet.NativeLibrary
 			}
 			return true;
 		}
-				
+
+		private const string LibraryPath = "PATH";
 		private static readonly string DefaultSearchPath = System.Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
 #else
 		[DllImport("kernel32.dll")]
