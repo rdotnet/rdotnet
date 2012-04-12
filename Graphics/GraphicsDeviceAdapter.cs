@@ -9,6 +9,7 @@ namespace RDotNet.Graphics
 	internal class GraphicsDeviceAdapter
 	{
 		private readonly IGraphicsDevice device;
+		private readonly List<GCHandle> delegateHandles;
 		private DeviceDescription description;
 		private REngine engine;
 
@@ -19,6 +20,7 @@ namespace RDotNet.Graphics
 				throw new ArgumentNullException("device");
 			}
 			this.device = device;
+			this.delegateHandles = new List<GCHandle>();
 		}
 
 		public REngine Engine
@@ -48,7 +50,7 @@ namespace RDotNet.Graphics
 			SetInterruptsSuspended(engine, true);
 
 			this.description = new DeviceDescription();
-			SetMethod(this.description);
+			SetMethod();
 			var gdd = engine.GetFunction<GEcreateDevDesc>("GEcreateDevDesc")(this.description.DangerousGetHandle());
 			engine.GetFunction<GEaddDevice2>("GEaddDevice2")(gdd, this.device.Name);
 
@@ -77,32 +79,80 @@ namespace RDotNet.Graphics
 			return Convert.ToBoolean(Marshal.ReadInt32(pointer));
 		}
 
-		private void SetMethod(DeviceDescription description)
+		private void SetMethod()
 		{
-			description.SetMethod("activate", (_DevDesc_activate)Activate);
-			description.SetMethod("cap", (_DevDesc_cap)Capture);
-			description.SetMethod("circle", (_DevDesc_circle)DrawCircle);
-			description.SetMethod("clip", (_DevDesc_clip)Clip);
-			description.SetMethod("close", (_DevDesc_close)Close);
-			description.SetMethod("deactivate", (_DevDesc_deactivate)Deactivate);
-			description.SetMethod("line", (_DevDesc_line)DrawLine);
-			description.SetMethod("locator", (_DevDesc_locator)GetLocation);
-			description.SetMethod("metricInfo", (_DevDesc_metricInfo)GetMetricInfo);
-			description.SetMethod("mode", (_DevDesc_mode)ChangeMode);
-			description.SetMethod("newPage", (_DevDesc_newPage)NewPage);
-			description.SetMethod("path", (_DevDesc_path)DrawPath);
-			description.SetMethod("polygon", (_DevDesc_polygon)DrawPolygon);
-			description.SetMethod("polyline", (_DevDesc_Polyline)DrawPolyline);
-			description.SetMethod("raster", (_DevDesc_raster)DrawRaster);
-			description.SetMethod("rect", (_DevDesc_rect)DrawRectangle);
-			description.SetMethod("size", (_DevDesc_size)Resize);
-			description.SetMethod("strWidth", (_DevDesc_strWidth)MeasureWidth);
-			description.SetMethod("text", (_DevDesc_text)DrawText);
-			description.SetMethod("strWidthUTF8", (_DevDesc_strWidth)MeasureWidth);
-			description.SetMethod("textUTF8", (_DevDesc_text)DrawText);
-			description.SetMethod("newFrameConfirm", (_DevDesc_newFrameConfirm)ConfirmNewFrame);
-			description.SetMethod("getEvent", (_DevDesc_getEvent)GetEvent);
-			description.SetMethod("eventHelper", (_DevDesc_eventHelper)EventHelper);
+			var activate = (_DevDesc_activate)Activate;
+			this.delegateHandles.Add(Engine.AllocateHandle(activate));
+			this.description.SetMethod("activate", activate);
+			var cap = (_DevDesc_cap)Capture;
+			this.delegateHandles.Add(Engine.AllocateHandle(cap));
+			this.description.SetMethod("cap", cap);
+			var circle = (_DevDesc_circle)DrawCircle;
+			this.delegateHandles.Add(Engine.AllocateHandle(circle));
+			this.description.SetMethod("circle", circle);
+			var clip = (_DevDesc_clip)Clip;
+			this.delegateHandles.Add(Engine.AllocateHandle(clip));
+			this.description.SetMethod("clip", clip);
+			var close = (_DevDesc_close)Close;
+			this.delegateHandles.Add(Engine.AllocateHandle(close));
+			this.description.SetMethod("close", close);
+			var deactivate = (_DevDesc_deactivate)Deactivate;
+			this.delegateHandles.Add(Engine.AllocateHandle(deactivate));
+			this.description.SetMethod("deactivate", deactivate);
+			var line = (_DevDesc_line)DrawLine;
+			this.delegateHandles.Add(Engine.AllocateHandle(line));
+			this.description.SetMethod("line", line);
+			var locator = (_DevDesc_locator)GetLocation;
+			this.delegateHandles.Add(Engine.AllocateHandle(locator));
+			this.description.SetMethod("locator", locator);
+			var metricInfo = (_DevDesc_metricInfo)GetMetricInfo;
+			this.delegateHandles.Add(Engine.AllocateHandle(metricInfo));
+			this.description.SetMethod("metricInfo", metricInfo);
+			var mode = (_DevDesc_mode)ChangeMode;
+			this.delegateHandles.Add(Engine.AllocateHandle(mode));
+			this.description.SetMethod("mode", mode);
+			var newPage = (_DevDesc_newPage)NewPage;
+			this.delegateHandles.Add(Engine.AllocateHandle(newPage));
+			this.description.SetMethod("newPage", newPage);
+			var path = (_DevDesc_path)DrawPath;
+			this.delegateHandles.Add(Engine.AllocateHandle(path));
+			this.description.SetMethod("path", path);
+			var polygon = (_DevDesc_polygon)DrawPolygon;
+			this.delegateHandles.Add(Engine.AllocateHandle(polygon));
+			this.description.SetMethod("polygon", polygon);
+			var polyline = (_DevDesc_Polyline)DrawPolyline;
+			this.delegateHandles.Add(Engine.AllocateHandle(polyline));
+			this.description.SetMethod("polyline", polyline);
+			var raster = (_DevDesc_raster)DrawRaster;
+			this.delegateHandles.Add(Engine.AllocateHandle(raster));
+			this.description.SetMethod("raster", raster);
+			var rect = (_DevDesc_rect)DrawRectangle;
+			this.delegateHandles.Add(Engine.AllocateHandle(rect));
+			this.description.SetMethod("rect", rect);
+			var size = (_DevDesc_size)Resize;
+			this.delegateHandles.Add(Engine.AllocateHandle(size));
+			this.description.SetMethod("size", size);
+			var strWidth = (_DevDesc_strWidth)MeasureWidth;
+			this.delegateHandles.Add(Engine.AllocateHandle(strWidth));
+			this.description.SetMethod("strWidth", strWidth);
+			var text = (_DevDesc_text)DrawText;
+			this.delegateHandles.Add(Engine.AllocateHandle(text));
+			this.description.SetMethod("text", text);
+			var strWidthUTF8 = (_DevDesc_strWidth)MeasureWidth;
+			this.delegateHandles.Add(Engine.AllocateHandle(strWidthUTF8));
+			this.description.SetMethod("strWidthUTF8", strWidthUTF8);
+			var textUTF8 = (_DevDesc_text)DrawText;
+			this.delegateHandles.Add(Engine.AllocateHandle(textUTF8));
+			this.description.SetMethod("textUTF8", textUTF8);
+			var newFrameConfirm = (_DevDesc_newFrameConfirm)ConfirmNewFrame;
+			this.delegateHandles.Add(Engine.AllocateHandle(newFrameConfirm));
+			this.description.SetMethod("newFrameConfirm", newFrameConfirm);
+			var getEvent = (_DevDesc_getEvent)GetEvent;
+			this.delegateHandles.Add(Engine.AllocateHandle(getEvent));
+			this.description.SetMethod("getEvent", getEvent);
+			var eventHelper = (_DevDesc_eventHelper)EventHelper;
+			this.delegateHandles.Add(Engine.AllocateHandle(eventHelper));
+			this.description.SetMethod("eventHelper", eventHelper);
 		}
 
 		private void Activate(IntPtr pDevDesc)

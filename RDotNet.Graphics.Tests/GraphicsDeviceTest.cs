@@ -59,6 +59,7 @@ namespace RDotNet.Graphics.Tests
 			form.TempImagePath = path;
 			try
 			{
+				GC.Collect();
 				var result = form.ShowDialog();
 				Assert.That(result, Is.EqualTo(DialogResult.OK));
 			}
