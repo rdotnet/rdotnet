@@ -20,11 +20,11 @@ namespace RDotNet
 	/// using (REngine engine = REngine.CreateInstance("RDotNet"))
 	/// {
 	///   engine.Initialize();
-	///	NumericVector random = engine.Evaluate("rnorm(5, 0, 1)").AsNumeric();
-	///	foreach (double r in random)
-	///	{
-	///		Console.Write(r + " ");
-	///	}
+	///   NumericVector random = engine.Evaluate("rnorm(5, 0, 1)").AsNumeric();
+	///   foreach (double r in random)
+	///   {
+	///     Console.Write(r + " ");
+	///   }
 	/// }
 	/// </code>
 	/// </example>
@@ -35,6 +35,7 @@ namespace RDotNet
 		private static readonly Dictionary<string, REngine> instances = new Dictionary<string, REngine>();
 
 		private readonly string id;
+		private readonly List<GCHandle> gcHandles; 
 		private CharacterDeviceAdapter adapter;
 		private bool isRunning;
 		private StartupParameter parameter;
@@ -43,6 +44,7 @@ namespace RDotNet
 			: base(dll)
 		{
 			this.id = id;
+			this.gcHandles = new List<GCHandle>();
 			this.isRunning = false;
 		}
 
@@ -245,6 +247,34 @@ namespace RDotNet
 		}
 
 		/// <summary>
+		/// Provides a way to access the specified object from unmanaged R process.
+		/// </summary>
+		/// <remarks>
+		/// This method allocates a handle for the specified object.
+		/// The handle will be free when <see cref="Dispose"/> method is called.
+		/// </remarks>
+		/// <param name="obj">A managed object.</param>
+		public GCHandle AllocateHandle(object obj)
+		{
+			var alloc = GCHandle.Alloc(obj);
+			this.gcHandles.Add(alloc);
+			return alloc;
+		}
+
+		/// <summary>
+		/// Releases the specified <see cref="GCHandle"/>.
+		/// </summary>
+		/// <param name="allocated">The handle allocated in the current engine.</param>
+		public void FreeHandle(GCHandle allocated)
+		{
+			if (!this.gcHandles.Remove(allocated))
+			{
+				throw new ArgumentException("The specified handle is not allocated in the R process.", "allocated");
+			}
+			allocated.Free();
+		}
+
+		/// <summary>
 		/// Gets a symbol defined in the global environment.
 		/// </summary>
 		/// <param name="name">The name.</param>
@@ -360,9 +390,9 @@ namespace RDotNet
 				string line;
 				while ((line = reader.ReadLine()) != null)
 				{
-					foreach (string segment in Segment(line))
+					foreach (var segment in Segment(line))
 					{
-						SymbolicExpression result = Parse(segment, incompleteStatement);
+						var result = Parse(segment, incompleteStatement);
 						if (result != null)
 						{
 							yield return result;
@@ -398,9 +428,9 @@ namespace RDotNet
 				string line;
 				while ((line = reader.ReadLine()) != null)
 				{
-					foreach (string segment in Segment(line))
+					foreach (var segment in Segment(line))
 					{
-						SymbolicExpression result = Parse(segment, incompleteStatement);
+						var result = Parse(segment, incompleteStatement);
 						if (result != null)
 						{
 							yield return result;
@@ -412,8 +442,8 @@ namespace RDotNet
 
 		private static IEnumerable<string> Segment(string line)
 		{
-			string[] segments = line.Split(';');
-			for (int index = 0; index < segments.Length; index++)
+			var segments = line.Split(';');
+			for (var index = 0; index < segments.Length; index++)
 			{
 				if (index == segments.Length - 1)
 				{
@@ -432,7 +462,7 @@ namespace RDotNet
 		private SymbolicExpression Parse(string statement, StringBuilder incompleteStatement)
 		{
 			incompleteStatement.Append(statement);
-			IntPtr s = GetFunction<Rf_mkString>("Rf_mkString")(incompleteStatement.ToString());
+			var s = GetFunction<Rf_mkString>("Rf_mkString")(incompleteStatement.ToString());
 
 			using (new ProtectedPointer(this, s))
 			{
@@ -459,7 +489,7 @@ namespace RDotNet
 					case ParseStatus.Incomplete:
 						return null;
 					default:
-						string errorStatement = incompleteStatement.ToString();
+						var errorStatement = incompleteStatement.ToString();
 						incompleteStatement.Clear();
 						throw new ParseException(status, errorStatement);
 				}
@@ -476,7 +506,7 @@ namespace RDotNet
 			{
 				throw new InvalidOperationException();
 			}
-			string[] newArgs = Utility.AddFirst(ID, args);
+			var newArgs = Utility.AddFirst(ID, args);
 			GetFunction<R_set_command_line_arguments>("R_set_command_line_arguments")(newArgs.Length, newArgs);
 		}
 
@@ -484,6 +514,11 @@ namespace RDotNet
 		{
 			this.isRunning = false;
 			instances.Remove(ID);
+			foreach (var alloc in this.gcHandles)
+			{
+				alloc.Free();
+			}
+			this.gcHandles.Clear();
 			if (disposing)
 			{
 				GetFunction<Rf_endEmbeddedR>("Rf_endEmbeddedR")(0);
@@ -493,7 +528,6 @@ namespace RDotNet
 				this.adapter.Dispose();
 				this.adapter = null;
 			}
-			GC.KeepAlive(this.parameter);
 			base.Dispose(disposing);
 		}
 
@@ -510,7 +544,7 @@ namespace RDotNet
 			}
 			try
 			{
-				IntPtr pointer = DangerousGetHandle(name);
+				var pointer = DangerousGetHandle(name);
 				return new SymbolicExpression(this, Marshal.ReadIntPtr(pointer));
 			}
 			catch (Exception ex)
