@@ -86,6 +86,7 @@ namespace RDotNet.Internals
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate IntPtr R_ParseVector(IntPtr statement, int statementCount, out ParseStatus status, IntPtr _);
 
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate IntPtr Rf_findVar(IntPtr name, IntPtr environment);
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
