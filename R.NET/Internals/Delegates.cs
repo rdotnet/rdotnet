@@ -32,6 +32,12 @@ namespace RDotNet.Internals
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate IntPtr Rf_protect(IntPtr sexp);
 
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate void R_PreserveObject(IntPtr sexp);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate void R_ReleaseObject(IntPtr sexp);
+
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate void Rf_unprotect(int count);
 
