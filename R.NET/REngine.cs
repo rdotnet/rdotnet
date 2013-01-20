@@ -214,18 +214,11 @@ namespace RDotNet
 		/// Initializes R process.
 		/// </summary>
 		/// <param name="parameter">The startup parameter.</param>
-        /// <param name="device">The IO device.</param>
-        /// <param name="setupMainLoop">Call the functions to initialise the embedded R</param>
-        public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null, bool setupMainLoop = true)
+		/// <param name="device">The IO device.</param>
+		public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null)
 		{
 			this.parameter = parameter ?? new StartupParameter();
 			this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
-            if (!setupMainLoop)
-            {
-                this.isRunning = true;
-                this.adapter.Install(this, this.parameter);
-                return;
-            }
 			GetFunction<R_setStartTime>("R_setStartTime")();
 			GetFunction<Rf_initialize_R>("Rf_initialize_R")(1, new[] { ID });
 			this.adapter.Install(this, this.parameter);
@@ -489,18 +482,19 @@ namespace RDotNet
 
 		protected override void Dispose(bool disposing)
         {
-			this.isRunning = false;			
-			if (disposing)
+			if (isRunning)
 			{
-                instances.Remove(ID);
-				GetFunction<Rf_endEmbeddedR>("Rf_endEmbeddedR")(0);
+			    instances.Remove(ID);
+			    GetFunction<Rf_endEmbeddedR>("Rf_endEmbeddedR")(0);
+			}
+            this.isRunning = false;
 
-                if (this.adapter != null)
-                {
-                    this.adapter.Dispose();
-                    this.adapter = null;
-                }
+		    if (disposing && this.adapter != null)
+            {
+                this.adapter.Dispose();
+                this.adapter = null;
             }
+
             // Why is this here?
 			GC.KeepAlive(this.parameter);
 			base.Dispose(disposing);

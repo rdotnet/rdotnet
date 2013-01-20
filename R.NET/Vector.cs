@@ -77,11 +77,7 @@ namespace RDotNet
 				{
 					throw new ArgumentNullException("name");
 				}
-                string[] names = null;
-                //using (new ProtectedPointer(this))
-                //{
-                    names = Names;
-                //}
+				string[] names = Names;
 				if (names == null)
 				{
 					throw new InvalidOperationException();
