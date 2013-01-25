@@ -215,10 +215,17 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="parameter">The startup parameter.</param>
 		/// <param name="device">The IO device.</param>
-		public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null)
+		/// <param name="setupMainLoop">if true, call the functions to initialise the embedded R</param>
+		public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null, bool setupMainLoop = true)
 		{
 			this.parameter = parameter ?? new StartupParameter();
 			this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
+			if (!setupMainLoop)
+			{
+				this.isRunning = true;
+				this.adapter.Install(this, this.parameter);
+				return;
+			}
 			GetFunction<R_setStartTime>("R_setStartTime")();
 			GetFunction<Rf_initialize_R>("Rf_initialize_R")(1, new[] { ID });
 			this.adapter.Install(this, this.parameter);
