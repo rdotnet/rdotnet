@@ -20,7 +20,7 @@ namespace RDotNet
 		/// </summary>
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="coerced">The pointer to a data frame.</param>
-		protected internal DataFrame(REngine engine, IntPtr coerced)
+		public DataFrame(REngine engine, IntPtr coerced)
 			: base(engine, coerced)
 		{}
 
