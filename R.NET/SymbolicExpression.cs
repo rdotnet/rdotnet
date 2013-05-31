@@ -29,7 +29,7 @@ namespace RDotNet
 			this.engine = engine;
 			this.sexp = (SEXPREC)Marshal.PtrToStructure(pointer, typeof(SEXPREC));
 			SetHandle(pointer);
-            Preserve();
+			Preserve();
 		}
 
 		public override bool IsInvalid
@@ -200,7 +200,7 @@ namespace RDotNet
 		{
 			if (!IsInvalid && !isProtected)
 			{
-                Engine.GetFunction<R_PreserveObject>("R_PreserveObject")(handle);
+				Engine.GetFunction<R_PreserveObject>("R_PreserveObject")(handle);
 				this.isProtected = true;
 			}
 		}
@@ -213,7 +213,7 @@ namespace RDotNet
 		{
 			if (!IsInvalid && IsProtected)
 			{
-                Engine.GetFunction<R_ReleaseObject>("R_ReleaseObject")(handle);
+				Engine.GetFunction<R_ReleaseObject>("R_ReleaseObject")(handle);
 				this.isProtected = false;
 			}
 		}

@@ -488,21 +488,21 @@ namespace RDotNet
 		}
 
 		protected override void Dispose(bool disposing)
-        {
+		{
 			if (isRunning)
 			{
-			    instances.Remove(ID);
-			    GetFunction<Rf_endEmbeddedR>("Rf_endEmbeddedR")(0);
+				instances.Remove(ID);
+				GetFunction<Rf_endEmbeddedR>("Rf_endEmbeddedR")(0);
 			}
-            this.isRunning = false;
+			this.isRunning = false;
 
-		    if (disposing && this.adapter != null)
-            {
-                this.adapter.Dispose();
-                this.adapter = null;
-            }
+			if (disposing && this.adapter != null)
+			{
+				this.adapter.Dispose();
+				this.adapter = null;
+			}
 
-            // Why is this here?
+			// Why is this here?
 			GC.KeepAlive(this.parameter);
 			base.Dispose(disposing);
 		}
