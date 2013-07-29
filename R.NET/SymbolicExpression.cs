@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
@@ -9,8 +10,9 @@ namespace RDotNet
 {
 	/// <summary>
 	/// An expression in R environment.
-	/// </summary>
-	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+   /// </summary>
+   [DebuggerDisplay("RObjectType = {Type}")]
+   [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public class SymbolicExpression : SafeHandle, IEquatable<SymbolicExpression>, IDynamicMetaObjectProvider
 	{
 		private readonly REngine engine;

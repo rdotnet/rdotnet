@@ -53,6 +53,10 @@
     <Compile Include="Devices\ConsoleDevice.cs" />
     <Compile Include="Devices\NullCharacterDevice.cs" />
     <Compile Include="Devices\ICharacterDevice.cs" />
+    <Compile Include="Diagnostics\DataFrameDebugView.cs" />
+    <Compile Include="Diagnostics\MatrixDebugView.cs" />
+    <Compile Include="Diagnostics\NotQuotedStringDisplay.cs" />
+    <Compile Include="Diagnostics\VectorDebugView.cs" />
     <Compile Include="Internals\Delegates.cs" />
     <Compile Include="Internals\OutputMode.cs" />
     <Compile Include="Internals\Unix\RStart.cs" />
