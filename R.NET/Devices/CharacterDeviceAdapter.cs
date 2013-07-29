@@ -11,7 +11,6 @@ namespace RDotNet.Devices
 	internal class CharacterDeviceAdapter : IDisposable
 	{
 		private readonly ICharacterDevice device;
-		private readonly GCHandle pin;
 
 		private REngine engine;
 
@@ -26,7 +25,6 @@ namespace RDotNet.Devices
 				throw new ArgumentNullException("device");
 			}
 			this.device = device;
-			this.pin = GCHandle.Alloc(device, GCHandleType.Pinned);
 		}
 
 		/// <summary>
@@ -46,7 +44,6 @@ namespace RDotNet.Devices
 
 		public void Dispose()
 		{
-			this.pin.Free();
 			GC.KeepAlive(this);
 		}
 
