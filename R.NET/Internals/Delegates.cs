@@ -119,6 +119,12 @@ namespace RDotNet.Internals
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate bool Rf_isFunction(IntPtr sexp);
 
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate bool Rf_isFactor(IntPtr sexp);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate bool Rf_isOrdered(IntPtr sexp);
+
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate IntPtr R_lsInternal(IntPtr environment, bool all);
 

@@ -582,5 +582,19 @@ namespace RDotNet
 					throw new ArgumentException();
 			}
 		}
+
+		public static Factor AsFactor(this SymbolicExpression expression)
+		{
+			if (expression == null)
+			{
+				throw new ArgumentNullException();
+			}
+			var handle = expression.DangerousGetHandle();
+			if (!expression.Engine.GetFunction<Rf_isFactor>()(handle))
+			{
+				throw new ArgumentException();
+			}
+			return new Factor(expression.Engine, handle);
+		}
 	}
 }
