@@ -32,7 +32,7 @@ namespace RDotNet
       {
          get
          {
-            return GetAttribute("levels").AsCharacter().ToArray();
+            return GetAttribute(Engine.GetPredefinedSymbol("R_LevelsSymbol")).AsCharacter().ToArray();
          }
       }
 
