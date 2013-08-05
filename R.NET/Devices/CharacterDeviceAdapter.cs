@@ -66,11 +66,16 @@ namespace RDotNet.Devices
 
 		private void SetupWindowsDevice(StartupParameter parameter)
 		{
-			string rhome = Marshal.PtrToStringAnsi(this.engine.GetFunction<getValue>("get_R_HOME")());
-			parameter.start.rhome = Marshal.StringToHGlobalAnsi(ConvertSeparator(rhome));
-			string home = Marshal.PtrToStringAnsi(this.engine.GetFunction<getValue>("getRUser")());
-			parameter.start.home = Marshal.StringToHGlobalAnsi(ConvertSeparator(home));
-			parameter.start.CharacterMode = UiMode.LinkDll;
+			if (parameter.RHome == null)
+			{
+				string rhome = Marshal.PtrToStringAnsi(this.engine.GetFunction<getValue>("get_R_HOME")());
+				parameter.start.rhome = Marshal.StringToHGlobalAnsi(ConvertSeparator(rhome));
+			}
+			if (parameter.Home == null)
+			{
+				string home = Marshal.PtrToStringAnsi(this.engine.GetFunction<getValue>("getRUser")());
+				parameter.start.home = Marshal.StringToHGlobalAnsi(ConvertSeparator(home));
+			}
 			parameter.start.ReadConsole = ReadConsole;
 			parameter.start.WriteConsole = WriteConsole;
 			parameter.start.WriteConsoleEx = WriteConsoleEx;
