@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package>
+   <metadata>
+      <id>R.NET</id>
+      <version>1.5.1</version>
+      <title>R.NET</title>
+      <authors>RecycleBin</authors>
+      <owners>kos59125</owners>
+      <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
+      <projectUrl>http://rdotnet.codeplex.com/</projectUrl>
+      <requireLicenseAcceptance>true</requireLicenseAcceptance>
+      <description>Collaboration of .NET Framework with R statistical computing. This requires the R binaries, which are available on http://www.r-project.org/</description>
+      <summary>Collaboration of .NET Framework with R statistical computing.</summary>
+      <copyright>Copyright 2012 RecycleBin</copyright>
+      <references>
+         <reference file="RDotNet.dll" />
+         <reference file="RDotNet.NativeLibrary.dll" />
+      </references>
+      <frameworkAssemblies>
+         <frameworkAssembly assemblyName="System.Numerics" />
+      </frameworkAssemblies>
+      <tags>R statistics</tags>
+   </metadata>
+   <files>
+      <file src="R.NET\bin\Release\*.dll" target="lib\net40" />
+      <file src="R.NET\bin\Release\*.xml" target="lib\net40" />
+   </files>
+</package>

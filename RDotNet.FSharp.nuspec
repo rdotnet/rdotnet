@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package>
+   <metadata>
+      <id>RDotNet.FSharp</id>
+      <version>0.1</version>
+      <title>R.NET F# Utility</title>
+      <authors>RecycleBin</authors>
+      <owners>kos59125</owners>
+      <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
+      <projectUrl>http://rdotnet.codeplex.com/</projectUrl>
+      <requireLicenseAcceptance>true</requireLicenseAcceptance>
+      <description>Provides utility extensions for R.NET.</description>
+      <summary>Provides utility extensions for R.NET.</summary>
+      <copyright>Copyright 2013 RecycleBin</copyright>
+      <references>
+         <reference file="RDotNet.FSharp.dll" />
+      </references>
+      <dependencies>
+         <dependency id="R.NET" />
+      </dependencies>
+      <tags>R F# statistics</tags>
+   </metadata>
+   <files>
+      <file src="RDotNet.FSharp\bin\Release\RDotNet.FSharp.dll" target="lib\net40" />
+   </files>
+</package>
