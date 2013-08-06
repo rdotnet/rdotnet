@@ -61,16 +61,16 @@ namespace RDotNet.Tests
       }
 
       [Test]
-      public void TestLevels()
+      public void TestGetLevels()
       {
          var engine = REngine.GetInstanceFromID(EngineName);
          var factor = engine.Evaluate("x <- factor(c('A', 'B', 'A', 'C', 'B'))").AsFactor();
-         Assert.That(factor.Levels, Is.EquivalentTo(new[] { "A", "B", "C" }));
+         Assert.That(factor.GetLevels(), Is.EquivalentTo(new[] { "A", "B", "C" }));
          factor = engine.Evaluate(@"
 levels(x) <- c('1st', '2nd', '3rd')
 x
 ").AsFactor();
-         Assert.That(factor.Levels, Is.EquivalentTo(new[] { "1st", "2nd", "3rd" }));
+         Assert.That(factor.GetLevels(), Is.EquivalentTo(new[] { "1st", "2nd", "3rd" }));
       }
 
       [Test]

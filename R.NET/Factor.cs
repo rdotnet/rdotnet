@@ -28,12 +28,9 @@ namespace RDotNet
       /// <summary>
       /// Gets the levels of the factor.
       /// </summary>
-      public string[] Levels
+      public string[] GetLevels()
       {
-         get
-         {
-            return GetAttribute(Engine.GetPredefinedSymbol("R_LevelsSymbol")).AsCharacter().ToArray();
-         }
+         return GetAttribute(Engine.GetPredefinedSymbol("R_LevelsSymbol")).AsCharacter().ToArray();
       }
 
       /// <summary>
@@ -42,7 +39,7 @@ namespace RDotNet
       /// <returns>Factors.</returns>
       public IEnumerable<string> GetFactors()
       {
-         var levels = Levels;
+         var levels = GetLevels();
          return this.Select(value => levels[value - 1]);
       }
 
