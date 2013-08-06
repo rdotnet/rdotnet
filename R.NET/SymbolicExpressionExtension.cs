@@ -583,18 +583,33 @@ namespace RDotNet
 			}
 		}
 
-		public static Factor AsFactor(this SymbolicExpression expression)
+		/// <summary>
+		/// Gets whether the specified expression is factor.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns><c>True</c> if the specified expression is factor.</returns>
+		public static bool IsFactor(this SymbolicExpression expression)
 		{
 			if (expression == null)
 			{
 				throw new ArgumentNullException();
 			}
 			var handle = expression.DangerousGetHandle();
-			if (!expression.Engine.GetFunction<Rf_isFactor>()(handle))
+			return expression.Engine.GetFunction<Rf_isFactor>()(handle);
+		}
+
+		/// <summary>
+		/// Gets the expression as a factor.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <returns>The factor.</returns>
+		public static Factor AsFactor(this SymbolicExpression expression)
+		{
+			if (!IsFactor(expression))
 			{
-				throw new ArgumentException();
+				throw new ArgumentException("Not a factor.", "expression");
 			}
-			return new Factor(expression.Engine, handle);
+			return new Factor(expression.Engine, expression.DangerousGetHandle());
 		}
 	}
 }
