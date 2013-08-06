@@ -70,6 +70,7 @@
     <Compile Include="Internals\Windows\RStart.cs" />
     <Compile Include="Internals\Windows\UiMode.cs" />
     <Compile Include="Internals\YesNoCancel.cs" />
+    <Compile Include="S4Object.cs" />
     <Compile Include="SpecialFunction.cs" />
     <Compile Include="Environment.cs" />
     <Compile Include="Expression.cs" />

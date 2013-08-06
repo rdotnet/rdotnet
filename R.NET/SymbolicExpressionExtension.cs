@@ -596,5 +596,33 @@ namespace RDotNet
 			}
 			return new Factor(expression.Engine, handle);
 		}
+
+      /// <summary>
+      /// Checks if the specified object is S4 object or not.
+      /// </summary>
+      /// <param name="expression">The object to check.</param>
+      /// <returns><c>True</c> if the object is an S4 object; otherwise, <c>false</c>.</returns>
+      public static bool IsS4(this SymbolicExpression expression)
+      {
+         if (expression == null)
+         {
+            throw new ArgumentNullException();
+         }
+         return expression.Engine.GetFunction<Rf_isS4>()(expression.DangerousGetHandle());
+      }
+
+      /// <summary>
+      /// Converts the type into <see cref="S4Object"/>.
+      /// </summary>
+      /// <param name="expression">The S4 object.</param>
+      /// <returns>The S4 object.</returns>
+      public static S4Object AsS4(this SymbolicExpression expression)
+      {
+         if (!IsS4(expression))
+         {
+            throw new ArgumentException("Not an S4 object.");
+         }
+         return new S4Object(expression.Engine, expression.DangerousGetHandle());
+      }
 	}
 }

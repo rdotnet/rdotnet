@@ -125,6 +125,17 @@ namespace RDotNet.Internals
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate bool Rf_isOrdered(IntPtr sexp);
 
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate bool Rf_isS4(IntPtr obj);
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate IntPtr R_do_slot(IntPtr obj, IntPtr name);
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate IntPtr R_do_slot_assign(IntPtr obj, IntPtr name, IntPtr value);
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate bool R_has_slot(IntPtr obj, IntPtr name);
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate IntPtr R_getClassDef(string what);
+
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate IntPtr R_lsInternal(IntPtr environment, bool all);
 
