@@ -5,7 +5,7 @@ syntax: glob
 *.user
 *.userprefs
 *.orig
-R.NET/*.nupkg
+*.nupkg
 *.VisualState.xml
 TestResult.xml
 
