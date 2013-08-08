@@ -24,7 +24,7 @@
    <files>
       <file src="R.NET\bin\Release\RDotNet.dll" target="lib\net40" />
       <file src="R.NET\bin\Release\RDotNet.xml" target="lib\net40" />
-      <file src="R.NET\bin\Release\RDotNet.NativeLibrary.dll" target="lib\net40" />
-      <file src="R.NET\bin\Release\RDotNet.NativeLibrary.xml" target="lib\net40" />
+      <file src="RDotNet.NativeLibrary\bin\Release\RDotNet.NativeLibrary.dll" target="lib\net40" />
+      <file src="RDotNet.NativeLibrary\bin\Release\RDotNet.NativeLibrary.xml" target="lib\net40" />
    </files>
 </package>
