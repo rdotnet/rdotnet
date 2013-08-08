@@ -58,7 +58,7 @@ namespace RDotNet
 				{
 					int offset = GetOffset(index);
 					IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
-					return new InternalString(Engine, pointer);
+					return new InternalString(Engine, pointer).GetInternalValue();
 				}
 			}
 			set
@@ -70,7 +70,7 @@ namespace RDotNet
 				using (new ProtectedPointer(this))
 				{
 					int offset = GetOffset(index);
-					SymbolicExpression s = value == null ? Engine.NilValue : new InternalString(Engine, value);
+					SymbolicExpression s = value == null ? Engine.GetPredefinedSymbol("R_NaString") : new InternalString(Engine, value);
 					using (new ProtectedPointer(s))
 					{
 						Marshal.WriteIntPtr(DataPointer, offset, s.DangerousGetHandle());
