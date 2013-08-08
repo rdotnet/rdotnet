@@ -42,7 +42,7 @@ let addBuildProperties =
    let debugSymbol properties =
       match buildParams.Debug with
          | true -> ("DebugSymbols", "true") :: ("DebugType", "full") :: properties
-         | false -> ("DebugSymbols", "false") :: ("DebugType", "none") :: properties
+         | false -> ("DebugSymbols", "false") :: ("DebugType", "pdbonly") :: properties
    let definieUnix properties =
       match buildParams.Unix with
          | true -> ("DefineConstants", "UNIX") :: properties
@@ -71,7 +71,9 @@ Target "Clean" (fun () ->
    CleanDir deployDir
 )
 
-let getProducts projectName = % projectName % "bin" % snd configuration % "*.*" |> (!+) |> Scan
+let getProducts projectName =
+   if buildParams.Debug then ["*"] else ["dll"; "XML"]
+   |> Seq.collect (fun s -> % projectName % "bin" % snd configuration % (sprintf "*.%s" s) |> (!+) |> Scan)
 Target "Build" (fun () ->
    build setBuildParams mainSolution
    projects
