@@ -14,5 +14,6 @@ bin/
 obj/
 publish/
 Help/
+Build/
 Deploy/
 packages/[^/]+/

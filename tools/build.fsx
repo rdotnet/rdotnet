@@ -10,8 +10,9 @@ let baseDir = Path.GetDirectoryName (__SOURCE_DIRECTORY__)
 let inline (~%) name = Path.Combine (baseDir, name)
 let inline (%) dir name = Path.Combine (dir, name)
 
+let projects = ["R.NET"; "RDotNet.NativeLibrary"; "RDotNet.FSharp"]
 let nugetToolPath = % ".nuget" % "NuGet.exe"
-let outputDir = % "RDotNet.FSharp" % "bin" % "Release"
+let outputDir = % "Build"
 let rdotnetAssemblyName = "RDotNet.dll"
 let rdotnetFSharpAssemblyName = "RDotNet.FSharp.dll"
 let deployDir = % "Deploy"
@@ -38,6 +39,10 @@ let buildParams =
 let zipName = deployDir % if buildParams.Unix then "RDotNet.Unix.zip" else "RDotNet.Windows.zip"
 
 let addBuildProperties =
+   let debugSymbol properties =
+      match buildParams.Debug with
+         | true -> ("DebugSymbols", "true") :: ("DebugType", "full") :: properties
+         | false -> ("DebugSymbols", "false") :: ("DebugType", "none") :: properties
    let definieUnix properties =
       match buildParams.Unix with
          | true -> ("DefineConstants", "UNIX") :: properties
@@ -47,7 +52,7 @@ let addBuildProperties =
          | Some (path) when File.Exists (path) -> ("SignAssembly", "true") :: ("AssemblyOriginatorKeyFile", path) :: properties
          | Some (path) -> failwithf "Key file not found at %s" path
          | None -> properties
-   definieUnix >> setKey
+   debugSymbol >> definieUnix >> setKey
 let configuration = "Configuration", if buildParams.Debug then "Debug" else "Release"
 let setBuildParams (p:MSBuildParams) = {
    p with
@@ -62,11 +67,16 @@ let setCleanParams (p:MSBuildParams) = {
 
 Target "Clean" (fun () ->
    build setCleanParams mainSolution
+   CleanDir outputDir
    CleanDir deployDir
 )
 
+let getProducts projectName = % projectName % "bin" % snd configuration % "*.*" |> (!+) |> Scan
 Target "Build" (fun () ->
    build setBuildParams mainSolution
+   projects
+   |> Seq.collect getProducts
+   |> Copy outputDir
 )
 
 let getMainAssemblyVersion assemblyPath =
@@ -92,7 +102,7 @@ Target "NuGetFSharp" (fun () ->
 )
 
 Target "Zip" (fun () ->
-   !+ (outputDir % "*.dll") ++ (outputDir % "*.xml")
+   !+ (outputDir % "*.*")
    |> Scan
    |> Zip outputDir zipName
 )
