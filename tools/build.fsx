@@ -5,10 +5,13 @@
 
 open System
 open System.IO
+open System.Reflection
 open Fake
 
 let nugetToolPath = @"./.nuget/NuGet.exe"
 let outputDir = @"./RDotNet.FSharp/bin/Release/"
+let rdotnetAssemblyName = "RDotNet.dll"
+let rdotnetFSharpAssemblyName = "RDotNet.FSharp.dll"
 let deployDir = @"./Deploy/"
 let mainSolution = @"./RDotNet.FSharp.sln"
 let rdotnetNuspec = @"./RDotNet.nuspec"
@@ -64,13 +67,26 @@ Target "Build" (fun () ->
    build setBuildParams mainSolution
 )
 
-let updateNuGetParams (p:NuGetParams) = { p with NoPackageAnalysis = false; OutputPath = "."; ToolPath = nugetToolPath; WorkingDir = "." }
-let pack = NuGetPack updateNuGetParams
+let getMainAssemblyVersion assemblyPath =
+   let assembly = Assembly.ReflectionOnlyLoadFrom (assemblyPath)
+   let name = assembly.GetName ()
+   sprintf "%A" name.Version
+let updateNuGetParams assemblyPath (p:NuGetParams) = {
+   p with
+      NoPackageAnalysis = false
+      OutputPath = "."
+      ToolPath = nugetToolPath
+      WorkingDir = "."
+      Version = getMainAssemblyVersion assemblyPath
+}
+let pack mainAssemblyPath = NuGetPack (updateNuGetParams mainAssemblyPath)
 Target "NuGetMain" (fun () ->
-   pack rdotnetNuspec
+   let path = Path.Combine (outputDir, rdotnetAssemblyName)
+   pack path rdotnetNuspec
 )
 Target "NuGetFSharp" (fun () ->
-   pack rdotnetFSharpNuspec
+   let path = Path.Combine (outputDir, rdotnetFSharpAssemblyName)
+   pack path rdotnetFSharpNuspec
 )
 
 Target "Zip" (fun () ->
