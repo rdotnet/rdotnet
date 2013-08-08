@@ -37,10 +37,10 @@ namespace RDotNet
       /// Gets the levels of the factor.
       /// </summary>
       /// <returns>Factors.</returns>
-      public IEnumerable<string> GetFactors()
+      public string[] GetFactors()
       {
          var levels = GetLevels();
-         return this.Select(value => levels[value - 1]);
+         return this.Select(value => levels[value - 1]).ToArray();
       }
 
       /// <summary>
@@ -75,7 +75,7 @@ namespace RDotNet
       /// <typeparam name="TEnum">The type of enum.</typeparam>
       /// <param name="ignoreCase">The value indicating case-sensitivity.</param>
       /// <returns>Factors.</returns>
-      public IEnumerable<TEnum> GetFactors<TEnum>(bool ignoreCase = false)
+      public TEnum[] GetFactors<TEnum>(bool ignoreCase = false)
          where TEnum : struct
       {
          Type enumType = typeof(TEnum);
@@ -89,7 +89,10 @@ namespace RDotNet
          //{
          //   throw new ArgumentException("Only Int32 is supported");
          //}
-         return GetFactors().Select(value => (TEnum)Enum.Parse(enumType, value, ignoreCase));
+         var levels = GetLevels();
+         return this.Select(value => levels[value - 1])
+            .Select(value => (TEnum)Enum.Parse(enumType, value, ignoreCase))
+            .ToArray();
       }
 
       /// <summary>
