@@ -54,9 +54,9 @@
     <Compile Include="Devices\NullCharacterDevice.cs" />
     <Compile Include="Devices\ICharacterDevice.cs" />
     <Compile Include="Diagnostics\DataFrameDebugView.cs" />
+    <Compile Include="Diagnostics\DataFrameColumnDisplay.cs" />
     <Compile Include="Diagnostics\FactorDebugView.cs" />
     <Compile Include="Diagnostics\MatrixDebugView.cs" />
-    <Compile Include="Diagnostics\NotQuotedStringDisplay.cs" />
     <Compile Include="Diagnostics\VectorDebugView.cs" />
     <Compile Include="Factor.cs" />
     <Compile Include="Internals\Delegates.cs" />

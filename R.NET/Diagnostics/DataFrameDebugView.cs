@@ -14,14 +14,13 @@ namespace RDotNet.Diagnostics
       }
 
       [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-      public NotQuotedStringDisplay[] Column
+      public DataFrameColumnDisplay[] Column
       {
          get
          {
-            var result = from c in this.dataFrame.ColumnNames
-                         let value = String.Format("\"{0}\" ({1})", c, this.dataFrame[c].Type)
-                         select new NotQuotedStringDisplay { Value = value };
-            return result.ToArray();
+            return Enumerable.Range(0, this.dataFrame.ColumnCount)
+               .Select(column => new DataFrameColumnDisplay(this.dataFrame, column))
+               .ToArray();
          }
       }
    }
