@@ -42,6 +42,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="RuntimeHelper.fs" />
     <Compile Include="Vector.fsi" />
     <Compile Include="Vector.fs" />
