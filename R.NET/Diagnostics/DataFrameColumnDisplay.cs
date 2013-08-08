@@ -34,8 +34,15 @@ namespace RDotNet.Diagnostics
          get
          {
             var column = this.data[this.columnIndex];
-            var name = this.data.ColumnNames[this.columnIndex];
-            return String.Format("\"{0}\" ({1})", name, column.Type);
+            var names = this.data.ColumnNames;
+            if (names == null || names[this.columnIndex] == null)
+            {
+               return String.Format("NA ({0})", column.Type);
+            }
+            else
+            {
+               return String.Format("\"{0}\" ({1})", names[this.columnIndex], column.Type);
+            }
          }
       }
    }

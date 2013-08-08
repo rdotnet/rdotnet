@@ -41,8 +41,29 @@ namespace RDotNet
 			return s.ToString();
 		}
 
+      /// <summary>
+      /// Gets the string representation of the string object.
+      /// This returns <c>"NA"</c> if the value is <c>NA</c>, whereas <see cref="GetInternalValue()"/> returns <c>null</c>.
+      /// </summary>
+      /// <returns>The string representation.</returns>
+      /// <seealso cref="GetInternalValue()"/>
 		public override string ToString()
 		{
+			IntPtr pointer = IntPtr.Add(handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+			return Marshal.PtrToStringAnsi(pointer);
+		}
+
+		/// <summary>
+		/// Gets the string representation of the string object.
+		/// This returns <c>null</c> if the value is <c>NA</c>, whereas <see cref="ToString()"/> returns <c>"NA"</c>.
+		/// </summary>
+		/// <returns>The string representation.</returns>
+		public string GetInternalValue()
+		{
+			if (handle == Engine.GetPredefinedSymbol("R_NaString").DangerousGetHandle())
+			{
+				return null;
+			}
 			IntPtr pointer = IntPtr.Add(handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
 			return Marshal.PtrToStringAnsi(pointer);
 		}
