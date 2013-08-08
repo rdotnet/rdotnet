@@ -1,6 +1,4 @@
-﻿// Path separators should be '/' for Unix environments.
-
-#r @"FakeLib.dll"
+﻿#r @"FakeLib.dll"
 #r @"ICSharpCode.SharpZipLib.dll"
 
 open System
@@ -8,14 +6,18 @@ open System.IO
 open System.Reflection
 open Fake
 
-let nugetToolPath = @"./.nuget/NuGet.exe"
-let outputDir = @"./RDotNet.FSharp/bin/Release/"
+let baseDir = Path.GetDirectoryName (__SOURCE_DIRECTORY__)
+let inline (~%) name = Path.Combine (baseDir, name)
+let inline (%) dir name = Path.Combine (dir, name)
+
+let nugetToolPath = % ".nuget" % "NuGet.exe"
+let outputDir = % "RDotNet.FSharp" % "bin" % "Release"
 let rdotnetAssemblyName = "RDotNet.dll"
 let rdotnetFSharpAssemblyName = "RDotNet.FSharp.dll"
-let deployDir = @"./Deploy/"
-let mainSolution = @"./RDotNet.FSharp.sln"
-let rdotnetNuspec = @"./RDotNet.nuspec"
-let rdotnetFSharpNuspec = @"./RDotNet.FSharp.nuspec"
+let deployDir = % "Deploy"
+let mainSolution = % "RDotNet.FSharp.sln"
+let rdotnetNuspec = % "RDotNet.nuspec"
+let rdotnetFSharpNuspec = % "RDotNet.FSharp.nuspec"
 
 type BuildParameter = {
    Debug : bool
@@ -30,10 +32,10 @@ let buildParams =
       | "--key" :: path :: args -> loop { acc with Key = Some (path) } args
       | _ :: args -> loop acc args  // ignores unknown argument
    let defaultBuildParam = { Debug = false; Unix = false; Key = None }
-   let args = Environment.GetCommandLineArgs () |> Array.toList  // args = ["fsi.exe"; "build.fsx"; ...]
-   loop defaultBuildParam args.Tail.Tail
+   let args = fsi.CommandLineArgs |> Array.toList  // args = ["build.fsx"; ...]
+   loop defaultBuildParam args.Tail
 
-let zipName = if buildParams.Unix then @"./RDotNet.Unix.zip" else @"./RDotNet.Windows.zip"
+let zipName = deployDir % if buildParams.Unix then "RDotNet.Unix.zip" else "RDotNet.Windows.zip"
 
 let addBuildProperties =
    let definieUnix properties =
@@ -74,39 +76,44 @@ let getMainAssemblyVersion assemblyPath =
 let updateNuGetParams assemblyPath (p:NuGetParams) = {
    p with
       NoPackageAnalysis = false
-      OutputPath = "."
+      OutputPath = deployDir
       ToolPath = nugetToolPath
-      WorkingDir = "."
+      WorkingDir = baseDir
       Version = getMainAssemblyVersion assemblyPath
 }
 let pack mainAssemblyPath = NuGetPack (updateNuGetParams mainAssemblyPath)
 Target "NuGetMain" (fun () ->
-   let path = Path.Combine (outputDir, rdotnetAssemblyName)
+   let path = outputDir % rdotnetAssemblyName
    pack path rdotnetNuspec
 )
 Target "NuGetFSharp" (fun () ->
-   let path = Path.Combine (outputDir, rdotnetFSharpAssemblyName)
+   let path = outputDir % rdotnetFSharpAssemblyName
    pack path rdotnetFSharpNuspec
 )
 
 Target "Zip" (fun () ->
-   !+ (Path.Combine (outputDir, "*.dll")) ++ (Path.Combine (outputDir, "*.xml"))
+   !+ (outputDir % "*.dll") ++ (outputDir % "*.xml")
    |> Scan
    |> Zip outputDir zipName
 )
 
 Target "Deploy" (fun () ->
-   ensureDirectory deployDir
-   !+ zipName ++ @"./*.nupkg"
+   !+ (deployDir % "*.*")
    |> Scan
-   |> Seq.iter (MoveFile deployDir)
+   |> Log "Build-Output: "
 )
 
-"Clean"
-==> "Build"
-==> "NuGetMain"
-==> "NuGetFSharp"
-==> "Zip"
-==> "Deploy"
+if buildParams.Unix then
+   "Clean"
+   ==> "Build"
+   ==> "Zip"
+   ==> "Deploy"
+else
+   "Clean"
+   ==> "Build"
+   ==> "NuGetMain"
+   ==> "NuGetFSharp"
+   ==> "Zip"
+   ==> "Deploy"
 
 Run "Deploy"
