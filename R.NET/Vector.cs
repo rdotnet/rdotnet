@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
+using RDotNet.Diagnostics;
 using RDotNet.Internals;
 
 namespace RDotNet
@@ -12,6 +14,8 @@ namespace RDotNet
 	/// A vector base.
 	/// </summary>
 	/// <typeparam name="T">The element type.</typeparam>
+	[DebuggerDisplay("Length = {Length}; RObjectType = {Type}")]
+	[DebuggerTypeProxy(typeof(VectorDebugView<>))]
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public abstract class Vector<T> : SymbolicExpression, IEnumerable<T>
 	{

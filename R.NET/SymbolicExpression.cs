@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
@@ -9,8 +10,9 @@ namespace RDotNet
 {
 	/// <summary>
 	/// An expression in R environment.
-	/// </summary>
-	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+   /// </summary>
+   [DebuggerDisplay("RObjectType = {Type}")]
+   [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public class SymbolicExpression : SafeHandle, IEquatable<SymbolicExpression>, IDynamicMetaObjectProvider
 	{
 		private readonly REngine engine;
@@ -29,6 +31,7 @@ namespace RDotNet
 			this.engine = engine;
 			this.sexp = (SEXPREC)Marshal.PtrToStructure(pointer, typeof(SEXPREC));
 			SetHandle(pointer);
+            Preserve();
 		}
 
 		public override bool IsInvalid
@@ -192,14 +195,14 @@ namespace RDotNet
 		}
 
 		/// <summary>
-		/// Prevents the expression from R's garbage collector.
+		/// Protects the expression from R's garbage collector.
 		/// </summary>
-		/// <seealso cref="SymbolicExpression.Unprotect"/>
-		public void Protect()
+		/// <seealso cref="Unpreserve"/>
+		public void Preserve()
 		{
-			if (!IsInvalid)
+			if (!IsInvalid && !isProtected)
 			{
-				Engine.GetFunction<Rf_protect>("Rf_protect")(handle);
+                Engine.GetFunction<R_PreserveObject>("R_PreserveObject")(handle);
 				this.isProtected = true;
 			}
 		}
@@ -207,12 +210,12 @@ namespace RDotNet
 		/// <summary>
 		/// Stops protection.
 		/// </summary>
-		/// <seealso cref="SymbolicExpression.Protect"/>
-		public void Unprotect()
+		/// <seealso cref="Preserve"/>
+		public void Unpreserve()
 		{
 			if (!IsInvalid && IsProtected)
 			{
-				Engine.GetFunction<Rf_unprotect_ptr>("Rf_unprotect_ptr")(handle);
+                Engine.GetFunction<R_ReleaseObject>("R_ReleaseObject")(handle);
 				this.isProtected = false;
 			}
 		}
@@ -221,7 +224,7 @@ namespace RDotNet
 		{
 			if (IsProtected)
 			{
-				Unprotect();
+				Unpreserve();
 			}
 			return true;
 		}

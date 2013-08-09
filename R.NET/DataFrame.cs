@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
+using RDotNet.Diagnostics;
 using RDotNet.Dynamic;
 
 namespace RDotNet
@@ -10,6 +12,8 @@ namespace RDotNet
 	/// <summary>
 	/// A data frame.
 	/// </summary>
+   [DebuggerDisplay(@"ColumnCount = {ColumnCount}; RowCount = {RowCount}; RObjectType = {Type}")]
+   [DebuggerTypeProxy(typeof(DataFrameDebugView))]
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public class DataFrame : Vector<DynamicVector>
 	{
