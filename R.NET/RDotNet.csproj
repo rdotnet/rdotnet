@@ -12,7 +12,6 @@
     <AssemblyName>RDotNet</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +21,7 @@
     <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\RDotNet.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\RDotNet.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -32,7 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DocumentationFile>bin\Release\RDotNet.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\RDotNet.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -54,6 +53,12 @@
     <Compile Include="Devices\ConsoleDevice.cs" />
     <Compile Include="Devices\NullCharacterDevice.cs" />
     <Compile Include="Devices\ICharacterDevice.cs" />
+    <Compile Include="Diagnostics\DataFrameDebugView.cs" />
+    <Compile Include="Diagnostics\DataFrameColumnDisplay.cs" />
+    <Compile Include="Diagnostics\FactorDebugView.cs" />
+    <Compile Include="Diagnostics\MatrixDebugView.cs" />
+    <Compile Include="Diagnostics\VectorDebugView.cs" />
+    <Compile Include="Factor.cs" />
     <Compile Include="Internals\Delegates.cs" />
     <Compile Include="Internals\OutputMode.cs" />
     <Compile Include="Internals\Unix\RStart.cs" />
@@ -114,7 +119,6 @@
       <Name>RDotNet.NativeLibrary</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

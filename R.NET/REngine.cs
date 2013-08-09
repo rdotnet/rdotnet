@@ -490,9 +490,12 @@ namespace RDotNet
 		}
 
 		protected override void Dispose(bool disposing)
+        {
+			if (isRunning)
 		{
 			this.isRunning = false;
 			instances.Remove(ID);
+		}
 			OnDisposing(EventArgs.Empty);
 			if (disposing)
 			{
@@ -500,11 +503,16 @@ namespace RDotNet
 				GetFunction<Rf_CleanEd>()();
 				GetFunction<R_CleanTempDir>()();
 			}
-			if (this.adapter != null)
-			{
-				this.adapter.Dispose();
-				this.adapter = null;
-			}
+            this.isRunning = false;
+
+		    if (disposing && this.adapter != null)
+            {
+                this.adapter.Dispose();
+                this.adapter = null;
+            }
+
+            // Why is this here?
+			GC.KeepAlive(this.parameter);
 			base.Dispose(disposing);
 		}
 
