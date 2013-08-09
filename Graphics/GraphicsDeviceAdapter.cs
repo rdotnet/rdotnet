@@ -44,7 +44,7 @@ namespace RDotNet.Graphics
 			}
 			this.engine = engine;
 
-			engine.GetFunction<R_GE_checkVersionOrDie>("R_GE_checkVersionOrDie")(this.device.Version);
+			//engine.GetFunction<R_GE_checkVersionOrDie>("R_GE_checkVersionOrDie")(this.device.Version);
 			engine.GetFunction<R_CheckDeviceAvailable>("R_CheckDeviceAvailable")();
 			var oldSuspended = GetInterruptsSuspended(engine);
 			SetInterruptsSuspended(engine, true);

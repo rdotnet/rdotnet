@@ -4,7 +4,8 @@ namespace RDotNet.Graphics
 {
 	public interface IGraphicsDevice
 	{
-		int Version { get; }
+		// for R_GE_checkVersionOrDie
+		//int Version { get; }
 		string Name { get; }
 
 		void OnActivated(DeviceDescription description);

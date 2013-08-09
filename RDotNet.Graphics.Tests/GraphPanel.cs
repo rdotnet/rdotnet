@@ -17,10 +17,23 @@ namespace RDotNet.Graphics.Tests
 
 		#region IGraphicsDevice Members
 
-		public int Version
-		{
-			get { return 9; }
-		}
+		//public int Version
+		//{
+		//   get
+		//   {
+		//      var engine = REngine.GetInstanceFromID("RDotNetTest");
+		//      var version = new Version(engine.DllVersion);
+		//      if (version < new Version(2, 14))  // maybe version 8 (R 2.12) works
+		//      {
+		//         throw new NotSupportedException();
+		//      }
+		//      else if (version < new Version(3, 0))
+		//      {
+		//         return 9;
+		//      }
+		//      return 10;  // cannot support future versions
+		//   }
+		//}
 
 		string IGraphicsDevice.Name
 		{
