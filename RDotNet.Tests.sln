@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.NativeLibrary", "RD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.Tests", "RDotNet.Tests\RDotNet.Tests.csproj", "{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.Graphics", "Graphics\RDotNet.Graphics.csproj", "{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.Graphics", "RDotNet.Graphics\RDotNet.Graphics.csproj", "{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.Graphics.Tests", "RDotNet.Graphics.Tests\RDotNet.Graphics.Tests.csproj", "{A535A809-9FA8-4167-8551-5AC84C7C4E1D}"
 EndProject

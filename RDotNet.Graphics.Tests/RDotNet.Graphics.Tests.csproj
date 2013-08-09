@@ -64,7 +64,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Graphics\RDotNet.Graphics.csproj">
+    <ProjectReference Include="..\RDotNet.Graphics\RDotNet.Graphics.csproj">
       <Project>{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}</Project>
       <Name>RDotNet.Graphics</Name>
     </ProjectReference>
