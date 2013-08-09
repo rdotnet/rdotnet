@@ -35,7 +35,6 @@ namespace RDotNet
 		private static readonly Dictionary<string, REngine> instances = new Dictionary<string, REngine>();
 
 		private readonly string id;
-		private readonly List<GCHandle> gcHandles; 
 		private CharacterDeviceAdapter adapter;
 		private bool isRunning;
 		private StartupParameter parameter;
@@ -44,7 +43,6 @@ namespace RDotNet
 			: base(dll)
 		{
 			this.id = id;
-			this.gcHandles = new List<GCHandle>();
 			this.isRunning = false;
 		}
 
@@ -244,34 +242,6 @@ namespace RDotNet
 		public void ForceGarbageCollection()
 		{
 			GetFunction<R_gc>("R_gc")();
-		}
-
-		/// <summary>
-		/// Provides a way to access the specified object from unmanaged R process.
-		/// </summary>
-		/// <remarks>
-		/// This method allocates a handle for the specified object.
-		/// The handle will be free when <see cref="Dispose"/> method is called.
-		/// </remarks>
-		/// <param name="obj">A managed object.</param>
-		public GCHandle AllocateHandle(object obj)
-		{
-			var alloc = GCHandle.Alloc(obj);
-			this.gcHandles.Add(alloc);
-			return alloc;
-		}
-
-		/// <summary>
-		/// Releases the specified <see cref="GCHandle"/>.
-		/// </summary>
-		/// <param name="allocated">The handle allocated in the current engine.</param>
-		public void FreeHandle(GCHandle allocated)
-		{
-			if (!this.gcHandles.Remove(allocated))
-			{
-				throw new ArgumentException("The specified handle is not allocated in the R process.", "allocated");
-			}
-			allocated.Free();
 		}
 
 		/// <summary>
@@ -510,18 +480,25 @@ namespace RDotNet
 			GetFunction<R_set_command_line_arguments>("R_set_command_line_arguments")(newArgs.Length, newArgs);
 		}
 
+		public event EventHandler Disposing;
+		protected virtual void OnDisposing(EventArgs e)
+		{
+			if (Disposing != null)
+			{
+				Disposing(this, e);
+			}
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			this.isRunning = false;
 			instances.Remove(ID);
-			foreach (var alloc in this.gcHandles)
-			{
-				alloc.Free();
-			}
-			this.gcHandles.Clear();
+			OnDisposing(EventArgs.Empty);
 			if (disposing)
 			{
-				GetFunction<Rf_endEmbeddedR>("Rf_endEmbeddedR")(0);
+				GetFunction<R_RunExitFinalizers>()();
+				GetFunction<Rf_CleanEd>()();
+				GetFunction<R_CleanTempDir>()();
 			}
 			if (this.adapter != null)
 			{

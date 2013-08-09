@@ -17,4 +17,7 @@ namespace RDotNet.Graphics.Internals
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate void GEaddDevice2(IntPtr dev, string name);
+
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void GEkillDevice(IntPtr dev);
 }

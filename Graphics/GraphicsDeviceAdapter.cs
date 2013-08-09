@@ -6,12 +6,13 @@ using RDotNet.Graphics.Internals;
 
 namespace RDotNet.Graphics
 {
-	internal class GraphicsDeviceAdapter
+	internal class GraphicsDeviceAdapter : IDisposable
 	{
 		private readonly IGraphicsDevice device;
 		private readonly List<GCHandle> delegateHandles;
 		private DeviceDescription description;
 		private REngine engine;
+		private IntPtr gdd;
 
 		public GraphicsDeviceAdapter(IGraphicsDevice device)
 		{
@@ -21,6 +22,7 @@ namespace RDotNet.Graphics
 			}
 			this.device = device;
 			this.delegateHandles = new List<GCHandle>();
+			this.gdd = IntPtr.Zero;
 		}
 
 		public REngine Engine
@@ -28,8 +30,33 @@ namespace RDotNet.Graphics
 			get { return this.engine; }
 		}
 
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			this.description.Dispose();
+			if (disposing && this.gdd != IntPtr.Zero)
+			{
+				Kill();
+			}
+		}
+
+		public void Kill()
+		{
+			Engine.GetFunction<GEkillDevice>()(this.description.DangerousGetHandle());
+			this.gdd = IntPtr.Zero;
+		}
+
 		public void SetEngine(REngine engine)
 		{
+			if (gdd != IntPtr.Zero)
+			{
+				throw new InvalidOperationException("engine is already set");
+			}
 			if (engine == null)
 			{
 				throw new ArgumentNullException("engine");
@@ -51,7 +78,7 @@ namespace RDotNet.Graphics
 
 			this.description = new DeviceDescription();
 			SetMethod();
-			var gdd = engine.GetFunction<GEcreateDevDesc>("GEcreateDevDesc")(this.description.DangerousGetHandle());
+			gdd = engine.GetFunction<GEcreateDevDesc>("GEcreateDevDesc")(this.description.DangerousGetHandle());
 			engine.GetFunction<GEaddDevice2>("GEaddDevice2")(gdd, this.device.Name);
 
 			SetInterruptsSuspended(engine, oldSuspended);
@@ -82,77 +109,89 @@ namespace RDotNet.Graphics
 		private void SetMethod()
 		{
 			var activate = (_DevDesc_activate)Activate;
-			this.delegateHandles.Add(Engine.AllocateHandle(activate));
+			Alloc(activate);
 			this.description.SetMethod("activate", activate);
 			var cap = (_DevDesc_cap)Capture;
-			this.delegateHandles.Add(Engine.AllocateHandle(cap));
+			Alloc(cap);
 			this.description.SetMethod("cap", cap);
 			var circle = (_DevDesc_circle)DrawCircle;
-			this.delegateHandles.Add(Engine.AllocateHandle(circle));
+			Alloc(circle);
 			this.description.SetMethod("circle", circle);
 			var clip = (_DevDesc_clip)Clip;
-			this.delegateHandles.Add(Engine.AllocateHandle(clip));
+			Alloc(clip);
 			this.description.SetMethod("clip", clip);
 			var close = (_DevDesc_close)Close;
-			this.delegateHandles.Add(Engine.AllocateHandle(close));
+			Alloc(close);
 			this.description.SetMethod("close", close);
 			var deactivate = (_DevDesc_deactivate)Deactivate;
-			this.delegateHandles.Add(Engine.AllocateHandle(deactivate));
+			Alloc(deactivate);
 			this.description.SetMethod("deactivate", deactivate);
 			var line = (_DevDesc_line)DrawLine;
-			this.delegateHandles.Add(Engine.AllocateHandle(line));
+			Alloc(line);
 			this.description.SetMethod("line", line);
 			var locator = (_DevDesc_locator)GetLocation;
-			this.delegateHandles.Add(Engine.AllocateHandle(locator));
+			Alloc(locator);
 			this.description.SetMethod("locator", locator);
 			var metricInfo = (_DevDesc_metricInfo)GetMetricInfo;
-			this.delegateHandles.Add(Engine.AllocateHandle(metricInfo));
+			Alloc(metricInfo);
 			this.description.SetMethod("metricInfo", metricInfo);
 			var mode = (_DevDesc_mode)ChangeMode;
-			this.delegateHandles.Add(Engine.AllocateHandle(mode));
+			Alloc(mode);
 			this.description.SetMethod("mode", mode);
 			var newPage = (_DevDesc_newPage)NewPage;
-			this.delegateHandles.Add(Engine.AllocateHandle(newPage));
+			Alloc(newPage);
 			this.description.SetMethod("newPage", newPage);
 			var path = (_DevDesc_path)DrawPath;
-			this.delegateHandles.Add(Engine.AllocateHandle(path));
+			Alloc(path);
 			this.description.SetMethod("path", path);
 			var polygon = (_DevDesc_polygon)DrawPolygon;
-			this.delegateHandles.Add(Engine.AllocateHandle(polygon));
+			Alloc(polygon);
 			this.description.SetMethod("polygon", polygon);
 			var polyline = (_DevDesc_Polyline)DrawPolyline;
-			this.delegateHandles.Add(Engine.AllocateHandle(polyline));
+			Alloc(polyline);
 			this.description.SetMethod("polyline", polyline);
 			var raster = (_DevDesc_raster)DrawRaster;
-			this.delegateHandles.Add(Engine.AllocateHandle(raster));
+			Alloc(raster);
 			this.description.SetMethod("raster", raster);
 			var rect = (_DevDesc_rect)DrawRectangle;
-			this.delegateHandles.Add(Engine.AllocateHandle(rect));
+			Alloc(rect);
 			this.description.SetMethod("rect", rect);
 			var size = (_DevDesc_size)Resize;
-			this.delegateHandles.Add(Engine.AllocateHandle(size));
+			Alloc(size);
 			this.description.SetMethod("size", size);
 			var strWidth = (_DevDesc_strWidth)MeasureWidth;
-			this.delegateHandles.Add(Engine.AllocateHandle(strWidth));
+			Alloc(strWidth);
 			this.description.SetMethod("strWidth", strWidth);
 			var text = (_DevDesc_text)DrawText;
-			this.delegateHandles.Add(Engine.AllocateHandle(text));
+			Alloc(text);
 			this.description.SetMethod("text", text);
 			var strWidthUTF8 = (_DevDesc_strWidth)MeasureWidth;
-			this.delegateHandles.Add(Engine.AllocateHandle(strWidthUTF8));
+			Alloc(strWidthUTF8);
 			this.description.SetMethod("strWidthUTF8", strWidthUTF8);
 			var textUTF8 = (_DevDesc_text)DrawText;
-			this.delegateHandles.Add(Engine.AllocateHandle(textUTF8));
+			Alloc(textUTF8);
 			this.description.SetMethod("textUTF8", textUTF8);
 			var newFrameConfirm = (_DevDesc_newFrameConfirm)ConfirmNewFrame;
-			this.delegateHandles.Add(Engine.AllocateHandle(newFrameConfirm));
+			Alloc(newFrameConfirm);
 			this.description.SetMethod("newFrameConfirm", newFrameConfirm);
 			var getEvent = (_DevDesc_getEvent)GetEvent;
-			this.delegateHandles.Add(Engine.AllocateHandle(getEvent));
+			Alloc(getEvent);
 			this.description.SetMethod("getEvent", getEvent);
 			var eventHelper = (_DevDesc_eventHelper)EventHelper;
-			this.delegateHandles.Add(Engine.AllocateHandle(eventHelper));
+			Alloc(eventHelper);
 			this.description.SetMethod("eventHelper", eventHelper);
+		}
+
+		private void Alloc(Delegate d)
+		{
+			var handle = GCHandle.Alloc(d);
+			this.delegateHandles.Add(handle);
+		}
+
+		private void FreeAll()
+		{
+			this.delegateHandles.ForEach(handle => handle.Free());
+			this.delegateHandles.Clear();
 		}
 
 		private void Activate(IntPtr pDevDesc)
