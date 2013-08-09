@@ -1,0 +1,19 @@
+syntax: glob
+*.suo
+*.pdb
+*.pidb
+*.user
+*.userprefs
+*.orig
+*.nupkg
+*.VisualState.xml
+TestResult.xml
+
+syntax: regexp
+bin/
+obj/
+publish/
+Help/
+Build/
+Deploy/
+packages/[^/]+/
