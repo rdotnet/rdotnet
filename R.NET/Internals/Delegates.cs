@@ -28,6 +28,12 @@ namespace RDotNet.Internals
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate void Rf_endEmbeddedR(int fatal);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void R_RunExitFinalizers();
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void Rf_CleanEd();
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	internal delegate void R_CleanTempDir();
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 	internal delegate IntPtr Rf_protect(IntPtr sexp);
