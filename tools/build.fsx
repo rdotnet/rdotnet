@@ -10,19 +10,19 @@ let baseDir = Path.GetDirectoryName (__SOURCE_DIRECTORY__)
 let inline (~%) name = Path.Combine (baseDir, name)
 let inline (%) dir name = Path.Combine (dir, name)
 
-let projects = ["R.NET"; "RDotNet.NativeLibrary"; "RDotNet.FSharp"]
+let projects = ["R.NET"; "RDotNet.NativeLibrary"; "RDotNet.FSharp"; "RDotNet.Graphics"]
 let nugetToolPath = % ".nuget" % "NuGet.exe"
 let outputDir = % "Build"
-let rdotnetAssemblyName = "RDotNet.dll"
-let rdotnetFSharpAssemblyName = "RDotNet.FSharp.dll"
 let deployDir = % "Deploy"
-let mainSolution = % "RDotNet.FSharp.sln"
-let rdotnetNuspec = % "RDotNet.nuspec"
-let rdotnetFSharpNuspec = % "RDotNet.FSharp.nuspec"
+let mainSolution = % "RDotNet.Release.sln"
+let rdotnet = "RDotNet"
+let rdotnetFSharp = "RDotNet.FSharp"
+let rdotnetGraphics = "RDotNet.Graphics"
 
 type BuildParameter = {
    Debug : bool
    Unix : bool
+   VersionSuffix : Map<string, string>
    Key : string option
 }
 let buildParams =
@@ -30,9 +30,17 @@ let buildParams =
       | [] -> acc
       | "--debug" :: args -> loop { acc with Debug = true } args
       | "--unix" :: args -> loop { acc with Unix = true } args
+      | "--pre" :: pre :: args ->
+         loop {
+            acc with
+               VersionSuffix =
+                  pre.Split (';')
+                  |> Array.map (fun keyvalue -> let keyvalue = keyvalue.Split ([|'='|], 2) in keyvalue.[0], keyvalue.[1])
+                  |> Array.fold (fun map (key, value) -> Map.add key value map) acc.VersionSuffix
+         } args
       | "--key" :: path :: args -> loop { acc with Key = Some (path) } args
       | _ :: args -> loop acc args  // ignores unknown argument
-   let defaultBuildParam = { Debug = false; Unix = false; Key = None }
+   let defaultBuildParam = { Debug = false; Unix = false; VersionSuffix = Map.empty; Key = None }
    let args = fsi.CommandLineArgs |> Array.toList  // args = ["build.fsx"; ...]
    loop defaultBuildParam args.Tail
 
@@ -81,26 +89,35 @@ Target "Build" (fun () ->
    |> Copy outputDir
 )
 
-let getMainAssemblyVersion assemblyPath =
+let getMainAssemblyVersion assemblyPath versionSuffix =
    let assembly = Assembly.ReflectionOnlyLoadFrom (assemblyPath)
    let name = assembly.GetName ()
-   sprintf "%A" name.Version
-let updateNuGetParams assemblyPath (p:NuGetParams) = {
+   let version = sprintf "%A" name.Version
+   match versionSuffix with
+      | Some (suffix) -> sprintf "%s-%s" version suffix
+      | None -> version
+let updateNuGetParams version (p:NuGetParams) = {
    p with
       NoPackageAnalysis = false
       OutputPath = deployDir
       ToolPath = nugetToolPath
       WorkingDir = baseDir
-      Version = getMainAssemblyVersion assemblyPath
+      Version = version
 }
-let pack mainAssemblyPath = NuGetPack (updateNuGetParams mainAssemblyPath)
+let pack projectName =
+   let assemblyName = sprintf "%s.dll" projectName
+   let assemblyPath = outputDir % assemblyName
+   let version = getMainAssemblyVersion assemblyPath <| Map.tryFind projectName buildParams.VersionSuffix
+   let nuspecPath = % (sprintf "%s.nuspec" projectName)
+   NuGetPack (updateNuGetParams version) nuspecPath
 Target "NuGetMain" (fun () ->
-   let path = outputDir % rdotnetAssemblyName
-   pack path rdotnetNuspec
+   pack rdotnet
 )
 Target "NuGetFSharp" (fun () ->
-   let path = outputDir % rdotnetFSharpAssemblyName
-   pack path rdotnetFSharpNuspec
+   pack rdotnetFSharp
+)
+Target "NuGetGraphics" (fun () ->
+   pack rdotnetGraphics
 )
 
 Target "Zip" (fun () ->
@@ -124,7 +141,7 @@ else
    "Clean"
    ==> "Build"
    ==> "NuGetMain"
-   ==> "NuGetFSharp"
+   ==> "NuGetFSharp" <=> "NuGetGraphics"
    ==> "Zip"
    ==> "Deploy"
 
