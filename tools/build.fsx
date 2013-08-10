@@ -114,8 +114,9 @@ Target "Build" (fun () ->
 
 let getMainAssemblyVersion assemblyPath =
    let assembly = Assembly.LoadFrom (assemblyPath)  // cannot get attributes with ReflectionOnlyLoadFrom
-   let infoVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute> ()
-   infoVersion.InformationalVersion
+   // Mono does not support GetCustomAttribute<T>.
+   let infoVersion = assembly.GetCustomAttributes (typeof<AssemblyInformationalVersionAttribute>, false)
+   (infoVersion.[0] :?> AssemblyInformationalVersionAttribute).InformationalVersion
 let updateNuGetParams version (p:NuGetParams) = {
    p with
       NoPackageAnalysis = false
