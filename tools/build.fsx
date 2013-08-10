@@ -15,34 +15,54 @@ let nugetToolPath = % ".nuget" % "NuGet.exe"
 let outputDir = % "Build"
 let deployDir = % "Deploy"
 let mainSolution = % "RDotNet.Release.sln"
-let rdotnet = "RDotNet"
+let rdotnetMain = "RDotNet"
 let rdotnetFSharp = "RDotNet.FSharp"
 let rdotnetGraphics = "RDotNet.Graphics"
 
 type BuildParameter = {
+   Help : bool
    Debug : bool
+   CleanDeploy : bool
+   NoNuGet : bool
    Unix : bool
-   VersionSuffix : Map<string, string>
    Key : string option
 }
 let buildParams =
    let rec loop acc = function
       | [] -> acc
+      | "-h" :: _ | "--help" :: _ -> { acc with Help = true }  // don't care other arguments
       | "--debug" :: args -> loop { acc with Debug = true } args
+      | "--clean-deploy" :: args -> loop { acc with CleanDeploy = true } args
+      | "--no-nuget" :: args -> loop { acc with NoNuGet = true } args
       | "--unix" :: args -> loop { acc with Unix = true } args
-      | "--pre" :: pre :: args ->
-         loop {
-            acc with
-               VersionSuffix =
-                  pre.Split (';')
-                  |> Array.map (fun keyvalue -> let keyvalue = keyvalue.Split ([|'='|], 2) in keyvalue.[0], keyvalue.[1])
-                  |> Array.fold (fun map (key, value) -> Map.add key value map) acc.VersionSuffix
-         } args
       | "--key" :: path :: args -> loop { acc with Key = Some (path) } args
       | _ :: args -> loop acc args  // ignores unknown argument
-   let defaultBuildParam = { Debug = false; Unix = false; VersionSuffix = Map.empty; Key = None }
+   let defaultBuildParam = {
+      Help = false
+      Debug = false
+      CleanDeploy = false
+      NoNuGet = false
+      Unix = false
+      Key = None
+   }
    let args = fsi.CommandLineArgs |> Array.toList  // args = ["build.fsx"; ...]
    loop defaultBuildParam args.Tail
+
+if buildParams.Help then
+   printfn """R.NET Build Script
+
+#Usage
+
+fsi.exe build.fsx [<options>]
+
+# Options
+-h | --help       Show this help
+--debug           Debug build
+--clean-deploy    Clean up deploy directory before build
+--no-nuget        Do not build NuGet packages
+--unix            Build with UNIX symbol (force --no-nuget)
+--key <key_path>  Sign assembly with the specified key"""
+   exit 0
 
 let zipName = deployDir % if buildParams.Unix then "RDotNet.Unix.zip" else "RDotNet.Windows.zip"
 
@@ -73,11 +93,14 @@ let setCleanParams (p:MSBuildParams) = {
       Properties = [configuration]
 }
 
-Target "Clean" (fun () ->
+Target "CleanBuild" (fun () ->
    build setCleanParams mainSolution
    CleanDir outputDir
+)
+Target "CleanDeploy" (fun () ->
    CleanDir deployDir
 )
+Target "Clean" DoNothing
 
 let getProducts projectName =
    if buildParams.Debug then ["*"] else ["dll"; "XML"]
@@ -89,13 +112,10 @@ Target "Build" (fun () ->
    |> Copy outputDir
 )
 
-let getMainAssemblyVersion assemblyPath versionSuffix =
-   let assembly = Assembly.ReflectionOnlyLoadFrom (assemblyPath)
-   let name = assembly.GetName ()
-   let version = sprintf "%A" name.Version
-   match versionSuffix with
-      | Some (suffix) -> sprintf "%s-%s" version suffix
-      | None -> version
+let getMainAssemblyVersion assemblyPath =
+   let assembly = Assembly.LoadFrom (assemblyPath)  // cannot get attributes with ReflectionOnlyLoadFrom
+   let infoVersion = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute> ()
+   infoVersion.InformationalVersion
 let updateNuGetParams version (p:NuGetParams) = {
    p with
       NoPackageAnalysis = false
@@ -107,11 +127,11 @@ let updateNuGetParams version (p:NuGetParams) = {
 let pack projectName =
    let assemblyName = sprintf "%s.dll" projectName
    let assemblyPath = outputDir % assemblyName
-   let version = getMainAssemblyVersion assemblyPath <| Map.tryFind projectName buildParams.VersionSuffix
+   let version = getMainAssemblyVersion assemblyPath
    let nuspecPath = % (sprintf "%s.nuspec" projectName)
    NuGetPack (updateNuGetParams version) nuspecPath
 Target "NuGetMain" (fun () ->
-   pack rdotnet
+   pack rdotnetMain
 )
 Target "NuGetFSharp" (fun () ->
    pack rdotnetFSharp
@@ -119,6 +139,7 @@ Target "NuGetFSharp" (fun () ->
 Target "NuGetGraphics" (fun () ->
    pack rdotnetGraphics
 )
+Target "NuGet" DoNothing
 
 Target "Zip" (fun () ->
    !+ (outputDir % "*.*")
@@ -132,17 +153,28 @@ Target "Deploy" (fun () ->
    |> Log "Build-Output: "
 )
 
-if buildParams.Unix then
-   "Clean"
-   ==> "Build"
-   ==> "Zip"
-   ==> "Deploy"
-else
-   "Clean"
-   ==> "Build"
-   ==> "NuGetMain"
-   ==> "NuGetFSharp" <=> "NuGetGraphics"
-   ==> "Zip"
-   ==> "Deploy"
+// Clean dependency
+"CleanBuild"
+=?> ("CleanDeploy", buildParams.CleanDeploy)
+==> "Clean"
+
+// Build dependency
+"Clean"
+==> "Build"
+
+// NuGet dependency
+"Build"
+==> "NuGetMain"
+==> "NuGetFSharp" <=> "NuGetGraphics"
+==> "NuGet"
+
+// Zip dependency
+"Build"
+==> "Zip"
+
+// Deploy dependency
+"Zip"
+=?> ("NuGet", not (buildParams.NoNuGet || buildParams.Unix))
+==> "Deploy"
 
 Run "Deploy"

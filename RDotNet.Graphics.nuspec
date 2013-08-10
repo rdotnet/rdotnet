@@ -2,7 +2,7 @@
 <package>
    <metadata>
       <id>RDotNet.Graphics</id>
-      <version>0.1</version>
+      <version>0.1-alpha</version>
       <title>R.NET Graphics Engine</title>
       <authors>RecycleBin</authors>
       <owners>kos59125</owners>
