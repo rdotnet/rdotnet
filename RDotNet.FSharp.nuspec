@@ -18,7 +18,7 @@
       <dependencies>
          <dependency id="R.NET" />
       </dependencies>
-      <tags>R F# statistics</tags>
+      <tags>R R.NET F# statistics</tags>
    </metadata>
    <files>
       <file src="RDotNet.FSharp\bin\Release\RDotNet.FSharp.dll" target="lib\net40" />
