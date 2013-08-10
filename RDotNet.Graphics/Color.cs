@@ -66,17 +66,29 @@ namespace RDotNet.Graphics
 			get { return this.alpha == 0; }
 		}
 
-		public static Color FromUInt32(uint abgr)
+		/// <summary>
+		/// Gets a color from 32-bit value.
+		/// </summary>
+		/// <param name="rgba">UInt32.</param>
+		/// <returns>The color.</returns>
+		public static Color FromUInt32(uint rgba)
 		{
 			var color = new Color();
-			color.alpha = (byte)((abgr & 0xFF000000u) >> 24);
-			color.blue = (byte)((abgr & 0x00FF0000u) >> 16);
-			color.green = (byte)((abgr & 0x0000FF00u) >> 8);
-			color.red = (byte)(abgr & 0x000000FFu);
+			color.alpha = (byte)((rgba & 0xFF000000u) >> 24);
+			color.blue = (byte)((rgba & 0x00FF0000u) >> 16);
+			color.green = (byte)((rgba & 0x0000FF00u) >> 8);
+			color.red = (byte)(rgba & 0x000000FFu);
 			return color;
 		}
 
-		public static Color FromBgr(byte blue, byte green, byte red)
+		/// <summary>
+		/// Gets a color from bytes.
+		/// </summary>
+		/// <param name="red">Red.</param>
+		/// <param name="green">Green.</param>
+		/// <param name="blue">Blue.</param>
+		/// <returns>The color.</returns>
+		public static Color FromRgb(byte red, byte green, byte blue)
 		{
 			var color = new Color();
 			color.alpha = byte.MaxValue;
@@ -86,7 +98,15 @@ namespace RDotNet.Graphics
 			return color;
 		}
 
-		public static Color FromAbgr(byte alpha, byte blue, byte green, byte red)
+		/// <summary>
+		/// Gets a color from bytes.
+		/// </summary>
+		/// <param name="alpha">Alpha.</param>
+		/// <param name="red">Red.</param>
+		/// <param name="green">Green.</param>
+		/// <param name="blue">Blue.</param>
+		/// <returns>The color.</returns>
+		public static Color FromArgb(byte alpha, byte red, byte green, byte blue)
 		{
 			var color = new Color();
 			color.alpha = alpha;
