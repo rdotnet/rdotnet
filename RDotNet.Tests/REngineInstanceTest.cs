@@ -45,18 +45,5 @@ namespace RDotNet.Tests
 			engine.Dispose();
 			Assert.That(engine.IsRunning, Is.False);
 		}
-
-		[Test]
-		public void TestIsInvalid()
-		{
-			Assert.That(REngine.GetInstanceFromID("RDotNetTest"), Is.Null);
-			var engine = REngine.CreateInstance("RDotNetTest");
-			Assert.That(engine, Is.Not.Null);
-			Assert.That(engine.IsInvalid, Is.False);
-			engine.Initialize();
-			Assert.That(engine.IsInvalid, Is.False);
-			engine.Dispose();
-			Assert.That(engine.IsInvalid, Is.True);
-		}
 	}
 }
