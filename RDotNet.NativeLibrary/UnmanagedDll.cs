@@ -15,7 +15,7 @@ namespace RDotNet.NativeLibrary
 	{
 		public override bool IsInvalid
 		{
-			get { return IsClosed || handle == IntPtr.Zero; }
+			get { return handle == IntPtr.Zero; }
 		}
 
 		/// <summary>
