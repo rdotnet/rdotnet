@@ -57,3 +57,52 @@ let ``match NumericVector pattern`` () =
    match engine.Evaluate ("""1""") with
    | NumericVector (_) -> ()
    | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``match RawVector pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""raw(0)""") with
+   | RawVector (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``character vector matches UntypedVector pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""LETTERS""") with
+   | UntypedVector (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``complex vector matches UntypedVector pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""1i""") with
+   | UntypedVector (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``integer vector matches UntypedVector pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""1L""") with
+   | UntypedVector (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``logical vector matches UntypedVector pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""TRUE""") with
+   | UntypedVector (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``numeric vector matches UntypedVector pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""pi""") with
+   | UntypedVector (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``raw vector matches UntypedVector pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""raw(0)""") with
+   | UntypedVector (_) -> ()
+   | _ -> Assert.Fail ("not matched")
