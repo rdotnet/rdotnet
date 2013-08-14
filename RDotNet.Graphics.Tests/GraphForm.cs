@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace RDotNet.Graphics.Tests
+namespace RDotNet.Graphics
 {
 	public partial class GraphForm : Form
 	{
@@ -10,16 +10,16 @@ namespace RDotNet.Graphics.Tests
 			InitializeComponent();
 		}
 
-		public REngine Engine { get; set; }
 		public string Code { get; set; }
 		public string TempImagePath { get; set; }
 
 		private void plotButton_Click(object sender, EventArgs e)
 		{
-			Engine.Evaluate(Code);
-			Engine.Evaluate(string.Format("png('{0}', {1}, {2})", TempImagePath.Replace('\\', '/'), this.pictureBox.Width, this.pictureBox.Height));
-			Engine.Evaluate(Code);
-			Engine.Evaluate("dev.off()");
+			var engine = REngine.GetInstanceFromID(Program.EngineName);
+			engine.Evaluate(Code);
+			engine.Evaluate(string.Format("png('{0}', {1}, {2})", TempImagePath.Replace('\\', '/'), this.pictureBox.Width, this.pictureBox.Height));
+			engine.Evaluate(Code);
+			engine.Evaluate("dev.off()");
 			this.pictureBox.ImageLocation = TempImagePath;
 		}
 	}

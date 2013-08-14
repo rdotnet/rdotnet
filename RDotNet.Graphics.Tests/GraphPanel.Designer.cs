@@ -1,4 +1,4 @@
-﻿namespace RDotNet.Graphics.Tests
+﻿namespace RDotNet.Graphics
 {
 	partial class GraphPanel
 	{
