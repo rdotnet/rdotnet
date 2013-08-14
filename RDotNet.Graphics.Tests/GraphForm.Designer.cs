@@ -1,4 +1,4 @@
-﻿namespace RDotNet.Graphics.Tests
+﻿namespace RDotNet.Graphics
 {
 	partial class GraphForm
 	{
@@ -33,7 +33,7 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.pictureBox = new System.Windows.Forms.PictureBox();
 			this.plotButton = new System.Windows.Forms.Button();
-			this.graphPanel = new RDotNet.Graphics.Tests.GraphPanel();
+			this.graphPanel = new RDotNet.Graphics.GraphPanel();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -66,8 +66,8 @@
 			// splitContainer1
 			// 
 			this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+				| System.Windows.Forms.AnchorStyles.Left) 
+				| System.Windows.Forms.AnchorStyles.Right)));
 			this.splitContainer1.IsSplitterFixed = true;
 			this.splitContainer1.Location = new System.Drawing.Point(0, 0);
 			this.splitContainer1.Name = "splitContainer1";
@@ -95,7 +95,7 @@
 			// plotButton
 			// 
 			this.plotButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+				| System.Windows.Forms.AnchorStyles.Right)));
 			this.plotButton.Location = new System.Drawing.Point(12, 346);
 			this.plotButton.Name = "plotButton";
 			this.plotButton.Size = new System.Drawing.Size(457, 23);

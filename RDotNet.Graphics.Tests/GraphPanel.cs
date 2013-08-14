@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace RDotNet.Graphics.Tests
+namespace RDotNet.Graphics
 {
 	public partial class GraphPanel : Panel, IGraphicsDevice
 	{

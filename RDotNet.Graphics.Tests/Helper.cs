@@ -2,7 +2,7 @@
 using System.IO;
 using Microsoft.Win32;
 
-namespace RDotNet.Graphics.Tests
+namespace RDotNet.Graphics
 {
 	internal static class Helper
 	{
