@@ -9,6 +9,8 @@ let (|ComplexVector|_|)   (sexp: SymbolicExpression)  = if sexp <> null && sexp.
 let (|IntegerVector|_|)   (sexp: SymbolicExpression)  = if sexp <> null && sexp.Type = SymbolicExpressionType.IntegerVector   then Some(sexp.AsInteger()) else None
 let (|LogicalVector|_|)   (sexp: SymbolicExpression)  = if sexp <> null && sexp.Type = SymbolicExpressionType.LogicalVector   then Some(sexp.AsLogical()) else None
 let (|NumericVector|_|)   (sexp: SymbolicExpression)  = if sexp <> null && sexp.Type = SymbolicExpressionType.NumericVector   then Some(sexp.AsNumeric()) else None
+let (|RawVector|_|)       (sexp: SymbolicExpression)  = if sexp <> null && sexp.Type = SymbolicExpressionType.RawVector   then Some(sexp.AsRaw()) else None
+let (|UntypedVector|_|)   (sexp: SymbolicExpression)  = if sexp <> null && sexp.IsVector() then Some(sexp.AsVector()) else None
 
 let (|Function|_|)        (sexp: SymbolicExpression)  = 
    if sexp <> null && (sexp.Type = SymbolicExpressionType.BuiltinFunction || sexp.Type = SymbolicExpressionType.Closure || sexp.Type = SymbolicExpressionType.SpecialFunction) then 

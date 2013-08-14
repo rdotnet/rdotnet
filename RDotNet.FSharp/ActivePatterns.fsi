@@ -8,6 +8,8 @@ val (|ComplexVector|_|)   : sexp:SymbolicExpression -> ComplexVector option
 val (|IntegerVector|_|)   : sexp:SymbolicExpression -> IntegerVector option
 val (|LogicalVector|_|)   : sexp:SymbolicExpression -> LogicalVector option
 val (|NumericVector|_|)   : sexp:SymbolicExpression -> NumericVector option
+val (|RawVector|_|)       : sexp:SymbolicExpression -> RawVector option
+val (|UntypedVector|_|)   : sexp:SymbolicExpression -> DynamicVector option
 val (|Function|_|)        : sexp:SymbolicExpression -> Function option
 val (|BuiltinFunction|_|) : sexp:SymbolicExpression -> BuiltinFunction option
 val (|Closure|_|)         : sexp:SymbolicExpression -> Closure option
