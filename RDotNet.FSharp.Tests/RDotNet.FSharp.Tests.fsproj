@@ -40,6 +40,7 @@
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="ActivePatternsTest.fs" />
     <Compile Include="VectorTest.fs" />
     <Compile Include="MatrixTest.fs" />
     <None Include="packages.config" />

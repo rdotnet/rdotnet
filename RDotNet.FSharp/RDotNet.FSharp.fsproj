@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="RuntimeHelper.fs" />
+    <Compile Include="ActivePatterns.fsi" />
+    <Compile Include="ActivePatterns.fs" />
     <Compile Include="Vector.fsi" />
     <Compile Include="Vector.fs" />
     <Compile Include="Matrix.fsi" />
