@@ -3,7 +3,7 @@ using System.Text;
 using RDotNet.Devices;
 using RDotNet.Internals;
 
-namespace RDotNet.Tests
+namespace RDotNet
 {
 	public class MockDevice : ICharacterDevice
 	{
