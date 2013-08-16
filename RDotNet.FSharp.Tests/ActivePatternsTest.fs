@@ -113,3 +113,87 @@ let ``raw vector matches UntypedVector pattern`` () =
    match engine.Evaluate ("""raw(0)""") with
    | UntypedVector (_) -> ()
    | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``match CharacterMatrix pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""as.matrix(LETTERS, 13, 2)""") with
+   | CharacterMatrix (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``match ComplexMatrix pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""matrix(1i, 1, 1)""") with
+   | ComplexMatrix (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``match IntegerMatrix pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""matrix(1L, 1, 1)""") with
+   | IntegerMatrix (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``match LogicalMatrix pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""matrix(c(TRUE, FALSE), 1, 2)""") with
+   | LogicalMatrix (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``match NumericMatrix pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""matrix(runif(12), 3, 4)""") with
+   | NumericMatrix (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``match RawMatrix pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""matrix(as.raw(seq_len(32)), 4, 8)""") with
+   | RawMatrix (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
+let ``chracter matrix should not match CharacterVector pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""as.matrix(LETTERS, 13, 2)""") with
+   | CharacterVector (_) -> Assert.Fail ("matched with vector pattern")
+   | _ -> ()
+
+[<Test>]
+let ``complex matrix should not match ComplexMatrix pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""matrix(1i, 1, 1)""") with
+   | ComplexVector (_) -> Assert.Fail ("matched with vector pattern")
+   | _ -> ()
+
+[<Test>]
+let ``integer matrix should not match IntegerMatrix pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""matrix(1L, 1, 1)""") with
+   | ComplexVector (_) -> Assert.Fail ("matched with vector pattern")
+   | _ -> ()
+
+[<Test>]
+let ``logical matrix should not match LogicalMatrix pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""matrix(c(TRUE, FALSE), 1, 2)""") with
+   | LogicalVector (_) -> Assert.Fail ("matched with vector pattern")
+   | _ -> ()
+
+[<Test>]
+let ``numeric matrix should not match NumericMatrix pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""matrix(runif(12), 3, 4)""") with
+   | NumericVector (_) -> Assert.Fail ("matched with vector pattern")
+   | _ -> ()
+
+[<Test>]
+let ``raw matrix should not match RawMatrix pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""matrix(as.raw(seq_len(32)), 4, 8)""") with
+   | RawVector (_) -> Assert.Fail ("matched with vector pattern")
+   | _ -> ()

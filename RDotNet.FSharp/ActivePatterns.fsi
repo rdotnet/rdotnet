@@ -1,7 +1,7 @@
 ﻿[<AutoOpen>]
 module RDotNet.ActivePatterns
 
-// TODO: distinguish matrix/array from one-dimensional vector (another module?)
+// TODO: array patterns
 
 val (|CharacterVector|_|) : sexp:SymbolicExpression -> CharacterVector option
 val (|ComplexVector|_|)   : sexp:SymbolicExpression -> ComplexVector option
@@ -22,3 +22,9 @@ val (|Pairlist|_|)        : sexp:SymbolicExpression -> Pairlist option
 val (|Null|_|)            : sexp:SymbolicExpression -> unit option
 val (|Symbol|_|)          : sexp:SymbolicExpression -> Symbol option
 val (|Factor|_|)          : sexp:SymbolicExpression -> Factor option
+val (|CharacterMatrix|_|) : sexp:SymbolicExpression -> CharacterMatrix option
+val (|ComplexMatrix|_|)   : sexp:SymbolicExpression -> ComplexMatrix option
+val (|IntegerMatrix|_|)   : sexp:SymbolicExpression -> IntegerMatrix option
+val (|LogicalMatrix|_|)   : sexp:SymbolicExpression -> LogicalMatrix option
+val (|NumericMatrix|_|)   : sexp:SymbolicExpression -> NumericMatrix option
+val (|RawMatrix|_|)       : sexp:SymbolicExpression -> RawMatrix option
