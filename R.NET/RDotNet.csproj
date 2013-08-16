@@ -49,6 +49,8 @@
     <Compile Include="CharacterMatrix.cs" />
     <Compile Include="ComplexMatrix.cs" />
     <Compile Include="BuiltinFunction.cs" />
+    <Compile Include="DataFrameColumnAttribute.cs" />
+    <Compile Include="DataFrameRowAttribute.cs" />
     <Compile Include="Devices\CharacterDeviceAdapter.cs" />
     <Compile Include="Devices\ConsoleDevice.cs" />
     <Compile Include="Devices\NullCharacterDevice.cs" />
