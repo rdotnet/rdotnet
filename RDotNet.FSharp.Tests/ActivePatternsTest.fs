@@ -73,7 +73,7 @@ let ``match Factor pattern`` () =
    | _ -> Assert.Fail ("not matched")
 
 [<Test>]
-let ``integer vector should not match Factor pattern`` () =
+let ``factor should not match IntegerVector pattern`` () =
    let engine = REngine.GetInstanceFromID (engineName)
    match engine.Evaluate ("""factor(letters)""") with
    | IntegerVector (_) -> Assert.Fail ("factor matched with integer vector")
