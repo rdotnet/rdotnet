@@ -73,6 +73,13 @@ let ``match Factor pattern`` () =
    | _ -> Assert.Fail ("not matched")
 
 [<Test>]
+let ``integer vector should not match Factor pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""factor(letters)""") with
+   | IntegerVector (_) -> Assert.Fail ("factor matched with integer vector")
+   | _ -> ()
+
+[<Test>]
 let ``character vector matches UntypedVector pattern`` () =
    let engine = REngine.GetInstanceFromID (engineName)
    match engine.Evaluate ("""LETTERS""") with

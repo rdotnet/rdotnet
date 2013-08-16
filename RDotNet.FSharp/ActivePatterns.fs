@@ -16,7 +16,7 @@ let isArray (sexp:SymbolicExpression) = sexp <> null && sexp.IsVector() && getDi
 // https://github.com/BlueMountainCapital/FSharpRProvider
 let (|CharacterVector|_|) (sexp: SymbolicExpression)  = if isVector sexp && sexp.Type = SymbolicExpressionType.CharacterVector then Some(sexp.AsCharacter()) else None
 let (|ComplexVector|_|)   (sexp: SymbolicExpression)  = if isVector sexp && sexp.Type = SymbolicExpressionType.ComplexVector   then Some(sexp.AsComplex()) else None
-let (|IntegerVector|_|)   (sexp: SymbolicExpression)  = if isVector sexp && sexp.Type = SymbolicExpressionType.IntegerVector   then Some(sexp.AsInteger()) else None
+let (|IntegerVector|_|)   (sexp: SymbolicExpression)  = if isVector sexp && sexp.Type = SymbolicExpressionType.IntegerVector && not (sexp.IsFactor ()) then Some(sexp.AsInteger()) else None
 let (|LogicalVector|_|)   (sexp: SymbolicExpression)  = if isVector sexp && sexp.Type = SymbolicExpressionType.LogicalVector   then Some(sexp.AsLogical()) else None
 let (|NumericVector|_|)   (sexp: SymbolicExpression)  = if isVector sexp && sexp.Type = SymbolicExpressionType.NumericVector   then Some(sexp.AsNumeric()) else None
 let (|RawVector|_|)       (sexp: SymbolicExpression)  = if isVector sexp && sexp.Type = SymbolicExpressionType.RawVector   then Some(sexp.AsRaw()) else None
