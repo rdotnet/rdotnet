@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using RDotNet.Diagnostics;
@@ -12,8 +13,8 @@ namespace RDotNet
 	/// <summary>
 	/// A data frame.
 	/// </summary>
-   [DebuggerDisplay(@"ColumnCount = {ColumnCount}; RowCount = {RowCount}; RObjectType = {Type}")]
-   [DebuggerTypeProxy(typeof(DataFrameDebugView))]
+	[DebuggerDisplay(@"ColumnCount = {ColumnCount}; RowCount = {RowCount}; RObjectType = {Type}")]
+	[DebuggerTypeProxy(typeof(DataFrameDebugView))]
 	[SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
 	public class DataFrame : Vector<DynamicVector>
 	{
@@ -188,6 +189,24 @@ namespace RDotNet
 		}
 
 		/// <summary>
+		/// Gets the row at the specified index mapping a specified class.
+		/// </summary>
+		/// <typeparam name="TRow">The row type with <see cref="DataFrameRowAttribute"/>.</typeparam>
+		/// <returns>The row.</returns>
+		public TRow GetRow<TRow>(int rowIndex)
+			where TRow : class, new()
+		{
+			var rowType = typeof(TRow);
+			var attribute = (DataFrameRowAttribute)rowType.GetCustomAttributes(typeof(DataFrameRowAttribute), false).Single();
+			if (attribute == null)
+			{
+				throw new ArgumentException("DataFrameRowAttribute is required.");
+			}
+			var row = GetRow(rowIndex);
+			return attribute.Convert<TRow>(row);
+		}
+
+		/// <summary>
 		/// Enumerates all the rows in the data frame.
 		/// </summary>
 		/// <returns>The collection of the rows.</returns>
@@ -197,6 +216,28 @@ namespace RDotNet
 			for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
 			{
 				yield return GetRow(rowIndex);
+			}
+		}
+
+		/// <summary>
+		/// Enumerates all the rows in the data frame mapping a specified class.
+		/// </summary>
+		/// <typeparam name="TRow">The row type with <see cref="DataFrameRowAttribute"/>.</typeparam>
+		/// <returns>The collection of the rows.</returns>
+		public IEnumerable<TRow> GetRows<TRow>()
+			where TRow : class, new()
+		{
+			var rowType = typeof(TRow);
+			var attribute = (DataFrameRowAttribute)rowType.GetCustomAttributes(typeof(DataFrameRowAttribute), false).Single();
+			if (attribute == null)
+			{
+				throw new ArgumentException("DataFrameRowAttribute is required.");
+			}
+			int rowCount = RowCount;
+			for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
+			{
+				var row = GetRow(rowIndex);
+				yield return attribute.Convert<TRow>(row);
 			}
 		}
 

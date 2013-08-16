@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CharacterVectorTest.cs" />
+    <Compile Include="DataFrameRowMappingTest.cs" />
     <Compile Include="FactorTest.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="InternalStringTest.cs" />
