@@ -21,3 +21,4 @@ val (|List|_|)            : sexp:SymbolicExpression -> GenericVector option
 val (|Pairlist|_|)        : sexp:SymbolicExpression -> Pairlist option
 val (|Null|_|)            : sexp:SymbolicExpression -> unit option
 val (|Symbol|_|)          : sexp:SymbolicExpression -> Symbol option
+val (|Factor|_|)          : sexp:SymbolicExpression -> Factor option

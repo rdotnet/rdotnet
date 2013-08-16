@@ -66,6 +66,13 @@ let ``match RawVector pattern`` () =
    | _ -> Assert.Fail ("not matched")
 
 [<Test>]
+let ``match Factor pattern`` () =
+   let engine = REngine.GetInstanceFromID (engineName)
+   match engine.Evaluate ("""factor(letters)""") with
+   | Factor (_) -> ()
+   | _ -> Assert.Fail ("not matched")
+
+[<Test>]
 let ``character vector matches UntypedVector pattern`` () =
    let engine = REngine.GetInstanceFromID (engineName)
    match engine.Evaluate ("""LETTERS""") with

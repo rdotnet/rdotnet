@@ -27,3 +27,5 @@ let (|List|_|)          (sexp: SymbolicExpression)    = if sexp <> null && sexp.
 let (|Pairlist|_|)      (sexp: SymbolicExpression)    = if sexp <> null && sexp.Type = SymbolicExpressionType.Pairlist then Some(sexp :?> Pairlist) else None     
 let (|Null|_|)          (sexp: SymbolicExpression)    = if sexp <> null && sexp.Type = SymbolicExpressionType.Null then Some() else None
 let (|Symbol|_|)        (sexp: SymbolicExpression)    = if sexp <> null && sexp.Type = SymbolicExpressionType.Symbol then Some(sexp.AsSymbol()) else None
+
+let (|Factor|_|) (sexp: SymbolicExpression) = if sexp <> null && sexp.IsFactor() then Some(sexp.AsFactor()) else None
