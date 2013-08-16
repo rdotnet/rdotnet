@@ -7,7 +7,7 @@ let engineName = "RDotNetTest"
 
 [<TestFixtureSetUp>]
 let setUpFixture () =
-   RDotNet.Tests.Helper.SetEnvironmentVariables ()
+   RDotNet.Helper.SetEnvironmentVariables ()
    let engine = REngine.CreateInstance (engineName)
    engine.Initialize ()
 

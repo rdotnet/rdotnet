@@ -2,7 +2,7 @@
 using System.IO;
 using Microsoft.Win32;
 
-namespace RDotNet.Tests
+namespace RDotNet
 {
 	internal static class Helper
 	{

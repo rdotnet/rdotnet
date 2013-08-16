@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using NUnit.Framework;
 
-namespace RDotNet.Tests
+namespace RDotNet
 {
    [TestFixture]
    class DataFrameRowMappingTest
