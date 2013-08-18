@@ -9,6 +9,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{C938B6B9-1060-4540-A76E-C380E02C4E48}"
 	ProjectSection(SolutionItems) = preProject
 		tools\build.fsx = tools\build.fsx
+		RDotNet.FSharp.nuspec = RDotNet.FSharp.nuspec
+		RDotNet.Graphics.nuspec = RDotNet.Graphics.nuspec
+		RDotNet.nuspec = RDotNet.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.Graphics", "RDotNet.Graphics\RDotNet.Graphics.csproj", "{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}"
