@@ -1,62 +1,43 @@
-﻿[<NUnit.Framework.TestFixture>]
-module RDotNet.VectorTest
+﻿namespace RDotNet
 
 open NUnit.Framework
 
-type S = SymbolicExpressionExtension
+type VectorTest () =
 
-let engineName = "RDotNetTest"
+   inherit RDotNetTestFixture ()
 
-[<TestFixtureSetUp>]
-let setUpFixture () =
-   RDotNet.Helper.SetEnvironmentVariables ()
-   let engine = REngine.CreateInstance (engineName)
-   engine.Initialize ()
+   [<Test>]
+   member this.``can slice vector all`` () =
+      let vector =
+         let engine = REngine.GetInstanceFromID (this.EngineName)
+         engine.Evaluate ("""0:5""") |> S.AsInteger
+      let actual = vector.[*]
+      Assert.That (actual, Is.TypeOf<IntegerVector> ())
+      Assert.That (actual, Is.EquivalentTo ([0..5]))
 
-[<TestFixtureTearDown>]
-let tearDownFixture () =
-   match REngine.GetInstanceFromID (engineName) with
-      | null -> ()
-      | engine -> engine.Dispose ()
+   [<Test>]
+   member this.``can slice vector from start to specific index`` () =
+      let vector =
+         let engine = REngine.GetInstanceFromID (this.EngineName)
+         engine.Evaluate ("""0:5""") |> S.AsInteger
+      let actual = vector.[..4]
+      Assert.That (actual, Is.TypeOf<IntegerVector> ())
+      Assert.That (actual, Is.EquivalentTo ([0..4]))
 
-[<SetUp>]
-let setUp () =
-   match REngine.GetInstanceFromID (engineName) with
-      | null -> failwith "engine not found"
-      | engine -> engine.Evaluate ("""rm(list=ls())""") |> ignore
+   [<Test>]
+   member this.``can slice vector from specific index to end`` () =
+      let vector =
+         let engine = REngine.GetInstanceFromID (this.EngineName)
+         engine.Evaluate ("""0:5""") |> S.AsInteger
+      let actual = vector.[2..]
+      Assert.That (actual, Is.TypeOf<IntegerVector> ())
+      Assert.That (actual, Is.EquivalentTo ([2..5]))
 
-[<Test>]
-let ``can slice vector all`` () =
-   let vector =
-      let engine = REngine.GetInstanceFromID (engineName)
-      engine.Evaluate ("""0:5""") |> S.AsInteger
-   let actual = vector.[*]
-   Assert.That (actual, Is.TypeOf<IntegerVector> ())
-   Assert.That (actual, Is.EquivalentTo ([0..5]))
-
-[<Test>]
-let ``can slice vector from start to specific index`` () =
-   let vector =
-      let engine = REngine.GetInstanceFromID (engineName)
-      engine.Evaluate ("""0:5""") |> S.AsInteger
-   let actual = vector.[..4]
-   Assert.That (actual, Is.TypeOf<IntegerVector> ())
-   Assert.That (actual, Is.EquivalentTo ([0..4]))
-
-[<Test>]
-let ``can slice vector from specific index to end`` () =
-   let vector =
-      let engine = REngine.GetInstanceFromID (engineName)
-      engine.Evaluate ("""0:5""") |> S.AsInteger
-   let actual = vector.[2..]
-   Assert.That (actual, Is.TypeOf<IntegerVector> ())
-   Assert.That (actual, Is.EquivalentTo ([2..5]))
-
-[<Test>]
-let ``can slice vector from specific index to specific index`` () =
-   let vector =
-      let engine = REngine.GetInstanceFromID (engineName)
-      engine.Evaluate ("""0:5""") |> S.AsInteger
-   let actual = vector.[2..4]
-   Assert.That (actual, Is.TypeOf<IntegerVector> ())
-   Assert.That (actual, Is.EquivalentTo ([2..4]))
+   [<Test>]
+   member this.``can slice vector from specific index to specific index`` () =
+      let vector =
+         let engine = REngine.GetInstanceFromID (this.EngineName)
+         engine.Evaluate ("""0:5""") |> S.AsInteger
+      let actual = vector.[2..4]
+      Assert.That (actual, Is.TypeOf<IntegerVector> ())
+      Assert.That (actual, Is.EquivalentTo ([2..4]))

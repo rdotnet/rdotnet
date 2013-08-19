@@ -40,6 +40,7 @@
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <ItemGroup>
     <None Include="app.config" />
+    <Compile Include="RuntimeHelper.fs" />
     <Compile Include="ActivePatternsTest.fs" />
     <Compile Include="VectorTest.fs" />
     <Compile Include="MatrixTest.fs" />
@@ -74,9 +75,9 @@
       <Project>{2a089a59-0f22-4484-b442-0fe8bda10879}</Project>
       <Private>True</Private>
     </ProjectReference>
-    <ProjectReference Include="..\RDotNet.Tests\RDotNet.Tests.csproj">
-      <Name>RDotNet.Tests</Name>
-      <Project>{6c456a2e-fbb5-44da-b0d2-fe76c49fcd06}</Project>
+    <ProjectReference Include="..\RDotNet.TestBase\RDotNet.TestBase.csproj">
+      <Name>RDotNet.TestBase</Name>
+      <Project>{b9e15660-096f-45fb-82e3-3c21bbe986df}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
