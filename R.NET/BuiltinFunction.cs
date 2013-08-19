@@ -23,11 +23,11 @@ namespace RDotNet
 			IntPtr argument = Engine.NilValue.DangerousGetHandle();
 			foreach (SymbolicExpression arg in args.Reverse())
 			{
-				argument = Engine.GetFunction<Rf_cons>("Rf_cons")(arg.DangerousGetHandle(), argument);
+				argument = Engine.GetFunction<Rf_cons>()(arg.DangerousGetHandle(), argument);
 			}
-			IntPtr call = Engine.GetFunction<Rf_lcons>("Rf_lcons")(handle, argument);
+			IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argument);
 
-			IntPtr result = Engine.GetFunction<Rf_eval>("Rf_eval")(call, Engine.GlobalEnvironment.DangerousGetHandle());
+			IntPtr result = Engine.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
 			return new SymbolicExpression(Engine, result);
 		}
 	}

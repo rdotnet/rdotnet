@@ -26,7 +26,7 @@ namespace RDotNet
 		/// <param name="type">The element type.</param>
 		/// <param name="length">The length of vector.</param>
 		protected Vector(REngine engine, SymbolicExpressionType type, int length)
-			: base(engine, engine.GetFunction<Rf_allocVector>("Rf_allocVector")(type, length))
+			: base(engine, engine.GetFunction<Rf_allocVector>()(type, length))
 		{
 			if (length <= 0)
 			{
@@ -43,7 +43,7 @@ namespace RDotNet
 		/// <param name="type">The element type.</param>
 		/// <param name="vector">The elements of vector.</param>
 		protected Vector(REngine engine, SymbolicExpressionType type, IEnumerable<T> vector)
-			: base(engine, engine.GetFunction<Rf_allocVector>("Rf_allocVector")(type, vector.Count()))
+			: base(engine, engine.GetFunction<Rf_allocVector>()(type, vector.Count()))
 		{
 			int index = 0;
 			foreach (T element in vector)
@@ -106,7 +106,7 @@ namespace RDotNet
 		/// </summary>
 		public int Length
 		{
-			get { return Engine.GetFunction<Rf_length>("Rf_length")(handle); }
+			get { return Engine.GetFunction<Rf_length>()(handle); }
 		}
 
 		/// <summary>

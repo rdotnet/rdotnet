@@ -20,7 +20,7 @@ namespace RDotNet
 		/// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
 		/// <param name="length">The length.</param>
 		public GenericVector(REngine engine, int length)
-			: base(engine, engine.GetFunction<Rf_allocVector>("Rf_allocVector")(SymbolicExpressionType.List, length))
+			: base(engine, engine.GetFunction<Rf_allocVector>()(SymbolicExpressionType.List, length))
 		{}
 
 		/// <summary>
@@ -86,7 +86,7 @@ namespace RDotNet
 		/// <returns>The pairlist.</returns>
 		public Pairlist ToPairlist()
 		{
-			return new Pairlist(Engine, Engine.GetFunction<Rf_VectorToPairList>("Rf_VectorToPairList")(handle));
+			return new Pairlist(Engine, Engine.GetFunction<Rf_VectorToPairList>()(handle));
 		}
 
 		public override DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)

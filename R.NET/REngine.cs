@@ -219,8 +219,8 @@ namespace RDotNet
 		{
 			this.parameter = parameter ?? new StartupParameter();
 			this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
-			GetFunction<R_setStartTime>("R_setStartTime")();
-			GetFunction<Rf_initialize_R>("Rf_initialize_R")(1, new[] { ID });
+			GetFunction<R_setStartTime>()();
+			GetFunction<Rf_initialize_R>()(1, new[] { ID });
 			this.adapter.Install(this, this.parameter);
 			switch (Environment.OSVersion.Platform)
 			{
@@ -232,7 +232,7 @@ namespace RDotNet
 					GetFunction<R_SetParams_Unix>("R_SetParams")(ref this.parameter.start.Common);
 					break;
 			}
-			GetFunction<setup_Rmainloop>("setup_Rmainloop")();
+			GetFunction<setup_Rmainloop>()();
 			this.isRunning = true;
 		}
 
@@ -241,7 +241,7 @@ namespace RDotNet
 		/// </summary>
 		public void ForceGarbageCollection()
 		{
-			GetFunction<R_gc>("R_gc")();
+			GetFunction<R_gc>()();
 		}
 
 		/// <summary>
@@ -432,12 +432,12 @@ namespace RDotNet
 		private SymbolicExpression Parse(string statement, StringBuilder incompleteStatement)
 		{
 			incompleteStatement.Append(statement);
-			var s = GetFunction<Rf_mkString>("Rf_mkString")(incompleteStatement.ToString());
+			var s = GetFunction<Rf_mkString>()(incompleteStatement.ToString());
 
 			using (new ProtectedPointer(this, s))
 			{
 				ParseStatus status;
-				var vector = new ExpressionVector(this, GetFunction<R_ParseVector>("R_ParseVector")(s, -1, out status, NilValue.DangerousGetHandle()));
+				var vector = new ExpressionVector(this, GetFunction<R_ParseVector>()(s, -1, out status, NilValue.DangerousGetHandle()));
 				if (vector.Length == 0)
 				{
 					return null;
@@ -477,7 +477,7 @@ namespace RDotNet
 				throw new InvalidOperationException();
 			}
 			var newArgs = Utility.AddFirst(ID, args);
-			GetFunction<R_set_command_line_arguments>("R_set_command_line_arguments")(newArgs.Length, newArgs);
+			GetFunction<R_set_command_line_arguments>()(newArgs.Length, newArgs);
 		}
 
 		public event EventHandler Disposing;

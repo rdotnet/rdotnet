@@ -24,7 +24,7 @@ namespace RDotNet
 		/// <param name="rowCount">The size of row.</param>
 		/// <param name="columnCount">The size of column.</param>
 		protected Matrix(REngine engine, SymbolicExpressionType type, int rowCount, int columnCount)
-			: base(engine, engine.GetFunction<Rf_allocMatrix>("Rf_allocMatrix")(type, rowCount, columnCount))
+			: base(engine, engine.GetFunction<Rf_allocMatrix>()(type, rowCount, columnCount))
 		{
 			if (rowCount <= 0)
 			{
@@ -46,7 +46,7 @@ namespace RDotNet
 		/// <param name="type">The element type.</param>
 		/// <param name="matrix">The values.</param>
 		public Matrix(REngine engine, SymbolicExpressionType type, T[,] matrix)
-			: base(engine, engine.GetFunction<Rf_allocMatrix>("Rf_allocMatrix")(type, matrix.GetLength(0), matrix.GetLength(1)))
+			: base(engine, engine.GetFunction<Rf_allocMatrix>()(type, matrix.GetLength(0), matrix.GetLength(1)))
 		{
 			int rowCount = RowCount;
 			int columnCount = ColumnCount;
@@ -139,7 +139,7 @@ namespace RDotNet
 		/// </summary>
 		public int RowCount
 		{
-			get { return Engine.GetFunction<Rf_nrows>("Rf_nrows")(handle); }
+			get { return Engine.GetFunction<Rf_nrows>()(handle); }
 		}
 
 		/// <summary>
@@ -147,7 +147,7 @@ namespace RDotNet
 		/// </summary>
 		public int ColumnCount
 		{
-			get { return Engine.GetFunction<Rf_ncols>("Rf_ncols")(handle); }
+			get { return Engine.GetFunction<Rf_ncols>()(handle); }
 		}
 
 		/// <summary>

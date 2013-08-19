@@ -25,7 +25,7 @@ namespace RDotNet
 		/// </summary>
 		public int Count
 		{
-			get { return Engine.GetFunction<Rf_length>("Rf_length")(handle); }
+			get { return Engine.GetFunction<Rf_length>()(handle); }
 		}
 
 		#region IEnumerable<Symbol> Members
