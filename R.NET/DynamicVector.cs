@@ -157,7 +157,7 @@ namespace RDotNet
 
 		private void WriteString(string value, IntPtr pointer, int offset)
 		{
-			IntPtr stringPointer = Engine.GetFunction<Rf_mkChar>("Rf_mkChar")(value);
+			IntPtr stringPointer = Engine.GetFunction<Rf_mkChar>()(value);
 			Marshal.WriteIntPtr(pointer, offset, stringPointer);
 		}
 

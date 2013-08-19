@@ -15,7 +15,7 @@ namespace RDotNet
 			this.sexp = sexp;
 			this.engine = engine;
 
-			engine.GetFunction<Rf_protect>("Rf_protect")(this.sexp);
+			engine.GetFunction<Rf_protect>()(this.sexp);
 		}
 
 		public ProtectedPointer(SymbolicExpression sexp)
@@ -23,14 +23,14 @@ namespace RDotNet
 			this.sexp = sexp.DangerousGetHandle();
 			this.engine = sexp.Engine;
 
-			this.engine.GetFunction<Rf_protect>("Rf_protect")(this.sexp);
+			this.engine.GetFunction<Rf_protect>()(this.sexp);
 		}
 
 		#region IDisposable Members
 
 		public void Dispose()
 		{
-			this.engine.GetFunction<Rf_unprotect_ptr>("Rf_unprotect_ptr")(this.sexp);
+			this.engine.GetFunction<Rf_unprotect_ptr>()(this.sexp);
 		}
 
 		#endregion

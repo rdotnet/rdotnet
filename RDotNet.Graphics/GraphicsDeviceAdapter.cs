@@ -71,20 +71,20 @@ namespace RDotNet.Graphics
 			}
 			this.engine = engine;
 
-			//engine.GetFunction<R_GE_checkVersionOrDie>("R_GE_checkVersionOrDie")(this.device.Version);
-			engine.GetFunction<R_CheckDeviceAvailable>("R_CheckDeviceAvailable")();
+			//engine.GetFunction<R_GE_checkVersionOrDie>()(this.device.Version);
+			engine.GetFunction<R_CheckDeviceAvailable>()();
 			var oldSuspended = GetInterruptsSuspended(engine);
 			SetInterruptsSuspended(engine, true);
 
 			this.description = new DeviceDescription();
 			SetMethod();
-			gdd = engine.GetFunction<GEcreateDevDesc>("GEcreateDevDesc")(this.description.DangerousGetHandle());
-			engine.GetFunction<GEaddDevice2>("GEaddDevice2")(gdd, this.device.Name);
+			gdd = engine.GetFunction<GEcreateDevDesc>()(this.description.DangerousGetHandle());
+			engine.GetFunction<GEaddDevice2>()(gdd, this.device.Name);
 
 			SetInterruptsSuspended(engine, oldSuspended);
 			if (GetInterruptsPending(engine) && !GetInterruptsSuspended(engine))
 			{
-				engine.GetFunction<Rf_onintr>("Rf_onintr")();
+				engine.GetFunction<Rf_onintr>()();
 			}
 		}
 

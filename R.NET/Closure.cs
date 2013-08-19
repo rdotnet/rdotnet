@@ -66,8 +66,8 @@ namespace RDotNet
 			var names = new CharacterVector(Engine, Arguments.Select(arg => arg.PrintName).ToArray());
 			arguments.SetAttribute(Engine.GetPredefinedSymbol("R_NamesSymbol"), names);
 
-			IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>("Rf_allocSExp")(SymbolicExpressionType.Environment);
-			IntPtr result = Engine.GetFunction<Rf_applyClosure>("Rf_applyClosure")(Body.DangerousGetHandle(), handle, arguments.ToPairlist().DangerousGetHandle(), Environment.DangerousGetHandle(), newEnvironment);
+			IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);
+			IntPtr result = Engine.GetFunction<Rf_applyClosure>()(Body.DangerousGetHandle(), handle, arguments.ToPairlist().DangerousGetHandle(), Environment.DangerousGetHandle(), newEnvironment);
 			return new SymbolicExpression(Engine, result);
 		}
 	}

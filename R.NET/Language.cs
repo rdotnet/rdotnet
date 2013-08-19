@@ -24,7 +24,7 @@ namespace RDotNet
 		{
 			get
 			{
-				int count = Engine.GetFunction<Rf_length>("Rf_length")(handle);
+				int count = Engine.GetFunction<Rf_length>()(handle);
 				// count == 1 for empty call.
 				if (count < 2)
 				{

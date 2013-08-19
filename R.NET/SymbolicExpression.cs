@@ -92,7 +92,7 @@ namespace RDotNet
 		/// <returns>The names of attributes</returns>
 		public string[] GetAttributeNames()
 		{
-			int length = Engine.GetFunction<Rf_length>("Rf_length")(this.sexp.attrib);
+			int length = Engine.GetFunction<Rf_length>()(this.sexp.attrib);
 			var names = new string[length];
 			IntPtr pointer = this.sexp.attrib;
 			for (int index = 0; index < length; index++)
@@ -122,8 +122,8 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			IntPtr installedName = Engine.GetFunction<Rf_install>("Rf_install")(attributeName);
-			IntPtr attribute = Engine.GetFunction<Rf_getAttrib>("Rf_getAttrib")(handle, installedName);
+			IntPtr installedName = Engine.GetFunction<Rf_install>()(attributeName);
+			IntPtr attribute = Engine.GetFunction<Rf_getAttrib>()(handle, installedName);
 			if (Engine.CheckNil(attribute))
 			{
 				return null;
@@ -142,7 +142,7 @@ namespace RDotNet
 				throw new ArgumentException();
 			}
 
-			IntPtr attribute = Engine.GetFunction<Rf_getAttrib>("Rf_getAttrib")(handle, symbol.handle);
+			IntPtr attribute = Engine.GetFunction<Rf_getAttrib>()(handle, symbol.handle);
 			if (Engine.CheckNil(attribute))
 			{
 				return null;
@@ -171,8 +171,8 @@ namespace RDotNet
 				value = Engine.NilValue;
 			}
 
-			IntPtr installedName = Engine.GetFunction<Rf_install>("Rf_install")(attributeName);
-			Engine.GetFunction<Rf_setAttrib>("Rf_setAttrib")(handle, installedName, value.handle);
+			IntPtr installedName = Engine.GetFunction<Rf_install>()(attributeName);
+			Engine.GetFunction<Rf_setAttrib>()(handle, installedName, value.handle);
 		}
 
 		internal void SetAttribute(SymbolicExpression symbol, SymbolicExpression value)
@@ -191,7 +191,7 @@ namespace RDotNet
 				value = Engine.NilValue;
 			}
 
-			Engine.GetFunction<Rf_setAttrib>("Rf_setAttrib")(handle, symbol.handle, value.handle);
+			Engine.GetFunction<Rf_setAttrib>()(handle, symbol.handle, value.handle);
 		}
 
 		/// <summary>
@@ -202,7 +202,7 @@ namespace RDotNet
 		{
 			if (!IsInvalid && !isProtected)
 			{
-                Engine.GetFunction<R_PreserveObject>("R_PreserveObject")(handle);
+                Engine.GetFunction<R_PreserveObject>()(handle);
 				this.isProtected = true;
 			}
 		}
@@ -215,7 +215,7 @@ namespace RDotNet
 		{
 			if (!IsInvalid && IsProtected)
 			{
-                Engine.GetFunction<R_ReleaseObject>("R_ReleaseObject")(handle);
+                Engine.GetFunction<R_ReleaseObject>()(handle);
 				this.isProtected = false;
 			}
 		}
