@@ -2,6 +2,10 @@
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
+#if UNIX
+using System.IO;
+using System.Linq;
+#endif
 
 namespace RDotNet.NativeLibrary
 {
@@ -128,38 +132,38 @@ namespace RDotNet.NativeLibrary
       /// <returns>If the function succeeds, the return value is nonzero.</returns>
       [Obsolete("Set environment variable 'PATH' instead.")]
 #if UNIX
-		public static bool SetDllDirectory(string dllDirectory)
-		{
-			if (dllDirectory == null)
-			{
-				System.Environment.SetEnvironmentVariable(LibraryPath, DefaultSearchPath, EnvironmentVariableTarget.Process);
-			}
-			else if (dllDirectory == string.Empty)
-			{
-				throw new NotImplementedException();
-			}
-			else
-			{
-				if (!Directory.Exists(dllDirectory))
-				{
-					return false;
-				}
-				string path = System.Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
-				if (string.IsNullOrEmpty(path))
-				{
-					path = dllDirectory;
-				}
-				else
-				{
-					path = dllDirectory + Path.PathSeparator + path;
-				}
-				System.Environment.SetEnvironmentVariable(LibraryPath, path, EnvironmentVariableTarget.Process);
-			}
-			return true;
-		}
+      public static bool SetDllDirectory(string dllDirectory)
+      {
+         if (dllDirectory == null)
+         {
+            System.Environment.SetEnvironmentVariable(LibraryPath, DefaultSearchPath, EnvironmentVariableTarget.Process);
+         }
+         else if (dllDirectory == string.Empty)
+         {
+            throw new NotImplementedException();
+         }
+         else
+         {
+            if (!Directory.Exists(dllDirectory))
+            {
+               return false;
+            }
+            string path = System.Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
+            if (string.IsNullOrEmpty(path))
+            {
+               path = dllDirectory;
+            }
+            else
+            {
+               path = dllDirectory + Path.PathSeparator + path;
+            }
+            System.Environment.SetEnvironmentVariable(LibraryPath, path, EnvironmentVariableTarget.Process);
+         }
+         return true;
+      }
 
-		private const string LibraryPath = "PATH";
-		private static readonly string DefaultSearchPath = System.Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
+      private const string LibraryPath = "PATH";
+      private static readonly string DefaultSearchPath = System.Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
 #else
       [DllImport("kernel32.dll")]
       [return: MarshalAs(UnmanagedType.Bool)]
@@ -168,20 +172,20 @@ namespace RDotNet.NativeLibrary
 #endif
 
 #if UNIX
-		private static IntPtr LoadLibrary(string filename)
-		{
-			const int RTLD_LAZY = 0x1;
-			if (filename.StartsWith("/"))
-			{
-				return dlopen(filename, RTLD_LAZY);
-			}
-			var searchPaths = (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator);
-			var dll = searchPaths.Select(directory => Path.Combine(directory, filename)).FirstOrDefault(File.Exists);
-			return dll == null ? IntPtr.Zero : dlopen(dll, RTLD_LAZY);
-		}
+      private static IntPtr LoadLibrary(string filename)
+      {
+         const int RTLD_LAZY = 0x1;
+         if (filename.StartsWith("/"))
+         {
+            return dlopen(filename, RTLD_LAZY);
+         }
+         var searchPaths = (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator);
+         var dll = searchPaths.Select(directory => Path.Combine(directory, filename)).FirstOrDefault(File.Exists);
+         return dll == null ? IntPtr.Zero : dlopen(dll, RTLD_LAZY);
+      }
 
-		[DllImport("libdl")]
-		private static extern IntPtr dlopen([MarshalAs(UnmanagedType.LPStr)] string filename, int flag);
+      [DllImport("libdl")]
+      private static extern IntPtr dlopen([MarshalAs(UnmanagedType.LPStr)] string filename, int flag);
 #else
 
       [DllImport("kernel32.dll")]
@@ -190,7 +194,7 @@ namespace RDotNet.NativeLibrary
 #endif
 
 #if UNIX
-		[DllImport("libdl", EntryPoint = "dlclose")]
+      [DllImport("libdl", EntryPoint = "dlclose")]
 #else
 
       [DllImport("kernel32.dll")]
@@ -200,7 +204,7 @@ namespace RDotNet.NativeLibrary
       private static extern bool FreeLibrary(IntPtr hModule);
 
 #if UNIX
-		[DllImport("libdl", EntryPoint = "dlsym")]
+      [DllImport("libdl", EntryPoint = "dlsym")]
 #else
 
       [DllImport("kernel32.dll", EntryPoint = "GetProcAddress")]
