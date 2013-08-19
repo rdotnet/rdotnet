@@ -2,38 +2,8 @@
 
 namespace RDotNet
 {
-   [TestFixture]
-   class CharacterVectorTest
+   class CharacterVectorTest : RDotNetTestFixture
    {
-      private const string EngineName = "RDotNetTest";
-      private readonly MockDevice device = new MockDevice();
-
-      [TestFixtureSetUp]
-      public void SetUpEngine()
-      {
-         Helper.SetEnvironmentVariables();
-         var engine = REngine.CreateInstance(EngineName);
-         engine.Initialize(device: device);
-      }
-
-      [TestFixtureTearDown]
-      public void DisposeEngine()
-      {
-         var engine = REngine.GetInstanceFromID(EngineName);
-         if (engine != null)
-         {
-            engine.Dispose();
-         }
-      }
-
-      [TearDown]
-      public void TearDown()
-      {
-         var engine = REngine.GetInstanceFromID(EngineName);
-         engine.Evaluate("rm(list=ls())");
-         this.device.Initialize();
-      }
-
       [Test]
       public void TestCharacter()
       {
