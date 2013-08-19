@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace RDotNet
 {
-   delegate void Map(DataFrameRow from, object to);
+   internal delegate void Map(DataFrameRow from, object to);
 
    /// <summary>
    /// Indicates the class with the attribute represents rows of certain data frames.
@@ -14,7 +14,7 @@ namespace RDotNet
    public class DataFrameRowAttribute : Attribute
    {
       private readonly Dictionary<Type, Map> cache;
-      
+
       /// <summary>
       /// Initializes a new instance.
       /// </summary>

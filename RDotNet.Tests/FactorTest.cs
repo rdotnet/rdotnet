@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using System.Linq;
 
 namespace RDotNet
 {
-   class FactorTest : RDotNetTestFixture
+   internal class FactorTest : RDotNetTestFixture
    {
       [Test]
       public void TestLength()

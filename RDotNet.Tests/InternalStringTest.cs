@@ -2,7 +2,7 @@
 
 namespace RDotNet
 {
-   class InternalStringTest : RDotNetTestFixture
+   internal class InternalStringTest : RDotNetTestFixture
    {
       [Test]
       public void TestCharacter()

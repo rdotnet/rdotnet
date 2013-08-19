@@ -1,121 +1,122 @@
-﻿using System;
-using System.Text;
-using RDotNet.Devices;
+﻿using RDotNet.Devices;
 using RDotNet.Internals;
+using System;
+using System.Text;
 
 namespace RDotNet
 {
-	public class MockDevice : ICharacterDevice
-	{
-		private readonly StringBuilder builder;
+   public class MockDevice : ICharacterDevice
+   {
+      private readonly StringBuilder builder;
 
-		public MockDevice()
-		{
-			this.builder = new StringBuilder();
-		}
+      public MockDevice()
+      {
+         this.builder = new StringBuilder();
+      }
 
-		public string Input { get; set; }
-		public YesNoCancel Answer { get; set; }
+      public string Input { get; set; }
 
-		#region ICharacterDevice Members
+      public YesNoCancel Answer { get; set; }
 
-		public string ReadConsole(string prompt, int capacity, bool history)
-		{
-			this.builder.Append(prompt);
-			return Input;
-		}
+      #region ICharacterDevice Members
 
-		public void WriteConsole(string output, int length, ConsoleOutputType outputType)
-		{
-			this.builder.Append(output);
-		}
+      public string ReadConsole(string prompt, int capacity, bool history)
+      {
+         this.builder.Append(prompt);
+         return Input;
+      }
 
-		public void ShowMessage(string message)
-		{
-			this.builder.Append(message);
-		}
+      public void WriteConsole(string output, int length, ConsoleOutputType outputType)
+      {
+         this.builder.Append(output);
+      }
 
-		public void Busy(BusyType which)
-		{
-			throw new NotImplementedException();
-		}
+      public void ShowMessage(string message)
+      {
+         this.builder.Append(message);
+      }
 
-		public void Callback()
-		{}
+      public void Busy(BusyType which)
+      {
+         throw new NotImplementedException();
+      }
 
-		public YesNoCancel Ask(string question)
-		{
-			this.builder.Append(question);
-			return Answer;
-		}
+      public void Callback()
+      { }
 
-		public void Suicide(string message)
-		{
-			throw new NotImplementedException();
-		}
+      public YesNoCancel Ask(string question)
+      {
+         this.builder.Append(question);
+         return Answer;
+      }
 
-		public void ResetConsole()
-		{
-			throw new NotImplementedException();
-		}
+      public void Suicide(string message)
+      {
+         throw new NotImplementedException();
+      }
 
-		public void FlushConsole()
-		{
-			throw new NotImplementedException();
-		}
+      public void ResetConsole()
+      {
+         throw new NotImplementedException();
+      }
 
-		public void ClearErrorConsole()
-		{
-			throw new NotImplementedException();
-		}
+      public void FlushConsole()
+      {
+         throw new NotImplementedException();
+      }
 
-		public void CleanUp(StartupSaveAction saveAction, int status, bool runLast)
-		{
-			throw new NotImplementedException();
-		}
+      public void ClearErrorConsole()
+      {
+         throw new NotImplementedException();
+      }
 
-		public bool ShowFiles(string[] files, string[] headers, string title, bool delete, string pager)
-		{
-			throw new NotImplementedException();
-		}
+      public void CleanUp(StartupSaveAction saveAction, int status, bool runLast)
+      {
+         throw new NotImplementedException();
+      }
 
-		public string ChooseFile(bool create)
-		{
-			throw new NotImplementedException();
-		}
+      public bool ShowFiles(string[] files, string[] headers, string title, bool delete, string pager)
+      {
+         throw new NotImplementedException();
+      }
 
-		public void EditFile(string file)
-		{
-			throw new NotImplementedException();
-		}
+      public string ChooseFile(bool create)
+      {
+         throw new NotImplementedException();
+      }
 
-		public SymbolicExpression LoadHistory(Language call, SymbolicExpression operation, Pairlist args, REnvironment environment)
-		{
-			throw new NotImplementedException();
-		}
+      public void EditFile(string file)
+      {
+         throw new NotImplementedException();
+      }
 
-		public SymbolicExpression SaveHistory(Language call, SymbolicExpression operation, Pairlist args, REnvironment environment)
-		{
-			throw new NotImplementedException();
-		}
+      public SymbolicExpression LoadHistory(Language call, SymbolicExpression operation, Pairlist args, REnvironment environment)
+      {
+         throw new NotImplementedException();
+      }
 
-		public SymbolicExpression AddHistory(Language call, SymbolicExpression operation, Pairlist args, REnvironment environment)
-		{
-			throw new NotImplementedException();
-		}
+      public SymbolicExpression SaveHistory(Language call, SymbolicExpression operation, Pairlist args, REnvironment environment)
+      {
+         throw new NotImplementedException();
+      }
 
-		#endregion
+      public SymbolicExpression AddHistory(Language call, SymbolicExpression operation, Pairlist args, REnvironment environment)
+      {
+         throw new NotImplementedException();
+      }
 
-		public void Initialize()
-		{
-			this.builder.Clear();
-			Input = null;
-			Answer = YesNoCancel.Cancel;
-		}
+      #endregion ICharacterDevice Members
 
-		public string GetString()
-		{
-			return this.builder.ToString();
-		}
-	}
+      public void Initialize()
+      {
+         this.builder.Clear();
+         Input = null;
+         Answer = YesNoCancel.Cancel;
+      }
+
+      public string GetString()
+      {
+         return this.builder.ToString();
+      }
+   }
 }

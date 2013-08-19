@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RDotNet
 {
@@ -14,6 +11,7 @@ namespace RDotNet
       private static readonly string[] Empty = new string[0];
 
       private readonly int index;
+
       /// <summary>
       /// Gets the index.
       /// </summary>
@@ -23,6 +21,7 @@ namespace RDotNet
       }
 
       private string name;
+
       /// <summary>
       /// Gets or sets the name.
       /// </summary>

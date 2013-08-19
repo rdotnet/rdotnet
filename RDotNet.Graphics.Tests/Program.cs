@@ -3,11 +3,11 @@ using System.Windows.Forms;
 
 namespace RDotNet.Graphics
 {
-   class Program
+   internal class Program
    {
       public const string EngineName = "RDotNetTest";
 
-      static void Main()
+      private static void Main()
       {
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);

@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using System.Linq;
 
 namespace RDotNet
 {
-   class DataFrameRowMappingTest : RDotNetTestFixture
+   internal class DataFrameRowMappingTest : RDotNetTestFixture
    {
       [Test]
       public void TestGetRow()
@@ -40,12 +40,16 @@ namespace RDotNet
    {
       [DataFrameColumn("Sepal.Length")]
       public double SepalLength { get; set; }
+
       [DataFrameColumn("Sepal.Width")]
       public double SepalWidth { get; set; }
+
       [DataFrameColumn("Petal.Length")]
       public double PetalLength { get; set; }
+
       [DataFrameColumn("Petal.Width")]
       public double PetalWidth { get; set; }
+
       [DataFrameColumn("Species")]
       public Iris Species { get; set; }
    }

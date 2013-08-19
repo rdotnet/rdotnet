@@ -22,8 +22,8 @@ let (|NumericVector|_|)   (sexp: SymbolicExpression)  = if isVector sexp && sexp
 let (|RawVector|_|)       (sexp: SymbolicExpression)  = if isVector sexp && sexp.Type = SymbolicExpressionType.RawVector   then Some(sexp.AsRaw()) else None
 let (|UntypedVector|_|)   (sexp: SymbolicExpression)  = if isVector sexp then Some(sexp.AsVector()) else None
 
-let (|Function|_|)        (sexp: SymbolicExpression)  = 
-   if sexp <> null && (sexp.Type = SymbolicExpressionType.BuiltinFunction || sexp.Type = SymbolicExpressionType.Closure || sexp.Type = SymbolicExpressionType.SpecialFunction) then 
+let (|Function|_|)        (sexp: SymbolicExpression)  =
+   if sexp <> null && (sexp.Type = SymbolicExpressionType.BuiltinFunction || sexp.Type = SymbolicExpressionType.Closure || sexp.Type = SymbolicExpressionType.SpecialFunction) then
       Some(sexp.AsFunction()) else None
 
 let (|BuiltinFunction|_|) (sexp: SymbolicExpression)  = if sexp <> null && sexp.Type = SymbolicExpressionType.BuiltinFunction then Some(sexp.AsFunction() :?> BuiltinFunction) else None
@@ -33,13 +33,12 @@ let (|SpecialFunction|_|) (sexp: SymbolicExpression)  = if sexp <> null && sexp.
 let (|Environment|_|)   (sexp: SymbolicExpression)    = if sexp <> null && sexp.Type = SymbolicExpressionType.Environment  then Some(sexp.AsEnvironment()) else None
 let (|Expression|_|)    (sexp: SymbolicExpression)    = if sexp <> null && sexp.Type = SymbolicExpressionType.ExpressionVector then Some(sexp.AsExpression()) else None
 let (|Language|_|)      (sexp: SymbolicExpression)    = if sexp <> null && sexp.Type = SymbolicExpressionType.LanguageObject then Some(sexp.AsLanguage()) else None
-let (|List|_|)          (sexp: SymbolicExpression)    = if sexp <> null && sexp.Type = SymbolicExpressionType.List then Some(sexp.AsList()) else None     
-let (|Pairlist|_|)      (sexp: SymbolicExpression)    = if sexp <> null && sexp.Type = SymbolicExpressionType.Pairlist then Some(sexp :?> Pairlist) else None     
+let (|List|_|)          (sexp: SymbolicExpression)    = if sexp <> null && sexp.Type = SymbolicExpressionType.List then Some(sexp.AsList()) else None
+let (|Pairlist|_|)      (sexp: SymbolicExpression)    = if sexp <> null && sexp.Type = SymbolicExpressionType.Pairlist then Some(sexp :?> Pairlist) else None
 let (|Null|_|)          (sexp: SymbolicExpression)    = if sexp <> null && sexp.Type = SymbolicExpressionType.Null then Some() else None
 let (|Symbol|_|)        (sexp: SymbolicExpression)    = if sexp <> null && sexp.Type = SymbolicExpressionType.Symbol then Some(sexp.AsSymbol()) else None
 
 let (|Factor|_|) (sexp: SymbolicExpression) = if sexp <> null && sexp.IsFactor() then Some(sexp.AsFactor()) else None
-
 
 let (|CharacterMatrix|_|) (sexp: SymbolicExpression)  = if isMatrix sexp && sexp.Type = SymbolicExpressionType.CharacterVector then Some(sexp.AsCharacterMatrix()) else None
 let (|ComplexMatrix|_|)   (sexp: SymbolicExpression)  = if isMatrix sexp && sexp.Type = SymbolicExpressionType.ComplexVector   then Some(sexp.AsComplexMatrix()) else None

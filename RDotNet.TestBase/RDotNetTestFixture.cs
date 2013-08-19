@@ -8,6 +8,7 @@ namespace RDotNet
       private readonly MockDevice device = new MockDevice();
 
       protected string EngineName { get { return "RDotNetTest"; } }
+
       protected MockDevice Device { get { return this.device; } }
 
       [TestFixtureSetUp]

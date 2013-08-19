@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.IO;
-using Microsoft.Win32;
 
 namespace RDotNet
 {
@@ -15,6 +15,7 @@ namespace RDotNet
             case PlatformID.Win32NT:
                Environment.SetEnvironmentVariable("PATH", FindRPathFromRegistry() + Path.PathSeparator + currentPath);
                break;
+
             case PlatformID.MacOSX:
                if (string.IsNullOrEmpty(rhome))
                {
@@ -22,6 +23,7 @@ namespace RDotNet
                }
                Environment.SetEnvironmentVariable("PATH", "/Library/Frameworks/R.framework/Libraries" + Path.PathSeparator + currentPath);
                break;
+
             case PlatformID.Unix:
                if (string.IsNullOrEmpty(rhome))
                {
