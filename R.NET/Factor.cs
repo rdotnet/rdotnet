@@ -1,7 +1,6 @@
 ﻿using RDotNet.Diagnostics;
 using RDotNet.Internals;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Permissions;
@@ -23,7 +22,7 @@ namespace RDotNet
       /// <param name="coerced">The pointer to a factor vector.</param>
       protected internal Factor(REngine engine, IntPtr coerced)
          : base(engine, coerced)
-      {}
+      { }
 
       /// <summary>
       /// Gets the levels of the factor.
@@ -57,7 +56,7 @@ namespace RDotNet
       ///    Treatment = 1,
       ///    Control = 2
       /// }
-      /// 
+      ///
       /// // You must set 'levels' and 'labels' arguments explicitly in this case
       /// // because levels of factor is sorted by default and the names in R and in enum names are different.
       /// var code = @"factor(

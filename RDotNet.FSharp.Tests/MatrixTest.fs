@@ -29,7 +29,7 @@ type MatrixTest () =
       Assert.That (actual.[0, 3], Is.EqualTo (10))
       Assert.That (actual.[1, 3], Is.EqualTo (11))
       Assert.That (actual.[2, 3], Is.EqualTo (12))
-   
+
    // | 1  4  7  10 |
    // | 2  5  8  11 |
    // +-------------+
@@ -49,7 +49,7 @@ type MatrixTest () =
       Assert.That (actual.[1, 2], Is.EqualTo (8))
       Assert.That (actual.[0, 3], Is.EqualTo (10))
       Assert.That (actual.[1, 3], Is.EqualTo (11))
-   
+
    //   1  4  7  10
    // +-------------+
    // | 2  5  8  11 |
@@ -69,7 +69,7 @@ type MatrixTest () =
       Assert.That (actual.[1, 2], Is.EqualTo (9))
       Assert.That (actual.[0, 3], Is.EqualTo (11))
       Assert.That (actual.[1, 3], Is.EqualTo (12))
-   
+
    //   1  4  7  10
    // +-------------+
    // | 2  5  8  11 |
@@ -86,7 +86,7 @@ type MatrixTest () =
       Assert.That (actual.[0, 1], Is.EqualTo (5))
       Assert.That (actual.[0, 2], Is.EqualTo (8))
       Assert.That (actual.[0, 3], Is.EqualTo (11))
-   
+
    // Requires F# 3.1 to compile.
    //   1  4  7  10
    // +-------------+
@@ -123,7 +123,7 @@ type MatrixTest () =
       Assert.That (actual.[0, 2], Is.EqualTo (7))
       Assert.That (actual.[1, 2], Is.EqualTo (8))
       Assert.That (actual.[2, 2], Is.EqualTo (9))
-   
+
    //      +------
    // 1  4 | 7  10
    // 2  5 | 8  11
@@ -142,7 +142,7 @@ type MatrixTest () =
       Assert.That (actual.[0, 1], Is.EqualTo (10))
       Assert.That (actual.[1, 1], Is.EqualTo (11))
       Assert.That (actual.[2, 1], Is.EqualTo (12))
-   
+
    //   +------+
    // 1 | 4  7 | 10
    // 2 | 5  8 | 11
@@ -161,7 +161,7 @@ type MatrixTest () =
       Assert.That (actual.[0, 1], Is.EqualTo (7))
       Assert.That (actual.[1, 1], Is.EqualTo (8))
       Assert.That (actual.[2, 1], Is.EqualTo (9))
-   
+
    // Requires F# 3.1 to compile.
    //   +---+
    // 1 | 4 | 7  10

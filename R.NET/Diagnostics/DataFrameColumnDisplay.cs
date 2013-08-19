@@ -9,6 +9,7 @@ namespace RDotNet.Diagnostics
    {
       [DebuggerBrowsable(DebuggerBrowsableState.Never)]
       private readonly DataFrame data;
+
       [DebuggerBrowsable(DebuggerBrowsableState.Never)]
       private readonly int columnIndex;
 

@@ -2,7 +2,7 @@
 
 namespace RDotNet
 {
-   class CharacterVectorTest : RDotNetTestFixture
+   internal class CharacterVectorTest : RDotNetTestFixture
    {
       [Test]
       public void TestCharacter()
