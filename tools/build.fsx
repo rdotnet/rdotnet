@@ -111,6 +111,9 @@ Target "Build" (fun () ->
    |> Seq.collect getProducts
    |> Copy outputDir
 )
+Target "EnsureDeploy" (fun () ->
+   ensureDirectory deployDir
+)
 
 let getMainAssemblyVersion assemblyPath =
    let assembly = Assembly.LoadFrom (assemblyPath)  // cannot get attributes with ReflectionOnlyLoadFrom
@@ -130,7 +133,6 @@ let pack projectName =
    let assemblyPath = outputDir % assemblyName
    let version = getMainAssemblyVersion assemblyPath
    let nuspecPath = % (sprintf "%s.nuspec" projectName)
-   ensureDirectory deployDir
    NuGetPack (updateNuGetParams version) nuspecPath
 Target "NuGetMain" (fun () ->
    pack rdotnetMain
@@ -166,12 +168,14 @@ Target "Deploy" (fun () ->
 
 // NuGet dependency
 "Build"
+==> "EnsureDeploy"
 ==> "NuGetMain"
 ==> "NuGetFSharp" <=> "NuGetGraphics"
 ==> "NuGet"
 
 // Zip dependency
 "Build"
+==> "EnsureDeploy"
 ==> "Zip"
 
 // Deploy dependency
