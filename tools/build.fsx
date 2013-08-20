@@ -130,6 +130,7 @@ let pack projectName =
    let assemblyPath = outputDir % assemblyName
    let version = getMainAssemblyVersion assemblyPath
    let nuspecPath = % (sprintf "%s.nuspec" projectName)
+   ensureDirectory deployDir
    NuGetPack (updateNuGetParams version) nuspecPath
 Target "NuGetMain" (fun () ->
    pack rdotnetMain
