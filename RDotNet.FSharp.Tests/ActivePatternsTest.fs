@@ -187,3 +187,10 @@ type ActivePatternsTest () =
       match engine.Evaluate ("""matrix(as.raw(seq_len(32)), 4, 8)""") with
       | RawVector (_) -> Assert.Fail ("matched with vector pattern")
       | _ -> ()
+
+   [<Test>]
+   member this.``match DataFrame pattern`` () =
+      let engine = REngine.GetInstanceFromID (this.EngineName)
+      match engine.Evaluate ("""data.frame()""") with
+      | DataFrame (_) -> ()
+      | _ -> Assert.Fail ("not matched")
