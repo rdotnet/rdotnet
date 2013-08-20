@@ -11,18 +11,20 @@ let inline (~%) name = Path.Combine (baseDir, name)
 let inline (%) dir name = Path.Combine (dir, name)
 
 let projects = ["R.NET"; "RDotNet.NativeLibrary"; "RDotNet.FSharp"; "RDotNet.Graphics"]
-let nugetToolPath = % ".nuget" % "NuGet.exe"
-let outputDir = % "Build"
-let deployDir = % "Deploy"
+let mainProject = "RDotNet"
+let fsharpProject = "RDotNet.FSharp"
+let graphicsProject = "RDotNet.Graphics"
 let mainSolution = % "RDotNet.Release.sln"
-let rdotnetMain = "RDotNet"
-let rdotnetFSharp = "RDotNet.FSharp"
-let rdotnetGraphics = "RDotNet.Graphics"
+
+let nugetToolPath = % ".nuget" % "NuGet.exe"
+let buildDir = % "Build"
+let deployDir = % "Deploy"
 
 type BuildParameter = {
    Help : bool
    Debug : bool
    CleanDeploy : bool
+   NoZip : bool
    NoNuGet : bool
    Unix : bool
    Key : string option
@@ -33,7 +35,9 @@ let buildParams =
       | "-h" :: _ | "--help" :: _ -> { acc with Help = true }  // don't care other arguments
       | "--debug" :: args -> loop { acc with Debug = true } args
       | "--clean-deploy" :: args -> loop { acc with CleanDeploy = true } args
+      | "--no-zip" :: args -> loop { acc with NoZip = true } args
       | "--no-nuget" :: args -> loop { acc with NoNuGet = true } args
+      | "--no-deploy" :: args -> loop { acc with NoZip = true; NoNuGet = true } args
       | "--unix" :: args -> loop { acc with Unix = true } args
       | "--key" :: path :: args -> loop { acc with Key = Some (path) } args
       | _ :: args -> loop acc args  // ignores unknown argument
@@ -41,6 +45,7 @@ let buildParams =
       Help = false
       Debug = false
       CleanDeploy = false
+      NoZip = false
       NoNuGet = false
       Unix = false
       Key = None
@@ -59,7 +64,9 @@ fsi.exe build.fsx [<options>]
 -h | --help       Show this help
 --debug           Debug build
 --clean-deploy    Clean up deploy directory before build
+--no-zip          Do not create zip archive
 --no-nuget        Do not build NuGet packages
+--no-deploy       Same as --no-zip --no-nuget
 --unix            Build with UNIX symbol (force --no-nuget)
 --key <key_path>  Sign assembly with the specified key"""
    exit 0
@@ -81,6 +88,8 @@ let addBuildProperties =
          | Some (path) -> failwithf "Key file not found at %s" path
          | None -> properties
    debugSymbol >> definieUnix >> setKey
+let buildZip = not buildParams.NoZip
+let buildNuGet = not (buildParams.NoNuGet || buildParams.Unix)
 let configuration = "Configuration", if buildParams.Debug then "Debug" else "Release"
 let setBuildParams (p:MSBuildParams) = {
    p with
@@ -95,7 +104,7 @@ let setCleanParams (p:MSBuildParams) = {
 
 Target "CleanBuild" (fun () ->
    build setCleanParams mainSolution
-   CleanDir outputDir
+   CleanDir buildDir
 )
 Target "CleanDeploy" (fun () ->
    CleanDir deployDir
@@ -109,7 +118,10 @@ Target "Build" (fun () ->
    build setBuildParams mainSolution
    projects
    |> Seq.collect getProducts
-   |> Copy outputDir
+   |> Copy buildDir
+   !+ (buildDir % "*.*")
+   |> Scan
+   |> Log "Build-Output: "
 )
 Target "EnsureDeploy" (fun () ->
    ensureDirectory deployDir
@@ -130,25 +142,25 @@ let updateNuGetParams version (p:NuGetParams) = {
 }
 let pack projectName =
    let assemblyName = sprintf "%s.dll" projectName
-   let assemblyPath = outputDir % assemblyName
+   let assemblyPath = buildDir % assemblyName
    let version = getMainAssemblyVersion assemblyPath
    let nuspecPath = % (sprintf "%s.nuspec" projectName)
    NuGetPack (updateNuGetParams version) nuspecPath
 Target "NuGetMain" (fun () ->
-   pack rdotnetMain
+   pack mainProject
 )
 Target "NuGetFSharp" (fun () ->
-   pack rdotnetFSharp
+   pack fsharpProject
 )
 Target "NuGetGraphics" (fun () ->
-   pack rdotnetGraphics
+   pack graphicsProject
 )
 Target "NuGet" DoNothing
 
 Target "Zip" (fun () ->
-   !+ (outputDir % "*.*")
+   !+ (buildDir % "*.*")
    |> Scan
-   |> Zip outputDir zipName
+   |> Zip buildDir zipName
 )
 
 Target "Deploy" (fun () ->
@@ -178,9 +190,12 @@ Target "Deploy" (fun () ->
 ==> "EnsureDeploy"
 ==> "Zip"
 
-// Deploy dependency
-"Zip"
-=?> ("NuGet", not (buildParams.NoNuGet || buildParams.Unix))
-==> "Deploy"
-
-Run "Deploy"
+// Deploy
+if buildZip || buildNuGet then
+   "Build"
+   =?> ("Zip", buildZip)
+   =?> ("NuGet", buildNuGet)
+   ==> "Deploy"
+   |> Run
+else
+   Run "Build"
