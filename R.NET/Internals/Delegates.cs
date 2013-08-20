@@ -72,6 +72,9 @@ namespace RDotNet.Internals
    internal delegate bool Rf_isVector(IntPtr sexp);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate bool Rf_isFrame(IntPtr sexp);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate int Rf_length(IntPtr sexp);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

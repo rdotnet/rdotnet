@@ -28,3 +28,4 @@ val (|IntegerMatrix|_|)   : sexp:SymbolicExpression -> IntegerMatrix option
 val (|LogicalMatrix|_|)   : sexp:SymbolicExpression -> LogicalMatrix option
 val (|NumericMatrix|_|)   : sexp:SymbolicExpression -> NumericMatrix option
 val (|RawMatrix|_|)       : sexp:SymbolicExpression -> RawMatrix option
+val (|DataFrame|_|)       : sexp:SymbolicExpression -> DataFrame option

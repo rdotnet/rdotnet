@@ -46,3 +46,5 @@ let (|IntegerMatrix|_|)   (sexp: SymbolicExpression)  = if isMatrix sexp && sexp
 let (|LogicalMatrix|_|)   (sexp: SymbolicExpression)  = if isMatrix sexp && sexp.Type = SymbolicExpressionType.LogicalVector   then Some(sexp.AsLogicalMatrix()) else None
 let (|NumericMatrix|_|)   (sexp: SymbolicExpression)  = if isMatrix sexp && sexp.Type = SymbolicExpressionType.NumericVector   then Some(sexp.AsNumericMatrix()) else None
 let (|RawMatrix|_|)       (sexp: SymbolicExpression)  = if isMatrix sexp && sexp.Type = SymbolicExpressionType.RawVector   then Some(sexp.AsRawMatrix()) else None
+
+let (|DataFrame|_|) (sexp:SymbolicExpression) = if sexp <> null && sexp.IsDataFrame () then Some (sexp.AsDataFrame ()) else None
