@@ -16,7 +16,7 @@
          <reference file="RDotNet.FSharp.dll" />
       </references>
       <dependencies>
-         <dependency id="R.NET" />
+         <dependency id="R.NET" version="1.5.4" />
       </dependencies>
       <tags>R R.NET F# statistics</tags>
    </metadata>
