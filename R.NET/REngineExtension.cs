@@ -1,3 +1,4 @@
+using RDotNet.Internals;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -469,6 +470,48 @@ namespace RDotNet
             throw new ArgumentException();
          }
          return new RawMatrix(engine, matrix);
+      }
+      
+      /// <summary>
+      /// Creates a new environment.
+      /// </summary>
+      /// <param name="engine">The engine.</param>
+      /// <param name="parent">The parent environment.</param>
+      /// <returns>The newly created environment.</returns>
+      public static REnvironment CreateEnvironment(this REngine engine, REnvironment parent)
+      {
+         if (engine == null)
+         {
+            throw new ArgumentNullException("engine");
+         }
+         if (parent == null)
+         {
+            throw new ArgumentNullException("parent");
+         }
+         if (!engine.IsRunning)
+         {
+            throw new ArgumentException();
+         }
+         return new REnvironment(engine, parent);
+      }
+
+      /// <summary>
+      /// Creates a new isolated environment.
+      /// </summary>
+      /// <param name="engine">The engine.</param>
+      /// <returns>The newly created isolated environment.</returns>
+      public static REnvironment CreateIsolatedEnvironment(this REngine engine)
+      {
+         if (engine == null)
+         {
+            throw new ArgumentNullException("engine");
+         }
+         if (!engine.IsRunning)
+         {
+            throw new ArgumentException();
+         }
+         var pointer = engine.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);
+         return new REnvironment(engine, pointer);
       }
    }
 }
