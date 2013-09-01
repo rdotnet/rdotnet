@@ -19,6 +19,15 @@ namespace RDotNet
       { }
 
       /// <summary>
+      /// Creates a new environment object.
+      /// </summary>
+      /// <param name="engine">The engine.</param>
+      /// <param name="parent">The parent environment.</param>
+      public REnvironment(REngine engine, REnvironment parent)
+         : base(engine, engine.GetFunction<Rf_NewEnvironment>()(engine.NilValue.DangerousGetHandle(), engine.NilValue.DangerousGetHandle(), parent.handle))
+      { }
+
+      /// <summary>
       /// Gets the parental environment.
       /// </summary>
       public REnvironment Parent
@@ -69,6 +78,22 @@ namespace RDotNet
       /// <param name="expression">The symbol.</param>
       public void SetSymbol(string name, SymbolicExpression expression)
       {
+         if (name == null)
+         {
+            throw new ArgumentNullException("name");
+         }
+         if (name == string.Empty)
+         {
+            throw new ArgumentException();
+         }
+         if (expression == null)
+         {
+            expression = Engine.NilValue;
+         }
+         if (expression.Engine != this.Engine)
+         {
+            throw new ArgumentException();
+         }
          IntPtr installedName = Engine.GetFunction<Rf_install>()(name);
          Engine.GetFunction<Rf_setVar>()(installedName, expression.DangerousGetHandle(), handle);
       }

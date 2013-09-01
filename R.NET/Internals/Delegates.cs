@@ -150,6 +150,9 @@ namespace RDotNet.Internals
    internal delegate IntPtr Rf_allocSExp(SymbolicExpressionType type);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate IntPtr Rf_NewEnvironment(IntPtr names, IntPtr values, IntPtr parent);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate IntPtr Rf_cons(IntPtr sexp, IntPtr next);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
