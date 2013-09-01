@@ -23,5 +23,6 @@
    <files>
       <file src="RDotNet.FSharp\bin\Release\RDotNet.FSharp.dll" target="lib\net40" />
       <file src="RDotNet.FSharp\bin\Release\RDotNet.FSharp.XML" target="lib\net40" />
+      <file src="RDotNet.FSharp\RDotNet.FSharp.fsx" target="." />
    </files>
 </package>

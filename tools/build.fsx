@@ -19,6 +19,7 @@ let mainSolution = % "RDotNet.Release.sln"
 let nugetToolPath = % ".nuget" % "NuGet.exe"
 let buildDir = % "Build"
 let deployDir = % "Deploy"
+let deployExtensions = ["dll"; "XML"; "fsx"]
 
 type BuildParameter = {
    Help : bool
@@ -112,7 +113,7 @@ Target "CleanDeploy" (fun () ->
 Target "Clean" DoNothing
 
 let getProducts projectName =
-   if buildParams.Debug then ["*"] else ["dll"; "XML"]
+   if buildParams.Debug then ["*"] else deployExtensions
    |> Seq.collect (fun s -> % projectName % "bin" % snd configuration % (sprintf "*.%s" s) |> (!+) |> Scan)
 Target "Build" (fun () ->
    build setBuildParams mainSolution

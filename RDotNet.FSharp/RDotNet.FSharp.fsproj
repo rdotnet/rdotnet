@@ -44,7 +44,9 @@
     <Compile Include="Vector.fs" />
     <Compile Include="Matrix.fsi" />
     <Compile Include="Matrix.fs" />
-    <None Include="RDotNet.FSharp.fsx" />
+    <None Include="RDotNet.FSharp.fsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
