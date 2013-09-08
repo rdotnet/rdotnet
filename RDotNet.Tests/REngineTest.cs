@@ -53,6 +53,22 @@ namespace RDotNet
       }
 
       [Test]
+      public void TestParseCodeLine()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         engine.Evaluate("cat('hello')");
+         Assert.That(Device.GetString(), Is.EqualTo("hello"));
+      }
+
+      [Test]
+      public void TestParseCodeBlock()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         engine.Evaluate("for(i in 1:3){\ncat(i)\ncat(i)\n}");
+         Assert.That(Device.GetString(), Is.EqualTo("112233"));
+      }
+
+      [Test]
       public void TestReadConsole()
       {
          var engine = REngine.GetInstanceFromID(EngineName);
