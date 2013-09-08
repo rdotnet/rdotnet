@@ -423,7 +423,7 @@ namespace RDotNet
             {
                if (segments[index] != string.Empty)
                {
-                  yield return segments[index];
+                  yield return segments[index] + "\n";
                }
             }
             else
