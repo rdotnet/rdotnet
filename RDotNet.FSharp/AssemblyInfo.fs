@@ -9,6 +9,6 @@ open System.Runtime.InteropServices
 [<assembly: AssemblyProduct("RDotNet.FSharp")>]
 [<assembly: AssemblyCopyright("Copyright © RecycleBin 2013")>]
 [<assembly: AssemblyVersion("0.1.2.0")>]
-[<assembly: AssemblyInformationalVersion("0.1.2")>]
+[<assembly: AssemblyInformationalVersion("0.1.2.1")>]
 
 ()
