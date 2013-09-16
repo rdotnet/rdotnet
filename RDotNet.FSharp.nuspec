@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata>
       <id>RDotNet.FSharp</id>
-      <version>0.1.2</version>
+      <version>0.1.2.1</version>
       <title>R.NET F# Utility</title>
       <authors>RecycleBin</authors>
       <owners>kos59125</owners>
