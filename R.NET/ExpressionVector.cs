@@ -26,9 +26,7 @@ namespace RDotNet
             }
             using (new ProtectedPointer(this))
             {
-               int offset = GetOffset(index);
-               IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
-               return new Expression(Engine, pointer);
+               return GetValue(index);
             }
          }
          set
@@ -42,6 +40,21 @@ namespace RDotNet
                SetValue(index, value);
             }
          }
+      }
+
+      protected override Expression[] GetArrayFast()
+      {
+         var res = new Expression[this.Length];
+         for (int i = 0; i < res.Length; i++)
+            res[i] = GetValue(i);
+         return res;
+      }
+
+      private Expression GetValue(int index)
+      {
+         int offset = GetOffset(index);
+         IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
+         return new Expression(Engine, pointer);
       }
 
       private void SetValue(int index, Expression value)

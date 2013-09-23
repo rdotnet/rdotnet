@@ -86,6 +86,13 @@ namespace RDotNet
          }
       }
 
+      protected override byte[] GetArrayFast()
+      {
+         var res = new byte[this.Length];
+         Marshal.Copy(DataPointer, res, 0, res.Length);
+         return res;
+      }
+
       protected override void SetVectorDirect(byte[] values)
       {
          Marshal.Copy(values, 0, DataPointer, values.Length);

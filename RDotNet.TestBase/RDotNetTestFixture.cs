@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace RDotNet
 {
@@ -41,5 +42,33 @@ namespace RDotNet
       protected virtual void TearDownTest()
       {
       }
+
+      protected double[] GenArrayDouble(int from, int to)
+      {
+         return Array.ConvertAll(GenArrayInteger(from, to), input => (double)input);
+      }
+
+      protected double[] ArrayMult(double[] a, double mult)
+      {
+         return Array.ConvertAll(a, input => input*mult);
+      }
+
+      protected int[] GenArrayInteger(int from, int to)
+      {
+         Assert.Greater(to, from);
+         var res = new int[to - from + 1];
+         for (int i = 0; i < (to - from + 1); i++)
+            res[i] = i + from;
+         return res;
+      }
+
+      // I thought NUnit was dealing with array equivalence. Cannot see here, so emulate.
+      protected static void CheckArrayEqual<T>(T[] a, T[] expected)
+      {
+         Assert.AreEqual(expected.Length, a.Length);
+         for (int i = 0; i < a.Length; i++)
+            Assert.AreEqual(expected[i], a[i]); //, 1e-9);
+      }
+
    }
 }
