@@ -39,10 +39,21 @@ namespace RDotNet
             }
             using (new ProtectedPointer(this))
             {
-               int offset = GetOffset(index);
-               Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
+               SetValue(index, value);
             }
          }
+      }
+
+      private void SetValue(int index, Expression value)
+      {
+         int offset = GetOffset(index);
+         Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
+      }
+
+      protected override void SetVectorDirect(Expression[] values)
+      {
+         for (int i = 0; i < values.Length; i++)
+            SetValue(i, values[i]);
       }
 
       /// <summary>

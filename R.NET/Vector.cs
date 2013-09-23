@@ -46,10 +46,11 @@ namespace RDotNet
          : base(engine, engine.GetFunction<Rf_allocVector>()(type, vector.Count()))
       {
          int index = 0;
-         foreach (T element in vector)
-         {
-            this[index++] = element;
-         }
+         SetVector(vector.ToArray());
+         //foreach (T element in vector)
+         //{
+         //   this[index++] = element;
+         //}
       }
 
       /// <summary>
@@ -67,6 +68,26 @@ namespace RDotNet
       /// <param name="index">The zero-based index of the element to get or set.</param>
       /// <returns>The element at the specified index.</returns>
       public abstract T this[int index] { get; set; }
+
+      /// <summary>
+      /// Initializes the content of a vector with runtime speed in mind. This method protects the R vector, then call SetVectorDirect.
+      /// </summary>
+      /// <param name="values">The values to put in the vector. Length must match exactly the vector size</param>
+      public void SetVector(T[] values)
+      {
+         if(values.Length != this.Length)
+            throw new ArgumentException("The length of the array provided differs from the vector length");
+         using (new ProtectedPointer(this))
+         {
+            SetVectorDirect(values);
+         }
+      }
+
+      /// <summary>
+      /// Initializes the content of a vector with runtime speed in mind. The vector must already be protected before calling this method.
+      /// </summary>
+      /// <param name="values">The values to put in the vector. Length must match exactly the vector size</param>
+      protected abstract void SetVectorDirect(T[] values);
 
       /// <summary>
       /// Gets or sets the element at the specified name.

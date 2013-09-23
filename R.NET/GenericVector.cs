@@ -69,10 +69,21 @@ namespace RDotNet
             }
             using (new ProtectedPointer(this))
             {
-               int offset = GetOffset(index);
-               Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
+               SetValue(index, value);
             }
          }
+      }
+
+      private void SetValue(int index, SymbolicExpression value)
+      {
+         int offset = GetOffset(index);
+         Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
+      }
+
+      protected override void SetVectorDirect(SymbolicExpression[] values)
+      {
+         for (int i = 0; i < values.Length; i++)
+            SetValue(i, values[i]);
       }
 
       protected override int DataSize

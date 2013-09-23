@@ -71,39 +71,50 @@ namespace RDotNet
             }
             using (new ProtectedPointer(this))
             {
-               IntPtr pointer = DataPointer;
-               int offset = GetOffset(index);
-               switch (Type)
-               {
-                  case SymbolicExpressionType.NumericVector:
-                     WriteDouble((double)value, pointer, offset);
-                     return;
-
-                  case SymbolicExpressionType.IntegerVector:
-                     WriteInt32((int)value, pointer, offset);
-                     return;
-
-                  case SymbolicExpressionType.CharacterVector:
-                     WriteString((string)value, pointer, offset);
-                     return;
-
-                  case SymbolicExpressionType.LogicalVector:
-                     WriteBoolean((bool)value, pointer, offset);
-                     return;
-
-                  case SymbolicExpressionType.RawVector:
-                     WriteByte((byte)value, pointer, offset);
-                     return;
-
-                  case SymbolicExpressionType.ComplexVector:
-                     WriteComplex((Complex)value, pointer, offset);
-                     return;
-
-                  default:
-                     WriteSymbolicExpression((SymbolicExpression)value, pointer, offset);
-                     return;
-               }
+               SetValue(index, value);
             }
+         }
+      }
+
+      protected override void SetVectorDirect(object[] values)
+      {
+         for (int i = 0; i < values.Length; i++)
+            SetValue(i, values[i]);
+      }
+
+      private void SetValue(int index, object value)
+      {
+         IntPtr pointer = DataPointer;
+         int offset = GetOffset(index);
+         switch (Type)
+         {
+            case SymbolicExpressionType.NumericVector:
+               WriteDouble((double) value, pointer, offset);
+               return;
+
+            case SymbolicExpressionType.IntegerVector:
+               WriteInt32((int) value, pointer, offset);
+               return;
+
+            case SymbolicExpressionType.CharacterVector:
+               WriteString((string) value, pointer, offset);
+               return;
+
+            case SymbolicExpressionType.LogicalVector:
+               WriteBoolean((bool) value, pointer, offset);
+               return;
+
+            case SymbolicExpressionType.RawVector:
+               WriteByte((byte) value, pointer, offset);
+               return;
+
+            case SymbolicExpressionType.ComplexVector:
+               WriteComplex((Complex) value, pointer, offset);
+               return;
+
+            default:
+               WriteSymbolicExpression((SymbolicExpression) value, pointer, offset);
+               return;
          }
       }
 

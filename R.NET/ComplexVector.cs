@@ -80,6 +80,18 @@ namespace RDotNet
          }
       }
 
+      protected override void SetVectorDirect(Complex[] values)
+      {
+         double[] data = new double[values.Length];
+         for (int i = 0; i < data.Length; i++)
+         {
+            data[2 * i] = values[i].Real;
+            data[2 * i + 1] = values[i].Imaginary;
+         }
+         IntPtr pointer = IntPtr.Add(DataPointer, 0);
+         Marshal.Copy(data, 0, pointer, data.Length);
+      }
+
       /// <summary>
       /// Gets the size of a complex number in byte.
       /// </summary>
