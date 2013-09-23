@@ -91,6 +91,12 @@ namespace RDotNet
          }
       }
 
+      protected override void SetVectorDirect(double[] values)
+      {
+         IntPtr pointer = IntPtr.Add(DataPointer, 0);
+         Marshal.Copy(values, 0, pointer, values.Length);
+      }
+
       /// <summary>
       /// Gets the size of a real number in byte.
       /// </summary>

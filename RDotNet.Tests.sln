@@ -23,6 +23,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "RDotNet.FSharp.Tests", "RDo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.TestBase", "RDotNet.TestBase\RDotNet.TestBase.csproj", "{B9E15660-096F-45FB-82E3-3C21BBE986DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasureRuntime", "TestApps\MeasureRuntime\MeasureRuntime.csproj", "{ACB361F9-C04B-4265-9295-F9D57F2A6789}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{B9E15660-096F-45FB-82E3-3C21BBE986DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9E15660-096F-45FB-82E3-3C21BBE986DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9E15660-096F-45FB-82E3-3C21BBE986DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACB361F9-C04B-4265-9295-F9D57F2A6789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACB361F9-C04B-4265-9295-F9D57F2A6789}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACB361F9-C04B-4265-9295-F9D57F2A6789}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACB361F9-C04B-4265-9295-F9D57F2A6789}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

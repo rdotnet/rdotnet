@@ -69,14 +69,27 @@ namespace RDotNet
             }
             using (new ProtectedPointer(this))
             {
-               int offset = GetOffset(index);
-               SymbolicExpression s = value == null ? Engine.GetPredefinedSymbol("R_NaString") : new InternalString(Engine, value);
-               using (new ProtectedPointer(s))
-               {
-                  Marshal.WriteIntPtr(DataPointer, offset, s.DangerousGetHandle());
-               }
+               SetValue(index, value);
             }
          }
+      }
+
+      private void SetValue(int index, string value)
+      {
+         int offset = GetOffset(index);
+         SymbolicExpression s = value == null ? Engine.GetPredefinedSymbol("R_NaString") : new InternalString(Engine, value);
+         using (new ProtectedPointer(s))
+         {
+            Marshal.WriteIntPtr(DataPointer, offset, s.DangerousGetHandle());
+         }
+      }
+
+      protected override void SetVectorDirect(string[] values)
+      {
+         // Possibly not the fastest implementation, but faster may require C code.
+         // TODO check the behavior of P/Invoke on array of strings (VT_ARRAY|VT_LPSTR?)
+         for (int i = 0; i < values.Length; i++)
+            SetValue(i, values[i]);
       }
 
       /// <summary>

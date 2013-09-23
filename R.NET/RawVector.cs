@@ -86,6 +86,11 @@ namespace RDotNet
          }
       }
 
+      protected override void SetVectorDirect(byte[] values)
+      {
+         Marshal.Copy(values, 0, DataPointer, values.Length);
+      }
+
       /// <summary>
       /// Gets the size of a byte value in byte.
       /// </summary>

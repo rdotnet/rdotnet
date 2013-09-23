@@ -57,10 +57,21 @@ namespace RDotNet
             }
             using (new ProtectedPointer(this))
             {
-               int offset = GetOffset(columnIndex);
-               Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
+               SetColumn(columnIndex, value);
             }
          }
+      }
+
+      private void SetColumn(int columnIndex, DynamicVector value)
+      {
+         int offset = GetOffset(columnIndex);
+         Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
+      }
+
+      protected override void SetVectorDirect(DynamicVector[] values)
+      {
+         for (int i = 0; i < values.Length; i++)
+            SetColumn(i, values[i]);
       }
 
       /// <summary>

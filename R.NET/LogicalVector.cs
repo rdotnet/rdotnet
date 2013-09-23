@@ -76,6 +76,12 @@ namespace RDotNet
          }
       }
 
+      protected override void SetVectorDirect(bool[] values)
+      {
+         var intValues = Array.ConvertAll(values, Convert.ToInt32);
+         Marshal.Copy(intValues, 0, DataPointer, values.Length);
+      }
+
       /// <summary>
       /// Gets the size of a Boolean value in byte.
       /// </summary>
