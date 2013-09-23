@@ -56,9 +56,7 @@ namespace RDotNet
             }
             using (new ProtectedPointer(this))
             {
-               int offset = GetOffset(index);
-               IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
-               return new SymbolicExpression(Engine, pointer);
+               return GetValue(index);
             }
          }
          set
@@ -74,12 +72,26 @@ namespace RDotNet
          }
       }
 
+      private SymbolicExpression GetValue(int index)
+      {
+         int offset = GetOffset(index);
+         IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
+         return new SymbolicExpression(Engine, pointer);
+      }
+
       private void SetValue(int index, SymbolicExpression value)
       {
          int offset = GetOffset(index);
          Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
       }
 
+      protected override SymbolicExpression[] GetArrayFast()
+      {
+         var res = new SymbolicExpression[this.Length];
+         for (int i = 0; i < res.Length; i++)
+            res[i] = GetValue(i);
+         return res;
+      }
       protected override void SetVectorDirect(SymbolicExpression[] values)
       {
          for (int i = 0; i < values.Length; i++)

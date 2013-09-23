@@ -44,9 +44,7 @@ namespace RDotNet
             }
             using (new ProtectedPointer(this))
             {
-               int offset = GetOffset(columnIndex);
-               IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
-               return new DynamicVector(Engine, pointer);
+               return GetColumn(columnIndex);
             }
          }
          set
@@ -60,6 +58,21 @@ namespace RDotNet
                SetColumn(columnIndex, value);
             }
          }
+      }
+
+      protected override DynamicVector[] GetArrayFast()
+      {
+         var res = new DynamicVector[this.Length];
+         for (int i = 0; i < res.Length; i++)
+            res[i] = GetColumn(i);
+         return res;
+      }
+
+      private DynamicVector GetColumn(int columnIndex)
+      {
+         int offset = GetOffset(columnIndex);
+         IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
+         return new DynamicVector(Engine, pointer);
       }
 
       private void SetColumn(int columnIndex, DynamicVector value)

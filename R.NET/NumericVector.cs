@@ -91,6 +91,13 @@ namespace RDotNet
          }
       }
 
+      protected override double[] GetArrayFast()
+      {
+         var res = new double[this.Length];
+         Marshal.Copy(DataPointer, res, 0, res.Length);
+         return res;
+      }
+
       protected override void SetVectorDirect(double[] values)
       {
          IntPtr pointer = IntPtr.Add(DataPointer, 0);

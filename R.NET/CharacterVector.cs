@@ -56,9 +56,7 @@ namespace RDotNet
             }
             using (new ProtectedPointer(this))
             {
-               int offset = GetOffset(index);
-               IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
-               return new InternalString(Engine, pointer).GetInternalValue();
+               return GetValue(index);
             }
          }
          set
@@ -72,6 +70,22 @@ namespace RDotNet
                SetValue(index, value);
             }
          }
+      }
+
+      protected override string[] GetArrayFast()
+      {
+         int n = this.Length;
+         string[] res = new string[n];
+         for (int i = 0; i < n; i++)
+            res[i] = GetValue(i);
+         return res;
+      }
+
+      private string GetValue(int index)
+      {
+         int offset = GetOffset(index);
+         IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
+         return new InternalString(Engine, pointer).GetInternalValue();
       }
 
       private void SetValue(int index, string value)

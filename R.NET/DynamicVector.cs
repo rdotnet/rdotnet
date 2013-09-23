@@ -36,31 +36,7 @@ namespace RDotNet
             }
             using (new ProtectedPointer(this))
             {
-               IntPtr pointer = DataPointer;
-               int offset = GetOffset(index);
-               switch (Type)
-               {
-                  case SymbolicExpressionType.NumericVector:
-                     return ReadDouble(pointer, offset);
-
-                  case SymbolicExpressionType.IntegerVector:
-                     return ReadInt32(pointer, offset);
-
-                  case SymbolicExpressionType.CharacterVector:
-                     return ReadString(pointer, offset);
-
-                  case SymbolicExpressionType.LogicalVector:
-                     return ReadBoolean(pointer, offset);
-
-                  case SymbolicExpressionType.RawVector:
-                     return ReadByte(pointer, offset);
-
-                  case SymbolicExpressionType.ComplexVector:
-                     return ReadComplex(pointer, offset);
-
-                  default:
-                     return ReadSymbolicExpression(pointer, offset);
-               }
+               return GetValue(index);
             }
          }
          set
@@ -73,6 +49,43 @@ namespace RDotNet
             {
                SetValue(index, value);
             }
+         }
+      }
+
+      protected override object[] GetArrayFast()
+      {
+         var res = new object[this.Length];
+         for (int i = 0; i < res.Length; i++)
+            res[i] = GetValue(i);
+         return res;
+      }
+
+      private object GetValue(int index)
+      {
+         IntPtr pointer = DataPointer;
+         int offset = GetOffset(index);
+         switch (Type)
+         {
+            case SymbolicExpressionType.NumericVector:
+               return ReadDouble(pointer, offset);
+
+            case SymbolicExpressionType.IntegerVector:
+               return ReadInt32(pointer, offset);
+
+            case SymbolicExpressionType.CharacterVector:
+               return ReadString(pointer, offset);
+
+            case SymbolicExpressionType.LogicalVector:
+               return ReadBoolean(pointer, offset);
+
+            case SymbolicExpressionType.RawVector:
+               return ReadByte(pointer, offset);
+
+            case SymbolicExpressionType.ComplexVector:
+               return ReadComplex(pointer, offset);
+
+            default:
+               return ReadSymbolicExpression(pointer, offset);
          }
       }
 
@@ -89,31 +102,31 @@ namespace RDotNet
          switch (Type)
          {
             case SymbolicExpressionType.NumericVector:
-               WriteDouble((double) value, pointer, offset);
+               WriteDouble((double)value, pointer, offset);
                return;
 
             case SymbolicExpressionType.IntegerVector:
-               WriteInt32((int) value, pointer, offset);
+               WriteInt32((int)value, pointer, offset);
                return;
 
             case SymbolicExpressionType.CharacterVector:
-               WriteString((string) value, pointer, offset);
+               WriteString((string)value, pointer, offset);
                return;
 
             case SymbolicExpressionType.LogicalVector:
-               WriteBoolean((bool) value, pointer, offset);
+               WriteBoolean((bool)value, pointer, offset);
                return;
 
             case SymbolicExpressionType.RawVector:
-               WriteByte((byte) value, pointer, offset);
+               WriteByte((byte)value, pointer, offset);
                return;
 
             case SymbolicExpressionType.ComplexVector:
-               WriteComplex((Complex) value, pointer, offset);
+               WriteComplex((Complex)value, pointer, offset);
                return;
 
             default:
-               WriteSymbolicExpression((SymbolicExpression) value, pointer, offset);
+               WriteSymbolicExpression((SymbolicExpression)value, pointer, offset);
                return;
          }
       }

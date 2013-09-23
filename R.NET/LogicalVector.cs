@@ -76,6 +76,13 @@ namespace RDotNet
          }
       }
 
+      protected override bool[] GetArrayFast()
+      {
+         int[] intValues = new int[this.Length];
+         Marshal.Copy(DataPointer, intValues, 0, intValues.Length);
+         return Array.ConvertAll(intValues, Convert.ToBoolean);
+      }
+
       protected override void SetVectorDirect(bool[] values)
       {
          var intValues = Array.ConvertAll(values, Convert.ToInt32);

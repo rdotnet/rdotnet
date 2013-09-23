@@ -84,6 +84,20 @@ namespace RDotNet
       }
 
       /// <summary>
+      /// A method to transfer data from native to .NET managed array equivalents fast.
+      /// </summary>
+      /// <returns>Array of values in the vector</returns>
+      public T[] ToArrayFast()
+      {
+         using (new ProtectedPointer(this))
+         {
+            return GetArrayFast();
+         }
+      }
+
+      protected abstract T[] GetArrayFast();
+
+      /// <summary>
       /// Initializes the content of a vector with runtime speed in mind. The vector must already be protected before calling this method.
       /// </summary>
       /// <param name="values">The values to put in the vector. Length must match exactly the vector size</param>
