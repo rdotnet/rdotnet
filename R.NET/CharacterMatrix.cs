@@ -78,14 +78,37 @@ namespace RDotNet
             }
             using (new ProtectedPointer(this))
             {
-               int offset = GetOffset(rowIndex, columnIndex);
-               SymbolicExpression s = value == null ? Engine.NilValue : new InternalString(Engine, value);
-               using (new ProtectedPointer(s))
-               {
-                  Marshal.WriteIntPtr(DataPointer, offset, s.DangerousGetHandle());
-               }
+               SetValue(rowIndex, columnIndex, value);
             }
          }
+      }
+
+      private void SetValue(int rowIndex, int columnIndex, string value)
+      {
+         int offset = GetOffset(rowIndex, columnIndex);
+         SymbolicExpression s = value == null ? Engine.NilValue : new InternalString(Engine, value);
+         using (new ProtectedPointer(s))
+         {
+            Marshal.WriteIntPtr(DataPointer, offset, s.DangerousGetHandle());
+         }
+      }
+
+      protected override void InitMatrixFastDirect(string[,] matrix)
+      {
+         int rows = matrix.GetLength(0);
+         int cols = matrix.GetLength(1);
+         for (int i = 0; i < rows; i++)
+         {
+            for (int j = 0; j < cols; j++)
+            {
+               SetValue(i, j, matrix[i, j]);
+            }
+         }
+      }
+
+      protected override string[,] GetArrayFast()
+      {
+         throw new NotImplementedException();
       }
 
       /// <summary>

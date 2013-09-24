@@ -49,6 +49,22 @@ namespace RDotNet
       {
          int rowCount = RowCount;
          int columnCount = ColumnCount;
+         //InitMatrixWithIndexers(matrix, rowCount, columnCount);
+         InitMatrixFast(matrix);
+      }
+
+      private void InitMatrixFast(T[,] matrix)
+      {
+         using (new ProtectedPointer(this))
+         {
+            InitMatrixFastDirect(matrix);
+         }
+      }
+
+      protected abstract void InitMatrixFastDirect(T[,] matrix);
+
+      private void InitMatrixWithIndexers(T[,] matrix, int rowCount, int columnCount)
+      {
          for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
          {
             for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
@@ -148,6 +164,11 @@ namespace RDotNet
       {
          get { return Engine.GetFunction<Rf_ncols>()(handle); }
       }
+
+      /// <summary>
+      /// Gets the total number of items (rows times columns) in this matrix
+      /// </summary>
+      public int ItemCount { get { return RowCount * ColumnCount; } }
 
       /// <summary>
       /// Gets the names of rows.
@@ -279,5 +300,15 @@ namespace RDotNet
             }
          }
       }
+
+      public T[,] ToArrayFast()
+      {
+         using (var p = new ProtectedPointer(this))
+         {
+            return GetArrayFast();
+         }
+      }
+
+      protected abstract T[,] GetArrayFast();
    }
 }

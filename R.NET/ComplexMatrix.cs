@@ -89,6 +89,22 @@ namespace RDotNet
          }
       }
 
+      protected override void InitMatrixFastDirect(Complex[,] matrix)
+      {
+         var vectorCplx = Utility.ArrayConvertOneDim(matrix);
+         var data = Utility.SerializeComplexToDouble(vectorCplx);
+         Marshal.Copy(data, 0, DataPointer, data.Length);
+      }
+
+      protected override Complex[,] GetArrayFast()
+      {
+         int n = this.ItemCount;
+         var data = new double[2 * n];
+         Marshal.Copy(DataPointer, data, 0, 2 * n);
+         var oneDim = Utility.DeserializeComplexFromDouble(data);
+         return Utility.ArrayConvertAllTwoDim(oneDim, this.RowCount, this.ColumnCount);
+      }
+
       /// <summary>
       /// Gets the size of a complex number in byte.
       /// </summary>

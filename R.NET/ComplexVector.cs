@@ -83,22 +83,14 @@ namespace RDotNet
       protected override Complex[] GetArrayFast()
       {
          int n = this.Length;
-         var res = new Complex[n];
          var data = new double[2*n];
          Marshal.Copy(DataPointer, data, 0, 2 * n);
-         for (int i = 0; i < n; i++)
-            res[i] = new Complex(data[2*i], data[2*i + 1]);
-         return res;
+         return Utility.DeserializeComplexFromDouble(data);
       }
 
       protected override void SetVectorDirect(Complex[] values)
       {
-         double[] data = new double[values.Length];
-         for (int i = 0; i < data.Length; i++)
-         {
-            data[2 * i] = values[i].Real;
-            data[2 * i + 1] = values[i].Imaginary;
-         }
+         double[] data = Utility.SerializeComplexToDouble(values);
          IntPtr pointer = IntPtr.Add(DataPointer, 0);
          Marshal.Copy(data, 0, pointer, data.Length);
       }

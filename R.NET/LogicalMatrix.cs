@@ -85,6 +85,19 @@ namespace RDotNet
          }
       }
 
+      protected override void InitMatrixFastDirect(bool[,] matrix)
+      {
+         var intValues = Utility.ArrayConvertAllOneDim(matrix, Convert.ToInt32);
+         Marshal.Copy(intValues, 0, DataPointer, intValues.Length);
+      }
+
+      protected override bool[,] GetArrayFast()
+      {
+         int[] intValues = new int[this.ItemCount];
+         Marshal.Copy(DataPointer, intValues, 0, intValues.Length);
+         return Utility.ArrayConvertAllTwoDim(intValues, Convert.ToBoolean, this.RowCount, this.ColumnCount);
+      }
+
       /// <summary>
       /// Gets the size of an integer in byte.
       /// </summary>
