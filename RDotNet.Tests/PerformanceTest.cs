@@ -48,5 +48,25 @@ namespace RDotNet
          a = engine.GetSymbol("x").AsInteger().ToArray();
          CheckArrayEqual(a, expected);
       }
+
+      [Test]
+      public void TestCreateNumericMatrixValid()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         engine.Evaluate("x <- matrix(1:110 * 1.1, nrow=10, ncol=11)");
+         var expected = ToMatrix(ArrayMult(GenArrayDouble(1, 110), 1.1), 10, 11);
+         var a = engine.GetSymbol("x").AsNumericMatrix().ToArrayFast();
+         CheckArrayEqual(a, expected);
+      }
+
+      [Test]
+      public void TestCreateIntegerMatrixValid()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         engine.Evaluate("x <- matrix(as.integer(1:110), nrow=10, ncol=11)");
+         var expected = ToMatrix(GenArrayInteger(1, 110), 10, 11);
+         var a = engine.GetSymbol("x").AsIntegerMatrix().ToArrayFast();
+         CheckArrayEqual(a, expected);
+      }
    }
 }
