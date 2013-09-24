@@ -23,6 +23,30 @@ namespace RDotNet
          return s.ElapsedMilliseconds;
       }
 
+      public static void CreateNumericMatrix(REngine engine, int n, Stopwatch s)
+      {
+         double[,] d = createDoubleMatrix(n);
+         s.Start();
+         var nvec = engine.CreateNumericMatrix(d);
+         s.Stop();
+      }
+
+      public static void CreateIntegerMatrix(REngine engine, int n, Stopwatch s)
+      {
+         int[,] d = createIntegerMatrix(n);
+         s.Start();
+         var nvec = engine.CreateIntegerMatrix(d);
+         s.Stop();
+      }
+
+      public static void CreateLogicalMatrix(REngine engine, int n, Stopwatch s)
+      {
+         bool[,] d = createLogicalMatrix(n);
+         s.Start();
+         var nvec = engine.CreateLogicalMatrix(d);
+         s.Stop();
+      }
+
       public static void CreateNumericVector(REngine engine, int n, Stopwatch s)
       {
          double[] d = createDoubleArray(n);
@@ -55,6 +79,39 @@ namespace RDotNet
          var nvec = engine.CreateCharacterVector(d);
          s.Stop();
       }
+
+      public static void RtoDotNetNumericMatrixFast(REngine engine, int n, Stopwatch s)
+      {
+         RtoDotNetNumericMatrix(engine, n, s, e => e.GetSymbol("x").AsNumericMatrix().ToArrayFast());
+      }
+
+      private static void RtoDotNetNumericMatrix(REngine engine, int n, Stopwatch s, Func<REngine, Array> fun)
+      {
+         var m = (int)Math.Floor(Math.Sqrt(n));
+         var vStatement = string.Format("matrix(as.numeric(1:({0}*{0})), nrow={0}, ncol={0})", m.ToString(CultureInfo.InvariantCulture));
+         engine.SetSymbol("x", engine.Evaluate(vStatement));
+         //engine.Evaluate("cat(ls())");
+         s.Start();
+         var nvec = fun(engine);
+         s.Stop();
+      }
+
+      public static void RtoDotNetIntegerMatrixFast(REngine engine, int n, Stopwatch s)
+      {
+         RtoDotNetNumericMatrix(engine, n, s, e => e.GetSymbol("x").AsIntegerMatrix().ToArrayFast());
+      }
+
+      private static void RtoDotNetIntegerMatrix(REngine engine, int n, Stopwatch s, Func<REngine, Array> fun)
+      {
+         var m = (int)Math.Floor(Math.Sqrt(n));
+         var vStatement = string.Format("matrix(as.integer(1:({0}*{0})), nrow={0}, ncol={0})", m.ToString(CultureInfo.InvariantCulture));
+         engine.SetSymbol("x", engine.Evaluate(vStatement));
+         //engine.Evaluate("cat(ls())");
+         s.Start();
+         var nvec = fun(engine);
+         s.Stop();
+      }
+
 
       private static void RtoDotNetNumericVector(REngine engine, int n, Stopwatch s, Func<REngine,Array> fun)
       {
@@ -135,5 +192,40 @@ namespace RDotNet
             a[i] = r.NextDouble();
          return a;
       }
+
+      private static double[,] createDoubleMatrix(int n)
+      {
+         int dim = (int)Math.Floor(Math.Sqrt(n));
+         var a = new double[dim, dim];
+         Random r = new Random(42);
+         for (int i = 0; i < dim; i++)
+            for (int j = 0; j < dim; j++)
+               a[i, j] = r.NextDouble();
+         return a;
+      }
+
+      private static int[,] createIntegerMatrix(int n, int max = 256)
+      {
+         int dim = (int)Math.Floor(Math.Sqrt(n));
+         var a = new int[dim, dim];
+         Random r = new Random(42);
+         for (int i = 0; i < dim; i++)
+            for (int j = 0; j < dim; j++)
+               a[i, j] = r.Next(max);
+         return a;
+      }
+
+      private static bool[,] createLogicalMatrix(int n, int max = 256)
+      {
+         int dim = (int)Math.Floor(Math.Sqrt(n));
+         var a = new bool[dim, dim];
+         Random r = new Random(42);
+         for (int i = 0; i < dim; i++)
+            for (int j = 0; j < dim; j++)
+               a[i, j] = (r.Next(max)<128);
+         return a;
+      }
+
+      
    }
 }

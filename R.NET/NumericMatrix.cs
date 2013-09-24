@@ -94,6 +94,19 @@ namespace RDotNet
          }
       }
 
+      protected override void InitMatrixFastDirect(double[,] matrix)
+      {
+         var values = Utility.ArrayConvertOneDim(matrix);
+         Marshal.Copy(values, 0, DataPointer, values.Length);
+      }
+
+      protected override double[,] GetArrayFast()
+      {
+         var values = new double[this.ItemCount];
+         Marshal.Copy(DataPointer, values, 0, values.Length);
+         return Utility.ArrayConvertAllTwoDim(values, this.RowCount, this.ColumnCount);
+      }
+
       /// <summary>
       /// Gets the size of a real number in byte.
       /// </summary>
