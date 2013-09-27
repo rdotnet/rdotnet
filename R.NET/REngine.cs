@@ -20,11 +20,11 @@ namespace RDotNet
    /// using (REngine engine = REngine.CreateInstance("RDotNet"))
    /// {
    ///   engine.Initialize();
-   ///   NumericVector random = engine.Evaluate("rnorm(5, 0, 1)").AsNumeric();
-   ///   foreach (double r in random)
-   ///   {
-   ///     Console.Write(r + " ");
-   ///   }
+   ///	NumericVector random = engine.Evaluate("rnorm(5, 0, 1)").AsNumeric();
+   ///	foreach (double r in random)
+   ///	{
+   ///		Console.Write(r + " ");
+   ///	}
    /// }
    /// </code>
    /// </example>
@@ -218,25 +218,31 @@ namespace RDotNet
       /// </summary>
       /// <param name="parameter">The startup parameter.</param>
       /// <param name="device">The IO device.</param>
-      public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null)
+      /// <param name="setupMainLoop">if true, call the functions to initialise the embedded R</param>
+      public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null, bool setupMainLoop = true)
       {
          this.parameter = parameter ?? new StartupParameter();
          this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
          GetFunction<R_setStartTime>()();
          GetFunction<Rf_initialize_R>()(1, new[] { ID });
+         if (!setupMainLoop)
+         {
+            this.isRunning = true;
+            this.adapter.Install(this, this.parameter);
+            return;
+         }
          this.adapter.Install(this, this.parameter);
          switch (Environment.OSVersion.Platform)
          {
             case PlatformID.Win32NT:
                GetFunction<R_SetParams_Windows>("R_SetParams")(ref this.parameter.start);
                break;
-
             case PlatformID.MacOSX:
             case PlatformID.Unix:
                GetFunction<R_SetParams_Unix>("R_SetParams")(ref this.parameter.start.Common);
                break;
          }
-         GetFunction<setup_Rmainloop>()();
+         GetFunction<setup_Rmainloop>("setup_Rmainloop")();
          this.isRunning = true;
       }
 
@@ -521,7 +527,7 @@ namespace RDotNet
          GC.KeepAlive(this.parameter);
          base.Dispose(disposing);
       }
-
+      
       /// <summary>
       /// Gets the predefined symbol with the specified name.
       /// </summary>
