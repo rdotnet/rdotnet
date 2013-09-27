@@ -45,5 +45,20 @@ namespace RDotNet
          engine.Dispose();
          Assert.That(engine.IsRunning, Is.False);
       }
+
+      [Test]
+      public void TestCreateEngineTwice()
+      {
+         // https://rdotnet.codeplex.com/workitem/54
+         var engine = REngine.CreateInstance("RDotNetTest");
+         engine.Initialize();
+         var paths = engine.Evaluate(".libPaths()").AsCharacter().ToArrayFast();
+         engine.Dispose();
+         engine = REngine.CreateInstance("RDotNetTest");
+         engine.Initialize();
+         paths = engine.Evaluate(".libPaths()").AsCharacter().ToArrayFast();
+         engine.Dispose();
+         Assert.That(engine.IsRunning, Is.False);
+      }
    }
 }
