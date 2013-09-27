@@ -8,6 +8,9 @@ using NUnit.Framework;
 
 namespace RDotNet
 {
+   /// <summary>
+   /// A suite of tests for checking that data is converted as expected from R to .NET
+   /// </summary>
    public class DataConversionTest : RDotNetTestFixture
    {
       [Test]
@@ -19,10 +22,14 @@ namespace RDotNet
          var vec = engine.GetSymbol("x").AsNumeric();
          CheckBothArrayConversions(vec, expected);
 
+         vec = engine.Evaluate("c(1.1,NA,2.2)").AsNumeric();
+         CheckBothArrayConversions(vec, new[]{1.1,double.NaN,2.2});
+
          // Test a large data set: I just cannot believe how faster things are...
          engine.Evaluate("x <- 1:1e7 * 1.1");
          var a = engine.GetSymbol("x").AsNumeric().ToArrayFast();
          Assert.AreEqual(a[10000000/2-1], 1.1*1e7/2);
+
       }
 
       [Test]
@@ -33,6 +40,8 @@ namespace RDotNet
          var expected = GenArrayInteger(1, 100);
          var vec = engine.GetSymbol("x").AsInteger();
          CheckBothArrayConversions(vec, expected);
+         vec = engine.Evaluate("as.integer(c(1,NA,2))").AsInteger();
+         CheckBothArrayConversions(vec, new[] { 1, Int32.MinValue, 2 });
       }
 
       [Test]
@@ -43,6 +52,9 @@ namespace RDotNet
          var expected = Array.ConvertAll(GenArrayInteger(1, 100), val => val % 2 == 1);
          var vec = engine.GetSymbol("x").AsLogical();
          CheckBothArrayConversions(vec, expected);
+         vec = engine.Evaluate("c(TRUE,NA,FALSE)").AsLogical();
+         CheckBothArrayConversions(vec, new[] { true, true, false });
+
       }
 
       [Test]
@@ -55,6 +67,7 @@ namespace RDotNet
             expected[i] = (i % 2 == 0) ? "a" : "bb";
          var vec = engine.GetSymbol("x").AsCharacter();
          CheckBothArrayConversions(vec, expected);
+         // NA members is already tested in another test class
       }
 
       [Test]
@@ -67,6 +80,8 @@ namespace RDotNet
             expected[i] = new Complex(i+1,i+101);
          var vec = engine.GetSymbol("x").AsComplex();
          CheckBothArrayConversions(vec, expected);
+         vec = engine.Evaluate("c(1+2i,NA,3+4i)").AsComplex();
+         CheckBothArrayConversions(vec, new[] { new Complex(1, 2), new Complex(double.NaN, double.NaN), new Complex(3, 4) });
       }
 
       private static void CheckBothArrayConversions<T>(Vector<T> vec, T[] expected)
