@@ -55,7 +55,6 @@ namespace RDotNet
          engine.Initialize();
          var paths = engine.Evaluate(".libPaths()").AsCharacter().ToArrayFast();
          Console.WriteLine(engine.Evaluate("Sys.getenv('R_HOME')").AsCharacter().ToArrayFast()[0]);
-         // engine.Evaluate("library(rjson)");
          engine.Dispose();
          Console.WriteLine("Before second creation");
          engine = REngine.CreateInstance("RDotNetTest");
