@@ -29,6 +29,7 @@ namespace RDotNet
                {
                   Environment.SetEnvironmentVariable("R_HOME", "/usr/lib/R");
                }
+               // TODO: cater for cases where user has build R from source and installed to e.g. /usr/local/lib
                Environment.SetEnvironmentVariable("PATH", "/usr/lib" + Path.PathSeparator + currentPath);
                break;
          }

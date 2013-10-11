@@ -176,25 +176,9 @@ namespace RDotNet
          {
             throw new ArgumentException();
          }
-         if (dll == null)
+         if (string.IsNullOrEmpty(dll))
          {
-            switch (NativeUtility.GetPlatform())
-            {
-               case PlatformID.Win32NT:
-                  dll = "R.dll";
-                  break;
-
-               case PlatformID.MacOSX:
-                  dll = "libR.dylib";
-                  break;
-
-               case PlatformID.Unix:
-                  dll = "libR.so";
-                  break;
-
-               default:
-                  throw new NotSupportedException();
-            }
+            dll = NativeUtility.GetRDllFileName();
          }
          var engine = new REngine(id, dll);
          instances.Add(id, engine);
