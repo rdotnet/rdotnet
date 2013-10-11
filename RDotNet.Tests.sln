@@ -25,6 +25,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.TestBase", "RDotNet
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasureRuntime", "TestApps\MeasureRuntime\MeasureRuntime.csproj", "{ACB361F9-C04B-4265-9295-F9D57F2A6789}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.SetEnv.Tests", "TestApps\RDotNet.SetEnv.Tests\RDotNet.SetEnv.Tests.csproj", "{1B9BBCE5-2BEC-4E83-82C7-3C8205380787}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.SetEnv.Tests.32", "TestApps\RDotNet.SetEnv.Tests.32\RDotNet.SetEnv.Tests.32.csproj", "{B14812D7-19F8-496D-9DFA-63DBD22A4EB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.SetEnv.Tests.64", "TestApps\RDotNet.SetEnv.Tests.64\RDotNet.SetEnv.Tests.64.csproj", "{1AB9D11C-4538-4D59-BC0E-AADC2F7FEAFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +73,18 @@ Global
 		{ACB361F9-C04B-4265-9295-F9D57F2A6789}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACB361F9-C04B-4265-9295-F9D57F2A6789}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ACB361F9-C04B-4265-9295-F9D57F2A6789}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B9BBCE5-2BEC-4E83-82C7-3C8205380787}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B9BBCE5-2BEC-4E83-82C7-3C8205380787}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B9BBCE5-2BEC-4E83-82C7-3C8205380787}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B9BBCE5-2BEC-4E83-82C7-3C8205380787}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B14812D7-19F8-496D-9DFA-63DBD22A4EB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B14812D7-19F8-496D-9DFA-63DBD22A4EB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B14812D7-19F8-496D-9DFA-63DBD22A4EB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B14812D7-19F8-496D-9DFA-63DBD22A4EB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AB9D11C-4538-4D59-BC0E-AADC2F7FEAFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AB9D11C-4538-4D59-BC0E-AADC2F7FEAFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AB9D11C-4538-4D59-BC0E-AADC2F7FEAFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AB9D11C-4538-4D59-BC0E-AADC2F7FEAFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
