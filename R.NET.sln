@@ -1,0 +1,41 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet", "R.NET\RDotNet.csproj", "{0923E1A0-2032-4997-AB73-49E42C4034A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.NativeLibrary", "RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj", "{2A089A59-0F22-4484-B442-0FE8BDA10879}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.Tests", "RDotNet.Tests\RDotNet.Tests.csproj", "{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		UnixDebug|Any CPU = UnixDebug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0923E1A0-2032-4997-AB73-49E42C4034A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0923E1A0-2032-4997-AB73-49E42C4034A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0923E1A0-2032-4997-AB73-49E42C4034A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0923E1A0-2032-4997-AB73-49E42C4034A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0923E1A0-2032-4997-AB73-49E42C4034A9}.UnixDebug|Any CPU.ActiveCfg = UnixDebug|Any CPU
+		{0923E1A0-2032-4997-AB73-49E42C4034A9}.UnixDebug|Any CPU.Build.0 = UnixDebug|Any CPU
+		{2A089A59-0F22-4484-B442-0FE8BDA10879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A089A59-0F22-4484-B442-0FE8BDA10879}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A089A59-0F22-4484-B442-0FE8BDA10879}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A089A59-0F22-4484-B442-0FE8BDA10879}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A089A59-0F22-4484-B442-0FE8BDA10879}.UnixDebug|Any CPU.ActiveCfg = UnixDebug|Any CPU
+		{2A089A59-0F22-4484-B442-0FE8BDA10879}.UnixDebug|Any CPU.Build.0 = UnixDebug|Any CPU
+		{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}.UnixDebug|Any CPU.ActiveCfg = UnixDebug|Any CPU
+		{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}.UnixDebug|Any CPU.Build.0 = UnixDebug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = R.NET\R.NET.csproj
+	EndGlobalSection
+EndGlobal
