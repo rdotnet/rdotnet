@@ -1,98 +1,87 @@
-﻿using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using System;
+using System.Linq;
 
-namespace RDotNet.Tests
+namespace RDotNet
 {
-	[TestFixture]
-	class REngineTest
-	{
-		private const string EngineName = "RDotNetTest";
-		private readonly MockDevice device = new MockDevice();
+   internal class REngineTest : RDotNetTestFixture
+   {
+      [Test]
+      public void TestSetCommandLineArguments()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         engine.SetCommandLineArguments(new[] { "Hello", "World" });
+         Assert.That(engine.Evaluate("commandArgs()").AsCharacter(), Is.EquivalentTo(new[] { EngineName, "Hello", "World" }));
+      }
 
-		[TestFixtureSetUp]
-		public void SetUpEngine()
-		{
-			Helper.SetEnvironmentVariables();
-			var engine = REngine.CreateInstance(EngineName);
-			engine.Initialize(device: device);
-		}
+      [Test]
+      public void TestGlobalEnvironment()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         Assert.That(engine.GlobalEnvironment.DangerousGetHandle(), Is.EqualTo(engine.Evaluate(".GlobalEnv").DangerousGetHandle()));
+      }
 
-		[TestFixtureTearDown]
-		public void DisposeEngine()
-		{
-			var engine = REngine.GetInstanceFromID(EngineName);
-			if (engine != null)
-			{
-				engine.Dispose();
-			}
-		}
+      [Test]
+      public void TestBaseNamespace()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         Assert.That(engine.BaseNamespace.DangerousGetHandle(), Is.EqualTo(engine.Evaluate(".BaseNamespaceEnv").DangerousGetHandle()));
+      }
 
-		[TearDown]
-		public void TearDown()
-		{
-			var engine = REngine.GetInstanceFromID(EngineName);
-			engine.Evaluate("rm(list=ls())");
-			this.device.Initialize();
-		}
+      [Test]
+      public void TestNilValue()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         Assert.That(engine.NilValue.DangerousGetHandle(), Is.EqualTo(engine.Evaluate("NULL").DangerousGetHandle()));
+      }
 
-		[Test]
-		public void TestSetCommandLineArguments()
-		{
-			var engine = REngine.GetInstanceFromID(EngineName);
-			engine.SetCommandLineArguments(new[] { "Hello", "World" });
-			Assert.That(engine.Evaluate("commandArgs()").AsCharacter(), Is.EquivalentTo(new[] { EngineName, "Hello", "World" }));
-		}
+      [Test]
+      public void TestGC()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         var memoryInitial = engine.Evaluate("memory.size()").AsNumeric().First();
+         engine.Evaluate("x <- numeric(5000000)");  // About 38 MB (should be larger than startup memory size)
+         GC.Collect();
+         engine.ForceGarbageCollection();
+         var memoryAfterAlloc = engine.Evaluate("memory.size()").AsNumeric().First();
+         Assert.That(memoryAfterAlloc - memoryInitial, Is.GreaterThan(35.0));  // x should not be collected.
+         engine.Evaluate("rm(x)");
+         GC.Collect();
+         engine.ForceGarbageCollection();
+         var memoryAfterGC = engine.Evaluate("memory.size()").AsNumeric().First();
+         Assert.That(memoryAfterAlloc - memoryAfterGC, Is.GreaterThan(35.0));  // x should be collected.
+      }
 
-		[Test]
-		public void TestGlobalEnvironment()
-		{
-			var engine = REngine.GetInstanceFromID(EngineName);
-			Assert.That(engine.GlobalEnvironment.DangerousGetHandle(), Is.EqualTo(engine.Evaluate(".GlobalEnv").DangerousGetHandle()));
-		}
+      [Test]
+      public void TestParseCodeLine()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         engine.Evaluate("cat('hello')");
+         Assert.That(Device.GetString(), Is.EqualTo("hello"));
+      }
 
-		[Test]
-		public void TestBaseNamespace()
-		{
-			var engine = REngine.GetInstanceFromID(EngineName);
-			Assert.That(engine.BaseNamespace.DangerousGetHandle(), Is.EqualTo(engine.Evaluate(".BaseNamespaceEnv").DangerousGetHandle()));
-		}
+      [Test]
+      public void TestParseCodeBlock()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         engine.Evaluate("for(i in 1:3){\ncat(i)\ncat(i)\n}");
+         Assert.That(Device.GetString(), Is.EqualTo("112233"));
+      }
 
-		[Test]
-		public void TestNilValue()
-		{
-			var engine = REngine.GetInstanceFromID(EngineName);
-			Assert.That(engine.NilValue.DangerousGetHandle(), Is.EqualTo(engine.Evaluate("NULL").DangerousGetHandle()));
-		}
+      [Test]
+      public void TestReadConsole()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         Device.Input = "Hello, World!";
+         Assert.That(engine.Evaluate("readline()").AsCharacter()[0], Is.EqualTo(Device.Input));
+      }
 
-		[Test]
-		public void TestGC()
-		{
-			var engine = REngine.GetInstanceFromID(EngineName);
-			var memoryInitial = engine.Evaluate("memory.size()").AsNumeric().First();
-			engine.Evaluate("x <- numeric(5000000)");  // About 40 MB (should be larger than startup memory size)
-			engine.ForceGarbageCollection();
-			var memoryAfterAlloc = engine.Evaluate("memory.size()").AsNumeric().First();
-			Assert.That(memoryAfterAlloc, Is.GreaterThan(memoryInitial));  // x should not be collected.
-			engine.Evaluate("rm(x)");
-			engine.ForceGarbageCollection();
-			var memoryAfterGC = engine.Evaluate("memory.size()").AsNumeric().First();
-			Assert.That(memoryAfterGC, Is.LessThan(memoryAfterAlloc));  // x should be collected.
-		}
-
-		[Test]
-		public void TestReadConsole()
-		{
-			var engine = REngine.GetInstanceFromID(EngineName);
-			this.device.Input = "Hello, World!";
-			Assert.That(engine.Evaluate("readline()").AsCharacter()[0], Is.EqualTo(this.device.Input));
-		}
-
-		[Test]
-		public void TestWriteConsole()
-		{
-			var engine = REngine.GetInstanceFromID(EngineName);
-			engine.Evaluate("print(NULL)");
-			Assert.That(this.device.GetString(), Is.EqualTo("NULL\n"));
-		}
-	}
+      [Test]
+      public void TestWriteConsole()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         engine.Evaluate("print(NULL)");
+         Assert.That(Device.GetString(), Is.EqualTo("NULL\n"));
+      }
+   }
 }
