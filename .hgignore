@@ -5,12 +5,16 @@ syntax: glob
 *.user
 *.userprefs
 *.orig
-R.NET/*.nupkg
+*.nupkg
 *.VisualState.xml
 TestResult.xml
+_ReSharper.R.*
 
 syntax: regexp
 bin/
 obj/
 publish/
 Help/
+Build/
+Deploy/
+packages/[^/]+/
