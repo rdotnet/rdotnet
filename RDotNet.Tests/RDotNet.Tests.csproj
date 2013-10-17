@@ -53,11 +53,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="REngineInstanceTest.cs" />
     <Compile Include="REngineTest.cs" />
-    <Compile Include="MockDevice.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
