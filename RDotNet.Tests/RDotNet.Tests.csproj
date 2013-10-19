@@ -57,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="REngineInstanceTest.cs" />
     <Compile Include="REngineTest.cs" />
+    <Compile Include="RFunctionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\R.NET\RDotNet.csproj">

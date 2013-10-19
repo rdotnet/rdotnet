@@ -239,6 +239,61 @@ namespace RDotNet
       }
 
       /// <summary>
+      /// Create a vector with a single value
+      /// </summary>
+      /// <param name="engine">The engine.</param>
+      /// <param name="value">The value</param>
+      /// <returns>The new vector.</returns>
+      public static CharacterVector CreateCharacterVector(this REngine engine, string value)
+      {
+         return CreateCharacterVector(engine, new[] { value });
+      }
+
+      /// <summary>
+      /// Create a vector with a single value
+      /// </summary>
+      /// <param name="engine">The engine.</param>
+      /// <param name="value">The value</param>
+      /// <returns>The new vector.</returns>
+      public static ComplexVector CreateComplexVector(this REngine engine, Complex value)
+      {
+         return CreateComplexVector(engine, new[] {value});
+      }
+
+      /// <summary>
+      /// Create a vector with a single value
+      /// </summary>
+      /// <param name="engine">The engine.</param>
+      /// <param name="value">The value</param>
+      /// <returns>The new vector.</returns>
+      public static LogicalVector CreateLogicalVector(this REngine engine, bool value)
+      {
+         return CreateLogicalVector(engine, new[] {value});
+      }
+
+      /// <summary>
+      /// Create a vector with a single value
+      /// </summary>
+      /// <param name="engine">The engine.</param>
+      /// <param name="value">The value</param>
+      /// <returns>The new vector.</returns>
+      public static NumericVector CreateNumericVector(this REngine engine, double value)
+      {
+         return CreateNumericVector(engine, new[] {value});
+      }
+
+      /// <summary>
+      /// Create a vector with a single value
+      /// </summary>
+      /// <param name="engine">The engine.</param>
+      /// <param name="value">The value</param>
+      /// <returns>The new vector.</returns>
+      public static RawVector CreateRawVector(this REngine engine, byte value)
+      {
+         return CreateRawVector(engine, new[] {value});
+      }
+
+      /// <summary>
       /// Creates a new empty CharacterMatrix with the specified size.
       /// </summary>
       /// <param name="engine">The engine.</param>
