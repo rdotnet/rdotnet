@@ -67,31 +67,48 @@ namespace RDotNet.NativeLibrary
       /// </summary>
       /// <param name="rPath">The path of the directory containing the R native library. 
       /// If null (default), this function tries to locate the path via the Windows registry, or commonly used locations on MacOS and Linux</param>
-      public static void SetEnvironmentVariables(string rPath=null)
+      /// <param name="rHome">The path for R_HOME. If null (default), the function checks the R_HOME environment variable. If none is set, 
+      /// the function uses platform specific sensible default behaviors.</param>
+      /// <remarks>
+      /// This function has been designed to limit the tedium for users, while allowing custom settings for unusual installations.
+      /// </remarks>
+      public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
       {
-         if(rPath!=null)
-            if(!Directory.Exists(rPath))
-               throw new ArgumentException(string.Format("Specified directory not found: '{0}'", rPath));
+         if (rPath != null) CheckDirExists(rPath);
+         if (rHome != null) CheckDirExists(rHome);
 
-         var rhome = Environment.GetEnvironmentVariable("R_HOME");
          if (rPath == null)
             rPath = FindRPath();
          SetenvPrependToPath(rPath);
-         switch (Environment.OSVersion.Platform)
+
+         if (string.IsNullOrEmpty(rHome))
+            rHome = Environment.GetEnvironmentVariable("R_HOME");
+         if (string.IsNullOrEmpty(rHome))
          {
-            case PlatformID.Win32NT:
-               break;
-
-            case PlatformID.MacOSX:
-               if (string.IsNullOrEmpty(rhome))
-                  Environment.SetEnvironmentVariable("R_HOME", "/Library/Frameworks/R.framework/Resources");
-               break;
-
-            case PlatformID.Unix:
-               if (string.IsNullOrEmpty(rhome))
-                  Environment.SetEnvironmentVariable("R_HOME", "/usr/lib/R");
-               break;
+            // R_HOME is neither specified by the user nor as an environmental variable. Rely on default locations specific to platforms
+            var platform = Environment.OSVersion.Platform;
+            switch (platform)
+            {
+               case PlatformID.Win32NT:
+                  break; // R on Windows seems to have a way to deduce its R_HOME if its R.dll is in the PATH
+               case PlatformID.MacOSX:
+                  rHome = "/Library/Frameworks/R.framework/Resources";
+                  break;
+               case PlatformID.Unix:
+                  rHome = "/usr/lib/R";
+                  break;
+               default:
+                  throw new NotSupportedException(platform.ToString());
+            }
          }
+         if (!string.IsNullOrEmpty(rHome))
+            Environment.SetEnvironmentVariable("R_HOME", rHome);
+      }
+
+      private static void CheckDirExists(string rPath)
+      {
+         if (!Directory.Exists(rPath))
+            throw new ArgumentException(string.Format("Specified directory not found: '{0}'", rPath));
       }
 
       public static string FindRPath()
