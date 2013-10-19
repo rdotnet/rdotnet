@@ -191,6 +191,21 @@ namespace RDotNet
       }
 
       /// <summary>
+      /// Perform the necessary setup for the PATH and R_HOME environment variables.
+      /// </summary>
+      /// <param name="rPath">The path of the directory containing the R native library. 
+      /// If null (default), this function tries to locate the path via the Windows registry, or commonly used locations on MacOS and Linux</param>
+      /// <param name="rHome">The path for R_HOME. If null (default), the function checks the R_HOME environment variable. If none is set, 
+      /// the function uses platform specific sensible default behaviors.</param>
+      /// <remarks>
+      /// This function has been designed to limit the tedium for users, while allowing custom settings for unusual installations.
+      /// </remarks>
+      public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
+      {
+         NativeUtility.SetEnvironmentVariables(rPath: rPath, rHome: rHome);
+      }
+
+      /// <summary>
       /// Initializes R process.
       /// </summary>
       /// <param name="parameter">The startup parameter.</param>
