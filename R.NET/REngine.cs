@@ -88,11 +88,16 @@ namespace RDotNet
       {
          get
          {
-            if (!IsRunning)
-            {
-               throw new InvalidOperationException();
-            }
+            CheckEngineIsRunning();
             return GetPredefinedSymbol("R_GlobalEnv").AsEnvironment();
+         }
+      }
+
+      private void CheckEngineIsRunning()
+      {
+         if (!IsRunning)
+         {
+            throw new InvalidOperationException("This engine is not running. You may have forgotten to call Initialize");
          }
       }
 
@@ -103,10 +108,7 @@ namespace RDotNet
       {
          get
          {
-            if (!IsRunning)
-            {
-               throw new InvalidOperationException();
-            }
+            CheckEngineIsRunning();
             return GetPredefinedSymbol("R_EmptyEnv").AsEnvironment();
          }
       }
@@ -118,10 +120,7 @@ namespace RDotNet
       {
          get
          {
-            if (!IsRunning)
-            {
-               throw new InvalidOperationException();
-            }
+            CheckEngineIsRunning();
             return GetPredefinedSymbol("R_BaseNamespace").AsEnvironment();
          }
       }
@@ -133,10 +132,7 @@ namespace RDotNet
       {
          get
          {
-            if (!IsRunning)
-            {
-               throw new InvalidOperationException();
-            }
+            CheckEngineIsRunning();
             return GetPredefinedSymbol("R_NilValue");
          }
       }
@@ -148,10 +144,7 @@ namespace RDotNet
       {
          get
          {
-            if (!IsRunning)
-            {
-               throw new InvalidOperationException();
-            }
+            CheckEngineIsRunning();
             return GetPredefinedSymbol("R_UnboundValue");
          }
       }
@@ -239,10 +232,7 @@ namespace RDotNet
       /// <returns>The symbol.</returns>
       public SymbolicExpression GetSymbol(string name)
       {
-         if (!IsRunning)
-         {
-            throw new InvalidOperationException();
-         }
+         CheckEngineIsRunning();
          return GlobalEnvironment.GetSymbol(name);
       }
 
@@ -254,10 +244,7 @@ namespace RDotNet
       /// <returns>The symbol.</returns>
       public SymbolicExpression GetSymbol(string name, REnvironment environment)
       {
-         if (!IsRunning)
-         {
-            throw new InvalidOperationException();
-         }
+         CheckEngineIsRunning();
          if (environment == null)
          {
             environment = GlobalEnvironment;
@@ -272,10 +259,7 @@ namespace RDotNet
       /// <param name="expression">The symbol.</param>
       public void SetSymbol(string name, SymbolicExpression expression)
       {
-         if (!IsRunning)
-         {
-            throw new InvalidOperationException();
-         }
+         CheckEngineIsRunning();
          GlobalEnvironment.SetSymbol(name, expression);
       }
 
@@ -287,10 +271,7 @@ namespace RDotNet
       /// <param name="environment">The environment. If <c>null</c> is passed, <see cref="GlobalEnvironment"/> is used.</param>
       public void SetSymbol(string name, SymbolicExpression expression, REnvironment environment)
       {
-         if (!IsRunning)
-         {
-            throw new InvalidOperationException();
-         }
+         CheckEngineIsRunning();
          if (environment == null)
          {
             environment = GlobalEnvironment;
@@ -305,10 +286,7 @@ namespace RDotNet
       /// <returns>Last evaluation.</returns>
       public SymbolicExpression Evaluate(string statement)
       {
-         if (!IsRunning)
-         {
-            throw new InvalidOperationException();
-         }
+         CheckEngineIsRunning();
          return Defer(statement).LastOrDefault();
       }
 
@@ -319,10 +297,7 @@ namespace RDotNet
       /// <returns>Last evaluation.</returns>
       public SymbolicExpression Evaluate(Stream stream)
       {
-         if (!IsRunning)
-         {
-            throw new InvalidOperationException();
-         }
+         CheckEngineIsRunning();
          return Defer(stream).LastOrDefault();
       }
 
@@ -333,10 +308,7 @@ namespace RDotNet
       /// <returns>Each evaluation.</returns>
       private IEnumerable<SymbolicExpression> Defer(string statement)
       {
-         if (!IsRunning)
-         {
-            throw new InvalidOperationException();
-         }
+         CheckEngineIsRunning();
          if (statement == null)
          {
             throw new ArgumentNullException();
@@ -367,10 +339,7 @@ namespace RDotNet
       /// <returns>Each evaluation.</returns>
       public IEnumerable<SymbolicExpression> Defer(Stream stream)
       {
-         if (!IsRunning)
-         {
-            throw new InvalidOperationException();
-         }
+         CheckEngineIsRunning();
          if (stream == null)
          {
             throw new ArgumentNullException();
@@ -461,10 +430,7 @@ namespace RDotNet
       /// <param name="args">The arguments.</param>
       public void SetCommandLineArguments(string[] args)
       {
-         if (!IsRunning)
-         {
-            throw new InvalidOperationException();
-         }
+         CheckEngineIsRunning();
          var newArgs = Utility.AddFirst(ID, args);
          GetFunction<R_set_command_line_arguments>()(newArgs.Length, newArgs);
       }
@@ -513,10 +479,7 @@ namespace RDotNet
       /// <returns>The symbol.</returns>
       public SymbolicExpression GetPredefinedSymbol(string name)
       {
-         if (!IsRunning)
-         {
-            throw new InvalidOperationException();
-         }
+         CheckEngineIsRunning();
          try
          {
             var pointer = DangerousGetHandle(name);
