@@ -3,6 +3,9 @@ using System.Numerics;
 
 namespace RDotNet
 {
+   /// <summary>
+   /// An internal helper class to convert types of arrays, primarily for data operations necessary for .NET types to/from R concepts.
+   /// </summary>
    internal static class Utility
    {
       public static T[] AddFirst<T>(T value, T[] array)
@@ -92,5 +95,12 @@ namespace RDotNet
          return res;
       }
 
+      internal static T[] Subset<T>(T[] array, int from, int to)
+      {
+         var res = new T[(to - from) + 1];
+         for (int i = 0; i < res.Length; i++)
+            res[i] = array[from + i];
+         return res;
+      }
    }
 }
