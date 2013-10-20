@@ -138,6 +138,8 @@ namespace RDotNet.NativeLibrary
 
       public static string FindRPathFromRegistry()
       {
+         if(Environment.OSVersion.Platform != PlatformID.Win32NT)
+            throw new NotSupportedException("This method is supported only on the Windows platform");
          var rCore = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
          if (rCore == null)
          {
