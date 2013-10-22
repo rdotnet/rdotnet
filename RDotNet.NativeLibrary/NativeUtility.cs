@@ -86,7 +86,7 @@ namespace RDotNet.NativeLibrary
          if (string.IsNullOrEmpty(rHome))
          {
             // R_HOME is neither specified by the user nor as an environmental variable. Rely on default locations specific to platforms
-            var platform = Environment.OSVersion.Platform;
+            var platform = GetPlatform();
             switch (platform)
             {
                case PlatformID.Win32NT:
@@ -113,7 +113,8 @@ namespace RDotNet.NativeLibrary
 
       public static string FindRPath()
       {
-         switch (Environment.OSVersion.Platform)
+         var platform = GetPlatform();
+         switch (platform)
          {
             case PlatformID.Win32NT:
                return FindRPathFromRegistry();
@@ -122,7 +123,7 @@ namespace RDotNet.NativeLibrary
             case PlatformID.Unix:  // TODO: perform a 'which R' command to locate local installations
                return "/usr/lib";
             default:
-               throw new NotSupportedException(Environment.OSVersion.Platform.ToString());
+               throw new NotSupportedException(platform.ToString());
          }
       }
 

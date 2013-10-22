@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using RDotNet.NativeLibrary;
 
 namespace RDotNet.Devices
 {
@@ -51,7 +52,7 @@ namespace RDotNet.Devices
       internal void Install(REngine engine, StartupParameter parameter)
       {
          this.engine = engine;
-         switch (Environment.OSVersion.Platform)
+         switch (NativeUtility.GetPlatform())
          {
             case PlatformID.Win32NT:
                SetupWindowsDevice(parameter);

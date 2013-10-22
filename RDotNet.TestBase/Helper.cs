@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.IO;
+using RDotNet.NativeLibrary;
 
 namespace RDotNet
 {
@@ -10,7 +11,7 @@ namespace RDotNet
       {
          var rhome = Environment.GetEnvironmentVariable("R_HOME");
          var currentPath = Environment.GetEnvironmentVariable("PATH");
-         switch (Environment.OSVersion.Platform)
+         switch (NativeUtility.GetPlatform())
          {
             case PlatformID.Win32NT:
                Environment.SetEnvironmentVariable("PATH", FindRPathFromRegistry() + Path.PathSeparator + currentPath);
