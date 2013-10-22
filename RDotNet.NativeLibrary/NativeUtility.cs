@@ -67,36 +67,54 @@ namespace RDotNet.NativeLibrary
       /// </summary>
       /// <param name="rPath">The path of the directory containing the R native library. 
       /// If null (default), this function tries to locate the path via the Windows registry, or commonly used locations on MacOS and Linux</param>
-      public static void SetEnvironmentVariables(string rPath=null)
+      /// <param name="rHome">The path for R_HOME. If null (default), the function checks the R_HOME environment variable. If none is set, 
+      /// the function uses platform specific sensible default behaviors.</param>
+      /// <remarks>
+      /// This function has been designed to limit the tedium for users, while allowing custom settings for unusual installations.
+      /// </remarks>
+      public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
       {
-         if(rPath!=null)
-            if(!Directory.Exists(rPath))
-               throw new ArgumentException(string.Format("Specified directory not found: '{0}'", rPath));
+         if (rPath != null) CheckDirExists(rPath);
+         if (rHome != null) CheckDirExists(rHome);
 
-         var rhome = Environment.GetEnvironmentVariable("R_HOME");
          if (rPath == null)
             rPath = FindRPath();
          SetenvPrependToPath(rPath);
-         switch (Environment.OSVersion.Platform)
+
+         if (string.IsNullOrEmpty(rHome))
+            rHome = Environment.GetEnvironmentVariable("R_HOME");
+         if (string.IsNullOrEmpty(rHome))
          {
-            case PlatformID.Win32NT:
-               break;
-
-            case PlatformID.MacOSX:
-               if (string.IsNullOrEmpty(rhome))
-                  Environment.SetEnvironmentVariable("R_HOME", "/Library/Frameworks/R.framework/Resources");
-               break;
-
-            case PlatformID.Unix:
-               if (string.IsNullOrEmpty(rhome))
-                  Environment.SetEnvironmentVariable("R_HOME", "/usr/lib/R");
-               break;
+            // R_HOME is neither specified by the user nor as an environmental variable. Rely on default locations specific to platforms
+            var platform = GetPlatform();
+            switch (platform)
+            {
+               case PlatformID.Win32NT:
+                  break; // R on Windows seems to have a way to deduce its R_HOME if its R.dll is in the PATH
+               case PlatformID.MacOSX:
+                  rHome = "/Library/Frameworks/R.framework/Resources";
+                  break;
+               case PlatformID.Unix:
+                  rHome = "/usr/lib/R";
+                  break;
+               default:
+                  throw new NotSupportedException(platform.ToString());
+            }
          }
+         if (!string.IsNullOrEmpty(rHome))
+            Environment.SetEnvironmentVariable("R_HOME", rHome);
+      }
+
+      private static void CheckDirExists(string rPath)
+      {
+         if (!Directory.Exists(rPath))
+            throw new ArgumentException(string.Format("Specified directory not found: '{0}'", rPath));
       }
 
       public static string FindRPath()
       {
-         switch (Environment.OSVersion.Platform)
+         var platform = GetPlatform();
+         switch (platform)
          {
             case PlatformID.Win32NT:
                return FindRPathFromRegistry();
@@ -105,7 +123,7 @@ namespace RDotNet.NativeLibrary
             case PlatformID.Unix:  // TODO: perform a 'which R' command to locate local installations
                return "/usr/lib";
             default:
-               throw new NotSupportedException(Environment.OSVersion.Platform.ToString());
+               throw new NotSupportedException(platform.ToString());
          }
       }
 
@@ -121,6 +139,8 @@ namespace RDotNet.NativeLibrary
 
       public static string FindRPathFromRegistry()
       {
+         if(Environment.OSVersion.Platform != PlatformID.Win32NT)
+            throw new NotSupportedException("This method is supported only on the Windows platform");
          var rCore = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
          if (rCore == null)
          {
