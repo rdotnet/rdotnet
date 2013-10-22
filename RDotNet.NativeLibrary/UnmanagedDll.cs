@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
@@ -29,19 +31,59 @@ namespace RDotNet.NativeLibrary
       {
          if (dllName == null)
          {
-            throw new ArgumentNullException("dllName");
+            throw new ArgumentNullException("dllName", "The name of the library to load is a null reference");
          }
          if (dllName == string.Empty)
          {
-            throw new ArgumentException("dllName");
+            throw new ArgumentException("The name of the library to load is an empty string", "dllName");
          }
 
          IntPtr handle = LoadLibrary(dllName);
          if (handle == IntPtr.Zero)
          {
-            throw new DllNotFoundException();
+            ReportLoadLibError(dllName);
          }
          SetHandle(handle);
+      }
+
+      private static void ReportLoadLibError(string dllName)
+      {
+         string dllFullName = dllName;
+         if (File.Exists(dllFullName))
+            ThrowFailedLibraryLoad(dllFullName);
+         else
+         {
+            // This below assumes that the PATH environment variable is what is relied on
+            // TODO: check whether there is more to it: http://msdn.microsoft.com/en-us/library/ms682586.aspx
+
+            // Also some pointers to relevant information if we want to check whether the attempt to load 
+            // was made on a 32 or 64 bit library
+            // For Windows:
+            // http://stackoverflow.com/questions/1345632/determine-if-an-executable-or-library-is-32-or-64-bits-on-windows
+            // http://www.neowin.net/forum/topic/732648-check-if-exe-is-x64/?p=590544108#entry590544108
+            // Linux, and perhaps MacOS; the 'file' command seems the way to go.
+            // http://stackoverflow.com/questions/5665228/in-linux-determine-if-a-a-library-archive-32-bit-or-64-bit
+
+            dllFullName = FindFullPath(dllName);
+            if (string.IsNullOrEmpty(dllFullName))
+               throw new DllNotFoundException(string.Format("Could not find the library named {0} in the search paths", dllName));
+            else
+               ThrowFailedLibraryLoad(dllFullName);
+         }
+      }
+
+      private static string FindFullPath(string dllName)
+      {
+         string dllFullName;
+         var searchPaths = (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator);
+         dllFullName = searchPaths.Select(directory => Path.Combine(directory, dllName)).FirstOrDefault(File.Exists);
+         return dllFullName;
+      }
+
+      private static void ThrowFailedLibraryLoad(string dllFullName)
+      {
+         throw new Exception(string.Format("This {0} bits process failed to load the library {1}",
+                                                      (Environment.Is64BitProcess ? "64" : "32"), dllFullName));
       }
 
       /// <summary>
@@ -179,8 +221,7 @@ namespace RDotNet.NativeLibrary
          {
             return dlopen(filename, RTLD_LAZY);
          }
-         var searchPaths = (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator);
-         var dll = searchPaths.Select(directory => Path.Combine(directory, filename)).FirstOrDefault(File.Exists);
+         var dll = FindFullPath(dllName);
          return dll == null ? IntPtr.Zero : dlopen(dll, RTLD_LAZY);
       }
 

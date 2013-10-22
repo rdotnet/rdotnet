@@ -1,4 +1,4 @@
-﻿using RDotNet.Devices;
+using RDotNet.Devices;
 using RDotNet.Internals;
 using RDotNet.NativeLibrary;
 using System;
@@ -20,11 +20,11 @@ namespace RDotNet
    /// using (REngine engine = REngine.CreateInstance("RDotNet"))
    /// {
    ///   engine.Initialize();
-   ///	NumericVector random = engine.Evaluate("rnorm(5, 0, 1)").AsNumeric();
-   ///	foreach (double r in random)
-   ///	{
-   ///		Console.Write(r + " ");
-   ///	}
+   ///   NumericVector random = engine.Evaluate("rnorm(5, 0, 1)").AsNumeric();
+   ///   foreach (double r in random)
+   ///   {
+   ///     Console.Write(r + " ");
+   ///   }
    /// }
    /// </code>
    /// </example>
@@ -88,16 +88,11 @@ namespace RDotNet
       {
          get
          {
-            CheckEngineIsRunning();
+            if (!IsRunning)
+            {
+               throw new InvalidOperationException();
+            }
             return GetPredefinedSymbol("R_GlobalEnv").AsEnvironment();
-         }
-      }
-
-      private void CheckEngineIsRunning()
-      {
-         if (!IsRunning)
-         {
-            throw new InvalidOperationException("This engine is not running. You may have forgotten to call Initialize");
          }
       }
 
@@ -108,7 +103,10 @@ namespace RDotNet
       {
          get
          {
-            CheckEngineIsRunning();
+            if (!IsRunning)
+            {
+               throw new InvalidOperationException();
+            }
             return GetPredefinedSymbol("R_EmptyEnv").AsEnvironment();
          }
       }
@@ -120,7 +118,10 @@ namespace RDotNet
       {
          get
          {
-            CheckEngineIsRunning();
+            if (!IsRunning)
+            {
+               throw new InvalidOperationException();
+            }
             return GetPredefinedSymbol("R_BaseNamespace").AsEnvironment();
          }
       }
@@ -132,7 +133,10 @@ namespace RDotNet
       {
          get
          {
-            CheckEngineIsRunning();
+            if (!IsRunning)
+            {
+               throw new InvalidOperationException();
+            }
             return GetPredefinedSymbol("R_NilValue");
          }
       }
@@ -144,7 +148,10 @@ namespace RDotNet
       {
          get
          {
-            CheckEngineIsRunning();
+            if (!IsRunning)
+            {
+               throw new InvalidOperationException();
+            }
             return GetPredefinedSymbol("R_UnboundValue");
          }
       }
@@ -169,9 +176,25 @@ namespace RDotNet
          {
             throw new ArgumentException();
          }
-         if (string.IsNullOrEmpty(dll))
+         if (dll == null)
          {
-            dll = NativeUtility.GetRDllFileName();
+            switch (NativeUtility.GetPlatform())
+            {
+               case PlatformID.Win32NT:
+                  dll = "R.dll";
+                  break;
+
+               case PlatformID.MacOSX:
+                  dll = "libR.dylib";
+                  break;
+
+               case PlatformID.Unix:
+                  dll = "libR.so";
+                  break;
+
+               default:
+                  throw new NotSupportedException();
+            }
          }
          var engine = new REngine(id, dll);
          instances.Add(id, engine);
@@ -191,50 +214,29 @@ namespace RDotNet
       }
 
       /// <summary>
-      /// Perform the necessary setup for the PATH and R_HOME environment variables.
-      /// </summary>
-      /// <param name="rPath">The path of the directory containing the R native library. 
-      /// If null (default), this function tries to locate the path via the Windows registry, or commonly used locations on MacOS and Linux</param>
-      /// <param name="rHome">The path for R_HOME. If null (default), the function checks the R_HOME environment variable. If none is set, 
-      /// the function uses platform specific sensible default behaviors.</param>
-      /// <remarks>
-      /// This function has been designed to limit the tedium for users, while allowing custom settings for unusual installations.
-      /// </remarks>
-      public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
-      {
-         NativeUtility.SetEnvironmentVariables(rPath: rPath, rHome: rHome);
-      }
-
-      /// <summary>
       /// Initializes R process.
       /// </summary>
       /// <param name="parameter">The startup parameter.</param>
       /// <param name="device">The IO device.</param>
-      /// <param name="setupMainLoop">if true, call the functions to initialise the embedded R</param>
-      public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null, bool setupMainLoop = true)
+      public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null)
       {
          this.parameter = parameter ?? new StartupParameter();
          this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
          GetFunction<R_setStartTime>()();
          GetFunction<Rf_initialize_R>()(1, new[] { ID });
-         if (!setupMainLoop)
-         {
-            this.isRunning = true;
-            this.adapter.Install(this, this.parameter);
-            return;
-         }
          this.adapter.Install(this, this.parameter);
-         switch (NativeUtility.GetPlatform())
+         switch (Environment.OSVersion.Platform)
          {
             case PlatformID.Win32NT:
                GetFunction<R_SetParams_Windows>("R_SetParams")(ref this.parameter.start);
                break;
+
             case PlatformID.MacOSX:
             case PlatformID.Unix:
                GetFunction<R_SetParams_Unix>("R_SetParams")(ref this.parameter.start.Common);
                break;
          }
-         GetFunction<setup_Rmainloop>("setup_Rmainloop")();
+         GetFunction<setup_Rmainloop>()();
          this.isRunning = true;
       }
 
@@ -253,7 +255,10 @@ namespace RDotNet
       /// <returns>The symbol.</returns>
       public SymbolicExpression GetSymbol(string name)
       {
-         CheckEngineIsRunning();
+         if (!IsRunning)
+         {
+            throw new InvalidOperationException();
+         }
          return GlobalEnvironment.GetSymbol(name);
       }
 
@@ -265,7 +270,10 @@ namespace RDotNet
       /// <returns>The symbol.</returns>
       public SymbolicExpression GetSymbol(string name, REnvironment environment)
       {
-         CheckEngineIsRunning();
+         if (!IsRunning)
+         {
+            throw new InvalidOperationException();
+         }
          if (environment == null)
          {
             environment = GlobalEnvironment;
@@ -280,7 +288,10 @@ namespace RDotNet
       /// <param name="expression">The symbol.</param>
       public void SetSymbol(string name, SymbolicExpression expression)
       {
-         CheckEngineIsRunning();
+         if (!IsRunning)
+         {
+            throw new InvalidOperationException();
+         }
          GlobalEnvironment.SetSymbol(name, expression);
       }
 
@@ -292,7 +303,10 @@ namespace RDotNet
       /// <param name="environment">The environment. If <c>null</c> is passed, <see cref="GlobalEnvironment"/> is used.</param>
       public void SetSymbol(string name, SymbolicExpression expression, REnvironment environment)
       {
-         CheckEngineIsRunning();
+         if (!IsRunning)
+         {
+            throw new InvalidOperationException();
+         }
          if (environment == null)
          {
             environment = GlobalEnvironment;
@@ -307,7 +321,10 @@ namespace RDotNet
       /// <returns>Last evaluation.</returns>
       public SymbolicExpression Evaluate(string statement)
       {
-         CheckEngineIsRunning();
+         if (!IsRunning)
+         {
+            throw new InvalidOperationException();
+         }
          return Defer(statement).LastOrDefault();
       }
 
@@ -318,7 +335,10 @@ namespace RDotNet
       /// <returns>Last evaluation.</returns>
       public SymbolicExpression Evaluate(Stream stream)
       {
-         CheckEngineIsRunning();
+         if (!IsRunning)
+         {
+            throw new InvalidOperationException();
+         }
          return Defer(stream).LastOrDefault();
       }
 
@@ -329,7 +349,10 @@ namespace RDotNet
       /// <returns>Each evaluation.</returns>
       private IEnumerable<SymbolicExpression> Defer(string statement)
       {
-         CheckEngineIsRunning();
+         if (!IsRunning)
+         {
+            throw new InvalidOperationException();
+         }
          if (statement == null)
          {
             throw new ArgumentNullException();
@@ -360,7 +383,10 @@ namespace RDotNet
       /// <returns>Each evaluation.</returns>
       public IEnumerable<SymbolicExpression> Defer(Stream stream)
       {
-         CheckEngineIsRunning();
+         if (!IsRunning)
+         {
+            throw new InvalidOperationException();
+         }
          if (stream == null)
          {
             throw new ArgumentNullException();
@@ -451,7 +477,10 @@ namespace RDotNet
       /// <param name="args">The arguments.</param>
       public void SetCommandLineArguments(string[] args)
       {
-         CheckEngineIsRunning();
+         if (!IsRunning)
+         {
+            throw new InvalidOperationException();
+         }
          var newArgs = Utility.AddFirst(ID, args);
          GetFunction<R_set_command_line_arguments>()(newArgs.Length, newArgs);
       }
@@ -492,7 +521,7 @@ namespace RDotNet
          GC.KeepAlive(this.parameter);
          base.Dispose(disposing);
       }
-      
+
       /// <summary>
       /// Gets the predefined symbol with the specified name.
       /// </summary>
@@ -500,7 +529,10 @@ namespace RDotNet
       /// <returns>The symbol.</returns>
       public SymbolicExpression GetPredefinedSymbol(string name)
       {
-         CheckEngineIsRunning();
+         if (!IsRunning)
+         {
+            throw new InvalidOperationException();
+         }
          try
          {
             var pointer = DangerousGetHandle(name);

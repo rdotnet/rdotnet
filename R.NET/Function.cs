@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using RDotNet.Internals;
+using System.Linq;
+
 
 namespace RDotNet
 {
@@ -17,10 +21,42 @@ namespace RDotNet
       { }
 
       /// <summary>
-      /// Executes the function.
+      /// Executes the function. Match the function arguments by order.
       /// </summary>
       /// <param name="args">The arguments.</param>
-      /// <returns>The return value.</returns>
-      public abstract SymbolicExpression Invoke(SymbolicExpression[] args);
+      /// <returns>The result of the function evaluation</returns>
+      public abstract SymbolicExpression Invoke(params SymbolicExpression[] args);
+
+      /// <summary>
+      /// Executes the function. Match the function arguments by name.
+      /// </summary>
+      /// <param name="args">The arguments, indexed by argument name</param>
+      /// <returns>The result of the function evaluation</returns>
+      public abstract SymbolicExpression Invoke(IDictionary<string, SymbolicExpression> args);
+
+      /// <summary>
+      /// Executes the function. Match the function arguments by name.
+      /// </summary>
+      /// <param name="args">one or more tuples, conceptually a pairlist of arguments. The argument names must be unique</param>
+      /// <returns>The result of the function evaluation</returns>
+      public SymbolicExpression InvokeNamed(params Tuple<string, SymbolicExpression>[] args)
+      {
+         return Invoke(args.ToDictionary(a => a.Item1, a => a.Item2));
+      }
+
+      protected SymbolicExpression InvokeSpecialFunction(SymbolicExpression[] args)
+      {
+         IntPtr argument = Engine.NilValue.DangerousGetHandle();
+         foreach (SymbolicExpression arg in args.Reverse())
+         {
+            argument = Engine.GetFunction<Rf_cons>()(arg.DangerousGetHandle(), argument);
+         }
+         IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argument);
+
+         IntPtr result = Engine.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
+         return new SymbolicExpression(Engine, result);
+      }
+
+
    }
 }
