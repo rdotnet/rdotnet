@@ -217,7 +217,7 @@ namespace RDotNet
          GetFunction<R_setStartTime>()();
          GetFunction<Rf_initialize_R>()(1, new[] { ID });
          this.adapter.Install(this, this.parameter);
-         switch (Environment.OSVersion.Platform)
+         switch (NativeUtility.GetPlatform())
          {
             case PlatformID.Win32NT:
                GetFunction<R_SetParams_Windows>("R_SetParams")(ref this.parameter.start);
