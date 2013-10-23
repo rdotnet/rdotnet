@@ -215,14 +215,13 @@ namespace RDotNet
       {
          this.parameter = parameter ?? new StartupParameter();
          this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
-         GetFunction<R_setStartTime>()();
-         GetFunction<Rf_initialize_R>()(1, new[] { ID });
          if (!setupMainLoop)
          {
             this.isRunning = true;
-            this.adapter.Install(this, this.parameter);
             return;
          }
+         GetFunction<R_setStartTime>()();
+         GetFunction<Rf_initialize_R>()(1, new[] { ID });
          this.adapter.Install(this, this.parameter);
          switch (NativeUtility.GetPlatform())
          {
