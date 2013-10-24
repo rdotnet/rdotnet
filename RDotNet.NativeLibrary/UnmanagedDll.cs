@@ -221,7 +221,7 @@ namespace RDotNet.NativeLibrary
          {
             return dlopen(filename, RTLD_LAZY);
          }
-         var dll = FindFullPath(dllName);
+         var dll = FindFullPath(filename);
          return dll == null ? IntPtr.Zero : dlopen(dll, RTLD_LAZY);
       }
 
