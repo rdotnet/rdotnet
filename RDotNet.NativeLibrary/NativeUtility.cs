@@ -24,21 +24,29 @@ namespace RDotNet.NativeLibrary
       /// <returns>The current platform.</returns>
       public static PlatformID GetPlatform()
       {
-         var platform = Environment.OSVersion.Platform;
-         if (platform != PlatformID.Unix)
+         if (!curPlatform.HasValue)
          {
-            return platform;
+            var platform = Environment.OSVersion.Platform;
+            if (platform != PlatformID.Unix)
+            {
+               curPlatform = platform;
+            }
+            else
+            {
+               try
+               {
+                  var kernelName = ExecCommand("uname", "-s");
+                  curPlatform = (kernelName == "Darwin" ? PlatformID.MacOSX : platform);
+               }
+               catch (Win32Exception) // probably no PATH to uname.
+               {
+                  curPlatform = platform;
+               }
+            }
          }
-         try
-         {
-               var kernelName = ExecCommand("uname", "-s");
-               return kernelName == "Darwin" ? PlatformID.MacOSX : platform;
-         }
-         catch (Win32Exception) // probably no PATH to uname.
-         {
-            return platform;
-         }
+         return curPlatform.Value;
       }
+      private static PlatformID? curPlatform = null;
 
       /// <summary>
       /// Execute a command in a new process
@@ -180,6 +188,12 @@ namespace RDotNet.NativeLibrary
 
             default:
                throw new NotSupportedException();
+         }
+      }
+
+      public static bool IsUnix {
+         get { var p = GetPlatform();
+            return p == PlatformID.MacOSX || p == PlatformID.Unix;
          }
       }
    }
