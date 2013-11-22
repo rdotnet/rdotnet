@@ -214,8 +214,33 @@ namespace RDotNet
       {
          this.parameter = parameter ?? new StartupParameter();
          this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
-         GetFunction<R_setStartTime>()();
-         GetFunction<Rf_initialize_R>()(1, new[] { ID });
+
+         string[] R_argv = buildRArgv(this.parameter);
+         // I am baffled by the example in the R extension manual for calculating R_argc, and by RInside. Looking at R_set_command_line_arguments, this should simply be:
+         int R_argc = R_argv.Length;
+         var status = GetFunction<Rf_initEmbeddedR>()(R_argc, R_argv);
+         // Odd. Seems to work because R_set_command_line_arguments is called, yet status == 1.
+         //if(status!=0)
+         //   throw new Exception("A call to Rf_initEmbeddedR returned a non-zero; status="+status);
+         //#ifndef WIN32
+         //R_CStackLimit = -1;      		// Don't do any stack checking, see R Exts, '8.1.5 Threading issues'
+         //#endif
+
+         GetFunction<R_ReplDLLinit>()();
+
+         StartupParameter pdef = new StartupParameter();
+         switch (NativeUtility.GetPlatform())
+         {
+            case PlatformID.Win32NT:
+               GetFunction<R_DefParams_Windows>("R_DefParams")(ref pdef.start);
+               break;
+
+            case PlatformID.MacOSX:
+            case PlatformID.Unix:
+               GetFunction<R_DefParams_Unix>("R_DefParams")(ref pdef.start.Common);
+               break;
+         }
+         //this.parameter.Interactive = false;
          this.adapter.Install(this, this.parameter);
          switch (NativeUtility.GetPlatform())
          {
@@ -228,8 +253,77 @@ namespace RDotNet
                GetFunction<R_SetParams_Unix>("R_SetParams")(ref this.parameter.start.Common);
                break;
          }
-         GetFunction<setup_Rmainloop>()();
          this.isRunning = true;
+      }
+
+      private string[] buildRArgv(StartupParameter parameter)
+      {
+         var argv = new List<string>();
+         // const char *R_argv[] = {(char*)programName, "--gui=none", "--no-save", "--no-readline", "--silent", "", ""};
+         argv.Add("rdotnet_app");
+         // Not sure whether I should add no-readline
+         //[MarshalAs(UnmanagedType.Bool)]
+      //public bool R_Quiet;
+         if(parameter.Quiet) argv.Add("--quiet");
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool R_Slave;
+         if (parameter.Slave) argv.Add("--slave");
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool R_Interactive;
+         if (parameter.Interactive) argv.Add("--interactive");
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool R_Verbose;
+         if (parameter.Verbose) argv.Add("--verbose");
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool LoadSiteFile;
+         if (!parameter.LoadSiteFile) argv.Add("--no-site-file");
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool LoadInitFile;
+         if (!parameter.LoadInitFile) argv.Add("--no-init-file");
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool DebugInitFile;
+         //if (parameter.Quiet) argv.Add("--quiet");
+
+      //public StartupRestoreAction RestoreAction;
+      //public StartupSaveAction SaveAction;
+      //internal UIntPtr vsize;
+      //internal UIntPtr nsize;
+      //internal UIntPtr max_vsize;
+      //internal UIntPtr max_nsize;
+      //internal UIntPtr ppsize;
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool NoRenviron;
+         if (parameter.NoRenviron) argv.Add("--no-environ");
+
+         switch (parameter.SaveAction)
+         {
+            case StartupSaveAction.NoSave:
+               argv.Add("--no-save");
+               break;
+            case StartupSaveAction.Save:
+               argv.Add("--save");
+               break;
+         }
+         switch (parameter.RestoreAction)
+         {
+            case StartupRestoreAction.NoRestore:
+               argv.Add("--no-restore-data");
+               break;
+            case StartupRestoreAction.Restore:
+               argv.Add("--restore");
+               break;
+         }
+
+         argv.Add("--max-mem-size=" + parameter.MaxMemorySize);
+         argv.Add("--max-ppsize=" + parameter.StackSize);
+         return argv.ToArray();
       }
 
       /// <summary>

@@ -98,7 +98,9 @@ namespace RDotNet.NativeLibrary
             switch (platform)
             {
                case PlatformID.Win32NT:
-                  break; // R on Windows seems to have a way to deduce its R_HOME if its R.dll is in the PATH
+                  // Rf_initialize_R for gnuwin calls get_R_HOME which scans the windows registry and figures out R_HOME
+                  // no need to set rHome here: just use the default behavior of R.dll
+                  break;
                case PlatformID.MacOSX:
                   rHome = "/Library/Frameworks/R.framework/Resources";
                   break;
