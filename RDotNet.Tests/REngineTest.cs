@@ -15,6 +15,13 @@ namespace RDotNet
       }
 
       [Test]
+      public void TestDefaultCommandLineArgs()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         var cmdArgs = engine.Evaluate("commandArgs()").AsCharacter();
+      }
+
+      [Test]
       public void TestGlobalEnvironment()
       {
          var engine = REngine.GetInstanceFromID(EngineName);
