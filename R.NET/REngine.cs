@@ -206,19 +206,37 @@ namespace RDotNet
       }
 
       /// <summary>
-      /// Initializes R process.
+      /// Set a global variable in native memory, of type int or compatible (e.g. uintptr_t)
       /// </summary>
-      /// <param name="parameter">The startup parameter.</param>
-      /// <param name="device">The IO device.</param>
-      public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null)
+      /// <param name="varname">variable name</param>
+      /// <param name="value">Value.</param>
+      /// <example>
+      /// <code>
+        /// SetDangerousInt32 ("R_CStackLimit", -1)
+      /// </code></example>
+      internal void SetDangerousInt32 (string varname, int value)
       {
-         this.parameter = parameter ?? new StartupParameter();
-         this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
+            var addr = this.DangerousGetHandle (varname);
+         System.Runtime.InteropServices.Marshal.WriteInt32 (addr, value);
+      }
 
-         string[] R_argv = buildRArgv(this.parameter);
+      public void Initialize (StartupParameter parameter = null, ICharacterDevice device = null)
+      {
+         this.parameter = parameter ?? new StartupParameter ();
+         this.adapter = new CharacterDeviceAdapter (device ?? DefaultDevice);
+
+          
+         switch (NativeUtility.GetPlatform ()) {
+         case PlatformID.MacOSX:
+         case PlatformID.Unix:
+            SetDangerousInt32 ("R_SignalHandlers", 0); // RInside
+            SetDangerousInt32 ("R_CStackLimit", -1); // Don't do any stack checking, see R Exts, '8.1.5 Threading issues'
+            break;
+         }
+         string[] R_argv = buildRArgv (this.parameter);
          // I am baffled by the example in the R extension manual for calculating R_argc, and by RInside. Looking at R_set_command_line_arguments, this should simply be:
          int R_argc = R_argv.Length;
-         var status = GetFunction<Rf_initEmbeddedR>()(R_argc, R_argv);
+         var status = GetFunction<Rf_initEmbeddedR> () (R_argc, R_argv);
          // Odd. Seems to work because R_set_command_line_arguments is called, yet status == 1.
          //if(status!=0)
          //   throw new Exception("A call to Rf_initEmbeddedR returned a non-zero; status="+status);
@@ -226,11 +244,10 @@ namespace RDotNet
          //R_CStackLimit = -1;      		// Don't do any stack checking, see R Exts, '8.1.5 Threading issues'
          //#endif
 
-         GetFunction<R_ReplDLLinit>()();
+         GetFunction<R_ReplDLLinit> () ();
 
-         StartupParameter pdef = new StartupParameter();
-         switch (NativeUtility.GetPlatform())
-         {
+         StartupParameter pdef = new StartupParameter ();
+         switch (NativeUtility.GetPlatform ()) {
             case PlatformID.Win32NT:
                GetFunction<R_DefParams_Windows>("R_DefParams")(ref pdef.start);
                break;
