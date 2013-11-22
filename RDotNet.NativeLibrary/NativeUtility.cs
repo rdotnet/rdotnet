@@ -97,18 +97,22 @@ namespace RDotNet.NativeLibrary
             var platform = GetPlatform();
             switch (platform)
             {
-               case PlatformID.Win32NT:
+            case PlatformID.Win32NT:
                   // Rf_initialize_R for gnuwin calls get_R_HOME which scans the windows registry and figures out R_HOME
                   // no need to set rHome here: just use the default behavior of R.dll
                   break;
                case PlatformID.MacOSX:
-                  rHome = "/Library/Frameworks/R.framework/Resources";
-                  break;
-               case PlatformID.Unix:
+               rHome = "/Library/Frameworks/R.framework/Resources";
+               break;
+            case PlatformID.Unix:
+               // if rPath is e.g. /usr/local/lib/R/lib/ , 
+               rHome = Path.GetDirectoryName (rPath);
+               if (!rHome.EndsWith ("R"))
+               // if rPath is e.g. /usr/lib/ (symlink)  then default 
                   rHome = "/usr/lib/R";
-                  break;
-               default:
-                  throw new NotSupportedException(platform.ToString());
+               break;
+            default:
+               throw new NotSupportedException (platform.ToString ());
             }
          }
          if (!string.IsNullOrEmpty(rHome))
@@ -123,17 +127,29 @@ namespace RDotNet.NativeLibrary
 
       public static string FindRPath()
       {
-         var platform = GetPlatform();
-         switch (platform)
-         {
-            case PlatformID.Win32NT:
-               return FindRPathFromRegistry();
-            case PlatformID.MacOSX: // TODO: is there a way to detect installations on MacOS
-               return "/Library/Frameworks/R.framework/Libraries";
-            case PlatformID.Unix:  // TODO: perform a 'which R' command to locate local installations
-               return "/usr/lib";
-            default:
-               throw new NotSupportedException(platform.ToString());
+         var shlibFilename = GetRDllFileName ();
+         var platform = GetPlatform ();
+         switch (platform) {
+         case PlatformID.Win32NT:
+            return FindRPathFromRegistry ();
+         case PlatformID.MacOSX: // TODO: is there a way to detect installations on MacOS
+            return "/Library/Frameworks/R.framework/Libraries";
+         case PlatformID.Unix:  
+            var rexepath = ExecCommand ("which", "R"); // /usr/local/bin/R
+            if (!string.IsNullOrEmpty (rexepath)) {
+               var bindir = Path.GetDirectoryName (rexepath);  //   /usr/local/bin
+               // Trying to emulate the start of the R shell script
+               // /usr/local/lib/R/lib/libR.so
+               var libdir = Path.Combine (Path.GetDirectoryName (bindir), "lib", "R", "lib");
+               if (File.Exists (Path.Combine (libdir, shlibFilename)))
+                  return libdir;
+               libdir = Path.Combine (Path.GetDirectoryName (bindir), "lib64", "R", "lib");
+               if (File.Exists (Path.Combine (libdir, shlibFilename)))
+                  return libdir;
+            }
+            return "/usr/lib"; 
+         default:
+            throw new NotSupportedException (platform.ToString ());
          }
       }
 
