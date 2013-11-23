@@ -229,35 +229,22 @@ namespace RDotNet
          switch (NativeUtility.GetPlatform ()) {
          case PlatformID.MacOSX:
          case PlatformID.Unix:
-            SetDangerousInt32 ("R_SignalHandlers", 0); // RInside
+            SetDangerousInt32 ("R_SignalHandlers", 0); // RInside does that for non WIN32
             SetDangerousInt32 ("R_CStackLimit", -1); // Don't do any stack checking, see R Exts, '8.1.5 Threading issues'
             break;
          }
-         string[] R_argv = buildRArgv (this.parameter);
-         // I am baffled by the example in the R extension manual for calculating R_argc, and by RInside. Looking at R_set_command_line_arguments, this should simply be:
+         string[] R_argv = BuildRArgv (this.parameter);
+         //string[] R_argv = new[]{"rdotnet_app",  "--interactive",  "--no-save",  "--no-restore-data",  "--max-ppsize=50000"};
+         //rdotnet_app --quiet --interactive --no-save --no-restore-data --max-mem-size=18446744073709551615 --max-ppsize=50000  
+         GetFunction<R_setStartTime> () ();
          int R_argc = R_argv.Length;
-         var status = GetFunction<Rf_initEmbeddedR> () (R_argc, R_argv);
-         // Odd. Seems to work because R_set_command_line_arguments is called, yet status == 1.
-         //if(status!=0)
-         //   throw new Exception("A call to Rf_initEmbeddedR returned a non-zero; status="+status);
-         //#ifndef WIN32
-         //R_CStackLimit = -1;      		// Don't do any stack checking, see R Exts, '8.1.5 Threading issues'
-         //#endif
+         var status = GetFunction<Rf_initialize_R> () (R_argc, R_argv);
+         if(status!=0)
+            throw new Exception("A call to Rf_initialize_R returned a non-zero; status="+status);
 
-         GetFunction<R_ReplDLLinit> () ();
-
-         StartupParameter pdef = new StartupParameter ();
-         switch (NativeUtility.GetPlatform ()) {
-            case PlatformID.Win32NT:
-               GetFunction<R_DefParams_Windows>("R_DefParams")(ref pdef.start);
-               break;
-
-            case PlatformID.MacOSX:
-            case PlatformID.Unix:
-               GetFunction<R_DefParams_Unix>("R_DefParams")(ref pdef.start.Common);
-               break;
-         }
-         //this.parameter.Interactive = false;
+         // following in RInside: may not be needed.
+         //GetFunction<R_ReplDLLinit> () ();
+         //this.parameter.Interactive = true; 
          this.adapter.Install(this, this.parameter);
          switch (NativeUtility.GetPlatform())
          {
@@ -270,18 +257,18 @@ namespace RDotNet
                GetFunction<R_SetParams_Unix>("R_SetParams")(ref this.parameter.start.Common);
                break;
          }
+         GetFunction<setup_Rmainloop>()();
          this.isRunning = true;
       }
 
-      private string[] buildRArgv(StartupParameter parameter)
+      public static string[] BuildRArgv(StartupParameter parameter)
       {
          var argv = new List<string>();
-         // const char *R_argv[] = {(char*)programName, "--gui=none", "--no-save", "--no-readline", "--silent", "", ""};
          argv.Add("rdotnet_app");
          // Not sure whether I should add no-readline
          //[MarshalAs(UnmanagedType.Bool)]
       //public bool R_Quiet;
-         if(parameter.Quiet) argv.Add("--quiet");
+         if(parameter.Quiet && !parameter.Interactive) argv.Add("--quiet");  // --quite --interactive to R embedded crashed...
 
       //[MarshalAs(UnmanagedType.Bool)]
       //public bool R_Slave;
@@ -338,7 +325,8 @@ namespace RDotNet
                break;
          }
 
-         argv.Add("--max-mem-size=" + parameter.MaxMemorySize);
+         // This creates a nasty crash if using the default MaxMemorySize. found out in Rdotnet workitem 72
+         //argv.Add("--max-mem-size=" + parameter.MaxMemorySize);
          argv.Add("--max-ppsize=" + parameter.StackSize);
          return argv.ToArray();
       }
