@@ -82,6 +82,7 @@ namespace RDotNet.NativeLibrary
       /// </remarks>
       public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
       {
+         var platform = GetPlatform();
          if (rPath != null) CheckDirExists(rPath);
          if (rHome != null) CheckDirExists(rHome);
 
@@ -94,7 +95,6 @@ namespace RDotNet.NativeLibrary
          if (string.IsNullOrEmpty(rHome))
          {
             // R_HOME is neither specified by the user nor as an environmental variable. Rely on default locations specific to platforms
-            var platform = GetPlatform();
             switch (platform)
             {
             case PlatformID.Win32NT:
@@ -116,7 +116,17 @@ namespace RDotNet.NativeLibrary
             }
          }
          if (!string.IsNullOrEmpty(rHome))
+         {
             Environment.SetEnvironmentVariable("R_HOME", rHome);
+            if (platform == PlatformID.Unix) {
+               // Normally in an R session we get something like:
+               // > Sys.getenv('LD_LIBRARY_PATH')
+               // [1] "/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server"
+               var rLibPath = Path.Combine (rHome, "lib");
+               if (Directory.Exists (rLibPath))
+                  Environment.SetEnvironmentVariable ("LD_LIBRARY_PATH", rLibPath);
+            }
+         }
       }
 
       private static void CheckDirExists(string rPath)
