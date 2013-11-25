@@ -47,6 +47,7 @@
     <Compile Include="UnmanagedDll.cs" />
     <Compile Include="NativeUtility.cs" />
     <Compile Include="WindowsLibraryLoader.cs" />
+    <Compile Include="IDynamicLibraryLoader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

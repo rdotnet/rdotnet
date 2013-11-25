@@ -2,35 +2,49 @@ using System;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
+using System.ComponentModel;
+
 namespace RDotNet.NativeLibrary
 {
-   internal class WindowsLibraryLoader
+   internal class WindowsLibraryLoader : IDynamicLibraryLoader
    {
-      [DllImport("kernel32.dll")]
-      internal static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
-      // <summary>
-      /// Adds a directory to the search path used to locate DLLs for the application.
-      /// </summary>
-      /// <remarks>
-      /// Calls <c>SetDllDirectory</c> in the kernel32.dll on Windows.
-      /// </remarks>
-      /// <param name="dllDirectory">
-      /// The directory to be added to the search path.
-      /// If this parameter is an empty string (""), the call removes the current directory from the default DLL search order.
-      /// If this parameter is NULL, the function restores the default search order.
-      /// </param>
-      /// <returns>If the function succeeds, the return value is nonzero.</returns>
-      [Obsolete("Set environment variable 'PATH' instead.")]
-      [DllImport("kernel32.dll")]
-      [return: MarshalAs(UnmanagedType.Bool)]
-      internal static extern bool SetDllDirectory([MarshalAs(UnmanagedType.LPStr)] string dllDirectory);
+      public IntPtr LoadLibrary(string filename)
+      {
+         return InternalLoadLibrary(filename);
+      }
 
-      [DllImport("kernel32.dll")]
+      public string GetLastError()
+      {
+         // see for instance http://blogs.msdn.com/b/shawnfa/archive/2004/09/10/227995.aspx 
+         /// and http://blogs.msdn.com/b/adam_nathan/archive/2003/04/25/56643.aspx
+         // TODO: does this work as expected with Mono+Windows stack?
+         return new Win32Exception().Message;
+      }
+
+      public bool FreeLibrary(IntPtr handle)
+      {
+         return InternalFreeLibrary(handle);
+      }
+
+      public IntPtr GetFunctionAddress(IntPtr hModule, string lpProcName)
+      {
+         return InternalGetProcAddress(hModule, lpProcName);
+      }
+
+      [DllImport("kernel32.dll", EntryPoint = "LoadLibrary",  SetLastError=true)]
+      private static extern IntPtr InternalLoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
+
+      [DllImport("kernel32.dll", EntryPoint = "FreeLibrary")]
       [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
       [return: MarshalAs(UnmanagedType.Bool)]
-      internal static extern bool FreeLibrary(IntPtr hModule);
+      private static extern bool InternalFreeLibrary(IntPtr hModule);
+
       [DllImport("kernel32.dll", EntryPoint = "GetProcAddress")]
-      internal static extern IntPtr GetFunctionAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);
+      private static extern IntPtr InternalGetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);
+
+      [DllImport("kernel32.dll", EntryPoint = "GetLastError")]
+      [return: MarshalAs(UnmanagedType.LPStr)]
+      private static extern string InternalGetLastError();
 
    }
 }

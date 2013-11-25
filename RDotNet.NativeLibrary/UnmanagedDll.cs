@@ -17,6 +17,8 @@ namespace RDotNet.NativeLibrary
          get { return handle == IntPtr.Zero; }
       }
 
+      private IDynamicLibraryLoader libraryLoader;
+
       /// <summary>
       /// Creates a proxy for the specified dll.
       /// </summary>
@@ -32,10 +34,12 @@ namespace RDotNet.NativeLibrary
          {
             throw new ArgumentException("The name of the library to load is an empty string", "dllName");
          }
+         if (IsUnix)
+            libraryLoader = new UnixLibraryLoader();
+         else
+            libraryLoader = new WindowsLibraryLoader ();
 
-         IntPtr handle = IsUnix
-                            ? UnixLibraryLoader.LoadLibrary(dllName)
-                            : WindowsLibraryLoader.LoadLibrary(dllName);
+         IntPtr handle = libraryLoader.LoadLibrary (dllName);
          if (handle == IntPtr.Zero)
          {
             ReportLoadLibError(dllName);
@@ -43,7 +47,7 @@ namespace RDotNet.NativeLibrary
          SetHandle(handle);
       }
 
-      private static void ReportLoadLibError(string dllName)
+      private void ReportLoadLibError(string dllName)
       {
          string dllFullName = dllName;
          if (File.Exists(dllFullName))
@@ -77,10 +81,33 @@ namespace RDotNet.NativeLibrary
          return dllFullName;
       }
 
-      private static void ThrowFailedLibraryLoad(string dllFullName)
+      private string createLdLibPathMsg()
       {
-         throw new Exception(string.Format("This {0} bits process failed to load the library {1}",
-                                                      (Environment.Is64BitProcess ? "64" : "32"), dllFullName));
+         if (!NativeUtility.IsUnix)
+            return null;
+         var sampleldLibPaths = "/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server";
+         var ldLibPathEnv = Environment.GetEnvironmentVariable ("LD_LIBRARY_PATH");
+         string msg="";
+         if (string.IsNullOrEmpty(ldLibPathEnv))
+            msg = msg + "The environment variable LD_LIBRARY_PATH is not set";
+         else
+            msg = msg + string.Format("The environment variable LD_LIBRARY_PATH is set to {0}", ldLibPathEnv);
+
+         msg = msg + string.Format(". For some Unix-like operating systems you may need to set it before launching the application to e.g. {0}", sampleldLibPaths);
+         return msg;
+      }
+
+      private void ThrowFailedLibraryLoad(string dllFullName)
+      {
+         var strMsg = string.Format("This {0}-bit process failed to load the library {1}",
+                                    (Environment.Is64BitProcess ? "64" : "32"), dllFullName);
+         var nativeError = libraryLoader.GetLastError();
+         if (!string.IsNullOrEmpty(nativeError))
+            strMsg = strMsg + string.Format(". Native error message is '{0}'", nativeError);
+         var ldLibPathMsg = createLdLibPathMsg();
+         if (!string.IsNullOrEmpty(ldLibPathMsg))
+            strMsg = strMsg + string.Format(". {0}", ldLibPathMsg);
+         throw new Exception(strMsg);
       }
 
       /// <summary>
@@ -135,14 +162,12 @@ namespace RDotNet.NativeLibrary
 
       private IntPtr GetFunctionAddress(string lpProcName)
       {
-         return IsUnix ? UnixLibraryLoader.GetFunctionAddress(handle, lpProcName)
-            : WindowsLibraryLoader.GetFunctionAddress(handle, lpProcName);
+         return libraryLoader.GetFunctionAddress(handle, lpProcName);
       }
 
       private bool FreeLibrary()
       {
-         return IsUnix ? UnixLibraryLoader.FreeLibrary(handle)
-            : WindowsLibraryLoader.FreeLibrary(handle);
+         return libraryLoader.FreeLibrary(handle);
       }
 
       /// <summary>

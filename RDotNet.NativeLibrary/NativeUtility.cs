@@ -24,28 +24,22 @@ namespace RDotNet.NativeLibrary
       /// <returns>The current platform.</returns>
       public static PlatformID GetPlatform()
       {
-         if (!curPlatform.HasValue)
-         {
+         if (!curPlatform.HasValue) {
             var platform = Environment.OSVersion.Platform;
-            if (platform != PlatformID.Unix)
-            {
+            if (platform != PlatformID.Unix) {
                curPlatform = platform;
-            }
-            else
-            {
-               try
-               {
+            } else {
+               try {
                   var kernelName = ExecCommand("uname", "-s");
                   curPlatform = (kernelName == "Darwin" ? PlatformID.MacOSX : platform);
-               }
-               catch (Win32Exception) // probably no PATH to uname.
-               {
+               } catch (Win32Exception) { // probably no PATH to uname.
                   curPlatform = platform;
                }
             }
          }
          return curPlatform.Value;
       }
+
       private static PlatformID? curPlatform = null;
 
       /// <summary>
@@ -56,8 +50,7 @@ namespace RDotNet.NativeLibrary
       /// <returns>The output of the command to the standard output stream</returns>
       public static string ExecCommand(string processName, string arguments)
       {
-         using (var uname = new Process())
-         {
+         using (var uname = new Process()) {
             uname.StartInfo.FileName = processName;
             uname.StartInfo.Arguments = arguments;
             uname.StartInfo.RedirectStandardOutput = true;
@@ -83,8 +76,10 @@ namespace RDotNet.NativeLibrary
       public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
       {
          var platform = GetPlatform();
-         if (rPath != null) CheckDirExists(rPath);
-         if (rHome != null) CheckDirExists(rHome);
+         if (rPath != null)
+            CheckDirExists(rPath);
+         if (rHome != null)
+            CheckDirExists(rHome);
 
          if (rPath == null)
             rPath = FindRPath();
@@ -92,40 +87,40 @@ namespace RDotNet.NativeLibrary
 
          if (string.IsNullOrEmpty(rHome))
             rHome = Environment.GetEnvironmentVariable("R_HOME");
-         if (string.IsNullOrEmpty(rHome))
-         {
+         if (string.IsNullOrEmpty(rHome)) {
             // R_HOME is neither specified by the user nor as an environmental variable. Rely on default locations specific to platforms
-            switch (platform)
-            {
+            switch (platform) {
             case PlatformID.Win32NT:
                   // Rf_initialize_R for gnuwin calls get_R_HOME which scans the windows registry and figures out R_HOME
                   // no need to set rHome here: just use the default behavior of R.dll
-                  break;
-               case PlatformID.MacOSX:
+               break;
+            case PlatformID.MacOSX:
                rHome = "/Library/Frameworks/R.framework/Resources";
                break;
             case PlatformID.Unix:
                // if rPath is e.g. /usr/local/lib/R/lib/ , 
-               rHome = Path.GetDirectoryName (rPath);
-               if (!rHome.EndsWith ("R"))
+               rHome = Path.GetDirectoryName(rPath);
+               if (!rHome.EndsWith("R"))
                // if rPath is e.g. /usr/lib/ (symlink)  then default 
                   rHome = "/usr/lib/R";
                break;
             default:
-               throw new NotSupportedException (platform.ToString ());
+               throw new NotSupportedException(platform.ToString());
             }
          }
-         if (!string.IsNullOrEmpty(rHome))
-         {
+         if (!string.IsNullOrEmpty(rHome)) {
             Environment.SetEnvironmentVariable("R_HOME", rHome);
-            if (platform == PlatformID.Unix) {
-               // Normally in an R session we get something like:
-               // > Sys.getenv('LD_LIBRARY_PATH')
-               // [1] "/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server"
-               var rLibPath = Path.Combine (rHome, "lib");
-               if (Directory.Exists (rLibPath))
-                  Environment.SetEnvironmentVariable ("LD_LIBRARY_PATH", rLibPath);
-            }
+         }
+         if (platform == PlatformID.Unix) {
+            // Let's check that LD_LIBRARY_PATH is set if this is a custom installation of R.
+            // Normally in an R session from a custom build/install we get something typically like:
+            // > Sys.getenv('LD_LIBRARY_PATH')
+            // [1] "/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server"
+            // The R script sets LD_LIBRARY_PATH before it starts the native executable under e.g. /usr/local/lib/R/bin/exec/R
+            // This would be useless to set LD_LIBRARY_PATH in the current function:
+            // it must be set as en env var BEFORE the process is started (see man page for dlopen)
+            // so all we can do is an intelligible error message for the user, explaining he needs to set the LD_LIBRARY_PATH env variable 
+            // Let's delay the notification about a missing LD_LIBRARY_PATH till loading libR.so fails, if it does.
          }
       }
 
@@ -137,29 +132,29 @@ namespace RDotNet.NativeLibrary
 
       public static string FindRPath()
       {
-         var shlibFilename = GetRDllFileName ();
-         var platform = GetPlatform ();
+         var shlibFilename = GetRDllFileName();
+         var platform = GetPlatform();
          switch (platform) {
          case PlatformID.Win32NT:
-            return FindRPathFromRegistry ();
+            return FindRPathFromRegistry();
          case PlatformID.MacOSX: // TODO: is there a way to detect installations on MacOS
             return "/Library/Frameworks/R.framework/Libraries";
          case PlatformID.Unix:  
-            var rexepath = ExecCommand ("which", "R"); // /usr/local/bin/R
-            if (!string.IsNullOrEmpty (rexepath)) {
-               var bindir = Path.GetDirectoryName (rexepath);  //   /usr/local/bin
+            var rexepath = ExecCommand("which", "R"); // /usr/bin/R,  or /usr/local/bin/R
+            if (!string.IsNullOrEmpty(rexepath)) {
+               var bindir = Path.GetDirectoryName(rexepath);  //   /usr/local/bin
                // Trying to emulate the start of the R shell script
                // /usr/local/lib/R/lib/libR.so
-               var libdir = Path.Combine (Path.GetDirectoryName (bindir), "lib", "R", "lib");
-               if (File.Exists (Path.Combine (libdir, shlibFilename)))
+               var libdir = Path.Combine(Path.GetDirectoryName(bindir), "lib", "R", "lib");
+               if (File.Exists(Path.Combine(libdir, shlibFilename)))
                   return libdir;
-               libdir = Path.Combine (Path.GetDirectoryName (bindir), "lib64", "R", "lib");
-               if (File.Exists (Path.Combine (libdir, shlibFilename)))
+               libdir = Path.Combine(Path.GetDirectoryName(bindir), "lib64", "R", "lib");
+               if (File.Exists(Path.Combine(libdir, shlibFilename)))
                   return libdir;
             }
             return "/usr/lib"; 
          default:
-            throw new NotSupportedException (platform.ToString ());
+            throw new NotSupportedException(platform.ToString());
          }
       }
 
@@ -175,18 +170,16 @@ namespace RDotNet.NativeLibrary
 
       public static string FindRPathFromRegistry()
       {
-         if(Environment.OSVersion.Platform != PlatformID.Win32NT)
+         if (Environment.OSVersion.Platform != PlatformID.Win32NT)
             throw new NotSupportedException("This method is supported only on the Windows platform");
          var rCore = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
-         if (rCore == null)
-         {
+         if (rCore == null) {
             throw new ApplicationException("Windows Registry key 'SOFTWARE\\R-core' not found.");
          }
          var is64Bit = Environment.Is64BitProcess;
          var subKey = is64Bit ? "R64" : "R";
          var r = rCore.OpenSubKey(subKey);
-         if (r == null)
-         {
+         if (r == null) {
             throw new ApplicationException("Windows Registry sub-key '" + subKey + "' not found.");
          }
          var currentVersion = new Version((string)r.GetValue("Current Version"));
@@ -203,24 +196,24 @@ namespace RDotNet.NativeLibrary
       /// <returns>R dll file name</returns>
       public static string GetRDllFileName()
       {
-         switch (GetPlatform())
-         {
-            case PlatformID.Win32NT:
-               return "R.dll";
+         switch (GetPlatform()) {
+         case PlatformID.Win32NT:
+            return "R.dll";
 
-            case PlatformID.MacOSX:
-               return "libR.dylib";
+         case PlatformID.MacOSX:
+            return "libR.dylib";
 
-            case PlatformID.Unix:
-               return "libR.so";
+         case PlatformID.Unix:
+            return "libR.so";
 
-            default:
-               throw new NotSupportedException();
+         default:
+            throw new NotSupportedException();
          }
       }
 
       public static bool IsUnix {
-         get { var p = GetPlatform();
+         get {
+            var p = GetPlatform();
             return p == PlatformID.MacOSX || p == PlatformID.Unix;
          }
       }
