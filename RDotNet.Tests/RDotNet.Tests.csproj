@@ -70,7 +70,7 @@
       <Name>RDotNet.NativeLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\RDotNet.TestBase\RDotNet.TestBase.csproj">
-      <Project>{b9e15660-096f-45fb-82e3-3c21bbe986df}</Project>
+      <Project>{B9E15660-096F-45FB-82E3-3C21BBE986DF}</Project>
       <Name>RDotNet.TestBase</Name>
     </ProjectReference>
   </ItemGroup>
