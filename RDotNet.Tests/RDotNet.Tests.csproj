@@ -51,6 +51,7 @@
     <Compile Include="EnvironmentTest.cs" />
     <Compile Include="DataFrameRowMappingTest.cs" />
     <Compile Include="DataFrameTest.cs" />
+    <Compile Include="ExceptionHandlingTest.cs" />
     <Compile Include="FactorTest.cs" />
     <Compile Include="InternalStringTest.cs" />
     <Compile Include="LoadLibraryTest.cs" />
