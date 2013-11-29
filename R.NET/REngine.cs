@@ -325,8 +325,15 @@ namespace RDotNet
                break;
          }
 
-         // This creates a nasty crash if using the default MaxMemorySize. found out in Rdotnet workitem 72
-         //argv.Add("--max-mem-size=" + parameter.MaxMemorySize);
+         if (parameter.MaxMemorySize == (Environment.Is64BitProcess ? ulong.MaxValue : uint.MaxValue))
+         {
+            // This creates a nasty crash if using the default MaxMemorySize. found out in Rdotnet workitem 72
+            // do nothing
+         }
+         else
+         {
+            argv.Add("--max-mem-size=" + parameter.MaxMemorySize);
+         }
          argv.Add("--max-ppsize=" + parameter.StackSize);
          return argv.ToArray();
       }
