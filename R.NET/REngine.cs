@@ -574,7 +574,7 @@ namespace RDotNet
       /// <summary>
       /// Gets the last error message in the R engine; see R function geterrmessage.
       /// </summary>
-      private string LastErrorMessage
+      internal string LastErrorMessage
       {
          get
          {
