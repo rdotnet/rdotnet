@@ -36,5 +36,34 @@ namespace RDotNet
          object expr = engine.Evaluate("fail('bailing out')");
          Assert.IsNull(expr);
       }
+
+      [Test, ExpectedExceptionAttribute(typeof(EvaluationException), ExpectedMessage = "Error: object 'x' not found")]
+      public void TestFailedExpressionUnboundSymbol()
+      {
+          var engine = REngine.GetInstanceFromID(EngineName);
+          var x = engine.GetSymbol("x");
+      }
+
+      [Test, ExpectedExceptionAttribute(typeof(EvaluationException), ExpectedMessage = "Error: object 'x' not found\n")]
+      public void TestFailedExpressionUnboundSymbolEvaluation()
+      {
+          var engine = REngine.GetInstanceFromID(EngineName);
+          var x = engine.Evaluate("x");
+      }
+
+      [Test, ExpectedExceptionAttribute(typeof(EvaluationException), ExpectedMessage = "Error: object 'x' not found\n")]
+      public void TestFailedExpressionParsingMissingParenthesis()
+      {
+          //> x <- rep(c(TRUE,FALSE), 55
+          //+ 
+          //+ x
+          //Error: unexpected symbol in:
+          //"
+          //x"
+          //> 
+          var engine = REngine.GetInstanceFromID(EngineName);
+          var expr = engine.Evaluate("x <- rep(c(TRUE,FALSE), 55");
+          var x = engine.Evaluate("x");
+      }
    }
 }
