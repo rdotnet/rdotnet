@@ -60,6 +60,7 @@
     <Compile Include="Diagnostics\FactorDebugView.cs" />
     <Compile Include="Diagnostics\MatrixDebugView.cs" />
     <Compile Include="Diagnostics\VectorDebugView.cs" />
+    <Compile Include="EvaluationException.cs" />
     <Compile Include="Factor.cs" />
     <Compile Include="Internals\Delegates.cs" />
     <Compile Include="Internals\OutputMode.cs" />

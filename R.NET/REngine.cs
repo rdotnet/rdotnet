@@ -212,15 +212,27 @@ namespace RDotNet
       /// <param name="value">Value.</param>
       /// <example>
       /// <code>
-        /// SetDangerousInt32 ("R_CStackLimit", -1)
+      /// SetDangerousInt32 ("R_CStackLimit", -1)
       /// </code></example>
-      internal void SetDangerousInt32 (string varname, int value)
+      internal void SetDangerousInt32(string varname, int value)
       {
-            var addr = this.DangerousGetHandle (varname);
-         System.Runtime.InteropServices.Marshal.WriteInt32 (addr, value);
+         var addr = this.DangerousGetHandle(varname);
+         System.Runtime.InteropServices.Marshal.WriteInt32(addr, value);
       }
 
-      public void Initialize (StartupParameter parameter = null, ICharacterDevice device = null)
+      /// <summary>
+      /// Gets the value of a character string
+      /// </summary>
+      /// <param name="varname">The variable name exported by the R dynamic library, e.g. R_ParseErrorMsg</param>
+      /// <returns>The Unicode equivalent of the native ANSI string</returns>
+      /// <example><code></code></example>
+      internal string GetDangerousChar(string varname)
+      {
+         var addr = this.DangerousGetHandle(varname);
+         return Marshal.PtrToStringAnsi(addr);
+      }
+
+      public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null)
       {
          this.parameter = parameter ?? new StartupParameter ();
          this.adapter = new CharacterDeviceAdapter (device ?? DefaultDevice);
@@ -511,37 +523,79 @@ namespace RDotNet
       {
          incompleteStatement.Append(statement);
          var s = GetFunction<Rf_mkString>()(incompleteStatement.ToString());
-
+         string errorStatement;
          using (new ProtectedPointer(this, s))
          {
             ParseStatus status;
             var vector = new ExpressionVector(this, GetFunction<R_ParseVector>()(s, -1, out status, NilValue.DangerousGetHandle()));
-            if (vector.Length == 0)
-            {
-               return null;
-            }
 
             switch (status)
             {
                case ParseStatus.OK:
                   incompleteStatement.Clear();
+                  if (vector.Length == 0)
+                  {
+                     return null;
+                  }
                   using (new ProtectedPointer(vector))
                   {
                      SymbolicExpression result;
                      if (!vector.First().TryEvaluate(GlobalEnvironment, out result))
                      {
-                        throw new ParseException();
+                        throw new EvaluationException(LastErrorMessage);
                      }
                      return result;
                   }
                case ParseStatus.Incomplete:
                   return null;
-
-               default:
-                  var errorStatement = incompleteStatement.ToString();
+               case ParseStatus.Error:
+                  // TODO: use LastErrorMessage if below is just a subset
+                  var parseErrorMsg = GetDangerousChar("R_ParseErrorMsg");
+                  errorStatement = incompleteStatement.ToString();
                   incompleteStatement.Clear();
-                  throw new ParseException(status, errorStatement);
+                  throw new ParseException(status, errorStatement, parseErrorMsg);
+               default:
+                  errorStatement = incompleteStatement.ToString();
+                  incompleteStatement.Clear();
+                  throw new ParseException(status, errorStatement, "");
             }
+         }
+      }
+
+
+      /// <summary>
+      /// A cache of the unevaluated R expression 'geterrmessage'
+      /// </summary>
+      /// <remarks>do_geterrmessage is in Rdll.hide, so we cannot access at the C API level. 
+      /// We use the 'geterrmessage()' R evaluation, but not using the same mechanism as other REngine evaluation 
+      /// to avoid recursions issues</remarks>
+      private Expression geterrmessage = null;
+
+      /// <summary>
+      /// Gets the last error message in the R engine; see R function geterrmessage.
+      /// </summary>
+      private string LastErrorMessage
+      {
+         get
+         {
+            if (geterrmessage == null)
+            {
+               var statement = "geterrmessage()\n";
+               var s = GetFunction<Rf_mkString>()(statement);
+               ParseStatus status;
+               var vector = new ExpressionVector(this, GetFunction<R_ParseVector>()(s, -1, out status, NilValue.DangerousGetHandle()));
+                  if (status != ParseStatus.OK)
+                     throw new ParseException(status, statement, "");
+                  if (vector.Length == 0)
+                     throw new ParseException(status, statement, "Failed to create expression vector!");
+               geterrmessage = vector.First();
+            }
+            SymbolicExpression result;
+            geterrmessage.TryEvaluate(GlobalEnvironment, out result);
+            var msgs = SymbolicExpressionExtension.AsCharacter(result).ToArray();
+            if (msgs.Length > 1) throw new Exception("Unexpected multiple error messages returned");
+            if (msgs.Length == 0) throw new Exception("No error messages returned (zero length)");
+            return msgs[0];
          }
       }
 
