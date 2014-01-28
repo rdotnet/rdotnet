@@ -45,13 +45,36 @@ namespace RDotNet
       [Test]
       public void TestGC()
       {
+         //> gc()
+         //> gc()
+         //> memory.size()
+         //[1] 24.7
+         //> x <- numeric(5e6)
+         //> object.size(x)
+         //40000040 bytes
+         //> memory.size()
+         //[1] 64.11
+         //> gc()
+         //> memory.size()
+         //[1] 62.89
+         //> rm(x)
+         //> gc()
+         //> memory.size()
+         //[1] 24.7
+
          var engine = REngine.GetInstanceFromID(EngineName);
+         GC.Collect();
+         // it seems important to call gc() twice to get a proper baseline.
+         engine.ForceGarbageCollection();
+         engine.ForceGarbageCollection();
          var memoryInitial = engine.Evaluate("memory.size()").AsNumeric().First();
-         engine.Evaluate("x <- numeric(5000000)");  // About 38 MB (should be larger than startup memory size)
+         engine.Evaluate("x <- numeric(5e6)"); 
          GC.Collect();
          engine.ForceGarbageCollection();
+         engine.ForceGarbageCollection();
          var memoryAfterAlloc = engine.Evaluate("memory.size()").AsNumeric().First();
-         Assert.That(memoryAfterAlloc - memoryInitial, Is.GreaterThan(35.0));  // x should not be collected.
+         // For some reasons the delta is not 40MB spot on. Use 35 MB as a threshold
+         Assert.That(memoryAfterAlloc - memoryInitial, Is.GreaterThan(35.0)); 
          engine.Evaluate("rm(x)");
          GC.Collect();
          engine.ForceGarbageCollection();
