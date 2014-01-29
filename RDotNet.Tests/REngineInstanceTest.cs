@@ -45,5 +45,39 @@ namespace RDotNet
          engine.Dispose();
          Assert.That(engine.IsRunning, Is.False);
       }
+
+       
+      [Test]
+      public void TestCreateEngineTwice()
+      {
+         // Investigate:
+         // https://rdotnet.codeplex.com/workitem/54
+         var engine = REngine.CreateInstance("RDotNetTest");
+         engine.Initialize();
+         var paths = engine.Evaluate(".libPaths()").AsCharacter().ToArrayFast();
+         Console.WriteLine(engine.Evaluate("Sys.getenv('R_HOME')").AsCharacter().ToArrayFast()[0]);
+         // engine.Evaluate("library(rjson)");
+         engine.Dispose();
+         Console.WriteLine("Before second creation");
+         engine = REngine.CreateInstance("RDotNetTest");
+         Console.WriteLine("Before second initialize");
+         engine.Initialize();
+         Console.WriteLine(engine.Evaluate("Sys.getenv('R_HOME')").AsCharacter().ToArrayFast()[0]);
+         paths = engine.Evaluate(".libPaths()").AsCharacter().ToArrayFast();
+         try
+         {
+            engine.Evaluate("library(methods)");
+         }
+         catch
+         {
+            engine.Evaluate("traceback()");
+            throw;
+         }
+         finally
+         {
+            engine.Dispose();
+         }
+         Assert.That(engine.IsRunning, Is.False);
+      }
    }
 }
