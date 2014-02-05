@@ -21,7 +21,10 @@ namespace RDotNet
          {
             throw new ArgumentNullException();
          }
-         return expression.Engine.GetFunction<Rf_isList>()(expression.DangerousGetHandle());
+         // See issue 81. Rf_isList in the R API is NOT the correct thing to use (yes, hard to be more conter-intuitive)
+         return (expression.Type == SymbolicExpressionType.List ||
+            // ?is.list ==> "is.list returns TRUE if and only if its argument is a list or a pairlist of length > 0"
+            (expression.Type == SymbolicExpressionType.Pairlist && expression.Engine.GetFunction<Rf_length>()(expression.DangerousGetHandle()) > 0)); 
       }
 
       /// <summary>

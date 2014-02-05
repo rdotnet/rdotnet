@@ -68,13 +68,13 @@ namespace RDotNet
          engine.ForceGarbageCollection();
          engine.ForceGarbageCollection();
          var memoryInitial = engine.Evaluate("memory.size()").AsNumeric().First();
-         engine.Evaluate("x <- numeric(5e6)"); 
+         engine.Evaluate("x <- numeric(5e6)");
          GC.Collect();
          engine.ForceGarbageCollection();
          engine.ForceGarbageCollection();
          var memoryAfterAlloc = engine.Evaluate("memory.size()").AsNumeric().First();
          // For some reasons the delta is not 40MB spot on. Use 35 MB as a threshold
-         Assert.That(memoryAfterAlloc - memoryInitial, Is.GreaterThan(35.0)); 
+         Assert.That(memoryAfterAlloc - memoryInitial, Is.GreaterThan(35.0));
          engine.Evaluate("rm(x)");
          GC.Collect();
          engine.ForceGarbageCollection();
@@ -112,6 +112,19 @@ namespace RDotNet
          var engine = REngine.GetInstanceFromID(EngineName);
          engine.Evaluate("print(NULL)");
          Assert.That(Device.GetString(), Is.EqualTo("NULL\n"));
+      }
+
+      [Test]
+      public void TestCallingTwice()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         engine.Evaluate("a <- 1");
+         engine.Evaluate("a <- a+1");
+         NumericVector v1 = engine.GetSymbol("a").AsNumeric();
+         Assert.AreEqual(2.0, v1[0]);
+         engine.Evaluate("a <- a+1");
+         NumericVector v2 = engine.GetSymbol("a").AsNumeric();
+         Assert.AreEqual(3.0, v2[0]);
       }
    }
 }

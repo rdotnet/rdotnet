@@ -27,6 +27,29 @@ namespace RDotNet
          var counts = iris.GetRows<IrisData>().GroupBy(data => data.Species).Select(group => group.Count());
          Assert.That(counts, Is.EquivalentTo(new[] { 50, 50, 50 }));
       }
+
+      [Test]
+      public void TestDataFrameSubsetting()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         var iris = engine.Evaluate("iris").AsDataFrame();
+         var iris50 = engine.Evaluate("iris[1:50,]").AsDataFrame();
+         Assert.AreEqual(150, iris.RowCount);
+         Assert.AreEqual(50, iris50.RowCount);
+         var species = (DynamicVector)GetSpecies(iris);
+         var species50 = (DynamicVector)GetSpecies(iris50);
+         var sameRef = object.ReferenceEquals(species, species50);
+         Assert.AreEqual(150, species.Length);
+         Assert.AreEqual(50, species50.Length);
+         Assert.AreEqual(iris50["Species"].Length, 50);
+      }
+
+      static dynamic GetSpecies(dynamic iris)
+      {
+         return iris.Species;
+      }
+
+
    }
 
    public enum Iris
