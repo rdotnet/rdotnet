@@ -19,5 +19,15 @@ namespace RDotNet
          var iris = engine.Evaluate("list()");
          Assert.That(iris.IsDataFrame(), Is.False);
       }
+
+      [Test]
+      public void TestDataFrameFactorColumns()
+      {
+         var engine = REngine.GetInstanceFromID(EngineName);
+         engine.Evaluate("data(mpg, package='ggplot2')");
+         var mpg = engine.Evaluate("mpg").AsDataFrame();
+         var manufacturer = mpg[0].AsFactor().GetFactors();
+         Assert.AreEqual("audi", manufacturer[0]);
+      }
    }
 }
