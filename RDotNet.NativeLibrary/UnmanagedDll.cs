@@ -167,7 +167,26 @@ namespace RDotNet.NativeLibrary
 
       private bool FreeLibrary()
       {
-         return libraryLoader.FreeLibrary(handle);
+         bool freed = false;
+         if (libraryLoader == null)
+         {
+            if (!this.IsInvalid)
+            {
+               try
+               {
+                  throw new ApplicationException("Warning: unexpected condition of library loader and native handle - some native resources may not be properly disposed of");
+               }
+               finally
+               {
+                  freed = false;
+               }
+            }
+            else
+               freed = true;
+            return freed;
+         }
+         else
+            return libraryLoader.FreeLibrary(handle);
       }
 
       /// <summary>

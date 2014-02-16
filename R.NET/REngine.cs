@@ -672,5 +672,17 @@ namespace RDotNet
       private delegate IntPtr _getDLLVersion();
 
       #endregion Nested type: _getDLLVersion
+
+      public void ClearGlobalEnvironment(bool garbageCollectR = true, bool garbageCollectDotNet = true)
+      {
+         this.Evaluate("rm(list=ls())");
+         if (garbageCollectDotNet)
+         {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+         }
+         if (garbageCollectR)
+            ForceGarbageCollection();
+      }
    }
 }

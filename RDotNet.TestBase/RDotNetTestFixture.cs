@@ -12,22 +12,31 @@ namespace RDotNet
 
       protected MockDevice Device { get { return this.device; } }
 
+      private static REngine engine = null;
+
+      private readonly bool initializeOnceOnly = false;
+
       [TestFixtureSetUp]
       protected virtual void SetUpFixture()
       {
+         if (initializeOnceOnly && engine != null)
+            return;
          Helper.SetEnvironmentVariables();
-         var engine = REngine.CreateInstance(EngineName);
+         engine = REngine.CreateInstance(EngineName);
          engine.Initialize(device: device);
       }
 
       [TestFixtureTearDown]
       protected virtual void TearDownFixture()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
-         if (engine != null)
-         {
-            engine.Dispose();
-         }
+         if (initializeOnceOnly && engine != null)
+            engine.ClearGlobalEnvironment();
+         else
+         //var engine = REngine.GetInstanceFromID(EngineName);
+            if (engine != null)
+            {
+               engine.Dispose();
+            }
       }
 
       [SetUp]

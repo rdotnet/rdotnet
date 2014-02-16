@@ -34,12 +34,27 @@ namespace RDotNet
       /// <returns>The GenericVector. Returns <c>null</c> if the specified expression is not vector.</returns>
       public static GenericVector AsList(this SymbolicExpression expression)
       {
-         if (!expression.IsVector())
-         {
-            return null;
-         }
-         return new GenericVector(expression.Engine, expression.DangerousGetHandle());
+         return asList(expression);
       }
+
+      /// <summary>
+      /// A cache of the REngine - WARNING this assumes there can be only one per process, initialized once only.
+      /// </summary>
+      private static REngine engine = null;
+      private static Function asListFunction = null;
+      private static GenericVector asList(SymbolicExpression expression)
+      {
+         if (!object.ReferenceEquals(engine, expression.Engine) || engine == null)
+         {
+            engine = expression.Engine;
+            asListFunction = null;
+         }
+         if(asListFunction==null) 
+            asListFunction = engine.Evaluate("as.list").AsFunction();
+         var newExpression = asListFunction.Invoke(expression);
+         return new GenericVector(newExpression.Engine, newExpression.DangerousGetHandle());
+      }
+
 
       /// <summary>
       /// Gets whether the specified expression is data frame.
