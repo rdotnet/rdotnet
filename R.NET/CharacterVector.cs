@@ -84,18 +84,28 @@ namespace RDotNet
       private string GetValue(int index)
       {
          int offset = GetOffset(index);
-         IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
-         return new InternalString(Engine, pointer).GetInternalValue();
+         IntPtr pointerItem = Marshal.ReadIntPtr(DataPointer, offset);
+         if (pointerItem == Engine.NaStringPointer)
+         {
+            return null;
+         }
+         IntPtr pointer = IntPtr.Add(pointerItem, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+         return Marshal.PtrToStringAnsi(pointer);
+      }
+
+      private Rf_mkChar _mkChar = null;
+      private IntPtr mkChar(string value) 
+      {
+         if (_mkChar == null)
+            _mkChar = Engine.GetFunction<Rf_mkChar>();
+         return _mkChar(value);
       }
 
       private void SetValue(int index, string value)
       {
          int offset = GetOffset(index);
-         SymbolicExpression s = value == null ? Engine.GetPredefinedSymbol("R_NaString") : new InternalString(Engine, value);
-         using (new ProtectedPointer(s))
-         {
-            Marshal.WriteIntPtr(DataPointer, offset, s.DangerousGetHandle());
-         }
+         IntPtr stringPointer = value == null ? Engine.NaStringPointer : mkChar(value);
+         Marshal.WriteIntPtr(DataPointer, offset, stringPointer);
       }
 
       protected override void SetVectorDirect(string[] values)

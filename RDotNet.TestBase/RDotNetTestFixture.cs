@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 
 namespace RDotNet
@@ -50,6 +51,20 @@ namespace RDotNet
       [TearDown]
       protected virtual void TearDownTest()
       {
+      }
+
+      protected static double GetRMemorySize(REngine engine)
+      {
+         var memoryAfterAlloc = engine.Evaluate("memory.size()").AsNumeric().First();
+         return memoryAfterAlloc;
+      }
+
+      protected static void GarbageCollectRandClr(REngine engine)
+      {
+         GC.Collect();
+         // it seems important to call gc() twice to get a proper baseline.
+         engine.ForceGarbageCollection();
+         engine.ForceGarbageCollection();
       }
 
       protected double[] GenArrayDouble(int from, int to)
