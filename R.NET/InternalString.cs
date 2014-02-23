@@ -60,7 +60,7 @@ namespace RDotNet
       /// <returns>The string representation.</returns>
       public string GetInternalValue()
       {
-         if (handle == Engine.GetPredefinedSymbol("R_NaString").DangerousGetHandle())
+         if (handle == Engine.NaStringPointer)
          {
             return null;
          }

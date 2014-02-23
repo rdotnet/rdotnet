@@ -684,5 +684,28 @@ namespace RDotNet
          if (garbageCollectR)
             ForceGarbageCollection();
       }
+
+      private IntPtr stringNAPointer = IntPtr.Zero;
+
+      public IntPtr NaStringPointer
+      {
+         get
+         {
+            if (stringNAPointer == IntPtr.Zero)
+               stringNAPointer = NaString.DangerousGetHandle();
+            return stringNAPointer;
+         }
+      }
+
+      public SymbolicExpression stringNaSexp = null;
+      public SymbolicExpression NaString
+      {
+         get
+         {
+            if (stringNaSexp == null)
+               stringNaSexp = this.GetPredefinedSymbol("R_NaString");
+            return stringNaSexp;
+         }
+      }
    }
 }

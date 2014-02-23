@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -110,6 +111,8 @@ namespace RDotNet.NativeLibrary
          throw new Exception(strMsg);
       }
 
+      private Dictionary<string, object> delegateFunctionPointers = new Dictionary<string, object>();
+
       /// <summary>
       /// Creates the delegate function for the specified function defined in the DLL.
       /// </summary>
@@ -119,16 +122,21 @@ namespace RDotNet.NativeLibrary
          where TDelegate : class
       {
          Type delegateType = typeof(TDelegate);
+         var functionName = delegateType.Name;
+         if (delegateFunctionPointers.ContainsKey(functionName))
+            return (TDelegate)delegateFunctionPointers[functionName];
          if (!delegateType.IsSubclassOf(typeof(Delegate)))
          {
             throw new ArgumentException();
          }
-         IntPtr function = GetFunctionAddress(delegateType.Name);
+         IntPtr function = GetFunctionAddress(functionName);
          if (function == IntPtr.Zero)
          {
             throw new EntryPointNotFoundException();
          }
-         return Marshal.GetDelegateForFunctionPointer(function, delegateType) as TDelegate;
+         var dFunc = Marshal.GetDelegateForFunctionPointer(function, delegateType) as TDelegate;
+         delegateFunctionPointers.Add(functionName, dFunc);
+         return dFunc;
       }
 
       /// <summary>
