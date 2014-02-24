@@ -27,7 +27,6 @@ type BuildParameter = {
    CleanDeploy : bool
    NoZip : bool
    NoNuGet : bool
-   Unix : bool
    Key : string option
 }
 let buildParams =
@@ -39,7 +38,6 @@ let buildParams =
       | "--no-zip" :: args -> loop { acc with NoZip = true } args
       | "--no-nuget" :: args -> loop { acc with NoNuGet = true } args
       | "--no-deploy" :: args -> loop { acc with NoZip = true; NoNuGet = true } args
-      | "--unix" :: args -> loop { acc with Unix = true } args
       | "--key" :: path :: args -> loop { acc with Key = Some (path) } args
       | _ :: args -> loop acc args  // ignores unknown argument
    let defaultBuildParam = {
@@ -48,7 +46,6 @@ let buildParams =
       CleanDeploy = false
       NoZip = false
       NoNuGet = false
-      Unix = false
       Key = None
    }
    let args = fsi.CommandLineArgs |> Array.toList  // args = ["build.fsx"; ...]
@@ -68,29 +65,24 @@ fsi.exe build.fsx [<options>]
 --no-zip          Do not create zip archive
 --no-nuget        Do not build NuGet packages
 --no-deploy       Same as --no-zip --no-nuget
---unix            Build with UNIX symbol (force --no-nuget)
 --key <key_path>  Sign assembly with the specified key"""
    exit 0
 
-let zipName = deployDir % if buildParams.Unix then "RDotNet.Unix.zip" else "RDotNet.Windows.zip"
+let zipName = deployDir % "RDotNet.zip"
 
 let addBuildProperties =
    let debugSymbol properties =
       match buildParams.Debug with
          | true -> ("DebugSymbols", "true") :: ("DebugType", "full") :: properties
          | false -> ("DebugSymbols", "false") :: ("DebugType", "pdbonly") :: properties
-   let definieUnix properties =
-      match buildParams.Unix with
-         | true -> ("DefineConstants", "UNIX") :: properties
-         | false -> properties
    let setKey properties =
       match buildParams.Key with
          | Some (path) when File.Exists (path) -> ("SignAssembly", "true") :: ("AssemblyOriginatorKeyFile", path) :: properties
          | Some (path) -> failwithf "Key file not found at %s" path
          | None -> properties
-   debugSymbol >> definieUnix >> setKey
+   debugSymbol >> setKey
 let buildZip = not buildParams.NoZip
-let buildNuGet = not (buildParams.NoNuGet || buildParams.Unix)
+let buildNuGet = not (buildParams.NoNuGet)
 let configuration = "Configuration", if buildParams.Debug then "Debug" else "Release"
 let setBuildParams (p:MSBuildParams) = {
    p with
