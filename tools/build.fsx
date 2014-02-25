@@ -68,12 +68,16 @@ fsi.exe build.fsx [<options>]
 --key <key_path>  Sign assembly with the specified key"""
    exit 0
 
-// Adjust the path env var for msbuild.exe
+// Try to detect the version 12.0 of MsBuild; see https://rdotnet.codeplex.com/workitem/87
 let procArch = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")
-let msbuildDirPath = 
+let msbuildFwDirPath =
     match procArch with 
         | "x86" -> Environment.GetEnvironmentVariable("SystemRoot") + @"\Microsoft.NET\Framework\v4.0.30319"
         | _ -> Environment.GetEnvironmentVariable("WINDIR") + @"\Microsoft.NET\Framework64\v4.0.30319"
+let progFileFolder = Environment.GetEnvironmentVariable("ProgramFiles(x86)") 
+let progFileFolderExists = if String.IsNullOrEmpty(progFileFolder) then false else Directory.Exists(progFileFolder)
+let msbuildProgDirPath = if progFileFolderExists then progFileFolder + @"\MSBuild\12.0\Bin" else ""
+let msbuildDirPath = if Directory.Exists(msbuildProgDirPath) then msbuildProgDirPath else msbuildFwDirPath
 let newPath = Environment.GetEnvironmentVariable("PATH") + ";" + msbuildDirPath
 Environment.SetEnvironmentVariable("PATH", newPath)
 
