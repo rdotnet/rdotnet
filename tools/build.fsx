@@ -68,6 +68,15 @@ fsi.exe build.fsx [<options>]
 --key <key_path>  Sign assembly with the specified key"""
    exit 0
 
+// Adjust the path env var for msbuild.exe
+let procArch = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")
+let msbuildDirPath = 
+    match procArch with 
+        | "x86" -> Environment.GetEnvironmentVariable("SystemRoot") + @"\Microsoft.NET\Framework\v4.0.30319"
+        | _ -> Environment.GetEnvironmentVariable("WINDIR") + @"\Microsoft.NET\Framework64\v4.0.30319"
+let newPath = Environment.GetEnvironmentVariable("PATH") + ";" + msbuildDirPath
+Environment.SetEnvironmentVariable("PATH", newPath)
+
 let zipName = deployDir % "RDotNet.zip"
 
 let addBuildProperties =
