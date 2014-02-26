@@ -12,7 +12,7 @@ namespace RDotNet
       [Test]
       public void TestCreateNumericVector()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          RuntimeDiagnostics r = new RuntimeDiagnostics(engine);
          int n = (int)1e6;
          var dt = r.MeasureRuntime(RuntimeDiagnostics.CreateNumericVector, n);

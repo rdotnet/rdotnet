@@ -8,7 +8,7 @@ namespace RDotNet
       [Test]
       public void TestCreateEnvironment()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var newEnv = engine.CreateEnvironment(engine.BaseNamespace);
          Assert.That(newEnv.Type, Is.EqualTo(SymbolicExpressionType.Environment));
          Assert.That(newEnv.Parent.DangerousGetHandle(), Is.EqualTo(engine.BaseNamespace.DangerousGetHandle()));
@@ -17,7 +17,7 @@ namespace RDotNet
       [Test]
       public void TestCreateIsolatedEnvironment()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var newEnv = engine.CreateIsolatedEnvironment();
          Assert.That(newEnv.Type, Is.EqualTo(SymbolicExpressionType.Environment));
          Assert.That(newEnv.Parent, Is.Null);

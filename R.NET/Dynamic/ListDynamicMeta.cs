@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace RDotNet.Dynamic
 {
+   /// <summary>
+   /// Dynamic and binding logic for R lists
+   /// </summary>
    public class ListDynamicMeta : SymbolicExpressionDynamicMeta
    {
       private static readonly Type[] IndexerNameType = new[] { typeof(string) };

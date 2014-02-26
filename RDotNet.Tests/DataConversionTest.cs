@@ -16,7 +16,7 @@ namespace RDotNet
       [Test]
       public void TestCreateNumericVectorValid()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("x <- 1:100 * 1.1");
          var expected = ArrayMult(GenArrayDouble(1, 100), 1.1);
          var vec = engine.GetSymbol("x").AsNumeric();
@@ -35,7 +35,7 @@ namespace RDotNet
       [Test]
       public void TestCreateIntegerVectorValid()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("x <- 1:100");
          var expected = GenArrayInteger(1, 100);
          var vec = engine.GetSymbol("x").AsInteger();
@@ -47,7 +47,7 @@ namespace RDotNet
       [Test]
       public void TestCreateLogicalVectorValid()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("x <- rep(c(TRUE,FALSE),50)");
          var expected = Array.ConvertAll(GenArrayInteger(1, 100), val => val % 2 == 1);
          var vec = engine.GetSymbol("x").AsLogical();
@@ -60,7 +60,7 @@ namespace RDotNet
       [Test]
       public void TestCreateCharacterVectorValid()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("x <- rep(c('a','bb'),50)");
          string[] expected = new string[100];
          for (int i = 0; i < 100; i++)
@@ -73,7 +73,7 @@ namespace RDotNet
       [Test]
       public void TestCreateComplexVectorValid()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("x <- 1:100 + 1i*(101:200)");
          var expected = new Complex[100];
          for (int i = 0; i < 100; i++)
@@ -95,7 +95,7 @@ namespace RDotNet
       [Test]
       public void TestCreateNumericMatrixValid()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("x <- matrix(1:110 * 1.1, nrow=10, ncol=11)");
          var expected = ToMatrix(ArrayMult(GenArrayDouble(1, 110), 1.1), 10, 11);
          var a = engine.GetSymbol("x").AsNumericMatrix().ToArrayFast();
@@ -105,7 +105,7 @@ namespace RDotNet
       [Test]
       public void TestCreateIntegerMatrixValid()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("x <- matrix(as.integer(1:110), nrow=10, ncol=11)");
          var expected = ToMatrix(GenArrayInteger(1, 110), 10, 11);
          var a = engine.GetSymbol("x").AsIntegerMatrix().ToArrayFast();
@@ -115,7 +115,7 @@ namespace RDotNet
       [Test]
       public void TestCreateLogicalMatrixValid()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("x <- matrix(rep(c(TRUE,FALSE), 55), nrow=10, ncol=11)");
          var exp_one = Array.ConvertAll(GenArrayInteger(1, 110), val => val % 2 == 1);
          var expected = ToMatrix(exp_one, 10, 11);
@@ -126,7 +126,7 @@ namespace RDotNet
       [Test]
       public void TestCreateComplexMatrixValid()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("x <- matrix((1:110 + 1i*(101:210)), nrow=10, ncol=11)");
          var exp_one = Array.ConvertAll(GenArrayInteger(1, 110), val => new Complex(val, val+100));
          var expected = ToMatrix(exp_one, 10, 11);

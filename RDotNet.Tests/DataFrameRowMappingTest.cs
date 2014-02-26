@@ -9,7 +9,7 @@ namespace RDotNet
       [Test]
       public void TestGetRow()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var iris = engine.Evaluate("iris").AsDataFrame();
          var row = iris.GetRow<IrisData>(0);
          Assert.That(row.Species, Is.EqualTo(Iris.setosa));
@@ -22,7 +22,7 @@ namespace RDotNet
       [Test]
       public void TestGetRows()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var iris = engine.Evaluate("iris").AsDataFrame();
          var counts = iris.GetRows<IrisData>().GroupBy(data => data.Species).Select(group => group.Count());
          Assert.That(counts, Is.EquivalentTo(new[] { 50, 50, 50 }));
@@ -31,7 +31,7 @@ namespace RDotNet
       [Test]
       public void TestDataFrameSubsetting()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var iris = engine.Evaluate("iris").AsDataFrame();
          var iris50 = engine.Evaluate("iris[1:50,]").AsDataFrame();
          Assert.AreEqual(150, iris.RowCount);

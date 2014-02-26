@@ -6,10 +6,18 @@ using System.Reflection;
 
 namespace RDotNet.Dynamic
 {
+   /// <summary>
+   /// Dynamic and binding logic for S expressions
+   /// </summary>
    public class SymbolicExpressionDynamicMeta : DynamicMetaObject
    {
       protected static readonly string[] Empty = new string[0];
 
+      /// <summary>
+      /// Dynamic and binding logic for S expressions
+      /// </summary>
+      /// <param name="parameter">The expression representing this new SymbolicExpressionDynamicMeta in the binding process</param>
+      /// <param name="expression">The runtime value of this SymbolicExpression represented by this new SymbolicExpressionDynamicMeta</param>
       public SymbolicExpressionDynamicMeta(System.Linq.Expressions.Expression parameter, SymbolicExpression expression)
          : base(parameter, BindingRestrictions.Empty, expression)
       { }

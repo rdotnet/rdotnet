@@ -8,7 +8,7 @@ namespace RDotNet
       [Test]
       public void TestCharacter()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var vector = engine.Evaluate("x <- c('foo', NA, 'bar')").AsCharacter();
          Assert.That(vector.Length, Is.EqualTo(3));
          Assert.That(vector[0], Is.EqualTo("foo"));
@@ -25,7 +25,7 @@ namespace RDotNet
       [Test]
       public void TestDotnetToR()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var vector = engine.Evaluate("x <- character(100)").AsCharacter();
          Assert.That(vector.Length, Is.EqualTo(100));
          Assert.That(vector[0], Is.EqualTo(""));
