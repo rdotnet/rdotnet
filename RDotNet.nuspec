@@ -9,9 +9,9 @@
       <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
       <projectUrl>http://rdotnet.codeplex.com/</projectUrl>
       <requireLicenseAcceptance>true</requireLicenseAcceptance>
-      <description>Collaboration of .NET Framework with R statistical computing. This requires the R binaries, which are available on http://www.r-project.org/</description>
-      <summary>Collaboration of .NET Framework with R statistical computing.</summary>
-      <copyright>Copyright 2012 RecycleBin</copyright>
+      <description>Library for interoperability in-process of the .NET Framework with the R statistical computing software. This requires the R binaries, which are available at http://www.r-project.org </description>
+      <summary>Library for interoperability of the .NET Framework with the R statistical computing software</summary>
+      <copyright>Copyright 2014 RecycleBin</copyright>
       <references>
          <reference file="RDotNet.dll" />
          <reference file="RDotNet.NativeLibrary.dll" />
@@ -19,7 +19,7 @@
       <frameworkAssemblies>
          <frameworkAssembly assemblyName="System.Numerics" />
       </frameworkAssemblies>
-      <tags>R RDotNet statistics</tags>
+      <tags>R R.NET statistics</tags>
    </metadata>
    <files>
       <file src="R.NET\bin\Release\RDotNet.dll" target="lib\net40" />
