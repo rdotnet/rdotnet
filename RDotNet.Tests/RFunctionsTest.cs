@@ -10,7 +10,7 @@ namespace RDotNet
       [Test]
       public void TestBuiltinFunctions()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
 
          // function (x)  .Primitive("abs")
          var abs = engine.GetSymbol("abs").AsFunction();
@@ -28,7 +28,7 @@ namespace RDotNet
       [Test]
       public void TestStatsFunctions()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
 
          //> a <- dpois(0:7, lambda = 0.9)
          //> signif(a, 2)
@@ -60,7 +60,7 @@ namespace RDotNet
       [Test]
       public void TestGenericFunction()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
 
 
          
@@ -127,7 +127,7 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
       [Test]
       public void TestArgumentMatching()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
 
          var funcDef = @"function(a, b, cc=NULL, d='d', e=length(d), f=FALSE, g=123.4) {
   r <- paste0('a=', ifelse(missing(a),'missing_a',a))
@@ -176,7 +176,7 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
       private SymbolicExpression CreateSexp(object value)
       {
          var t = value.GetType();
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          if (t == typeof(double))
             return engine.CreateNumericVector((double)value);
          if (t == typeof(string))

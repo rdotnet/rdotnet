@@ -20,7 +20,7 @@ namespace RDotNet
       public void TestFailedExpressionParsing()
       {
          // https://rdotnet.codeplex.com/workitem/77 
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          object expr = engine.Evaluate("function(k) substitute(bar(x) = k)");
          Assert.IsNull(expr);
       }
@@ -31,7 +31,7 @@ namespace RDotNet
          //> fail <- function(msg) {stop(paste( 'the message is', msg))} 
          //> fail('bailing out')
          //Error in fail("bailing out") : the message is bailing out
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("fail <- function(msg) {stop(paste( 'the message is', msg))}");
          object expr = engine.Evaluate("fail('bailing out')");
          Assert.IsNull(expr);
@@ -40,14 +40,14 @@ namespace RDotNet
       [Test, ExpectedExceptionAttribute(typeof(EvaluationException), ExpectedMessage = "Error: object 'x' not found")]
       public void TestFailedExpressionUnboundSymbol()
       {
-          var engine = REngine.GetInstanceFromID(EngineName);
+          var engine = this.Engine;
           var x = engine.GetSymbol("x");
       }
 
       [Test, ExpectedExceptionAttribute(typeof(EvaluationException), ExpectedMessage = "Error: object 'x' not found\n")]
       public void TestFailedExpressionUnboundSymbolEvaluation()
       {
-          var engine = REngine.GetInstanceFromID(EngineName);
+          var engine = this.Engine;
           var x = engine.Evaluate("x");
       }
 
@@ -61,7 +61,7 @@ namespace RDotNet
           //"
           //x"
           //> 
-          var engine = REngine.GetInstanceFromID(EngineName);
+          var engine = this.Engine;
           var expr = engine.Evaluate("x <- rep(c(TRUE,FALSE), 55");
           var x = engine.Evaluate("x");
       }

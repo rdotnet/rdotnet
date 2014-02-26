@@ -158,14 +158,18 @@ namespace RDotNet.NativeLibrary
          }
       }
 
-      private static void SetenvPrependToPath(string rPath)
+      private static void SetenvPrependToPath(string rPath, string envVarName="PATH")
       {
-         Environment.SetEnvironmentVariable("PATH", PrependToPath(rPath));
+         Environment.SetEnvironmentVariable(envVarName, PrependToPath(rPath, envVarName));
       }
 
-      private static string PrependToPath(string rPath)
+      private static string PrependToPath(string rPath, string envVarName = "PATH")
       {
-         return rPath + Path.PathSeparator + Environment.GetEnvironmentVariable("PATH");
+         var currentPathEnv = Environment.GetEnvironmentVariable(envVarName);
+         var paths = currentPathEnv.Split(new[]{Path.PathSeparator}, StringSplitOptions.RemoveEmptyEntries);
+         if (paths[0] == rPath)
+            return currentPathEnv;
+         return rPath + Path.PathSeparator + currentPathEnv;
       }
 
       public static string FindRPathFromRegistry()
@@ -196,7 +200,8 @@ namespace RDotNet.NativeLibrary
       /// <returns>R dll file name</returns>
       public static string GetRDllFileName()
       {
-         switch (GetPlatform()) {
+         var p = GetPlatform();
+         switch (p) {
          case PlatformID.Win32NT:
             return "R.dll";
 
@@ -207,7 +212,7 @@ namespace RDotNet.NativeLibrary
             return "libR.so";
 
          default:
-            throw new NotSupportedException();
+            throw new NotSupportedException("Platform is not supported: " + p.ToString());
          }
       }
 

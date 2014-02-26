@@ -32,7 +32,7 @@ namespace RDotNet
    public class REngine : UnmanagedDll
    {
       private static readonly ICharacterDevice DefaultDevice = new ConsoleDevice();
-      private static readonly Dictionary<string, REngine> instances = new Dictionary<string, REngine>();
+      //private static readonly Dictionary<string, REngine> instances = new Dictionary<string, REngine>();
 
       private readonly string id;
       private CharacterDeviceAdapter adapter;
@@ -44,6 +44,7 @@ namespace RDotNet
       {
          this.id = id;
          this.isRunning = false;
+         this.Disposed = false;
       }
 
       /// <summary>
@@ -149,13 +150,34 @@ namespace RDotNet
          }
       }
 
+      private static bool environmentIsSet = false;
+      private static REngine engine = null;
+
+      public static string EngineName { get { return "R.NET"; } }
+
+      /// <summary>
+      /// Gets a reference to the R engine
+      /// </summary>
+      /// <param name="dll">The file name of the library to load, e.g. "R.dll" for Windows. You should usually not provide this optional parameter</param>
+      /// <returns>The engine.</returns>
+      public static REngine GetInstance(string dll = null)
+      {
+         if (!environmentIsSet) // should there be a warning? and how?
+            SetEnvironmentVariables();
+         if (engine == null)
+            engine = CreateInstance(EngineName, dll);
+         if (engine.Disposed)
+            throw new Exception("The single REngine instance has already been disposed of (i.e. shut down). Multiple engine restart cannot be supported.");
+         return engine;
+      }
+
       /// <summary>
       /// Creates a new instance that handles R.DLL.
       /// </summary>
       /// <param name="id">ID.</param>
-      /// <param name="dll">The core dll of R.</param>
+      /// <param name="dll">The file name of the library to load, e.g. "R.dll" for Windows. You should usually not provide this optional parameter</param>
       /// <returns>The engine.</returns>
-      public static REngine CreateInstance(string id, string dll = null)
+      private static REngine CreateInstance(string id, string dll = null)
       {
          if (id == null)
          {
@@ -165,28 +187,16 @@ namespace RDotNet
          {
             throw new ArgumentException("Empty ID is not allowed.", "id");
          }
-         if (instances.ContainsKey(id))
-         {
-            throw new ArgumentException();
-         }
+         //if (instances.ContainsKey(id))
+         //{
+         //   throw new ArgumentException();
+         //}
          if (string.IsNullOrEmpty(dll))
          {
             dll = NativeUtility.GetRDllFileName();
          }
          var engine = new REngine(id, dll);
-         instances.Add(id, engine);
-         return engine;
-      }
-
-      /// <summary>
-      /// Gets an instance specified in the given ID.
-      /// </summary>
-      /// <param name="id">ID.</param>
-      /// <returns>The engine.</returns>
-      public static REngine GetInstanceFromID(string id)
-      {
-         REngine engine;
-         instances.TryGetValue(id, out engine);
+         //instances.Add(id, engine);
          return engine;
       }
 
@@ -202,6 +212,7 @@ namespace RDotNet
       /// </remarks>
       public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
       {
+         environmentIsSet = true;
          NativeUtility.SetEnvironmentVariables(rPath: rPath, rHome: rHome);
       }
 
@@ -620,12 +631,17 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Gets whether this object has been disposed of already.
+      /// </summary>
+      public bool Disposed { get; private set; }
+
       protected override void Dispose(bool disposing)
       {
          if (isRunning)
          {
             this.isRunning = false;
-            instances.Remove(ID);
+            //instances.Remove(ID);
          }
          OnDisposing(EventArgs.Empty);
          if (disposing)
@@ -633,6 +649,7 @@ namespace RDotNet
             GetFunction<R_RunExitFinalizers>()();
             GetFunction<Rf_CleanEd>()();
             GetFunction<R_CleanTempDir>()();
+            Disposed = true;
          }
          this.isRunning = false;
 
@@ -642,7 +659,6 @@ namespace RDotNet
             this.adapter = null;
          }
 
-         // Why is this here?
          GC.KeepAlive(this.parameter);
          base.Dispose(disposing);
       }

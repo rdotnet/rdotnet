@@ -12,8 +12,8 @@ namespace RDotNet
       {
          MockDevice device = new MockDevice();
          string EngineName = "RDotNet";
-         Helper.SetEnvironmentVariables();
-         using (var engine = REngine.CreateInstance(EngineName))
+         REngine.SetEnvironmentVariables();
+         using (var engine = REngine.GetInstance())
          {
             ulong maxMemSize = 128 * 1024 * 1024;
             StartupParameter parameter = new StartupParameter()

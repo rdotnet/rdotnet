@@ -8,7 +8,7 @@ namespace RDotNet
       [Test]
       public void TestLength()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var factor = engine.Evaluate("factor(c('A', 'B', 'A', 'C', 'B'))").AsFactor();
          Assert.That(factor.Length, Is.EqualTo(5));
       }
@@ -16,7 +16,7 @@ namespace RDotNet
       [Test]
       public void TestIsOrderedTrue()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var factor = engine.Evaluate("factor(c('A', 'B', 'A', 'C', 'B'), ordered=TRUE)").AsFactor();
          Assert.That(factor.IsOrdered, Is.True);
       }
@@ -24,7 +24,7 @@ namespace RDotNet
       [Test]
       public void TestIsOrderedFalse()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var factor = engine.Evaluate("factor(c('A', 'B', 'A', 'C', 'B'), ordered=FALSE)").AsFactor();
          Assert.That(factor.IsOrdered, Is.False);
       }
@@ -32,7 +32,7 @@ namespace RDotNet
       [Test]
       public void TestGetLevels()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var factor = engine.Evaluate("x <- factor(c('A', 'B', 'A', 'C', 'B'))").AsFactor();
          Assert.That(factor.GetLevels(), Is.EquivalentTo(new[] { "A", "B", "C" }));
          factor = engine.Evaluate(@"
@@ -45,7 +45,7 @@ x
       [Test]
       public void TestGetFactors()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var factor = engine.Evaluate("x <- factor(c('A', 'B', 'A', 'C', 'B'))").AsFactor();
          Assert.That(factor.GetFactors(), Is.EquivalentTo(new[] { "A", "B", "A", "C", "B" }));
          factor = engine.Evaluate(@"
@@ -58,7 +58,7 @@ x
       [Test]
       public void TestGetFactorsEnum()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var code = "factor(c(rep('T', 5), rep('C', 5), rep('T', 4), rep('C', 5)), levels=c('T', 'C'), labels=c('Treatment', 'Control'))";
          var factor = engine.Evaluate(code).AsFactor();
          var expected = Enumerable.Repeat(Group.Treatment, 5)

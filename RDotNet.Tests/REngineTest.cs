@@ -9,36 +9,36 @@ namespace RDotNet
       [Test]
       public void TestSetCommandLineArguments()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.SetCommandLineArguments(new[] { "Hello", "World" });
-         Assert.That(engine.Evaluate("commandArgs()").AsCharacter(), Is.EquivalentTo(new[] { EngineName, "Hello", "World" }));
+         Assert.That(engine.Evaluate("commandArgs()").AsCharacter(), Is.EquivalentTo(new[] { REngine.EngineName, "Hello", "World" }));
       }
 
       [Test]
       public void TestDefaultCommandLineArgs()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var cmdArgs = engine.Evaluate("commandArgs()").AsCharacter();
       }
 
       [Test]
       public void TestGlobalEnvironment()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          Assert.That(engine.GlobalEnvironment.DangerousGetHandle(), Is.EqualTo(engine.Evaluate(".GlobalEnv").DangerousGetHandle()));
       }
 
       [Test]
       public void TestBaseNamespace()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          Assert.That(engine.BaseNamespace.DangerousGetHandle(), Is.EqualTo(engine.Evaluate(".BaseNamespaceEnv").DangerousGetHandle()));
       }
 
       [Test]
       public void TestNilValue()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          Assert.That(engine.NilValue.DangerousGetHandle(), Is.EqualTo(engine.Evaluate("NULL").DangerousGetHandle()));
       }
 
@@ -106,7 +106,7 @@ namespace RDotNet
 
       private void CheckProperMemoryReclaimR<T>(string statementCreateX, double expectedMinMegaBytesDifference, Func<SymbolicExpression, T> coercionFun) where T : SymbolicExpression
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var memoryInitial = GetBaselineRengineMemory(engine);
          engine.Evaluate(statementCreateX);
          T sexp = coercionFun(engine.GetSymbol("x"));
@@ -136,7 +136,7 @@ namespace RDotNet
          var statementCreateX = "x <- format(1:1000000)";
          double expectedMinBytesDifference = 2.5e7;  // (20 bytes + 2*6) * 1e6 = 3.2e7 bytes ~ 32 MB
          
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var memoryInitial = GetBaselineDotnetMemory(engine);
          engine.Evaluate(statementCreateX);
          var strArray = engine.GetSymbol("x").AsCharacter().ToArray();
@@ -151,7 +151,7 @@ namespace RDotNet
       [Test]
       public void TestParseCodeLine()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("cat('hello')");
          Assert.That(Device.GetString(), Is.EqualTo("hello"));
       }
@@ -159,7 +159,7 @@ namespace RDotNet
       [Test]
       public void TestParseCodeBlock()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("for(i in 1:3){\ncat(i)\ncat(i)\n}");
          Assert.That(Device.GetString(), Is.EqualTo("112233"));
       }
@@ -167,7 +167,7 @@ namespace RDotNet
       [Test]
       public void TestReadConsole()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          Device.Input = "Hello, World!";
          Assert.That(engine.Evaluate("readline()").AsCharacter()[0], Is.EqualTo(Device.Input));
       }
@@ -175,7 +175,7 @@ namespace RDotNet
       [Test]
       public void TestWriteConsole()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("print(NULL)");
          Assert.That(Device.GetString(), Is.EqualTo("NULL\n"));
       }
@@ -183,7 +183,7 @@ namespace RDotNet
       [Test]
       public void TestCallingTwice()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          engine.Evaluate("a <- 1");
          engine.Evaluate("a <- a+1");
          NumericVector v1 = engine.GetSymbol("a").AsNumeric();

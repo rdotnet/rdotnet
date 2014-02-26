@@ -8,7 +8,7 @@ namespace RDotNet
       public void TestIsList()
       {
          //https://rdotnet.codeplex.com/workitem/81         
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var pairList = engine.Evaluate("pairlist(a=5)");
          var aList = engine.Evaluate("list(a=5)");
          bool b = aList.AsList().IsList();
@@ -20,7 +20,7 @@ namespace RDotNet
       public void TestListSubsetting()
       {
          //https://rdotnet.codeplex.com/workitem/81         
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var numlist = engine.Evaluate("c(1.5, 2.5)").AsList();
          var numListString = numlist.ToString();
          var element = numlist[1];
@@ -39,7 +39,7 @@ List of 3
 > 
           */
 
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var functionAsList = engine.Evaluate("as.list").AsList();
          Assert.AreEqual(3, functionAsList.Length);
          Assert.IsTrue(functionAsList[0].IsSymbol());
