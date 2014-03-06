@@ -39,7 +39,7 @@ namespace RDotNet
       private bool isRunning;
       private StartupParameter parameter;
 
-      private REngine(string id, string dll)
+      protected REngine(string id, string dll)
          : base(dll)
       {
          this.id = id;
@@ -191,13 +191,19 @@ namespace RDotNet
          //{
          //   throw new ArgumentException();
          //}
+         dll = ProcessRDllFileName(dll);
+         var engine = new REngine(id, dll);
+         //instances.Add(id, engine);
+         return engine;
+      }
+
+      protected static string ProcessRDllFileName(string dll)
+      {
          if (string.IsNullOrEmpty(dll))
          {
             dll = NativeUtility.GetRDllFileName();
          }
-         var engine = new REngine(id, dll);
-         //instances.Add(id, engine);
-         return engine;
+         return dll;
       }
 
       /// <summary>
@@ -237,14 +243,21 @@ namespace RDotNet
       /// <param name="varname">The variable name exported by the R dynamic library, e.g. R_ParseErrorMsg</param>
       /// <returns>The Unicode equivalent of the native ANSI string</returns>
       /// <example><code></code></example>
-      internal string GetDangerousChar(string varname)
+      public string GetDangerousChar(string varname)
       {
          var addr = this.DangerousGetHandle(varname);
          return Marshal.PtrToStringAnsi(addr);
       }
 
+      /// <summary>
+      /// Initialize this REngine object. Only the first call has an effect. Subsequent calls to this function are ignored.
+      /// </summary>
+      /// <param name="parameter">The optional startup parameters</param>
+      /// <param name="device">The optional character device to use for the R engine</param>
       public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null)
       {
+         if (this.isRunning)
+            return;
          this.parameter = parameter ?? new StartupParameter ();
          this.adapter = new CharacterDeviceAdapter (device ?? DefaultDevice);
 

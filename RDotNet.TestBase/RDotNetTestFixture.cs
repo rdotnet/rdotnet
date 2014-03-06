@@ -7,23 +7,23 @@ namespace RDotNet
    [TestFixture]
    public class RDotNetTestFixture
    {
-      private readonly MockDevice device = new MockDevice();
+      private static readonly MockDevice device = new MockDevice();
 
 //      protected string EngineName { get { return "RDotNetTest"; } }
 
-      protected MockDevice Device { get { return this.device; } }
+      protected MockDevice Device { get { return device; } }
 
       private static REngine engine = null;
 
       protected REngine Engine { get { return engine; } }
 
-//      private readonly bool initializeOnceOnly = false;
+      private readonly bool initializeOnceOnly = true;
 
       [TestFixtureSetUp]
       protected virtual void SetUpFixture()
       {
-         //if (initializeOnceOnly && engine != null)
-         //   return;
+         if (initializeOnceOnly && engine != null)
+            return;
          REngine.SetEnvironmentVariables();
          engine = REngine.GetInstance();
          engine.Initialize(device: device);
@@ -36,18 +36,17 @@ namespace RDotNet
          //   engine.ClearGlobalEnvironment();
          //else
          //var engine = REngine.GetInstanceFromID(EngineName);
-            if (engine != null)
-            {
-               engine.Dispose();
-            }
+         //if (engine != null)
+         //{
+         //   engine.Dispose();
+         //}
       }
 
       [SetUp]
       protected virtual void SetUpTest()
       {
-         var engine = REngine.GetInstance();
          engine.Evaluate("rm(list=ls())");
-         this.device.Initialize();
+         this.Device.Initialize();
       }
 
       [TearDown]
