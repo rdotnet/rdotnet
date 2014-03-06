@@ -107,6 +107,7 @@ namespace RDotNet
       private void CheckProperMemoryReclaimR<T>(string statementCreateX, double expectedMinMegaBytesDifference, Func<SymbolicExpression, T> coercionFun) where T : SymbolicExpression
       {
          var engine = this.Engine;
+         engine.Evaluate("if (exists('x')) {rm(x)}");
          var memoryInitial = GetBaselineRengineMemory(engine);
          engine.Evaluate(statementCreateX);
          T sexp = coercionFun(engine.GetSymbol("x"));
