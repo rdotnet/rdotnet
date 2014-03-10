@@ -25,8 +25,7 @@ namespace RDotNet
          if (initializeOnceOnly && engine != null)
             return;
          REngine.SetEnvironmentVariables();
-         engine = REngine.GetInstance();
-         engine.Initialize(device: device);
+         engine = REngine.GetInstance(dll: null, initialize: true, parameter: null, device: Device);
       }
 
       [TestFixtureTearDown]

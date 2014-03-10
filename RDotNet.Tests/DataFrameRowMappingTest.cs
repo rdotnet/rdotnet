@@ -32,12 +32,12 @@ namespace RDotNet
       public void TestDataFrameSubsetting()
       {
          var engine = this.Engine;
-         var iris = engine.Evaluate("iris").AsDataFrame();
-         var iris50 = engine.Evaluate("iris[1:50,]").AsDataFrame();
+         dynamic iris = engine.Evaluate("iris").AsDataFrame();
+         dynamic iris50 = engine.Evaluate("iris[1:50,]").AsDataFrame();
          Assert.AreEqual(150, iris.RowCount);
          Assert.AreEqual(50, iris50.RowCount);
-         var species = (DynamicVector)GetSpecies(iris);
-         var species50 = (DynamicVector)GetSpecies(iris50);
+         var species50 = (DynamicVector)iris50.Species;
+         var species = (DynamicVector)iris.Species;
          var sameRef = object.ReferenceEquals(species, species50);
          Assert.AreEqual(150, species.Length);
          Assert.AreEqual(50, species50.Length);
