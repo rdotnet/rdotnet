@@ -156,18 +156,42 @@ namespace RDotNet
       public static string EngineName { get { return "R.NET"; } }
 
       /// <summary>
-      /// Gets a reference to the R engine
+      /// Gets a reference to the R engine, creating and initializing it if necessary. In most cases users need not provide any parameter to this method.
       /// </summary>
-      /// <param name="dll">The file name of the library to load, e.g. "R.dll" for Windows. You should usually not provide this optional parameter</param>
+      /// <param name="dll">The file name of the library to load, e.g. "R.dll" for Windows. You usually do not need need to provide this optional parameter</param>
+      /// <param name="initialize">Initialize the R engine after its creation. Default is true</param>
+      /// <param name="parameter">If 'initialize' is 'true', you can optionally specify the specific startup parameters for the R native engine</param>
+      /// <param name="device">If 'initialize' is 'true', you can optionally specify a character device for the R engine to use</param>
       /// <returns>The engine.</returns>
-      public static REngine GetInstance(string dll = null)
+      /// <example>
+      /// <p>A minimalist approach is to just call GetInstance</p>
+      /// <code>
+      /// REngine.SetEnvironmentVariables();
+      /// var engine = REngine.GetInstance();
+      /// engine.Evaluate("letters[1:26]");
+      /// </code>
+      /// <p>In unusual circumstances you may need to elaborate on the initialization in a separate method call</p>
+      /// <code>
+      /// REngine.SetEnvironmentVariables(rPath=@"c:\my\peculiar\path\to\R\bin\x64");
+      /// var engine = REngine.GetInstance(initialize=false);
+      /// StartupParameter sParams=new StartupParameter(){NoRenviron=true;};
+      /// ICharacterDevice device = new YourCustomDevice();
+      /// engine.Initialize(parameter: sParams, device: device);
+      /// engine.Evaluate("letters[1:26]");
+      /// </code>
+      /// </example>
+      public static REngine GetInstance(string dll = null, bool initialize = true, StartupParameter parameter = null, ICharacterDevice device = null)
       {
          if (!environmentIsSet) // should there be a warning? and how?
             SetEnvironmentVariables();
          if (engine == null)
+         {
             engine = CreateInstance(EngineName, dll);
+            if (initialize)
+               engine.Initialize(parameter, device);
+         }
          if (engine.Disposed)
-            throw new Exception("The single REngine instance has already been disposed of (i.e. shut down). Multiple engine restart cannot be supported.");
+            throw new Exception("The single REngine instance has already been disposed of (i.e. shut down). Multiple engine restart is not possible.");
          return engine;
       }
 
