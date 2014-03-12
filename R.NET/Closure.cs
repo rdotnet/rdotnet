@@ -68,15 +68,17 @@ namespace RDotNet
 
       public override SymbolicExpression Invoke(IDictionary<string, SymbolicExpression> args)
       {
-         if (args.Count > Arguments.Count)
-            throw new ArgumentException("Too many arguments provided for this function", "args");
+         //if (args.Count > Arguments.Count)
+         //   throw new ArgumentException("Too many arguments provided for this function", "args");
 
-         var argNames = args.Keys.ToArray();
-         var argsArr = new SymbolicExpression[args.Count];
-         for (int i = 0; i < argNames.Length; i++)
-            argsArr[i] = args[argNames[i]];
+         var a = args.ToArray();
+         return Invoke(Array.ConvertAll(a, x => x.Key), Array.ConvertAll(a, x => x.Value));
+         //var argNames = args.Keys.ToArray();
+         //var argsArr = new SymbolicExpression[args.Count];
+         //for (int i = 0; i < argNames.Length; i++)
+         //   argsArr[i] = args[argNames[i]];
 
-         return Invoke(argNames, argsArr);
+         //return Invoke(argNames, argsArr);
       }
 
       private SymbolicExpression Invoke(string[] argNames, SymbolicExpression[] args)
@@ -86,10 +88,13 @@ namespace RDotNet
          arguments.SetAttribute(Engine.GetPredefinedSymbol("R_NamesSymbol"), names);
          var argPairList = arguments.ToPairlist();
 
-         IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);
-         IntPtr result = Engine.GetFunction<Rf_applyClosure>()(Body.DangerousGetHandle(), handle,
-                                                               argPairList.DangerousGetHandle(),
-                                                               Environment.DangerousGetHandle(), newEnvironment);
+         //IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);
+         //IntPtr result = Engine.GetFunction<Rf_applyClosure>()(Body.DangerousGetHandle(), handle,
+         //                                                      argPairList.DangerousGetHandle(),
+         //                                                      Environment.DangerousGetHandle(), newEnvironment);
+         IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argPairList.DangerousGetHandle());
+         IntPtr result = Engine.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
+
          return new SymbolicExpression(Engine, result);
       }
 
