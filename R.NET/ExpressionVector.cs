@@ -4,6 +4,9 @@ using System.Security.Permissions;
 
 namespace RDotNet
 {
+   /// <summary>
+   /// A vector of S expressions
+   /// </summary>
    [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
    public class ExpressionVector : Vector<Expression>
    {

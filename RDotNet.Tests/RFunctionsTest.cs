@@ -10,7 +10,7 @@ namespace RDotNet
       [Test]
       public void TestBuiltinFunctions()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
 
          // function (x)  .Primitive("abs")
          var abs = engine.GetSymbol("abs").AsFunction();
@@ -28,7 +28,7 @@ namespace RDotNet
       [Test]
       public void TestStatsFunctions()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
 
          //> a <- dpois(0:7, lambda = 0.9)
          //> signif(a, 2)
@@ -56,11 +56,78 @@ namespace RDotNet
 
       }
 
+      // https://rdotnet.codeplex.com/workitem/76
+      [Test]
+      public void TestGenericFunction()
+      {
+         var engine = this.Engine;
+
+
+         
+         var funcDef=@"
+printPairList <- function(...) {
+  a <- list(...)
+  namez <- names(a)
+  r <- ''
+  if(length(a)==0) return('empty pairlist')
+  for(i in 1:length(a)) {
+    name <- namez[i]
+    r <- paste(r, paste0(name, '=', a[[i]], sep=';'))
+  }
+  substring(r, 1, (nchar(r)-1))
+}
+  
+
+setGeneric( 'f', function(x, ...) {
+	standardGeneric('f')
+} )
+
+setMethod( 'f', 'integer', function(x, ...) { paste( 'f.integer called:', printPairList(...) ) } )
+setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printPairList(...) ) } )
+";
+
+         engine.Evaluate(funcDef);
+         var f=engine.GetSymbol("f").AsFunction();
+
+
+         // > f(1, b=2, c=3)
+         // [1] "f.numeric called:  b=2; c=3"
+         checkInvoke(f.InvokeNamed(tc("a", "1.0"), tc("b", "2"), tc("c", "3")), "f.numeric called:  b=2; c=3");
+         // > f(1, b=2.1, c=3)
+         // [1] "f.numeric called:  b=2.1; c=3"
+         checkInvoke(f.InvokeNamed(tc("a", "1.0"), tc("b", "2.1"), tc("c", "3")), "f.numeric called:  b=2.1; c=3");
+         // > f(1, c=3, b=2)
+         // [1] "f.numeric called:  c=3; b=2"
+         checkInvoke(f.InvokeNamed(tc("a", "1.0"), tc("c", "3"), tc("b", "2")), "f.numeric called:  c=3; b=2");
+         // > f(1L, b=2, c=3)
+         // [1] "f.integer called:  b=2; c=3"
+         checkInvoke(f.InvokeNamed(tc("a", "1L"), tc("b", "2"), tc("c", "3")), "f.integer called:  b=2; c=3");
+         // > f(1L, c=3, b=2)
+         // [1] "f.integer called:  c=3; b=2"
+         checkInvoke(f.InvokeNamed(tc("a", "1L"), tc("c", "3"), tc("b", "2")), "f.integer called:  c=3; b=2");
+         
+         // .NET Framework array to R vector.
+         NumericVector group1 = engine.CreateNumericVector(new double[] { 30.02, 29.99, 30.11, 29.97, 30.01, 29.99 });
+         engine.SetSymbol("group1", group1);
+         // Direct parsing from R script.
+         NumericVector group2 = engine.Evaluate("group2 <- c(29.89, 29.93, 29.72, 29.98, 30.02, 29.98)").AsNumeric();
+
+         GenericVector testResult = engine.Evaluate("t.test(group1, group2)").AsList();
+         double p = testResult["p.value"].AsNumeric().First();
+         Assert.AreEqual(0.09077332, Math.Round(p, 8));
+
+         var s2 = engine.GetSymbol("t.test");
+         var f2 = s2.AsFunction();
+         GenericVector testResult2 = f2.Invoke(new[] { group1, group2 }).AsList();
+         double p2 = testResult2["p.value"].AsNumeric().First();
+         double p3 = testResult2[2].AsNumeric().First();
+         Assert.AreEqual(0.09077332, p2);
+      }
 
       [Test]
       public void TestArgumentMatching()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
 
          var funcDef = @"function(a, b, cc=NULL, d='d', e=length(d), f=FALSE, g=123.4) {
   r <- paste0('a=', ifelse(missing(a),'missing_a',a))
@@ -109,7 +176,7 @@ namespace RDotNet
       private SymbolicExpression CreateSexp(object value)
       {
          var t = value.GetType();
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          if (t == typeof(double))
             return engine.CreateNumericVector((double)value);
          if (t == typeof(string))

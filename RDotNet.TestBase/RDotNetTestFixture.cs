@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 
 namespace RDotNet
@@ -6,41 +7,64 @@ namespace RDotNet
    [TestFixture]
    public class RDotNetTestFixture
    {
-      private readonly MockDevice device = new MockDevice();
+      private static readonly MockDevice device = new MockDevice();
 
-      protected string EngineName { get { return "RDotNetTest"; } }
+//      protected string EngineName { get { return "RDotNetTest"; } }
 
-      protected MockDevice Device { get { return this.device; } }
+      protected MockDevice Device { get { return device; } }
+
+      private static REngine engine = null;
+
+      protected REngine Engine { get { return engine; } }
+
+      private readonly bool initializeOnceOnly = true;
 
       [TestFixtureSetUp]
       protected virtual void SetUpFixture()
       {
-         Helper.SetEnvironmentVariables();
-         var engine = REngine.CreateInstance(EngineName);
-         engine.Initialize(device: device);
+         if (initializeOnceOnly && engine != null)
+            return;
+         REngine.SetEnvironmentVariables();
+         engine = REngine.GetInstance(dll: null, initialize: true, parameter: null, device: Device);
       }
 
       [TestFixtureTearDown]
       protected virtual void TearDownFixture()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
-         if (engine != null)
-         {
-            engine.Dispose();
-         }
+         //if (initializeOnceOnly && engine != null)
+         //   engine.ClearGlobalEnvironment();
+         //else
+         //var engine = REngine.GetInstanceFromID(EngineName);
+         //if (engine != null)
+         //{
+         //   engine.Dispose();
+         //}
       }
 
       [SetUp]
       protected virtual void SetUpTest()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
          engine.Evaluate("rm(list=ls())");
-         this.device.Initialize();
+         this.Device.Initialize();
       }
 
       [TearDown]
       protected virtual void TearDownTest()
       {
+      }
+
+      protected static double GetRMemorySize(REngine engine)
+      {
+         var memoryAfterAlloc = engine.Evaluate("memory.size()").AsNumeric().First();
+         return memoryAfterAlloc;
+      }
+
+      protected static void GarbageCollectRandClr(REngine engine)
+      {
+         GC.Collect();
+         // it seems important to call gc() twice to get a proper baseline.
+         engine.ForceGarbageCollection();
+         engine.ForceGarbageCollection();
       }
 
       protected double[] GenArrayDouble(int from, int to)

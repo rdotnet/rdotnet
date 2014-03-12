@@ -12,6 +12,11 @@ namespace RDotNet
       private DataFrame frame;
       private int rowIndex;
 
+      /// <summary>
+      /// Creates a new object representing a data frame row
+      /// </summary>
+      /// <param name="frame">R Data frame</param>
+      /// <param name="rowIndex">zero-based row index</param>
       public DataFrameRow(DataFrame frame, int rowIndex)
       {
          this.frame = frame;
@@ -21,7 +26,7 @@ namespace RDotNet
       /// <summary>
       /// Gets and sets the value at the specified column.
       /// </summary>
-      /// <param name="index">The column index.</param>
+      /// <param name="index">The zero-based column index.</param>
       /// <returns>The value.</returns>
       public object this[int index]
       {

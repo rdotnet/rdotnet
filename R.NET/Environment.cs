@@ -60,7 +60,7 @@ namespace RDotNet
          IntPtr value = Engine.GetFunction<Rf_findVar>()(installedName, handle);
          if (Engine.CheckUnbound(value))
          {
-            return null;
+            throw new EvaluationException(string.Format("Error: object '{0}' not found", name));
          }
 
          var sexp = (SEXPREC)Marshal.PtrToStructure(value, typeof(SEXPREC));
@@ -80,11 +80,11 @@ namespace RDotNet
       {
          if (name == null)
          {
-            throw new ArgumentNullException("name");
+            throw new ArgumentNullException("name", "'name' cannot be null");
          }
          if (name == string.Empty)
          {
-            throw new ArgumentException();
+            throw new ArgumentException("'name' cannot be an empty string");
          }
          if (expression == null)
          {

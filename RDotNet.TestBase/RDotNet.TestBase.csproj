@@ -45,7 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helper.cs" />
     <Compile Include="MockDevice.cs" />
     <Compile Include="RDotNetTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

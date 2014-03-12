@@ -14,6 +14,11 @@ namespace RDotNet
    /// </remarks>
    public class DynamicVector : Vector<object>
    {
+      /// <summary>
+      /// Creates a container for a collection of values
+      /// </summary>
+      /// <param name="engine">The R engine</param>
+      /// <param name="coerced">Pointer to the native R object, coerced to the appropriate type</param>
       protected internal DynamicVector(REngine engine, IntPtr coerced)
          : base(engine, coerced)
       { }

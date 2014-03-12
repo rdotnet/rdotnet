@@ -7,7 +7,7 @@ namespace RDotNet
       [Test]
       public void TestIsDataFrameTrue()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var iris = engine.Evaluate("data.frame()");
          Assert.That(iris.IsDataFrame(), Is.True);
       }
@@ -15,9 +15,19 @@ namespace RDotNet
       [Test]
       public void TestIsDataFrameFalse()
       {
-         var engine = REngine.GetInstanceFromID(EngineName);
+         var engine = this.Engine;
          var iris = engine.Evaluate("list()");
          Assert.That(iris.IsDataFrame(), Is.False);
+      }
+
+      [Test]
+      public void TestDataFrameFactorColumns()
+      {
+         var engine = this.Engine;
+         engine.Evaluate("data(mpg, package='ggplot2')");
+         var mpg = engine.Evaluate("mpg").AsDataFrame();
+         var manufacturer = mpg[0].AsFactor().GetFactors();
+         Assert.AreEqual("audi", manufacturer[0]);
       }
    }
 }

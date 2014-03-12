@@ -32,18 +32,19 @@ namespace RDotNet
    public class REngine : UnmanagedDll
    {
       private static readonly ICharacterDevice DefaultDevice = new ConsoleDevice();
-      private static readonly Dictionary<string, REngine> instances = new Dictionary<string, REngine>();
+      //private static readonly Dictionary<string, REngine> instances = new Dictionary<string, REngine>();
 
       private readonly string id;
       private CharacterDeviceAdapter adapter;
       private bool isRunning;
       private StartupParameter parameter;
 
-      private REngine(string id, string dll)
+      protected REngine(string id, string dll)
          : base(dll)
       {
          this.id = id;
          this.isRunning = false;
+         this.Disposed = false;
       }
 
       /// <summary>
@@ -149,13 +150,58 @@ namespace RDotNet
          }
       }
 
+      private static bool environmentIsSet = false;
+      private static REngine engine = null;
+
+      public static string EngineName { get { return "R.NET"; } }
+
+      /// <summary>
+      /// Gets a reference to the R engine, creating and initializing it if necessary. In most cases users need not provide any parameter to this method.
+      /// </summary>
+      /// <param name="dll">The file name of the library to load, e.g. "R.dll" for Windows. You usually do not need need to provide this optional parameter</param>
+      /// <param name="initialize">Initialize the R engine after its creation. Default is true</param>
+      /// <param name="parameter">If 'initialize' is 'true', you can optionally specify the specific startup parameters for the R native engine</param>
+      /// <param name="device">If 'initialize' is 'true', you can optionally specify a character device for the R engine to use</param>
+      /// <returns>The engine.</returns>
+      /// <example>
+      /// <p>A minimalist approach is to just call GetInstance</p>
+      /// <code>
+      /// REngine.SetEnvironmentVariables();
+      /// var engine = REngine.GetInstance();
+      /// engine.Evaluate("letters[1:26]");
+      /// </code>
+      /// <p>In unusual circumstances you may need to elaborate on the initialization in a separate method call</p>
+      /// <code>
+      /// REngine.SetEnvironmentVariables(rPath=@"c:\my\peculiar\path\to\R\bin\x64");
+      /// var engine = REngine.GetInstance(initialize=false);
+      /// StartupParameter sParams=new StartupParameter(){NoRenviron=true;};
+      /// ICharacterDevice device = new YourCustomDevice();
+      /// engine.Initialize(parameter: sParams, device: device);
+      /// engine.Evaluate("letters[1:26]");
+      /// </code>
+      /// </example>
+      public static REngine GetInstance(string dll = null, bool initialize = true, StartupParameter parameter = null, ICharacterDevice device = null)
+      {
+         if (!environmentIsSet) // should there be a warning? and how?
+            SetEnvironmentVariables();
+         if (engine == null)
+         {
+            engine = CreateInstance(EngineName, dll);
+            if (initialize)
+               engine.Initialize(parameter, device);
+         }
+         if (engine.Disposed)
+            throw new Exception("The single REngine instance has already been disposed of (i.e. shut down). Multiple engine restart is not possible.");
+         return engine;
+      }
+
       /// <summary>
       /// Creates a new instance that handles R.DLL.
       /// </summary>
       /// <param name="id">ID.</param>
-      /// <param name="dll">The core dll of R.</param>
+      /// <param name="dll">The file name of the library to load, e.g. "R.dll" for Windows. You should usually not provide this optional parameter</param>
       /// <returns>The engine.</returns>
-      public static REngine CreateInstance(string id, string dll = null)
+      private static REngine CreateInstance(string id, string dll = null)
       {
          if (id == null)
          {
@@ -165,29 +211,23 @@ namespace RDotNet
          {
             throw new ArgumentException("Empty ID is not allowed.", "id");
          }
-         if (instances.ContainsKey(id))
+         //if (instances.ContainsKey(id))
+         //{
+         //   throw new ArgumentException();
+         //}
+         dll = ProcessRDllFileName(dll);
+         var engine = new REngine(id, dll);
+         //instances.Add(id, engine);
+         return engine;
+      }
+
+      protected static string ProcessRDllFileName(string dll)
          {
-            throw new ArgumentException();
-         }
          if (string.IsNullOrEmpty(dll))
          {
             dll = NativeUtility.GetRDllFileName();
          }
-         var engine = new REngine(id, dll);
-         instances.Add(id, engine);
-         return engine;
-      }
-
-      /// <summary>
-      /// Gets an instance specified in the given ID.
-      /// </summary>
-      /// <param name="id">ID.</param>
-      /// <returns>The engine.</returns>
-      public static REngine GetInstanceFromID(string id)
-      {
-         REngine engine;
-         instances.TryGetValue(id, out engine);
-         return engine;
+         return dll;
       }
 
       /// <summary>
@@ -202,17 +242,47 @@ namespace RDotNet
       /// </remarks>
       public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
       {
+         environmentIsSet = true;
          NativeUtility.SetEnvironmentVariables(rPath: rPath, rHome: rHome);
       }
 
       /// <summary>
-      /// Initializes R process.
+      /// Set a global variable in native memory, of type int or compatible (e.g. uintptr_t)
       /// </summary>
-      /// <param name="parameter">The startup parameter.</param>
-      /// <param name="device">The IO device.</param>
+      /// <param name="varname">variable name</param>
+      /// <param name="value">Value.</param>
+      /// <example>
+      /// <code>
+      /// SetDangerousInt32 ("R_CStackLimit", -1)
+      /// </code></example>
+      internal void SetDangerousInt32(string varname, int value)
+      {
+         var addr = this.DangerousGetHandle(varname);
+         System.Runtime.InteropServices.Marshal.WriteInt32(addr, value);
+      }
+
+      /// <summary>
+      /// Gets the value of a character string
+      /// </summary>
+      /// <param name="varname">The variable name exported by the R dynamic library, e.g. R_ParseErrorMsg</param>
+      /// <returns>The Unicode equivalent of the native ANSI string</returns>
+      /// <example><code></code></example>
+      public string GetDangerousChar(string varname)
+      {
+         var addr = this.DangerousGetHandle(varname);
+         return Marshal.PtrToStringAnsi(addr);
+      }
+
+      /// <summary>
+      /// Initialize this REngine object. Only the first call has an effect. Subsequent calls to this function are ignored.
+      /// </summary>
+      /// <param name="parameter">The optional startup parameters</param>
+      /// <param name="device">The optional character device to use for the R engine</param>
       /// <param name="setupMainLoop">if true, call the functions to initialise the embedded R</param>
       public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null, bool setupMainLoop = true)
       {
+         if (this.isRunning)
+            return;
          this.parameter = parameter ?? new StartupParameter();
          this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
          if (!setupMainLoop)
@@ -220,8 +290,27 @@ namespace RDotNet
             this.isRunning = true;
             return;
          }
+
+          
+         switch (NativeUtility.GetPlatform ()) {
+         case PlatformID.MacOSX:
+         case PlatformID.Unix:
+            SetDangerousInt32 ("R_SignalHandlers", 0); // RInside does that for non WIN32
+            SetDangerousInt32 ("R_CStackLimit", -1); // Don't do any stack checking, see R Exts, '8.1.5 Threading issues'
+            break;
+         }
+         string[] R_argv = BuildRArgv (this.parameter);
+         //string[] R_argv = new[]{"rdotnet_app",  "--interactive",  "--no-save",  "--no-restore-data",  "--max-ppsize=50000"};
+         //rdotnet_app --quiet --interactive --no-save --no-restore-data --max-mem-size=18446744073709551615 --max-ppsize=50000  
          GetFunction<R_setStartTime>()();
-         GetFunction<Rf_initialize_R>()(1, new[] { ID });
+         int R_argc = R_argv.Length;
+         var status = GetFunction<Rf_initialize_R> () (R_argc, R_argv);
+         if(status!=0)
+            throw new Exception("A call to Rf_initialize_R returned a non-zero; status="+status);
+
+         // following in RInside: may not be needed.
+         //GetFunction<R_ReplDLLinit> () ();
+         //this.parameter.Interactive = true; 
          this.adapter.Install(this, this.parameter);
          switch (NativeUtility.GetPlatform())
          {
@@ -235,6 +324,83 @@ namespace RDotNet
          }
          GetFunction<setup_Rmainloop>("setup_Rmainloop")();
          this.isRunning = true;
+      }
+
+      public static string[] BuildRArgv(StartupParameter parameter)
+      {
+         var argv = new List<string>();
+         argv.Add("rdotnet_app");
+         // Not sure whether I should add no-readline
+         //[MarshalAs(UnmanagedType.Bool)]
+      //public bool R_Quiet;
+         if(parameter.Quiet && !parameter.Interactive) argv.Add("--quiet");  // --quite --interactive to R embedded crashed...
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool R_Slave;
+         if (parameter.Slave) argv.Add("--slave");
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool R_Interactive;
+         if (parameter.Interactive) argv.Add("--interactive");
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool R_Verbose;
+         if (parameter.Verbose) argv.Add("--verbose");
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool LoadSiteFile;
+         if (!parameter.LoadSiteFile) argv.Add("--no-site-file");
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool LoadInitFile;
+         if (!parameter.LoadInitFile) argv.Add("--no-init-file");
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool DebugInitFile;
+         //if (parameter.Quiet) argv.Add("--quiet");
+
+      //public StartupRestoreAction RestoreAction;
+      //public StartupSaveAction SaveAction;
+      //internal UIntPtr vsize;
+      //internal UIntPtr nsize;
+      //internal UIntPtr max_vsize;
+      //internal UIntPtr max_nsize;
+      //internal UIntPtr ppsize;
+
+      //[MarshalAs(UnmanagedType.Bool)]
+      //public bool NoRenviron;
+         if (parameter.NoRenviron) argv.Add("--no-environ");
+
+         switch (parameter.SaveAction)
+         {
+            case StartupSaveAction.NoSave:
+               argv.Add("--no-save");
+               break;
+            case StartupSaveAction.Save:
+               argv.Add("--save");
+               break;
+         }
+         switch (parameter.RestoreAction)
+         {
+            case StartupRestoreAction.NoRestore:
+               argv.Add("--no-restore-data");
+               break;
+            case StartupRestoreAction.Restore:
+               argv.Add("--restore");
+               break;
+         }
+
+         if (parameter.MaxMemorySize == (Environment.Is64BitProcess ? ulong.MaxValue : uint.MaxValue))
+         {
+            // This creates a nasty crash if using the default MaxMemorySize. found out in Rdotnet workitem 72
+            // do nothing
+         }
+         else
+         {
+            argv.Add("--max-mem-size=" + parameter.MaxMemorySize);
+         }
+         argv.Add("--max-ppsize=" + parameter.StackSize);
+         return argv.ToArray();
       }
 
       /// <summary>
@@ -410,37 +576,79 @@ namespace RDotNet
       {
          incompleteStatement.Append(statement);
          var s = GetFunction<Rf_mkString>()(incompleteStatement.ToString());
-
+         string errorStatement;
          using (new ProtectedPointer(this, s))
          {
             ParseStatus status;
             var vector = new ExpressionVector(this, GetFunction<R_ParseVector>()(s, -1, out status, NilValue.DangerousGetHandle()));
-            if (vector.Length == 0)
-            {
-               return null;
-            }
 
             switch (status)
             {
                case ParseStatus.OK:
                   incompleteStatement.Clear();
+                  if (vector.Length == 0)
+                  {
+                     return null;
+                  }
                   using (new ProtectedPointer(vector))
                   {
                      SymbolicExpression result;
                      if (!vector.First().TryEvaluate(GlobalEnvironment, out result))
                      {
-                        throw new ParseException();
+                        throw new EvaluationException(LastErrorMessage);
                      }
                      return result;
                   }
                case ParseStatus.Incomplete:
                   return null;
-
-               default:
-                  var errorStatement = incompleteStatement.ToString();
+               case ParseStatus.Error:
+                  // TODO: use LastErrorMessage if below is just a subset
+                  var parseErrorMsg = GetDangerousChar("R_ParseErrorMsg");
+                  errorStatement = incompleteStatement.ToString();
                   incompleteStatement.Clear();
-                  throw new ParseException(status, errorStatement);
+                  throw new ParseException(status, errorStatement, parseErrorMsg);
+               default:
+                  errorStatement = incompleteStatement.ToString();
+                  incompleteStatement.Clear();
+                  throw new ParseException(status, errorStatement, "");
             }
+         }
+      }
+
+
+      /// <summary>
+      /// A cache of the unevaluated R expression 'geterrmessage'
+      /// </summary>
+      /// <remarks>do_geterrmessage is in Rdll.hide, so we cannot access at the C API level. 
+      /// We use the 'geterrmessage()' R evaluation, but not using the same mechanism as other REngine evaluation 
+      /// to avoid recursions issues</remarks>
+      private Expression geterrmessage = null;
+
+      /// <summary>
+      /// Gets the last error message in the R engine; see R function geterrmessage.
+      /// </summary>
+      internal string LastErrorMessage
+      {
+         get
+         {
+            if (geterrmessage == null)
+            {
+               var statement = "geterrmessage()\n";
+               var s = GetFunction<Rf_mkString>()(statement);
+               ParseStatus status;
+               var vector = new ExpressionVector(this, GetFunction<R_ParseVector>()(s, -1, out status, NilValue.DangerousGetHandle()));
+                  if (status != ParseStatus.OK)
+                     throw new ParseException(status, statement, "");
+                  if (vector.Length == 0)
+                     throw new ParseException(status, statement, "Failed to create expression vector!");
+               geterrmessage = vector.First();
+            }
+            SymbolicExpression result;
+            geterrmessage.TryEvaluate(GlobalEnvironment, out result);
+            var msgs = SymbolicExpressionExtension.AsCharacter(result).ToArray();
+            if (msgs.Length > 1) throw new Exception("Unexpected multiple error messages returned");
+            if (msgs.Length == 0) throw new Exception("No error messages returned (zero length)");
+            return msgs[0];
          }
       }
 
@@ -465,12 +673,17 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Gets whether this object has been disposed of already.
+      /// </summary>
+      public bool Disposed { get; private set; }
+
       protected override void Dispose(bool disposing)
       {
          if (isRunning)
          {
             this.isRunning = false;
-            instances.Remove(ID);
+            //instances.Remove(ID);
          }
          OnDisposing(EventArgs.Empty);
          if (disposing)
@@ -478,6 +691,7 @@ namespace RDotNet
             GetFunction<R_RunExitFinalizers>()();
             GetFunction<Rf_CleanEd>()();
             GetFunction<R_CleanTempDir>()();
+            Disposed = true;
          }
          this.isRunning = false;
 
@@ -487,7 +701,6 @@ namespace RDotNet
             this.adapter = null;
          }
 
-         // Why is this here?
          GC.KeepAlive(this.parameter);
          base.Dispose(disposing);
       }
@@ -517,5 +730,40 @@ namespace RDotNet
       private delegate IntPtr _getDLLVersion();
 
       #endregion Nested type: _getDLLVersion
+
+      public void ClearGlobalEnvironment(bool garbageCollectR = true, bool garbageCollectDotNet = true)
+      {
+         this.Evaluate("rm(list=ls())");
+         if (garbageCollectDotNet)
+         {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+   }
+         if (garbageCollectR)
+            ForceGarbageCollection();
+      }
+
+      private IntPtr stringNAPointer = IntPtr.Zero;
+
+      public IntPtr NaStringPointer
+      {
+         get
+         {
+            if (stringNAPointer == IntPtr.Zero)
+               stringNAPointer = NaString.DangerousGetHandle();
+            return stringNAPointer;
+         }
+      }
+
+      public SymbolicExpression stringNaSexp = null;
+      public SymbolicExpression NaString
+      {
+         get
+         {
+            if (stringNaSexp == null)
+               stringNaSexp = this.GetPredefinedSymbol("R_NaString");
+            return stringNaSexp;
+         }
+      }
    }
 }
