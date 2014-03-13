@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata>
       <id>R.NET</id>
-      <version>1.5.6</version>
+      <version>1.5.7</version>
       <title>R.NET</title>
       <authors>RecycleBin</authors>
       <owners>kos59125</owners>
