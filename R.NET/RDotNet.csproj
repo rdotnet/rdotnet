@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0923E1A0-2032-4997-AB73-49E42C4034A9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RDotNet</RootNamespace>
+    <AssemblyName>RDotNet</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\RDotNet.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile>bin\Release\RDotNet.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Closure.cs" />
+    <Compile Include="ComplexVector.cs" />
+    <Compile Include="CharacterMatrix.cs" />
+    <Compile Include="ComplexMatrix.cs" />
+    <Compile Include="BuiltinFunction.cs" />
+    <Compile Include="DataFrameColumnAttribute.cs" />
+    <Compile Include="DataFrameRowAttribute.cs" />
+    <Compile Include="Devices\CharacterDeviceAdapter.cs" />
+    <Compile Include="Devices\ConsoleDevice.cs" />
+    <Compile Include="Devices\NullCharacterDevice.cs" />
+    <Compile Include="Devices\ICharacterDevice.cs" />
+    <Compile Include="Diagnostics\DataFrameDebugView.cs" />
+    <Compile Include="Diagnostics\DataFrameColumnDisplay.cs" />
+    <Compile Include="Diagnostics\FactorDebugView.cs" />
+    <Compile Include="Diagnostics\MatrixDebugView.cs" />
+    <Compile Include="Diagnostics\VectorDebugView.cs" />
+    <Compile Include="EvaluationException.cs" />
+    <Compile Include="Factor.cs" />
+    <Compile Include="Internals\Delegates.cs" />
+    <Compile Include="Internals\OutputMode.cs" />
+    <Compile Include="Internals\Unix\RStart.cs" />
+    <Compile Include="Internals\ConsoleOutputType.cs" />
+    <Compile Include="Internals\BusyType.cs" />
+    <Compile Include="Internals\SaveActions.cs" />
+    <Compile Include="Internals\Unix\Delegates.cs" />
+    <Compile Include="Internals\Windows\Delegates.cs" />
+    <Compile Include="Internals\Windows\RStart.cs" />
+    <Compile Include="Internals\Windows\UiMode.cs" />
+    <Compile Include="Internals\YesNoCancel.cs" />
+    <Compile Include="Properties\VersionInfo.cs" />
+    <Compile Include="SpecialFunction.cs" />
+    <Compile Include="Environment.cs" />
+    <Compile Include="Expression.cs" />
+    <Compile Include="ExpressionVector.cs" />
+    <Compile Include="DataFrame.cs" />
+    <Compile Include="DataFrameRow.cs" />
+    <Compile Include="DynamicVector.cs" />
+    <Compile Include="Dynamic\DataFrameDynamicMeta.cs" />
+    <Compile Include="Dynamic\SymbolicExpressionDynamicMeta.cs" />
+    <Compile Include="Dynamic\ListDynamicMeta.cs" />
+    <Compile Include="Function.cs" />
+    <Compile Include="GenericVector.cs" />
+    <Compile Include="Language.cs" />
+    <Compile Include="LogicalMatrix.cs" />
+    <Compile Include="Pairlist.cs" />
+    <Compile Include="RawMatrix.cs" />
+    <Compile Include="NumericMatrix.cs" />
+    <Compile Include="IntegerMatrix.cs" />
+    <Compile Include="Matrix.cs" />
+    <Compile Include="InternalString.cs" />
+    <Compile Include="Internals\SEXPREC_HEADER.cs" />
+    <Compile Include="RawVector.cs" />
+    <Compile Include="Internals\ParseStatus.cs" />
+    <Compile Include="NumericVector.cs" />
+    <Compile Include="IntegerVector.cs" />
+    <Compile Include="Internals\VECTOR_SEXPREC.cs" />
+    <Compile Include="ParseException.cs" />
+    <Compile Include="ProtectedPointer.cs" />
+    <Compile Include="REngineExtension.cs" />
+    <Compile Include="StartupParameter.cs" />
+    <Compile Include="Symbol.cs" />
+    <Compile Include="SymbolicExpression.cs" />
+    <Compile Include="Internals\SEXPREC.cs" />
+    <Compile Include="Internals\SymbolicExpressionType.cs" />
+    <Compile Include="Internals\sxpinfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="REngine.cs" />
+    <Compile Include="SymbolicExpressionExtension.cs" />
+    <Compile Include="Utility.cs" />
+    <Compile Include="Vector.cs" />
+    <Compile Include="LogicalVector.cs" />
+    <Compile Include="CharacterVector.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj">
+      <Project>{2A089A59-0F22-4484-B442-0FE8BDA10879}</Project>
+      <Name>RDotNet.NativeLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
