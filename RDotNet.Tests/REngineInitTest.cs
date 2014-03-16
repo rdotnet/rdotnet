@@ -1,5 +1,7 @@
 ﻿using NUnit.Framework;
+using RDotNet.NativeLibrary;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace RDotNet
@@ -23,6 +25,25 @@ namespace RDotNet
             engine.Initialize(parameter: parameter, device: device);
             Assert.That(engine.Evaluate("memory.limit()").AsNumeric()[0], Is.LessThan(128)); // returns 122 using command line R.exe
          }
+      }
+
+      // TODO: probably needs adjustments for MacOS and Linux
+      [Test]
+      public void TestFindRBinPath()
+      {
+         string rLibPath = NativeUtility.FindRPath();
+         var files = Directory.GetFiles(rLibPath);
+         var fnmatch = files.Where(fn => fn.ToLower() == Path.Combine(rLibPath.ToLower(), NativeUtility.GetRDllFileName().ToLower()));
+         Assert.AreEqual(1, fnmatch.Count());
+      }
+
+      [Test]
+      public void TestFindRHomePath()
+      {
+         string rHomePath = NativeUtility.FindRHome();
+         var files = Directory.GetFiles(rHomePath);
+         var fnmatch = files.Where(fn => Path.GetFileName(fn) == "CHANGES");
+         Assert.AreEqual(1, fnmatch.Count());
       }
    }
 }
