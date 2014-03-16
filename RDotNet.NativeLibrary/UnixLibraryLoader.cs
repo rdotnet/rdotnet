@@ -3,9 +3,11 @@ using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Linq;
 using System.IO;
+using System.Security.Permissions;
 
 namespace RDotNet.NativeLibrary
 {
+   [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
    internal class UnixLibraryLoader : IDynamicLibraryLoader
    {
       public IntPtr LoadLibrary(string filename)
