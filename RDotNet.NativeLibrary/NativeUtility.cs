@@ -89,26 +89,18 @@ namespace RDotNet.NativeLibrary
             rHome = Environment.GetEnvironmentVariable("R_HOME");
          if (string.IsNullOrEmpty(rHome)) {
             // R_HOME is neither specified by the user nor as an environmental variable. Rely on default locations specific to platforms
-            switch (platform) {
-            case PlatformID.Win32NT:
-                  // Rf_initialize_R for gnuwin calls get_R_HOME which scans the windows registry and figures out R_HOME
-                  // no need to set rHome here: just use the default behavior of R.dll
-               break;
-            case PlatformID.MacOSX:
-               rHome = "/Library/Frameworks/R.framework/Resources";
-               break;
-            case PlatformID.Unix:
-               // if rPath is e.g. /usr/local/lib/R/lib/ , 
-               rHome = Path.GetDirectoryName(rPath);
-               if (!rHome.EndsWith("R"))
-               // if rPath is e.g. /usr/lib/ (symlink)  then default 
-                  rHome = "/usr/lib/R";
-               break;
-            default:
-               throw new NotSupportedException(platform.ToString());
-            }
+            rHome = FindRHome(rPath);
          }
-         if (!string.IsNullOrEmpty(rHome)) {
+         if (string.IsNullOrEmpty(rHome))
+            throw new NotSupportedException("R_HOME was not provided and could not be found by R.NET");
+         else
+         {
+            // It is highly recommended to use the 8.3 short path format on windows. 
+            // See the manual page of R.home function in R. Solves at least the issue R.NET 97.
+            if (platform == PlatformID.Win32NT)
+               rHome = WindowsLibraryLoader.GetShortPath(rHome);
+            if (!Directory.Exists(rHome))
+               throw new DirectoryNotFoundException("Directory for R_HOME does not exist");
             Environment.SetEnvironmentVariable("R_HOME", rHome);
          }
          if (platform == PlatformID.Unix) {
@@ -124,12 +116,59 @@ namespace RDotNet.NativeLibrary
          }
       }
 
+      /// <summary>
+      /// Try to locate the directory path to use for the R_HOME environment variable. This is used by R.NET by default; users may want to use it to diagnose problematic behaviors.
+      /// </summary>
+      /// <param name="rPath">Optional path to the directory containing the R shared library. This is ignored unless on a Unix platform (i.e. ignored on Windows and MacOS)</param>
+      /// <returns>The path that R.NET found suitable as a candidate for the R_HOME environment</returns>
+      public static string FindRHome(string rPath=null)
+      {
+         var platform = GetPlatform();
+         string rHome;
+         switch (platform)
+         {
+            case PlatformID.Win32NT:
+               // We need here to guess, process and set R_HOME
+               // Rf_initialize_R for gnuwin calls get_R_HOME which scans the windows registry and figures out R_HOME; however for 
+               // unknown reasons in R.NET we end up with long path names, whereas R.exe ends up with the short, 8.3 path format.
+               // Blanks in the R_HOME environment variable cause trouble (e.g. for Rcpp), so we really must make sure 
+               // that rHome is a short path format. Here we retrieve the path possibly in long format, and process to short format later on 
+               // to capture all possible sources of R_HOME specifications
+               // Behavior added to fix issue 
+               rHome = GetRhomeWin32NT();
+               break;
+            case PlatformID.MacOSX:
+               rHome = "/Library/Frameworks/R.framework/Resources";
+               break;
+            case PlatformID.Unix:
+               // if rPath is e.g. /usr/local/lib/R/lib/ , 
+               rHome = Path.GetDirectoryName(rPath);
+               if (!rHome.EndsWith("R"))
+                  // if rPath is e.g. /usr/lib/ (symlink)  then default 
+                  rHome = "/usr/lib/R";
+               break;
+            default:
+               throw new NotSupportedException(platform.ToString());
+         }
+         return rHome;
+      }
+
+      private static string GetRhomeWin32NT()
+      {
+         RegistryKey rCoreKey = GetRCoreRegistryKeyWin32();
+         return GetRInstallPathFromRCoreKegKey(rCoreKey);
+      }
+
       private static void CheckDirExists(string rPath)
       {
          if (!Directory.Exists(rPath))
             throw new ArgumentException(string.Format("Specified directory not found: '{0}'", rPath));
       }
 
+      /// <summary>
+      /// Attempt to find a suitable path to the R shared library. This is used by R.NET by default; users may want to use it to diagnose problematic behaviors.
+      /// </summary>
+      /// <returns>The path to the directory where the R shared library is expected to be</returns>
       public static string FindRPath()
       {
          var shlibFilename = GetRDllFileName();
@@ -172,26 +211,54 @@ namespace RDotNet.NativeLibrary
          return rPath + Path.PathSeparator + currentPathEnv;
       }
 
+      /// <summary>
+      /// Windows-only function; finds in the Windows registry the path to the most recently installed R binaries.
+      /// </summary>
+      /// <returns>The path, such as</returns>
       public static string FindRPathFromRegistry()
       {
-         if (Environment.OSVersion.Platform != PlatformID.Win32NT)
-            throw new NotSupportedException("This method is supported only on the Windows platform");
-         var rCore = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
-         if (rCore == null) {
-            throw new ApplicationException("Windows Registry key 'SOFTWARE\\R-core' not found.");
-         }
-         var is64Bit = Environment.Is64BitProcess;
-         var subKey = is64Bit ? "R64" : "R";
-         var r = rCore.OpenSubKey(subKey);
-         if (r == null) {
-            throw new ApplicationException("Windows Registry sub-key '" + subKey + "' not found.");
-         }
-         var currentVersion = new Version((string)r.GetValue("Current Version"));
-         var installPath = (string)r.GetValue("InstallPath");
+         CheckPlatformWin32();
+         bool is64Bit = Environment.Is64BitProcess;
+         RegistryKey rCoreKey = GetRCoreRegistryKeyWin32();
+         var installPath = GetRInstallPathFromRCoreKegKey(rCoreKey);
+         var currentVersion = new Version((string)rCoreKey.GetValue("Current Version"));
          var bin = Path.Combine(installPath, "bin");
          // Up to 2.11.x, DLLs are installed in R_HOME\bin.
          // From 2.12.0, DLLs are installed in the one level deeper directory.
          return currentVersion < new Version(2, 12) ? bin : Path.Combine(bin, is64Bit ? "x64" : "i386");
+      }
+
+      private static string GetRInstallPathFromRCoreKegKey(RegistryKey rCoreKey)
+      {
+         var installPath = (string)rCoreKey.GetValue("InstallPath");
+         return installPath;
+      }
+
+      private static void CheckPlatformWin32()
+      {
+         if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+            throw new NotSupportedException("This method is supported only on the Win32NT platform");
+      }
+
+      private static RegistryKey GetRCoreRegistryKeyWin32()
+      {
+         CheckPlatformWin32();
+         var rCore = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
+         if (rCore == null)
+         {
+            rCore = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\R-core");
+            if (rCore == null)
+               throw new ApplicationException("Windows Registry key 'SOFTWARE\\R-core' not found in HKEY_LOCAL_MACHINE nor HKEY_CURRENT_USER");
+         }
+         bool is64Bit = Environment.Is64BitProcess;
+         var subKey = is64Bit ? "R64" : "R";
+         var r = rCore.OpenSubKey(subKey);
+         if (r == null)
+         {
+            throw new ApplicationException( string.Format(
+               "Windows Registry sub-key '{0}' of key '{1}' was not found", subKey , rCore.ToString()));
+         }
+         return r;
       }
 
       /// <summary>
