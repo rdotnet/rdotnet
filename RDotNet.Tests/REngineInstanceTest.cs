@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
+using RDotNet.Devices;
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace RDotNet
 {
@@ -95,6 +97,45 @@ namespace RDotNet
          }
          Assert.That(engine.IsRunning, Is.False);
       }
+
+      public class Job : MarshalByRefObject
+      {
+         // uses R.NET here
+         public void Execute()
+         {
+            var engine = InitREngine();
+            engine.Evaluate("x <- 5");
+         }
+
+         // initializes REngine
+         private REngine InitREngine()
+         {
+            var engine = REngine.GetInstance(initialize: false);
+            engine.Initialize(null, new NullCharacterDevice());  // real char device?
+            //AppDomain.CurrentDomain.DomainUnload += (EventHandler)((o, e) => engine.Dispose());
+            return engine;
+         }
+      }
+
+      [Test]
+      public void TestMultipleAppDomains()
+      {
+         TestAppDomain("test1");  // works
+         TestAppDomain("test2");  // hangs at the last line in Job.Execute()
+      }
+      private static void TestAppDomain(string jobName)
+      {
+         var domainSetup = new AppDomainSetup();
+         domainSetup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+         AppDomain ad = AppDomain.CreateDomain(jobName, AppDomain.CurrentDomain.Evidence, domainSetup);
+
+         var type = typeof(Job);
+         var jd = (Job)ad.CreateInstanceAndUnwrap(type.Assembly.FullName, type.FullName, true, BindingFlags.CreateInstance, null,
+                             new object[] { }, null, null);
+         jd.Execute();
+         AppDomain.Unload(ad);
+      }
+
 
       [Test, Ignore] // TODO
       public void TestSeveralAppDomains()
