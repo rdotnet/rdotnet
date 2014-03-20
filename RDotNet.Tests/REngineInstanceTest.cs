@@ -111,7 +111,7 @@ namespace RDotNet
          private REngine InitREngine()
          {
             var engine = REngine.GetInstance(initialize: false);
-            engine.Initialize(null, new NullCharacterDevice());  // real char device?
+            engine.Initialize(null, new NullCharacterDevice(), setupMainLoop:false);  // real char device?
             //AppDomain.CurrentDomain.DomainUnload += (EventHandler)((o, e) => engine.Dispose());
             return engine;
          }
@@ -120,6 +120,7 @@ namespace RDotNet
       [Test]
       public void TestMultipleAppDomains()
       {
+         var e = REngine.GetInstance(); // need to trigger the R main loop setup once, and it may as well be in the default appdomain
          TestAppDomain("test1");  // works
          TestAppDomain("test2");  // hangs at the last line in Job.Execute()
       }
