@@ -20,11 +20,11 @@ namespace RDotNet
    /// using (REngine engine = REngine.CreateInstance("RDotNet"))
    /// {
    ///   engine.Initialize();
-   ///   NumericVector random = engine.Evaluate("rnorm(5, 0, 1)").AsNumeric();
-   ///   foreach (double r in random)
-   ///   {
-   ///     Console.Write(r + " ");
-   ///   }
+   ///	NumericVector random = engine.Evaluate("rnorm(5, 0, 1)").AsNumeric();
+   ///	foreach (double r in random)
+   ///	{
+   ///		Console.Write(r + " ");
+   ///	}
    /// }
    /// </code>
    /// </example>
@@ -222,7 +222,7 @@ namespace RDotNet
       }
 
       protected static string ProcessRDllFileName(string dll)
-      {
+         {
          if (string.IsNullOrEmpty(dll))
          {
             dll = NativeUtility.GetRDllFileName();
@@ -278,12 +278,18 @@ namespace RDotNet
       /// </summary>
       /// <param name="parameter">The optional startup parameters</param>
       /// <param name="device">The optional character device to use for the R engine</param>
-      public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null)
+      /// <param name="setupMainLoop">if true, call the functions to initialise the embedded R</param>
+      public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null, bool setupMainLoop = true)
       {
          if (this.isRunning)
             return;
-         this.parameter = parameter ?? new StartupParameter ();
-         this.adapter = new CharacterDeviceAdapter (device ?? DefaultDevice);
+         this.parameter = parameter ?? new StartupParameter();
+         this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
+         if (!setupMainLoop)
+         {
+            this.isRunning = true;
+            return;
+         }
 
           
          switch (NativeUtility.GetPlatform ()) {
@@ -296,7 +302,7 @@ namespace RDotNet
          string[] R_argv = BuildRArgv (this.parameter);
          //string[] R_argv = new[]{"rdotnet_app",  "--interactive",  "--no-save",  "--no-restore-data",  "--max-ppsize=50000"};
          //rdotnet_app --quiet --interactive --no-save --no-restore-data --max-mem-size=18446744073709551615 --max-ppsize=50000  
-         GetFunction<R_setStartTime> () ();
+         GetFunction<R_setStartTime>()();
          int R_argc = R_argv.Length;
          var status = GetFunction<Rf_initialize_R> () (R_argc, R_argv);
          if(status!=0)
@@ -699,7 +705,7 @@ namespace RDotNet
          GC.KeepAlive(this.parameter);
          base.Dispose(disposing);
       }
-
+      
       /// <summary>
       /// Gets the predefined symbol with the specified name.
       /// </summary>
@@ -733,7 +739,7 @@ namespace RDotNet
          {
             GC.Collect();
             GC.WaitForPendingFinalizers();
-         }
+   }
          if (garbageCollectR)
             ForceGarbageCollection();
       }
