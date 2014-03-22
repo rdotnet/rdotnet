@@ -440,7 +440,7 @@ namespace RDotNet
       }
 
       /// <summary>
-      /// Defines a symbol in the global environment.
+      /// Assign a value to a name in the global environment.
       /// </summary>
       /// <param name="name">The name.</param>
       /// <param name="expression">The symbol.</param>
@@ -451,7 +451,7 @@ namespace RDotNet
       }
 
       /// <summary>
-      /// Defines a symbol in the specified environment.
+      /// Assign a value to a name in a specific environment.
       /// </summary>
       /// <param name="name">The name.</param>
       /// <param name="expression">The symbol.</param>

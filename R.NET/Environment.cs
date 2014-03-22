@@ -95,7 +95,7 @@ namespace RDotNet
             throw new ArgumentException();
          }
          IntPtr installedName = Engine.GetFunction<Rf_install>()(name);
-         Engine.GetFunction<Rf_setVar>()(installedName, expression.DangerousGetHandle(), handle);
+         Engine.GetFunction<Rf_defineVar>()(installedName, expression.DangerousGetHandle(), handle);
       }
 
       /// <summary>

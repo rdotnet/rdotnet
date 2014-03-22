@@ -138,6 +138,9 @@ namespace RDotNet.Internals
    internal delegate void Rf_setVar(IntPtr name, IntPtr value, IntPtr environment);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate void Rf_defineVar(IntPtr name, IntPtr value, IntPtr environment);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate IntPtr Rf_getAttrib(IntPtr sexp, IntPtr name);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
