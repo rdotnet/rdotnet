@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Numerics;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace RDotNet
 {
@@ -102,5 +105,6 @@ namespace RDotNet
             res[i] = array[from + i];
          return res;
       }
+
    }
 }

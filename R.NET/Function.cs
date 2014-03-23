@@ -65,14 +65,21 @@ namespace RDotNet
          arguments.SetAttribute(Engine.GetPredefinedSymbol("R_NamesSymbol"), names);
          var argPairList = arguments.ToPairlist();
 
-         //IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);
-         //IntPtr result = Engine.GetFunction<Rf_applyClosure>()(Body.DangerousGetHandle(), handle,
-         //                                                      argPairList.DangerousGetHandle(),
-         //                                                      Environment.DangerousGetHandle(), newEnvironment);
-         IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argPairList.DangerousGetHandle());
-         IntPtr result = Engine.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
+         try
+         {
+            //IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);
+            //IntPtr result = Engine.GetFunction<Rf_applyClosure>()(Body.DangerousGetHandle(), handle,
+            //                                                      argPairList.DangerousGetHandle(),
+            //                                                      Environment.DangerousGetHandle(), newEnvironment);
+            IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argPairList.DangerousGetHandle());
+            IntPtr result = Engine.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
 
-         return new SymbolicExpression(Engine, result);
+            return new SymbolicExpression(Engine, result);
+         }
+         catch (Exception ex)
+         {
+            throw new EvaluationException(Engine.LastErrorMessage, ex);
+         }
       }
 
 
