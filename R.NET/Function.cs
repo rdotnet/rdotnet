@@ -28,6 +28,20 @@ namespace RDotNet
       public abstract SymbolicExpression Invoke(params SymbolicExpression[] args);
 
       /// <summary>
+      /// A convenience method to executes the function. Match the function arguments by order, after evaluating each to an R expression.
+      /// </summary>
+      /// <param name="args">string representation of the arguments; each is evaluated to symbolic expression before being passed as argument to this object (i.e. this Function)</param>
+      /// <returns>The result of the function evaluation</returns>
+      /// <example>
+      /// <code>
+      /// </code>
+      /// </example>
+      public SymbolicExpression InvokeStrArgs(params string[] args)
+      {
+         return Invoke(Array.ConvertAll(args, x => Engine.Evaluate(x)));
+      }
+
+      /// <summary>
       /// Executes the function. Match the function arguments by name.
       /// </summary>
       /// <param name="args">The arguments, indexed by argument name</param>
@@ -41,10 +55,28 @@ namespace RDotNet
       /// <returns>The result of the function evaluation</returns>
       public SymbolicExpression InvokeNamed(params Tuple<string, SymbolicExpression>[] args)
       {
-         return Invoke(args.ToDictionary(a => a.Item1, a => a.Item2));
+         return InvokeViaPairlist(Array.ConvertAll(args, x => x.Item1), Array.ConvertAll(args, x => x.Item2));
       }
 
-      protected SymbolicExpression InvokeSpecialFunction(SymbolicExpression[] args)
+      protected SymbolicExpression InvokeViaPairlist(string[] argNames, SymbolicExpression[] args)
+      {
+         var names = new CharacterVector(Engine, argNames);
+         var arguments = new GenericVector(Engine, args);
+         arguments.SetAttribute(Engine.GetPredefinedSymbol("R_NamesSymbol"), names);
+         var argPairList = arguments.ToPairlist();
+
+         //IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);
+         //IntPtr result = Engine.GetFunction<Rf_applyClosure>()(Body.DangerousGetHandle(), handle,
+         //                                                      argPairList.DangerousGetHandle(),
+         //                                                      Environment.DangerousGetHandle(), newEnvironment);
+         IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argPairList.DangerousGetHandle());
+         IntPtr result = Engine.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
+
+         return new SymbolicExpression(Engine, result);
+      }
+
+
+      protected SymbolicExpression InvokeOrderedArguments(SymbolicExpression[] args)
       {
          IntPtr argument = Engine.NilValue.DangerousGetHandle();
          foreach (SymbolicExpression arg in args.Reverse())

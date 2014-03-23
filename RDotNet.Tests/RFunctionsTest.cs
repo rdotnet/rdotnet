@@ -56,15 +56,7 @@ namespace RDotNet
 
       }
 
-      // https://rdotnet.codeplex.com/workitem/76
-      [Test]
-      public void TestGenericFunction()
-      {
-         var engine = this.Engine;
-
-
-         
-         var funcDef=@"
+      private static string defPrintPairlist = @"
 printPairList <- function(...) {
   a <- list(...)
   namez <- names(a)
@@ -77,7 +69,27 @@ printPairList <- function(...) {
   substring(r, 1, (nchar(r)-1))
 }
   
+";
 
+      [Test]
+      public void TestSpecialFunctions()
+      {
+         var e = Engine;
+         var plus = e.Evaluate("`if`").AsFunction();
+         // tisoneCall <- call("if", quote(a==1), "this is one", "this is not one")
+         e.Evaluate("a <- 1");
+         Assert.AreEqual("this is one", plus.InvokeStrArgs("quote(a==1)", "'this is one'", "'this is not one'").AsCharacter().ToArray()[0]);
+         e.Evaluate("a <- 2");
+         Assert.AreEqual("this is not one", plus.InvokeStrArgs("quote(a==1)", "'this is one'", "'this is not one'").AsCharacter().ToArray()[0]);
+      }
+
+      // https://rdotnet.codeplex.com/workitem/76
+      [Test]
+      public void TestGenericFunction()
+      {
+         var engine = this.Engine;
+
+         var funcDef=@"
 setGeneric( 'f', function(x, ...) {
 	standardGeneric('f')
 } )
@@ -86,25 +98,26 @@ setMethod( 'f', 'integer', function(x, ...) { paste( 'f.integer called:', printP
 setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printPairList(...) ) } )
 ";
 
+         engine.Evaluate(defPrintPairlist);
          engine.Evaluate(funcDef);
          var f=engine.GetSymbol("f").AsFunction();
 
 
          // > f(1, b=2, c=3)
          // [1] "f.numeric called:  b=2; c=3"
-         checkInvoke(f.InvokeNamed(tc("a", "1.0"), tc("b", "2"), tc("c", "3")), "f.numeric called:  b=2; c=3");
+         checkInvoke(f.InvokeNamed(tc("x", 1.0), tc("b", "2"), tc("c", "3")), "f.numeric called:  b=2; c=3");
          // > f(1, b=2.1, c=3)
          // [1] "f.numeric called:  b=2.1; c=3"
-         checkInvoke(f.InvokeNamed(tc("a", "1.0"), tc("b", "2.1"), tc("c", "3")), "f.numeric called:  b=2.1; c=3");
+         checkInvoke(f.InvokeNamed(tc("x", 1.0), tc("b", "2.1"), tc("c", "3")), "f.numeric called:  b=2.1; c=3");
          // > f(1, c=3, b=2)
          // [1] "f.numeric called:  c=3; b=2"
-         checkInvoke(f.InvokeNamed(tc("a", "1.0"), tc("c", "3"), tc("b", "2")), "f.numeric called:  c=3; b=2");
+         checkInvoke(f.InvokeNamed(tc("x", 1.0), tc("c", "3"), tc("b", "2")), "f.numeric called:  c=3; b=2");
          // > f(1L, b=2, c=3)
          // [1] "f.integer called:  b=2; c=3"
-         checkInvoke(f.InvokeNamed(tc("a", "1L"), tc("b", "2"), tc("c", "3")), "f.integer called:  b=2; c=3");
+         checkInvoke(f.InvokeNamed(tc("x", 1), tc("b", "2"), tc("c", "3")), "f.integer called:  b=2; c=3");
          // > f(1L, c=3, b=2)
          // [1] "f.integer called:  c=3; b=2"
-         checkInvoke(f.InvokeNamed(tc("a", "1L"), tc("c", "3"), tc("b", "2")), "f.integer called:  c=3; b=2");
+         checkInvoke(f.InvokeNamed(tc("x", 1), tc("c", "3"), tc("b", "2")), "f.integer called:  c=3; b=2");
          
          // .NET Framework array to R vector.
          NumericVector group1 = engine.CreateNumericVector(new double[] { 30.02, 29.99, 30.11, 29.97, 30.01, 29.99 });
@@ -116,12 +129,17 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
          double p = testResult["p.value"].AsNumeric().First();
          Assert.AreEqual(0.09077332, Math.Round(p, 8));
 
-         var s2 = engine.GetSymbol("t.test");
-         var f2 = s2.AsFunction();
-         GenericVector testResult2 = f2.Invoke(new[] { group1, group2 }).AsList();
+         var studentTest = engine.Evaluate("t.test").AsFunction();
+         GenericVector testResult2 = studentTest.Invoke(new[] { group1, group2 }).AsList();
          double p2 = testResult2["p.value"].AsNumeric().First();
          double p3 = testResult2[2].AsNumeric().First();
-         Assert.AreEqual(0.09077332, p2);
+         Assert.AreEqual(0.09077332, Math.Round(p2, 8));
+
+         var sexp = studentTest.Invoke(engine.Evaluate("1:10"), engine.Evaluate("7:20"));
+         // > format((t.test(1:10, y = c(7:20)) )$p.value, digits=12)
+         // [1] "1.85528183251e-05"
+         Assert.AreEqual(1.85528183251e-05, sexp.AsList()["p.value"].AsNumeric()[0], 1e-12);
+
       }
 
       [Test]
@@ -168,6 +186,50 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
 
       }
 
+      [Test]
+      public void TestDotPairArguments()
+      {
+         var e = Engine;
+         // What if one of several 'formals' is a dotted pairlist
+         var funcDef = @"
+g <- function(x, ..., y) {
+   paste0( 'x=', ifelse(missing(x), 'missing_x', x),  '; y=', ifelse(missing(y), 'missing_y', y), '; ', printPairList(...) )
+}
+";
+
+         e.Evaluate(defPrintPairlist);
+         e.Evaluate(funcDef);
+         var g = e.GetSymbol("g").AsFunction();
+
+         var exp = "x=missing_x; y=missing_y; empty pairlist";
+         checkInvoke(g.Invoke(), exp);
+
+         // > g(1)
+         // [1] "x=1; y=missing_y; empty pairlist"
+         exp = "x=1; y=missing_y; empty pairlist";
+         checkInvoke(g.InvokeNamed(tc("x", "1")), exp);
+         checkInvoke(g.InvokeStrArgs("1"), exp);
+         //> g(1,'b')
+         //[1] "x=1; y=missing_y;  =b"
+         exp = "x=1; y=missing_y;  =b";
+         checkInvoke(g.InvokeStrArgs("1", "'b'"), exp);
+         //> g(1,y='b')
+         //[1] "x=1; y=b; empty pairlist"
+         //> g(1,c='c',y='b')
+         //[1] "x=1; y=b;  c=c"
+         exp = "x=1; y=b;  c=c";
+         checkInvoke(g.InvokeNamed(tc("x", 1), tc("y", "b"), tc("c", "c")), exp);
+         //> g(1,y='b',c='c')
+         //[1] "x=1; y=b;  c=c"
+         //> g(d=1,y='b',c='c')
+         //[1] "x=missing_x; y=b;  d=1; c=c"
+         //> 
+         //> g(1,2,3,y=4,5,6,7)
+         //[1] "x=1; y=4;  =2; =3; =5; =6; =7"
+         exp = "x=1; y=4;  =2; =3; =5; =6; =7";
+         checkInvoke(g.InvokeNamed(tc("", "1"), tc("", "2"), tc("", "3"), tc("y", "4"), tc("", "5"), tc("", "6"), tc("", "7")), exp);
+      }
+
       private Tuple<string,SymbolicExpression> tc(string argname, object value)
       {
          return Tuple.Create(argname, CreateSexp(value));
@@ -177,6 +239,12 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
       {
          var t = value.GetType();
          var engine = this.Engine;
+         if (t == typeof(int))
+         {
+            var res = engine.CreateIntegerVector(1);
+            res[0] = (int)value;
+            return res;
+         }
          if (t == typeof(double))
             return engine.CreateNumericVector((double)value);
          if (t == typeof(string))
