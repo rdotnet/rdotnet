@@ -19,7 +19,7 @@ namespace RDotNet
 
       public override SymbolicExpression Invoke(params SymbolicExpression[] args)
       {
-         return InvokeSpecialFunction(args);
+         return InvokeOrderedArguments(args);
       }
 
       public override SymbolicExpression Invoke(IDictionary<string, SymbolicExpression> args)
