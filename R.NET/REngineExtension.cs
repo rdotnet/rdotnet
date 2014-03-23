@@ -1,5 +1,6 @@
 using RDotNet.Internals;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -526,7 +527,64 @@ namespace RDotNet
          }
          return new RawMatrix(engine, matrix);
       }
+
+      public static DataFrame CreateDataFrame(this REngine engine, IEnumerable[] columns, string[] columnNames=null,
+         string[] rowNames=null, bool checkRows=false, bool checkNames=true, bool stringsAsFactors=true)
+      {
+         var df = engine.GetSymbol("data.frame").AsFunction();
+         SymbolicExpression[] colVectors = ToVectors(engine, columns);
+         Tuple<string,SymbolicExpression>[] namedColArgs = CreateNamedArgs(colVectors, columnNames);
+         var args = new List<Tuple<string,SymbolicExpression>>(namedColArgs);
+         if (rowNames != null) args.Add(Tuple.Create("row.names", (SymbolicExpression)engine.CreateCharacterVector(rowNames)));
+         args.Add(Tuple.Create("check.rows", (SymbolicExpression)engine.CreateLogicalVector(checkRows)));
+         args.Add(Tuple.Create("check.names", (SymbolicExpression)engine.CreateLogicalVector(checkNames)));
+         args.Add(Tuple.Create("stringsAsFactors", (SymbolicExpression)engine.CreateLogicalVector(stringsAsFactors)));
+         var result = df.InvokeNamed(args.ToArray()).AsDataFrame();
+         return result;
+      }
+
+      private static Tuple<string, SymbolicExpression>[] CreateNamedArgs(SymbolicExpression[] colVectors, string[] columnNames)
+      {
+         if (columnNames != null && colVectors.Length != columnNames.Length)
+            throw new ArgumentException("columnNames", "when not null, the number of column names must match the number of SEXP");
+         var args = new List<Tuple<string, SymbolicExpression>>();
+         for (int i = 0; i < colVectors.Length; i++)
+            args.Add( Tuple.Create(columnNames != null ? columnNames[i] : "", colVectors[i]));
+         return args.ToArray();
+      }
+
+      internal static SymbolicExpression[] ToVectors(REngine engine, IEnumerable[] columns)
+      {
+         return Array.ConvertAll(columns, x => ToVector(engine, x));
+      }
+
+      internal static SymbolicExpression ToVector(REngine engine, IEnumerable values)
+      {
+         if(values == null) throw new ArgumentNullException("values", "values to transform to an R vector must not be null");
+         var ints = values as IEnumerable<int>;
+         var chars = values as IEnumerable<string>;
+         var cplxs = values as IEnumerable<Complex>;
+         var logicals = values as IEnumerable<bool>;
+         var nums = values as IEnumerable<double>;
+         var raws = values as IEnumerable<byte>;
+
+         if (ints != null)
+            return engine.CreateIntegerVector(ints);
+         if (chars != null)
+            return engine.CreateCharacterVector(chars);
+         if (cplxs != null)
+            return engine.CreateComplexVector(cplxs);
+         if (logicals!= null)
+            return engine.CreateLogicalVector(logicals);
+         if (nums != null)
+            return engine.CreateNumericVector(nums);
+         if (raws != null)
+            return engine.CreateRawVector(raws);
+         throw new NotSupportedException(string.Format("Cannot convert type {0} to an R vector", values.GetType()));
+
+      }         
       
+
       /// <summary>
       /// Creates a new environment.
       /// </summary>
