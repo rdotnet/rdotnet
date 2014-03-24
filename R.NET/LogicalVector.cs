@@ -76,6 +76,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Efficient conversion from R vector representation to the array equivalent in the CLR
+      /// </summary>
+      /// <returns>Array equivalent</returns>
       protected override bool[] GetArrayFast()
       {
          int[] intValues = new int[this.Length];
@@ -83,6 +87,9 @@ namespace RDotNet
          return Array.ConvertAll(intValues, Convert.ToBoolean);
       }
 
+      /// <summary>
+      /// Efficient initialisation of R vector values from an array representation in the CLR
+      /// </summary>
       protected override void SetVectorDirect(bool[] values)
       {
          var intValues = Array.ConvertAll(values, Convert.ToInt32);

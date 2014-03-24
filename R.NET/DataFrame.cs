@@ -60,6 +60,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Gets an array of the columns of this R data frame object
+      /// </summary>
+      /// <returns></returns>
       protected override DynamicVector[] GetArrayFast()
       {
          var res = new DynamicVector[this.Length];
@@ -81,6 +85,9 @@ namespace RDotNet
          Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
       }
 
+      /// <summary>
+      /// Efficient initialisation of R vector values from an array representation in the CLR
+      /// </summary>
       protected override void SetVectorDirect(DynamicVector[] values)
       {
          for (int i = 0; i < values.Length; i++)
@@ -265,6 +272,11 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// returns a new DataFrameDynamicMeta for this DataFrame
+      /// </summary>
+      /// <param name="parameter"></param>
+      /// <returns></returns>
       public override DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)
       {
          return new DataFrameDynamicMeta(parameter, this);

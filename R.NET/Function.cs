@@ -58,6 +58,12 @@ namespace RDotNet
          return InvokeViaPairlist(Array.ConvertAll(args, x => x.Item1), Array.ConvertAll(args, x => x.Item2));
       }
 
+      /// <summary>
+      /// Executes the function. Match the function arguments by name.
+      /// </summary>
+      /// <param name="argNames">The names of the arguments. These can be empty strings for unnamed function arguments</param>
+      /// <param name="args">The arguments passed to the function</param>
+      /// <returns></returns>
       protected SymbolicExpression InvokeViaPairlist(string[] argNames, SymbolicExpression[] args)
       {
          var names = new CharacterVector(Engine, argNames);

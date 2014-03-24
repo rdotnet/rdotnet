@@ -39,6 +39,11 @@ namespace RDotNet
       private bool isRunning;
       private StartupParameter parameter;
 
+      /// <summary>
+      /// Create a new REngine instance
+      /// </summary>
+      /// <param name="id">The identifier of this object</param>
+      /// <param name="dll">The name of the file that is the shared R library, e.g. "R.dll"</param>
       protected REngine(string id, string dll)
          : base(dll)
       {
@@ -153,6 +158,9 @@ namespace RDotNet
       private static bool environmentIsSet = false;
       private static REngine engine = null;
 
+      /// <summary>
+      /// Gets the name of the R engine instance (singleton).
+      /// </summary>
       public static string EngineName { get { return "R.NET"; } }
 
       /// <summary>
@@ -221,8 +229,13 @@ namespace RDotNet
          return engine;
       }
 
+      /// <summary>
+      /// if the parameter is null or empty string, return the default names of the R shared library file depending on the platform
+      /// </summary>
+      /// <param name="dll">The name of the library provided, possibly null or empty</param>
+      /// <returns>A candidate for the file name of the R shared library</returns>
       protected static string ProcessRDllFileName(string dll)
-         {
+      {
          if (string.IsNullOrEmpty(dll))
          {
             dll = NativeUtility.GetRDllFileName();
@@ -291,22 +304,23 @@ namespace RDotNet
             return;
          }
 
-          
-         switch (NativeUtility.GetPlatform ()) {
-         case PlatformID.MacOSX:
-         case PlatformID.Unix:
-            SetDangerousInt32 ("R_SignalHandlers", 0); // RInside does that for non WIN32
-            SetDangerousInt32 ("R_CStackLimit", -1); // Don't do any stack checking, see R Exts, '8.1.5 Threading issues'
-            break;
+
+         switch (NativeUtility.GetPlatform())
+         {
+            case PlatformID.MacOSX:
+            case PlatformID.Unix:
+               SetDangerousInt32("R_SignalHandlers", 0); // RInside does that for non WIN32
+               SetDangerousInt32("R_CStackLimit", -1); // Don't do any stack checking, see R Exts, '8.1.5 Threading issues'
+               break;
          }
-         string[] R_argv = BuildRArgv (this.parameter);
+         string[] R_argv = BuildRArgv(this.parameter);
          //string[] R_argv = new[]{"rdotnet_app",  "--interactive",  "--no-save",  "--no-restore-data",  "--max-ppsize=50000"};
          //rdotnet_app --quiet --interactive --no-save --no-restore-data --max-mem-size=18446744073709551615 --max-ppsize=50000  
          GetFunction<R_setStartTime>()();
          int R_argc = R_argv.Length;
-         var status = GetFunction<Rf_initialize_R> () (R_argc, R_argv);
-         if(status!=0)
-            throw new Exception("A call to Rf_initialize_R returned a non-zero; status="+status);
+         var status = GetFunction<Rf_initialize_R>()(R_argc, R_argv);
+         if (status != 0)
+            throw new Exception("A call to Rf_initialize_R returned a non-zero; status=" + status);
 
          // following in RInside: may not be needed.
          //GetFunction<R_ReplDLLinit> () ();
@@ -327,49 +341,58 @@ namespace RDotNet
          this.isRunning = true;
       }
 
+      /// <summary>
+      /// Creates the command line arguments corresponding to the specified startup parameters
+      /// </summary>
+      /// <param name="parameter"></param>
+      /// <returns></returns>
+      /// <remarks>While not obvious from the R documentation, it seems that command line arguments need to be passed 
+      /// to get the startup parameters taken into account. Passing the StartupParameter to the API seems not to work as expected. 
+      /// While this function may appear like an oddity to a reader, it proved necessary to the initialisation of the R engine 
+      /// after much trial and error.</remarks>
       public static string[] BuildRArgv(StartupParameter parameter)
       {
          var argv = new List<string>();
          argv.Add("rdotnet_app");
          // Not sure whether I should add no-readline
          //[MarshalAs(UnmanagedType.Bool)]
-      //public bool R_Quiet;
-         if(parameter.Quiet && !parameter.Interactive) argv.Add("--quiet");  // --quite --interactive to R embedded crashed...
+         //public bool R_Quiet;
+         if (parameter.Quiet && !parameter.Interactive) argv.Add("--quiet");  // --quite --interactive to R embedded crashed...
 
-      //[MarshalAs(UnmanagedType.Bool)]
-      //public bool R_Slave;
+         //[MarshalAs(UnmanagedType.Bool)]
+         //public bool R_Slave;
          if (parameter.Slave) argv.Add("--slave");
 
-      //[MarshalAs(UnmanagedType.Bool)]
-      //public bool R_Interactive;
+         //[MarshalAs(UnmanagedType.Bool)]
+         //public bool R_Interactive;
          if (parameter.Interactive) argv.Add("--interactive");
 
-      //[MarshalAs(UnmanagedType.Bool)]
-      //public bool R_Verbose;
+         //[MarshalAs(UnmanagedType.Bool)]
+         //public bool R_Verbose;
          if (parameter.Verbose) argv.Add("--verbose");
 
-      //[MarshalAs(UnmanagedType.Bool)]
-      //public bool LoadSiteFile;
+         //[MarshalAs(UnmanagedType.Bool)]
+         //public bool LoadSiteFile;
          if (!parameter.LoadSiteFile) argv.Add("--no-site-file");
 
-      //[MarshalAs(UnmanagedType.Bool)]
-      //public bool LoadInitFile;
+         //[MarshalAs(UnmanagedType.Bool)]
+         //public bool LoadInitFile;
          if (!parameter.LoadInitFile) argv.Add("--no-init-file");
 
-      //[MarshalAs(UnmanagedType.Bool)]
-      //public bool DebugInitFile;
+         //[MarshalAs(UnmanagedType.Bool)]
+         //public bool DebugInitFile;
          //if (parameter.Quiet) argv.Add("--quiet");
 
-      //public StartupRestoreAction RestoreAction;
-      //public StartupSaveAction SaveAction;
-      //internal UIntPtr vsize;
-      //internal UIntPtr nsize;
-      //internal UIntPtr max_vsize;
-      //internal UIntPtr max_nsize;
-      //internal UIntPtr ppsize;
+         //public StartupRestoreAction RestoreAction;
+         //public StartupSaveAction SaveAction;
+         //internal UIntPtr vsize;
+         //internal UIntPtr nsize;
+         //internal UIntPtr max_vsize;
+         //internal UIntPtr max_nsize;
+         //internal UIntPtr ppsize;
 
-      //[MarshalAs(UnmanagedType.Bool)]
-      //public bool NoRenviron;
+         //[MarshalAs(UnmanagedType.Bool)]
+         //public bool NoRenviron;
          if (parameter.NoRenviron) argv.Add("--no-environ");
 
          switch (parameter.SaveAction)
@@ -638,10 +661,10 @@ namespace RDotNet
                var s = GetFunction<Rf_mkString>()(statement);
                ParseStatus status;
                var vector = new ExpressionVector(this, GetFunction<R_ParseVector>()(s, -1, out status, NilValue.DangerousGetHandle()));
-                  if (status != ParseStatus.OK)
-                     throw new ParseException(status, statement, "");
-                  if (vector.Length == 0)
-                     throw new ParseException(status, statement, "Failed to create expression vector!");
+               if (status != ParseStatus.OK)
+                  throw new ParseException(status, statement, "");
+               if (vector.Length == 0)
+                  throw new ParseException(status, statement, "Failed to create expression vector!");
                geterrmessage = vector.First();
             }
             SymbolicExpression result;
@@ -705,7 +728,7 @@ namespace RDotNet
          GC.KeepAlive(this.parameter);
          base.Dispose(disposing);
       }
-      
+
       /// <summary>
       /// Gets the predefined symbol with the specified name.
       /// </summary>
@@ -732,6 +755,11 @@ namespace RDotNet
 
       #endregion Nested type: _getDLLVersion
 
+      /// <summary>
+      /// Removes all variables from the R global environment, and whether garbage collections should be forced
+      /// </summary>
+      /// <param name="garbageCollectR">if true (default) request an R garbage collection. This happens after the .NET garbage collection if both requested</param>
+      /// <param name="garbageCollectDotNet">If true (default), triggers CLR garbage collection and wait for pengind finalizers.</param>
       public void ClearGlobalEnvironment(bool garbageCollectR = true, bool garbageCollectDotNet = true)
       {
          this.Evaluate("rm(list=ls())");
@@ -739,13 +767,16 @@ namespace RDotNet
          {
             GC.Collect();
             GC.WaitForPendingFinalizers();
-   }
+         }
          if (garbageCollectR)
             ForceGarbageCollection();
       }
 
       private IntPtr stringNAPointer = IntPtr.Zero;
 
+      /// <summary>
+      /// Native pointer to the SEXP representing NA for strings (character vectors in R terminology).
+      /// </summary>
       public IntPtr NaStringPointer
       {
          get
@@ -756,7 +787,11 @@ namespace RDotNet
          }
       }
 
-      public SymbolicExpression stringNaSexp = null;
+      private SymbolicExpression stringNaSexp = null;
+
+      /// <summary>
+      /// SEXP representing NA for strings (character vectors in R terminology).
+      /// </summary>
       public SymbolicExpression NaString
       {
          get

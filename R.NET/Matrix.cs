@@ -61,18 +61,11 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Initializes this R matrix, using the values in a rectangular array.
+      /// </summary>
+      /// <param name="matrix"></param>
       protected abstract void InitMatrixFastDirect(T[,] matrix);
-
-      private void InitMatrixWithIndexers(T[,] matrix, int rowCount, int columnCount)
-      {
-         for (int rowIndex = 0; rowIndex < rowCount; rowIndex++)
-         {
-            for (int columnIndex = 0; columnIndex < columnCount; columnIndex++)
-            {
-               this[rowIndex, columnIndex] = matrix[rowIndex, columnIndex];
-            }
-         }
-      }
 
       /// <summary>
       /// Creates a new instance for a matrix.
@@ -301,7 +294,11 @@ namespace RDotNet
          }
       }
 
-      public T[,] ToArrayFast()
+      /// <summary>
+      /// Gets a .NET representation as a two dimensional array of an R matrix
+      /// </summary>
+      /// <returns></returns>
+      public T[,] ToArray()
       {
          using (var p = new ProtectedPointer(this))
          {
@@ -309,6 +306,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Efficient conversion from R matrix representation to the array equivalent in the CLR
+      /// </summary>
+      /// <returns>Array equivalent</returns>
       protected abstract T[,] GetArrayFast();
    }
 }

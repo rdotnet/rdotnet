@@ -93,6 +93,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Initializes this R matrix, using the values in a rectangular array.
+      /// </summary>
+      /// <param name="matrix"></param>
       protected override void InitMatrixFastDirect(string[,] matrix)
       {
          int rows = matrix.GetLength(0);
@@ -106,9 +110,13 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// NotSupportedException();
+      /// </summary>
+      /// <returns></returns>
       protected override string[,] GetArrayFast()
       {
-         throw new NotImplementedException();
+         throw new NotSupportedException();
       }
 
       /// <summary>

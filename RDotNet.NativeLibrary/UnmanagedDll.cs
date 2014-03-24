@@ -13,6 +13,9 @@ namespace RDotNet.NativeLibrary
    [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
    public class UnmanagedDll : SafeHandle
    {
+      /// <summary>
+      /// Gets whether the current handle is equal to the invalid handle
+      /// </summary>
       public override bool IsInvalid
       {
          get { return handle == IntPtr.Zero; }
@@ -211,11 +214,19 @@ namespace RDotNet.NativeLibrary
          return GetFunctionAddress(entryPoint);
       }
 
+      /// <summary>
+      /// Frees the native library this objects represents
+      /// </summary>
+      /// <returns>The result of the call to FreeLibrary</returns>
       protected override bool ReleaseHandle()
       {
          return FreeLibrary();
       }
 
+      /// <summary>
+      /// Frees the native library this objects represents
+      /// </summary>
+      /// <param name="disposing"></param>
       protected override void Dispose(bool disposing)
       {
          if (FreeLibrary())

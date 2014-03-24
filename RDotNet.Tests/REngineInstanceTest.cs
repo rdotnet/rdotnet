@@ -72,16 +72,16 @@ namespace RDotNet
          // https://rdotnet.codeplex.com/workitem/54
          var engine = REngine.GetInstance();
          engine.Initialize();
-         var paths = engine.Evaluate(".libPaths()").AsCharacter().ToArrayFast();
-         Console.WriteLine(engine.Evaluate("Sys.getenv('R_HOME')").AsCharacter().ToArrayFast()[0]);
+         var paths = engine.Evaluate(".libPaths()").AsCharacter().ToArray();
+         Console.WriteLine(engine.Evaluate("Sys.getenv('R_HOME')").AsCharacter().ToArray()[0]);
          // engine.Evaluate("library(rjson)");
          engine.Dispose();
          Console.WriteLine("Before second creation");
          engine = REngine.GetInstance();
          Console.WriteLine("Before second initialize");
          engine.Initialize();
-         Console.WriteLine(engine.Evaluate("Sys.getenv('R_HOME')").AsCharacter().ToArrayFast()[0]);
-         paths = engine.Evaluate(".libPaths()").AsCharacter().ToArrayFast();
+         Console.WriteLine(engine.Evaluate("Sys.getenv('R_HOME')").AsCharacter().ToArray()[0]);
+         paths = engine.Evaluate(".libPaths()").AsCharacter().ToArray();
          try
          {
             engine.Evaluate("library(methods)");

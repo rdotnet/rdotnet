@@ -89,6 +89,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Initializes this R matrix, using the values in a rectangular array.
+      /// </summary>
+      /// <param name="matrix"></param>
       protected override void InitMatrixFastDirect(Complex[,] matrix)
       {
          var vectorCplx = Utility.ArrayConvertOneDim(matrix);
@@ -96,6 +100,10 @@ namespace RDotNet
          Marshal.Copy(data, 0, DataPointer, data.Length);
       }
 
+      /// <summary>
+      /// Gets a rectangular array representation in the CLR, equivalent of a matrix in R. 
+      /// </summary>
+      /// <returns>Rectangular array with values representing the content of the R matrix. Beware NA codes</returns>
       protected override Complex[,] GetArrayFast()
       {
          int n = this.ItemCount;
