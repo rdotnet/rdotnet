@@ -45,6 +45,11 @@ namespace RDotNet
          return string.Format("Status {2} for {0} : {1}", errorStatement, errorMsg, status);
       }
 
+      /// <summary>
+      /// Creates a new ParseException
+      /// </summary>
+      /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
+      /// <param name="context"></param>
       protected ParseException(SerializationInfo info, StreamingContext context)
          : base(info, context)
       {

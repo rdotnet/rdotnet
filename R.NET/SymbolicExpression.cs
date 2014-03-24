@@ -34,6 +34,9 @@ namespace RDotNet
          Preserve();
       }
 
+      /// <summary>
+      /// Is the handle of this SEXP invalid (zero, i.e. null pointer)
+      /// </summary>
       public override bool IsInvalid
       {
          get { return handle == IntPtr.Zero; }

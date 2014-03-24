@@ -283,6 +283,9 @@ namespace RDotNet.NativeLibrary
          }
       }
 
+      /// <summary>
+      /// Is the platform a unix like (Unis or MacOX)
+      /// </summary>
       public static bool IsUnix {
          get {
             var p = GetPlatform();

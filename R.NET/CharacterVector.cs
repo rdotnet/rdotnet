@@ -72,6 +72,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Gets an array representation of this R vector. Note that the implementation is not as fast as for numeric vectors.
+      /// </summary>
+      /// <returns></returns>
       protected override string[] GetArrayFast()
       {
          int n = this.Length;
@@ -108,6 +112,9 @@ namespace RDotNet
          Marshal.WriteIntPtr(DataPointer, offset, stringPointer);
       }
 
+      /// <summary>
+      /// Efficient initialisation of R vector values from an array representation in the CLR
+      /// </summary>
       protected override void SetVectorDirect(string[] values)
       {
          // Possibly not the fastest implementation, but faster may require C code.

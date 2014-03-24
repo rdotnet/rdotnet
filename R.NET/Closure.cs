@@ -55,6 +55,11 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Invoke this function, using an ordered list of unnamed arguments.
+      /// </summary>
+      /// <param name="args">The arguments of the function</param>
+      /// <returns>The result of the evaluation</returns>
       public override SymbolicExpression Invoke(params SymbolicExpression[] args)
       {
          //int count = Arguments.Count;
@@ -63,11 +68,13 @@ namespace RDotNet
          return InvokeOrderedArguments(args);
       }
 
+      /// <summary>
+      /// Invoke this function, using named arguments provided as key-value pairs
+      /// </summary>
+      /// <param name="args">the representation of named arguments, as a dictionary</param>
+      /// <returns>The result of the evaluation</returns>
       public override SymbolicExpression Invoke(IDictionary<string, SymbolicExpression> args)
       {
-         //if (args.Count > Arguments.Count)
-         //   throw new ArgumentException("Too many arguments provided for this function", "args");
-
          var a = args.ToArray();
          return InvokeViaPairlist(Array.ConvertAll(a, x => x.Key), Array.ConvertAll(a, x => x.Value));
       }

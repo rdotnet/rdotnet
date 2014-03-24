@@ -40,7 +40,7 @@ namespace RDotNet
       /// </summary>
       /// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
       /// <param name="vector">The values.</param>
-      /// <seealso cref="REngineExtension.CreateIntegerVector(REngine, int[])"/>
+      /// <seealso cref="REngineExtension.CreateIntegerVector(REngine, IEnumerable{int})"/>
       public IntegerVector(REngine engine, int[] vector)
          : base(engine, SymbolicExpressionType.IntegerVector, vector.Length)
       {
@@ -89,6 +89,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Efficient conversion from R vector representation to the array equivalent in the CLR
+      /// </summary>
+      /// <returns>Array equivalent</returns>
       protected override int[] GetArrayFast()
       {
          var res = new int[this.Length];
@@ -96,6 +100,9 @@ namespace RDotNet
          return res;
       }
 
+      /// <summary>
+      /// Efficient initialisation of R vector values from an array representation in the CLR
+      /// </summary>
       protected override void SetVectorDirect(int[] values)
       {
          Marshal.Copy(values, 0, DataPointer, values.Length);

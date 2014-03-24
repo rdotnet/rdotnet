@@ -82,7 +82,7 @@ namespace RDotNet
 
       public static void RtoDotNetNumericMatrixFast(REngine engine, int n, Stopwatch s)
       {
-         RtoDotNetNumericMatrix(engine, n, s, e => e.GetSymbol("x").AsNumericMatrix().ToArrayFast());
+         RtoDotNetNumericMatrix(engine, n, s, e => e.GetSymbol("x").AsNumericMatrix().ToArray());
       }
 
       private static void RtoDotNetNumericMatrix(REngine engine, int n, Stopwatch s, Func<REngine, Array> fun)
@@ -98,7 +98,7 @@ namespace RDotNet
 
       public static void RtoDotNetIntegerMatrixFast(REngine engine, int n, Stopwatch s)
       {
-         RtoDotNetNumericMatrix(engine, n, s, e => e.GetSymbol("x").AsIntegerMatrix().ToArrayFast());
+         RtoDotNetNumericMatrix(engine, n, s, e => e.GetSymbol("x").AsIntegerMatrix().ToArray());
       }
 
       private static void RtoDotNetIntegerMatrix(REngine engine, int n, Stopwatch s, Func<REngine, Array> fun)
@@ -130,7 +130,7 @@ namespace RDotNet
 
       public static void RtoDotNetNumericVectorFast(REngine engine, int n, Stopwatch s)
       {
-         RtoDotNetNumericVector(engine, n, s, e => e.GetSymbol("x").AsNumeric().ToArrayFast());
+         RtoDotNetNumericVector(engine, n, s, e => e.GetSymbol("x").AsNumeric().ToArray());
       }
 
       public static void RtoDotNetIntegerVector(REngine engine, int n, Stopwatch s, Func<REngine, Array> fun)
@@ -149,7 +149,7 @@ namespace RDotNet
 
       public static void RtoDotNetIntegerVectorFast(REngine engine, int n, Stopwatch s)
       {
-         RtoDotNetIntegerVector(engine, n, s, e => e.Evaluate("x").AsInteger().ToArrayFast());
+         RtoDotNetIntegerVector(engine, n, s, e => e.Evaluate("x").AsInteger().ToArray());
       }
 
       public static void RtoDotNetCharacterVector(REngine engine, int n, Stopwatch s)

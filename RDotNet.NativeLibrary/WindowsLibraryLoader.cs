@@ -18,7 +18,7 @@ namespace RDotNet.NativeLibrary
       public string GetLastError()
       {
          // see for instance http://blogs.msdn.com/b/shawnfa/archive/2004/09/10/227995.aspx 
-         /// and http://blogs.msdn.com/b/adam_nathan/archive/2003/04/25/56643.aspx
+         // and http://blogs.msdn.com/b/adam_nathan/archive/2003/04/25/56643.aspx
          // TODO: does this work as expected with Mono+Windows stack?
          return new Win32Exception().Message;
       }

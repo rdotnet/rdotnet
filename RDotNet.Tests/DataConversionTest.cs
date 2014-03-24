@@ -27,7 +27,7 @@ namespace RDotNet
 
          // Test a large data set: I just cannot believe how faster things are...
          engine.Evaluate("x <- 1:1e7 * 1.1");
-         var a = engine.GetSymbol("x").AsNumeric().ToArrayFast();
+         var a = engine.GetSymbol("x").AsNumeric().ToArray();
          Assert.AreEqual(a[10000000/2-1], 1.1*1e7/2);
 
       }
@@ -86,7 +86,7 @@ namespace RDotNet
 
       private static void CheckBothArrayConversions<T>(Vector<T> vec, T[] expected)
       {
-         var a = vec.ToArrayFast();
+         var a = vec.ToArray();
          CheckArrayEqual(a, expected);
          a = vec.ToArray();
          CheckArrayEqual(a, expected);
@@ -98,7 +98,7 @@ namespace RDotNet
          var engine = this.Engine;
          engine.Evaluate("x <- matrix(1:110 * 1.1, nrow=10, ncol=11)");
          var expected = ToMatrix(ArrayMult(GenArrayDouble(1, 110), 1.1), 10, 11);
-         var a = engine.GetSymbol("x").AsNumericMatrix().ToArrayFast();
+         var a = engine.GetSymbol("x").AsNumericMatrix().ToArray();
          CheckArrayEqual(a, expected);
       }
 
@@ -108,7 +108,7 @@ namespace RDotNet
          var engine = this.Engine;
          engine.Evaluate("x <- matrix(as.integer(1:110), nrow=10, ncol=11)");
          var expected = ToMatrix(GenArrayInteger(1, 110), 10, 11);
-         var a = engine.GetSymbol("x").AsIntegerMatrix().ToArrayFast();
+         var a = engine.GetSymbol("x").AsIntegerMatrix().ToArray();
          CheckArrayEqual(a, expected);
       }
 
@@ -119,7 +119,7 @@ namespace RDotNet
          engine.Evaluate("x <- matrix(rep(c(TRUE,FALSE), 55), nrow=10, ncol=11)");
          var exp_one = Array.ConvertAll(GenArrayInteger(1, 110), val => val % 2 == 1);
          var expected = ToMatrix(exp_one, 10, 11);
-         var a = engine.GetSymbol("x").AsLogicalMatrix().ToArrayFast();
+         var a = engine.GetSymbol("x").AsLogicalMatrix().ToArray();
          CheckArrayEqual(a, expected);
       }
 
@@ -130,7 +130,7 @@ namespace RDotNet
          engine.Evaluate("x <- matrix((1:110 + 1i*(101:210)), nrow=10, ncol=11)");
          var exp_one = Array.ConvertAll(GenArrayInteger(1, 110), val => new Complex(val, val+100));
          var expected = ToMatrix(exp_one, 10, 11);
-         var a = engine.GetSymbol("x").AsComplexMatrix().ToArrayFast();
+         var a = engine.GetSymbol("x").AsComplexMatrix().ToArray();
          CheckArrayEqual(a, expected);
       }
    }

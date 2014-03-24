@@ -48,7 +48,7 @@ namespace RDotNet
       /// </summary>
       /// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
       /// <param name="coerced">The pointer to a raw vector.</param>
-      /// <seealso cref="REngineExtension.CreateRawVector(REngine, byte[])"/>
+      /// <seealso cref="REngineExtension.CreateRawVector(REngine, IEnumerable{byte})"/>
       protected internal RawVector(REngine engine, IntPtr coerced)
          : base(engine, coerced)
       { }
@@ -86,6 +86,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Efficient conversion from R vector representation to the array equivalent in the CLR
+      /// </summary>
+      /// <returns>Array equivalent</returns>
       protected override byte[] GetArrayFast()
       {
          var res = new byte[this.Length];

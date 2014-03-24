@@ -57,6 +57,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Gets an array representation of a vector in R. Note that the implementation cannot be particularly "fast" in spite of the name.
+      /// </summary>
+      /// <returns></returns>
       protected override object[] GetArrayFast()
       {
          var res = new object[this.Length];
@@ -94,6 +98,9 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Efficient initialisation of R vector values from an array representation in the CLR
+      /// </summary>
       protected override void SetVectorDirect(object[] values)
       {
          for (int i = 0; i < values.Length; i++)
