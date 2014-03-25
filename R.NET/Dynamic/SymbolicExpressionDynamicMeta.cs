@@ -36,11 +36,23 @@ namespace RDotNet.Dynamic
       /// <returns></returns>
       protected DynamicMetaObject BindGetMember<RType, BType>(GetMemberBinder binder, Type[] indexerNameType)
       {
-         ConstantExpression instance = System.Linq.Expressions.Expression.Constant(Value, typeof(RType));
-         ConstantExpression name = System.Linq.Expressions.Expression.Constant(binder.Name, typeof(string));
+         ConstantExpression instance;
+         ConstantExpression name;
+         BuildInstanceAndName<RType>(binder, out instance, out name);
          PropertyInfo indexer = typeof(RType).GetProperty("Item", indexerNameType);
          IndexExpression call = System.Linq.Expressions.Expression.Property(instance, indexer, name);
+         return CreateDynamicMetaObject<BType>(call);
+      }
+
+      private static DynamicMetaObject CreateDynamicMetaObject<BType>(System.Linq.Expressions.Expression call)
+      {
          return new DynamicMetaObject(call, BindingRestrictions.GetTypeRestriction(call, typeof(BType)));
+      }
+
+      private void BuildInstanceAndName<RType>(GetMemberBinder binder, out ConstantExpression instance, out ConstantExpression name)
+      {
+         instance = System.Linq.Expressions.Expression.Constant(Value, typeof(RType));
+         name = System.Linq.Expressions.Expression.Constant(binder.Name, typeof(string));
       }
 
       /// <summary>
@@ -66,11 +78,12 @@ namespace RDotNet.Dynamic
             return base.BindGetMember(binder);
          }
 
-         ConstantExpression instance = System.Linq.Expressions.Expression.Constant(Value, typeof(SymbolicExpression));
-         ConstantExpression name = System.Linq.Expressions.Expression.Constant(binder.Name, typeof(string));
+         ConstantExpression instance;
+         ConstantExpression name;
+         BuildInstanceAndName<SymbolicExpression>(binder, out instance, out name);
          MethodInfo getAttribute = typeof(SymbolicExpression).GetMethod("GetAttribute");
          MethodCallExpression call = System.Linq.Expressions.Expression.Call(instance, getAttribute, name);
-         return new DynamicMetaObject(call, BindingRestrictions.GetTypeRestriction(call, typeof(SymbolicExpression)));
+         return CreateDynamicMetaObject<SymbolicExpression>(call);
       }
 
       private string[] GetAttributeNames()

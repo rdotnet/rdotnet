@@ -73,6 +73,11 @@ namespace RDotNet
          get { return this.errorStatement; }
       }
 
+      /// <summary>
+      /// Sets the serialization info about the exception thrown
+      /// </summary>
+      /// <param name="info">Serialized object data.</param>
+      /// <param name="context">Contextual information about the source or destination</param>
       public override void GetObjectData(SerializationInfo info, StreamingContext context)
       {
          base.GetObjectData(info, context);

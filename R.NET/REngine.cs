@@ -32,7 +32,6 @@ namespace RDotNet
    public class REngine : UnmanagedDll
    {
       private static readonly ICharacterDevice DefaultDevice = new ConsoleDevice();
-      //private static readonly Dictionary<string, REngine> instances = new Dictionary<string, REngine>();
 
       private readonly string id;
       private CharacterDeviceAdapter adapter;
@@ -687,8 +686,15 @@ namespace RDotNet
          GetFunction<R_set_command_line_arguments>()(newArgs.Length, newArgs);
       }
 
+      /// <summary>
+      /// Event triggered when disposing of this REngine
+      /// </summary>
       public event EventHandler Disposing;
 
+      /// <summary>
+      /// Called on disposing of this REngine
+      /// </summary>
+      /// <param name="e"></param>
       protected virtual void OnDisposing(EventArgs e)
       {
          if (Disposing != null)
@@ -702,6 +708,10 @@ namespace RDotNet
       /// </summary>
       public bool Disposed { get; private set; }
 
+      /// <summary>
+      /// Dispose of this REngine, including using the native R API to clean up, if the parameter is true
+      /// </summary>
+      /// <param name="disposing">if true, release native resources, using the native R API to clean up.</param>
       protected override void Dispose(bool disposing)
       {
          if (isRunning)
