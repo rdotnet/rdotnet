@@ -88,7 +88,11 @@ namespace RDotNet
          }
       }
 
-
+      /// <summary>
+      /// Invoke this function with unnamed arguments.
+      /// </summary>
+      /// <param name="args">The arguments passed to function call.</param>
+      /// <returns>The result of the function evaluation.</returns>
       protected SymbolicExpression InvokeOrderedArguments(SymbolicExpression[] args)
       {
          IntPtr argument = Engine.NilValue.DangerousGetHandle();

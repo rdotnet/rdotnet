@@ -77,11 +77,21 @@ namespace RDotNet
          get { return this.rowIndex; }
       }
 
+      /// <summary>
+      /// Gets the column names of the data frame.
+      /// </summary>
+      /// <returns></returns>
       public override IEnumerable<string> GetDynamicMemberNames()
       {
          return DataFrame.ColumnNames;
       }
 
+      /// <summary>
+      /// Try to get a member to a specified value
+      /// </summary>
+      /// <param name="binder">Dynamic get member operation at the call site; Binder whose name should be one of the data frame column name</param>
+      /// <param name="result">The value of the member</param>
+      /// <returns>false if setting failed</returns>
       public override bool TryGetMember(GetMemberBinder binder, out object result)
       {
          string[] columnNames = DataFrame.ColumnNames;
@@ -94,6 +104,12 @@ namespace RDotNet
          return true;
       }
 
+      /// <summary>
+      /// Try to set a member to a specified value
+      /// </summary>
+      /// <param name="binder">Dynamic set member operation at the call site; Binder whose name should be one of the data frame column name</param>
+      /// <param name="value">The value to set</param>
+      /// <returns>false if setting failed</returns>
       public override bool TrySetMember(SetMemberBinder binder, object value)
       {
          string[] columnNames = DataFrame.ColumnNames;

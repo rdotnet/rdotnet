@@ -97,6 +97,10 @@ namespace RDotNet
          return res;
       }
 
+      /// <summary>
+      /// Sets the values of this RawVector
+      /// </summary>
+      /// <param name="values">Managed values, to be converted to unmanaged equivalent</param>
       protected override void SetVectorDirect(byte[] values)
       {
          Marshal.Copy(values, 0, DataPointer, values.Length);

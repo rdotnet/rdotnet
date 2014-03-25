@@ -204,6 +204,9 @@ namespace RDotNet
          get { return Names; }
       }
 
+      /// <summary>
+      /// Gets the data size of each element in this vector, i.e. the offset in memory between elements.
+      /// </summary>
       protected override int DataSize
       {
          get { return Marshal.SizeOf(typeof(IntPtr)); }

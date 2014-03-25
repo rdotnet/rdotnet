@@ -106,6 +106,9 @@ namespace RDotNet
             SetValue(i, values[i]);
       }
 
+      /// <summary>
+      /// Gets the size of each item in this vector
+      /// </summary>
       protected override int DataSize
       {
          get { return Marshal.SizeOf(typeof(IntPtr)); }
@@ -120,6 +123,11 @@ namespace RDotNet
          return new Pairlist(Engine, Engine.GetFunction<Rf_VectorToPairList>()(handle));
       }
 
+      /// <summary>
+      /// returns a new ListDynamicMeta for this Generic Vector
+      /// </summary>
+      /// <param name="parameter"></param>
+      /// <returns></returns>
       public override DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)
       {
          return new ListDynamicMeta(parameter, this);

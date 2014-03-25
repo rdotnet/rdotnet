@@ -528,6 +528,17 @@ namespace RDotNet
          return new RawMatrix(engine, matrix);
       }
 
+      /// <summary>
+      /// Create an R data frame from managed arrays and objects.
+      /// </summary>
+      /// <param name="engine">R engine</param>
+      /// <param name="columns">The columns with the values for the data frame. These must be array of supported types (double, string, bool, integer, byte)</param>
+      /// <param name="columnNames">Column names. default: null.</param>
+      /// <param name="rowNames">Row names. Default null.</param>
+      /// <param name="checkRows">Check rows. See data.frame R documentation</param>
+      /// <param name="checkNames">See data.frame R documentation</param>
+      /// <param name="stringsAsFactors">Should columns of strings be considered as factors (categories). See data.frame R documentation</param>
+      /// <returns></returns>
       public static DataFrame CreateDataFrame(this REngine engine, IEnumerable[] columns, string[] columnNames=null,
          string[] rowNames=null, bool checkRows=false, bool checkNames=true, bool stringsAsFactors=true)
       {
