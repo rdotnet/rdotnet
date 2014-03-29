@@ -22,6 +22,19 @@ namespace RDotNet
       }
 
       [Test]
+      public void TestMissingValues()
+      {
+         var engine = this.Engine;
+         var factor = engine.Evaluate("x <- factor(c('A', 'B', 'A', NA, 'C', 'B'), ordered=TRUE)").AsFactor();
+         Assert.That(factor.GetFactors(), Is.EquivalentTo(new[] { "A", "B", "A", null, "C", "B" }));
+         factor = engine.Evaluate(@"
+levels(x) <- c('1st', '2nd', '3rd')
+x
+").AsFactor();
+         Assert.That(factor.GetFactors(), Is.EquivalentTo(new[] { "1st", "2nd", "1st", null, "3rd", "2nd" }));
+      }
+
+      [Test]
       public void TestIsOrderedFalse()
       {
          var engine = this.Engine;
