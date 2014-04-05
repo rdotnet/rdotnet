@@ -39,7 +39,8 @@ namespace RDotNet
       public string[] GetFactors()
       {
          var levels = GetLevels();
-         return this.Select(value => levels[value - 1]).ToArray();
+         var levelIndices = this.GetArrayFast();
+         return Array.ConvertAll(levelIndices, value => (value == int.MinValue ? null : levels[value - 1]));
       }
 
       /// <summary>
