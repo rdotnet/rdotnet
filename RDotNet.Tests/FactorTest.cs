@@ -67,6 +67,17 @@ x
                                   .Concat(Enumerable.Repeat(Group.Control, 5));
          Assert.That(factor.GetFactors<Group>(), Is.EquivalentTo(expected));
       }
+
+      [Test]
+      public void TestAsCharacterFactors()
+      {
+         var engine = this.Engine;
+         var c = engine.Evaluate("as.factor(rep(letters[1:3], 5))").AsCharacter();
+         Assert.AreEqual("a", c[0]);
+         Assert.AreEqual("b", c[1]);
+         Assert.AreEqual("c", c[2]);
+         Assert.AreEqual("a", c[3]);
+      }
    }
 
    public enum Group

@@ -90,6 +90,9 @@ namespace RDotNet.Internals
    internal delegate IntPtr Rf_mkChar(string s);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate IntPtr Rf_asCharacterFactor(IntPtr sexp);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate IntPtr Rf_allocVector(SymbolicExpressionType type, int length);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

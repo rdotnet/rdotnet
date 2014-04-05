@@ -169,7 +169,11 @@ namespace RDotNet
          {
             return null;
          }
-         IntPtr coerced = expression.Engine.GetFunction<Rf_coerceVector>()(expression.DangerousGetHandle(), SymbolicExpressionType.CharacterVector);
+         IntPtr coerced = IntPtr.Zero;
+         if (expression.IsFactor())
+            coerced = expression.Engine.GetFunction<Rf_asCharacterFactor>()(expression.DangerousGetHandle());
+         else
+            coerced = expression.Engine.GetFunction<Rf_coerceVector>()(expression.DangerousGetHandle(), SymbolicExpressionType.CharacterVector);
          return new CharacterVector(expression.Engine, coerced);
       }
 
