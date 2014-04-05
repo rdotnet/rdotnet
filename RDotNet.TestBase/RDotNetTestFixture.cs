@@ -31,14 +31,8 @@ namespace RDotNet
       [TestFixtureTearDown]
       protected virtual void TearDownFixture()
       {
-         //if (initializeOnceOnly && engine != null)
-         //   engine.ClearGlobalEnvironment();
-         //else
-         //var engine = REngine.GetInstanceFromID(EngineName);
-         //if (engine != null)
-         //{
-         //   engine.Dispose();
-         //}
+         if (engine != null)
+            engine.ClearGlobalEnvironment();
       }
 
       [SetUp]

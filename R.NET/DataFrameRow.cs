@@ -43,6 +43,34 @@ namespace RDotNet
       }
 
       /// <summary>
+      /// Gets the inner representation of the value; an integer if the column is a factor
+      /// </summary>
+      /// <param name="index"></param>
+      /// <returns></returns>
+      internal object GetInnerValue(int index)
+      {
+         DynamicVector column = DataFrame[index];
+         if (column.IsFactor())
+            return column.AsInteger()[RowIndex];
+         else
+            return column[RowIndex];
+      }
+
+      /// <summary>
+      /// Sets the inner representation of the value; an integer if the column is a factor
+      /// </summary>
+      /// <param name="index"></param>
+      /// <param name="value"></param>
+      internal void SetInnerValue(int index, object value)
+      {
+         DynamicVector column = DataFrame[index];
+         if (column.IsFactor())
+            column.AsInteger()[RowIndex] = (int)value;
+         else
+            column[RowIndex] = value;
+      }
+
+      /// <summary>
       /// Gets and sets the value at the specified column.
       /// </summary>
       /// <param name="name">The column name.</param>
