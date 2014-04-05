@@ -215,7 +215,12 @@ namespace RDotNet
       {
          if (!IsInvalid && !isProtected)
          {
-            Engine.GetFunction<R_PreserveObject>()(handle);
+            if (Engine.EnableLock)
+            {
+               lock (Engine) { Engine.GetFunction<R_PreserveObject>()(handle); }
+            }
+            else
+               Engine.GetFunction<R_PreserveObject>()(handle);
             this.isProtected = true;
          }
       }
@@ -228,7 +233,12 @@ namespace RDotNet
       {
          if (!IsInvalid && IsProtected)
          {
-            Engine.GetFunction<R_ReleaseObject>()(handle);
+            if (Engine.EnableLock)
+            {
+               lock (Engine) { Engine.GetFunction<R_ReleaseObject>()(handle); ; }
+            }
+            else
+               Engine.GetFunction<R_ReleaseObject>()(handle);
             this.isProtected = false;
          }
       }

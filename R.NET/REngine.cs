@@ -49,7 +49,15 @@ namespace RDotNet
          this.id = id;
          this.isRunning = false;
          this.Disposed = false;
+         this.EnableLock = false;
       }
+
+      /// <summary>
+      /// Gets/sets whether the call to Preserve and Unpreserve on symbolic expressions 
+      /// should be using a lock to prevent thread concurrency issues. Default is false;
+      /// </summary>
+      /// <remarks>See https://rdotnet.codeplex.com/workitem/67 for details</remarks>
+      public bool EnableLock { get; set; }
 
       /// <summary>
       /// Gets whether this instance is running.
@@ -836,5 +844,6 @@ namespace RDotNet
             return stringNaSexp;
          }
       }
+
    }
 }
