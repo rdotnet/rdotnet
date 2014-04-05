@@ -111,28 +111,25 @@ namespace RDotNet
       {
          get
          {
-            if (name == null)
-            {
-               throw new ArgumentNullException("name");
-            }
-            string[] names = Names;
-            if (names == null)
-            {
-               throw new InvalidOperationException();
-            }
-            int index = Array.IndexOf(names, name);
+            int index = getIndex(name);
             return this[index];
          }
          set
          {
-            string[] names = Names;
-            if (names == null)
-            {
-               throw new InvalidOperationException();
-            }
-            int index = Array.IndexOf(names, name);
+            int index = getIndex(name);
             this[index] = value;
          }
+      }
+
+      private int getIndex(string name)
+      {
+         if (name == null)
+            throw new ArgumentNullException("name", "indexing a vector by name requires a non-null name argument");
+         string[] names = Names;
+         if (names == null)
+            throw new NotSupportedException("The vector has no names defined - indexing it by name cannot be supported");
+         int index = Array.IndexOf(names, name);
+         return index;
       }
 
       /// <summary>
