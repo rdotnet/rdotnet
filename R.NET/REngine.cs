@@ -766,20 +766,45 @@ namespace RDotNet
       #endregion Nested type: _getDLLVersion
 
       /// <summary>
-      /// Removes all variables from the R global environment, and whether garbage collections should be forced
+      /// Removes variables from the R global environment, and whether garbage collections should be forced
       /// </summary>
       /// <param name="garbageCollectR">if true (default) request an R garbage collection. This happens after the .NET garbage collection if both requested</param>
-      /// <param name="garbageCollectDotNet">If true (default), triggers CLR garbage collection and wait for pengind finalizers.</param>
-      public void ClearGlobalEnvironment(bool garbageCollectR = true, bool garbageCollectDotNet = true)
+      /// <param name="garbageCollectDotNet">If true (default), triggers CLR garbage collection and wait for pending finalizers.</param>
+      /// <param name="removeHiddenRVars">Should hidden variables (starting with '.', such as '.Random.seed') be removed. Default is false.</param>
+      /// <param name="detachPackages">If true, detach some packages and other attached resources. Default is false. See 'detach' function in R</param>
+      /// <param name="toDetach">names of resources to dettach, e.g. an array of names such as 'mpg', 'package:lattice'. 
+      /// If null, entries found in 'search()' between the first item and 'package:base' are detached. See 'search' function documentation in R</param>
+      public void ClearGlobalEnvironment(bool garbageCollectR = true, bool garbageCollectDotNet = true, bool removeHiddenRVars = false, bool detachPackages = false, string[] toDetach = null)
       {
-         this.Evaluate("rm(list=ls())");
+         if (detachPackages)
+            doDetachPackages(toDetach);
+         var rmStatement = removeHiddenRVars ? "rm(list=ls(all.names=TRUE))" : "rm(list=ls())";
+         this.Evaluate(rmStatement);
          if (garbageCollectDotNet)
          {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+            dotNetCollectAndWait();
+            dotNetCollectAndWait();
          }
          if (garbageCollectR)
             ForceGarbageCollection();
+      }
+
+      private void doDetachPackages(string[] toDetach)
+      {
+         if (toDetach == null)
+         {
+            toDetach = Evaluate("search()[2:(which(search()=='package:stats')-1)]").AsCharacter().ToArray();
+         }
+         foreach (var dbName in toDetach)
+         {
+            Evaluate("detach('" + dbName + "')");
+         }
+      }
+
+      private static void dotNetCollectAndWait()
+      {
+         GC.Collect();
+         GC.WaitForPendingFinalizers();
       }
 
       private IntPtr stringNAPointer = IntPtr.Zero;

@@ -45,13 +45,10 @@ namespace RDotNet
       public void TestDataFrameInMemoryCreation()
       {
          var engine = this.Engine;
-         IEnumerable[] columns = new IEnumerable[3];
-         columns[0] = new string[] { "a", "a", "a", "a", "a", "b", "b", "b", "b", "b" };
-         columns[1] = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-         columns[2] = new double[] { 1.1, 2.1, 3.1, 4.1, 5.1, 6.1, 7.1, 8.1, 9.1, 10.1 };
-
-         var columnNames = new[] { "Category", "No.", "Measure" };
-         var df = engine.CreateDataFrame(columns, columnNames: columnNames);
+         IEnumerable[] columns;
+         string[] columnNames;
+         DataFrame df;
+         createTestDataFrame(engine, out columns, out columnNames, out df);
          checkDataFrameContent(df);
          Assert.AreEqual(columnNames, df.ColumnNames);
          df = engine.CreateDataFrame(columns, columnNames: null);
@@ -60,6 +57,22 @@ namespace RDotNet
          columns[1] = new int[] { 1, 2, 3, 4, 5, 6, 7 };
          Assert.Throws(typeof(EvaluationException), (() => df = engine.CreateDataFrame(columns, columnNames: null)));
 
+      }
+
+      private static void createTestDataFrame(REngine engine, out IEnumerable[] columns, out string[] columnNames, out DataFrame df)
+      {
+         columns = createTestDfColumns();
+         columnNames = new[] { "Category", "No.", "Measure" };
+         df = engine.CreateDataFrame(columns, columnNames: columnNames);
+      }
+
+      private static IEnumerable[] createTestDfColumns()
+      {
+         IEnumerable[] columns = new IEnumerable[3];
+         columns[0] = new string[] { "a", "a", "a", "a", "a", "b", "b", "b", "b", "b" };
+         columns[1] = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+         columns[2] = new double[] { 1.1, 2.1, 3.1, 4.1, 5.1, 6.1, 7.1, 8.1, 9.1, 10.1 };
+         return columns;
       }
 
       [Test]
@@ -106,7 +119,20 @@ namespace RDotNet
          Assert.AreEqual(2008, mpg[2, 3]);
          Assert.AreEqual(2008, mpg[2, "year"]);
 //         Assert.AreEqual(2008, mpg["3", "year"]);
-         
+
+         IEnumerable[] columns;
+         string[] columnNames;
+         DataFrame df;
+         createTestDataFrame(engine, out columns, out columnNames, out df);
+
+         Assert.AreEqual("a", df[0, 0]);
+         df[0, 0] = "b";
+         Assert.AreEqual("b", df[0, 0]);
+         df[0, 0] = "c";
+         Assert.AreEqual(null, df[0, 0]);
+         Assert.AreEqual("b", df[5, 0]);
+         df[5, 0] = null;
+         Assert.AreEqual(null, df[5, 0]);
       }
       private static void checkDataFrameContent(DataFrame df)
       {

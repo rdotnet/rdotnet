@@ -146,5 +146,7 @@ namespace RDotNet
          IntPtr pointer = IntPtr.Add(DataPointer, offset);
          Marshal.Copy(pointer, destination, destinationIndex, length);
       }
+
+      protected int NACode { get { return int.MinValue; } }
    }
 }
