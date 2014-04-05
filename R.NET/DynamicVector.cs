@@ -79,8 +79,16 @@ namespace RDotNet
                return ReadDouble(pointer, offset);
 
             case SymbolicExpressionType.IntegerVector:
-               return ReadInt32(pointer, offset);
-
+               var intValue = ReadInt32(pointer, offset);
+               if (this.IsFactor())
+               {
+                  if (intValue < 0)
+                     return null;
+                  else
+                     return this.AsFactor().GetLevels()[intValue - 1];
+               }
+               else
+                  return intValue;
             case SymbolicExpressionType.CharacterVector:
                return ReadString(pointer, offset);
 
