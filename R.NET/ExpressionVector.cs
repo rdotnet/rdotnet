@@ -4,6 +4,9 @@ using System.Security.Permissions;
 
 namespace RDotNet
 {
+   /// <summary>
+   /// A vector of S expressions
+   /// </summary>
    [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
    public class ExpressionVector : Vector<Expression>
    {
@@ -16,6 +19,11 @@ namespace RDotNet
          : base(engine, coerced)
       { }
 
+      /// <summary>
+      /// Gets/sets the expression for an index
+      /// </summary>
+      /// <param name="index">index value</param>
+      /// <returns>The Expression at a given index.</returns>
       public override Expression this[int index]
       {
          get
@@ -42,6 +50,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Gets an array representation of a vector of SEXP in R. Note that the implementation cannot be particularly "fast" in spite of the name.
+      /// </summary>
+      /// <returns></returns>
       protected override Expression[] GetArrayFast()
       {
          var res = new Expression[this.Length];
@@ -63,6 +75,9 @@ namespace RDotNet
          Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
       }
 
+      /// <summary>
+      /// Efficient initialisation of R vector values from an array representation in the CLR
+      /// </summary>
       protected override void SetVectorDirect(Expression[] values)
       {
          for (int i = 0; i < values.Length; i++)

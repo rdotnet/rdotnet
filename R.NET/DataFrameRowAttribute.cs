@@ -55,7 +55,7 @@ namespace RDotNet
             var attribute = t.Item1;
             var setter = t.Item2;
             var index = attribute.GetIndex(names);
-            setter.Invoke(to, new object[] { from[index] });
+            setter.Invoke(to, new object[] { from.GetInnerValue(index) });
          }
       }
    }

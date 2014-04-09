@@ -14,9 +14,9 @@ namespace MeasureRuntime
 
       private static void Main(string[] args)
       {
-         Helper.SetEnvironmentVariables();
+         REngine.SetEnvironmentVariables();
          var engineName = "R_engine";
-         using (var engine = REngine.CreateInstance(engineName))
+         using (var engine = REngine.GetInstance())
          {
             engine.Initialize(device: device);
             //DoMeasuresVectors(engine);

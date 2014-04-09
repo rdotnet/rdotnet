@@ -80,6 +80,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Gets an array representation in the CLR of a vector in R. 
+      /// </summary>
+      /// <returns></returns>
       protected override Complex[] GetArrayFast()
       {
          int n = this.Length;
@@ -88,6 +92,9 @@ namespace RDotNet
          return Utility.DeserializeComplexFromDouble(data);
       }
 
+      /// <summary>
+      /// Efficient initialisation of R vector values from an array representation in the CLR
+      /// </summary>
       protected override void SetVectorDirect(Complex[] values)
       {
          double[] data = Utility.SerializeComplexToDouble(values);

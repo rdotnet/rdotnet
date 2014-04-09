@@ -37,7 +37,7 @@ namespace RDotNet
       /// </summary>
       /// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
       /// <param name="vector">The values.</param>
-      /// <seealso cref="REngineExtension.CreateNumericVector(REngine, double[])"/>
+      /// <seealso cref="REngineExtension.CreateNumericVector(REngine, IEnumerable{double})"/>
       public NumericVector(REngine engine, double[] vector)
          : base(engine, SymbolicExpressionType.NumericVector, vector.Length)
       {
@@ -91,6 +91,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Efficient conversion from R vector representation to the array equivalent in the CLR
+      /// </summary>
+      /// <returns>Array equivalent</returns>
       protected override double[] GetArrayFast()
       {
          var res = new double[this.Length];
@@ -98,6 +102,9 @@ namespace RDotNet
          return res;
       }
 
+      /// <summary>
+      /// Efficient initialisation of R vector values from an array representation in the CLR
+      /// </summary>
       protected override void SetVectorDirect(double[] values)
       {
          IntPtr pointer = IntPtr.Add(DataPointer, 0);

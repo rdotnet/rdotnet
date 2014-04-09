@@ -18,6 +18,9 @@ namespace RDotNet
       // Windows style RStart includes Unix-style RStart.
       internal RStart start;
 
+      /// <summary>
+      /// Create a new Startup parameter, using some default parameters
+      /// </summary>
       public StartupParameter()
       {
          this.start = new RStart();

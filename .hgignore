@@ -8,6 +8,7 @@ syntax: glob
 *.nupkg
 *.VisualState.xml
 TestResult.xml
+_ReSharper.R.*
 
 syntax: regexp
 bin/

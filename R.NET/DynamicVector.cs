@@ -14,6 +14,11 @@ namespace RDotNet
    /// </remarks>
    public class DynamicVector : Vector<object>
    {
+      /// <summary>
+      /// Creates a container for a collection of values
+      /// </summary>
+      /// <param name="engine">The R engine</param>
+      /// <param name="coerced">Pointer to the native R object, coerced to the appropriate type</param>
       protected internal DynamicVector(REngine engine, IntPtr coerced)
          : base(engine, coerced)
       { }
@@ -52,6 +57,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Gets an array representation of a vector in R. Note that the implementation cannot be particularly "fast" in spite of the name.
+      /// </summary>
+      /// <returns></returns>
       protected override object[] GetArrayFast()
       {
          var res = new object[this.Length];
@@ -70,7 +79,10 @@ namespace RDotNet
                return ReadDouble(pointer, offset);
 
             case SymbolicExpressionType.IntegerVector:
-               return ReadInt32(pointer, offset);
+               if (this.IsFactor())
+                  return this.AsFactor().GetFactor(index);
+               else
+                  return ReadInt32(pointer, offset);
 
             case SymbolicExpressionType.CharacterVector:
                return ReadString(pointer, offset);
@@ -89,6 +101,9 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Efficient initialisation of R vector values from an array representation in the CLR
+      /// </summary>
       protected override void SetVectorDirect(object[] values)
       {
          for (int i = 0; i < values.Length; i++)
@@ -106,7 +121,10 @@ namespace RDotNet
                return;
 
             case SymbolicExpressionType.IntegerVector:
-               WriteInt32((int)value, pointer, offset);
+               if (this.IsFactor())
+                  this.AsFactor().SetFactor(index, value as string);
+               else
+                  WriteInt32((int)value, pointer, offset);
                return;
 
             case SymbolicExpressionType.CharacterVector:
@@ -131,6 +149,9 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Gets the data size of each element in this vector, i.e. the offset in memory between elements.
+      /// </summary>
       protected override int DataSize
       {
          get

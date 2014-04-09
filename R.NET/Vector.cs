@@ -45,12 +45,7 @@ namespace RDotNet
       protected Vector(REngine engine, SymbolicExpressionType type, IEnumerable<T> vector)
          : base(engine, engine.GetFunction<Rf_allocVector>()(type, vector.Count()))
       {
-         int index = 0;
          SetVector(vector.ToArray());
-         //foreach (T element in vector)
-         //{
-         //   this[index++] = element;
-         //}
       }
 
       /// <summary>
@@ -87,7 +82,7 @@ namespace RDotNet
       /// A method to transfer data from native to .NET managed array equivalents fast.
       /// </summary>
       /// <returns>Array of values in the vector</returns>
-      public T[] ToArrayFast()
+      public T[] ToArray()
       {
          using (new ProtectedPointer(this))
          {
@@ -95,6 +90,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Gets a representation as a one dimensional array of an R vector, with efficiency in mind for the unmanaged to managed transition, if possible.
+      /// </summary>
+      /// <returns></returns>
       protected abstract T[] GetArrayFast();
 
       /// <summary>
@@ -112,28 +111,25 @@ namespace RDotNet
       {
          get
          {
-            if (name == null)
-            {
-               throw new ArgumentNullException("name");
-            }
-            string[] names = Names;
-            if (names == null)
-            {
-               throw new InvalidOperationException();
-            }
-            int index = Array.IndexOf(names, name);
+            int index = getIndex(name);
             return this[index];
          }
          set
          {
-            string[] names = Names;
-            if (names == null)
-            {
-               throw new InvalidOperationException();
-            }
-            int index = Array.IndexOf(names, name);
+            int index = getIndex(name);
             this[index] = value;
          }
+      }
+
+      private int getIndex(string name)
+      {
+         if (name == null)
+            throw new ArgumentNullException("name", "indexing a vector by name requires a non-null name argument");
+         string[] names = Names;
+         if (names == null)
+            throw new NotSupportedException("The vector has no names defined - indexing it by name cannot be supported");
+         int index = Array.IndexOf(names, name);
+         return index;
       }
 
       /// <summary>
@@ -185,6 +181,9 @@ namespace RDotNet
 
       #region IEnumerable<T> Members
 
+      /// <summary>
+      /// Gets enumerator
+      /// </summary>
       public IEnumerator<T> GetEnumerator()
       {
          for (int index = 0; index < Length; index++)

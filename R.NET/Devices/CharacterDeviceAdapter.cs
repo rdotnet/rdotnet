@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using RDotNet.NativeLibrary;
 
 namespace RDotNet.Devices
 {
@@ -51,7 +52,7 @@ namespace RDotNet.Devices
       internal void Install(REngine engine, StartupParameter parameter)
       {
          this.engine = engine;
-         switch (Environment.OSVersion.Platform)
+         switch (NativeUtility.GetPlatform())
          {
             case PlatformID.Win32NT:
                SetupWindowsDevice(parameter);
@@ -69,12 +70,12 @@ namespace RDotNet.Devices
          if (parameter.RHome == null)
          {
             string rhome = Marshal.PtrToStringAnsi(this.engine.GetFunction<getValue>("get_R_HOME")());
-            parameter.start.rhome = Marshal.StringToHGlobalAnsi(ConvertSeparator(rhome));
+            parameter.start.rhome = Marshal.StringToHGlobalAnsi(ConvertSeparatorToUnixStylePath(rhome));
          }
          if (parameter.Home == null)
          {
             string home = Marshal.PtrToStringAnsi(this.engine.GetFunction<getValue>("getRUser")());
-            parameter.start.home = Marshal.StringToHGlobalAnsi(ConvertSeparator(home));
+            parameter.start.home = Marshal.StringToHGlobalAnsi(ConvertSeparatorToUnixStylePath(home));
          }
          parameter.start.ReadConsole = ReadConsole;
          parameter.start.WriteConsole = WriteConsole;
@@ -137,7 +138,7 @@ namespace RDotNet.Devices
          Marshal.WriteIntPtr(addHistoryPointer, newAddHistory);
       }
 
-      private static string ConvertSeparator(string path)
+      private static string ConvertSeparatorToUnixStylePath(string path)
       {
          return path.Replace(Path.DirectorySeparatorChar, '/');
       }
@@ -221,34 +222,29 @@ namespace RDotNet.Devices
          Device.EditFile(file);
       }
 
-      private IntPtr LoadHistory(IntPtr call, IntPtr operation, IntPtr args, IntPtr environment)
+      private IntPtr CallDeviceFunction(IntPtr call, IntPtr operation, IntPtr args, IntPtr environment, Func<Language,SymbolicExpression,Pairlist,REnvironment,SymbolicExpression> func)
       {
          var c = new Language(Engine, call);
          var op = new SymbolicExpression(Engine, operation);
          var arglist = new Pairlist(Engine, args);
          var env = new REnvironment(Engine, environment);
-         SymbolicExpression result = Device.LoadHistory(c, op, arglist, env);
+         SymbolicExpression result = func(c, op, arglist, env);
          return result.DangerousGetHandle();
+      }
+
+      private IntPtr LoadHistory(IntPtr call, IntPtr operation, IntPtr args, IntPtr environment)
+      {
+         return CallDeviceFunction(call, operation, args, environment, Device.LoadHistory);
       }
 
       private IntPtr SaveHistory(IntPtr call, IntPtr operation, IntPtr args, IntPtr environment)
       {
-         var c = new Language(Engine, call);
-         var op = new SymbolicExpression(Engine, operation);
-         var arglist = new Pairlist(Engine, args);
-         var env = new REnvironment(Engine, environment);
-         SymbolicExpression result = Device.SaveHistory(c, op, arglist, env);
-         return result.DangerousGetHandle();
+         return CallDeviceFunction(call, operation, args, environment, Device.SaveHistory);
       }
 
       private IntPtr AddHistory(IntPtr call, IntPtr operation, IntPtr args, IntPtr environment)
       {
-         var c = new Language(Engine, call);
-         var op = new SymbolicExpression(Engine, operation);
-         var arglist = new Pairlist(Engine, args);
-         var env = new REnvironment(Engine, environment);
-         SymbolicExpression result = Device.AddHistory(c, op, arglist, env);
-         return result.DangerousGetHandle();
+         return CallDeviceFunction(call, operation, args, environment, Device.AddHistory);
       }
 
       #region Nested type: getValue

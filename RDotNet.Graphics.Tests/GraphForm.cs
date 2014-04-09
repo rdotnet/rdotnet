@@ -16,7 +16,7 @@ namespace RDotNet.Graphics
 
       private void plotButton_Click(object sender, EventArgs e)
       {
-         var engine = REngine.GetInstanceFromID(Program.EngineName);
+         var engine = REngine.GetInstance();
          engine.Evaluate(Code);
          engine.Evaluate(string.Format("png('{0}', {1}, {2})", TempImagePath.Replace('\\', '/'), this.pictureBox.Width, this.pictureBox.Height));
          engine.Evaluate(Code);

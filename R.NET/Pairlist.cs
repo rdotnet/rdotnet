@@ -30,6 +30,10 @@ namespace RDotNet
 
       #region IEnumerable<Symbol> Members
 
+      /// <summary>
+      /// Gets an enumerator over this pairlist
+      /// </summary>
+      /// <returns>The enumerator</returns>
       public IEnumerator<Symbol> GetEnumerator()
       {
          if (Count != 0)

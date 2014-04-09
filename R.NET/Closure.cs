@@ -1,4 +1,5 @@
-﻿using RDotNet.Internals;
+﻿using System.Collections.Generic;
+using RDotNet.Internals;
 using System;
 using System.Linq;
 
@@ -54,21 +55,33 @@ namespace RDotNet
          }
       }
 
-      public override SymbolicExpression Invoke(SymbolicExpression[] args)
+      /// <summary>
+      /// Invoke this function, using an ordered list of unnamed arguments.
+      /// </summary>
+      /// <param name="args">The arguments of the function</param>
+      /// <returns>The result of the evaluation</returns>
+      public override SymbolicExpression Invoke(params SymbolicExpression[] args)
       {
-         int count = Arguments.Count;
-         if (args.Length != count)
-         {
-            throw new ArgumentException();
-         }
+         //int count = Arguments.Count;
+         //if (args.Length > count)
+         //   throw new ArgumentException("Too many arguments provided for this function", "args");
+         return InvokeOrderedArguments(args);
+      }
 
-         var arguments = new GenericVector(Engine, args);
-         var names = new CharacterVector(Engine, Arguments.Select(arg => arg.PrintName).ToArray());
-         arguments.SetAttribute(Engine.GetPredefinedSymbol("R_NamesSymbol"), names);
+      /// <summary>
+      /// Invoke this function, using named arguments provided as key-value pairs
+      /// </summary>
+      /// <param name="args">the representation of named arguments, as a dictionary</param>
+      /// <returns>The result of the evaluation</returns>
+      public override SymbolicExpression Invoke(IDictionary<string, SymbolicExpression> args)
+      {
+         var a = args.ToArray();
+         return InvokeViaPairlist(Array.ConvertAll(a, x => x.Key), Array.ConvertAll(a, x => x.Value));
+      }
 
-         IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);
-         IntPtr result = Engine.GetFunction<Rf_applyClosure>()(Body.DangerousGetHandle(), handle, arguments.ToPairlist().DangerousGetHandle(), Environment.DangerousGetHandle(), newEnvironment);
-         return new SymbolicExpression(Engine, result);
+      private string[] GetArgumentNames()
+      {
+         return Arguments.Select(arg => arg.PrintName).ToArray();
       }
    }
 }

@@ -72,6 +72,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Gets an array representation of this R vector. Note that the implementation is not as fast as for numeric vectors.
+      /// </summary>
+      /// <returns></returns>
       protected override string[] GetArrayFast()
       {
          int n = this.Length;
@@ -84,20 +88,33 @@ namespace RDotNet
       private string GetValue(int index)
       {
          int offset = GetOffset(index);
-         IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
-         return new InternalString(Engine, pointer).GetInternalValue();
+         IntPtr pointerItem = Marshal.ReadIntPtr(DataPointer, offset);
+         if (pointerItem == Engine.NaStringPointer)
+         {
+            return null;
+         }
+         IntPtr pointer = IntPtr.Add(pointerItem, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+         return Marshal.PtrToStringAnsi(pointer);
+      }
+
+      private Rf_mkChar _mkChar = null;
+      private IntPtr mkChar(string value) 
+      {
+         if (_mkChar == null)
+            _mkChar = Engine.GetFunction<Rf_mkChar>();
+         return _mkChar(value);
       }
 
       private void SetValue(int index, string value)
       {
          int offset = GetOffset(index);
-         SymbolicExpression s = value == null ? Engine.GetPredefinedSymbol("R_NaString") : new InternalString(Engine, value);
-         using (new ProtectedPointer(s))
-         {
-            Marshal.WriteIntPtr(DataPointer, offset, s.DangerousGetHandle());
-         }
+         IntPtr stringPointer = value == null ? Engine.NaStringPointer : mkChar(value);
+         Marshal.WriteIntPtr(DataPointer, offset, stringPointer);
       }
 
+      /// <summary>
+      /// Efficient initialisation of R vector values from an array representation in the CLR
+      /// </summary>
       protected override void SetVectorDirect(string[] values)
       {
          // Possibly not the fastest implementation, but faster may require C code.
