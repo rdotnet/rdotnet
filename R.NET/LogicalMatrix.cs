@@ -85,12 +85,20 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Initializes this R matrix, using the values in a rectangular array.
+      /// </summary>
+      /// <param name="matrix"></param>
       protected override void InitMatrixFastDirect(bool[,] matrix)
       {
          var intValues = Utility.ArrayConvertAllOneDim(matrix, Convert.ToInt32);
          Marshal.Copy(intValues, 0, DataPointer, intValues.Length);
       }
 
+      /// <summary>
+      /// Gets a rectangular array representation in the CLR, equivalent of a matrix in R. 
+      /// </summary>
+      /// <returns>Rectangular array with values representing the content of the R matrix. Beware NA codes</returns>
       protected override bool[,] GetArrayFast()
       {
          int[] intValues = new int[this.ItemCount];

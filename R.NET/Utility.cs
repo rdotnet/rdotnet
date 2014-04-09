@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Numerics;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace RDotNet
 {
+   /// <summary>
+   /// An internal helper class to convert types of arrays, primarily for data operations necessary for .NET types to/from R concepts.
+   /// </summary>
    internal static class Utility
    {
       public static T[] AddFirst<T>(T value, T[] array)
@@ -89,6 +95,14 @@ namespace RDotNet
          var res = new Complex[n];
          for (int i = 0; i < n; i++)
             res[i] = new Complex(data[2 * i], data[2 * i + 1]);
+         return res;
+      }
+
+      internal static T[] Subset<T>(T[] array, int from, int to)
+      {
+         var res = new T[(to - from) + 1];
+         for (int i = 0; i < res.Length; i++)
+            res[i] = array[from + i];
          return res;
       }
 

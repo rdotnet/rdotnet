@@ -25,8 +25,8 @@ namespace RDotNet.Graphics
             Code = @"plot(1:10, pch=1:10, col=1:10, cex=seq(1, 2, length=10))",
             TempImagePath = path,
          };
-         Helper.SetEnvironmentVariables();
-         var engine = REngine.CreateInstance(EngineName);
+         REngine.SetEnvironmentVariables();
+         var engine = REngine.GetInstance();
          Application.ThreadExit += (sender, e) => engine.Dispose();
          engine.Initialize();
          engine.Install(form.graphPanel);

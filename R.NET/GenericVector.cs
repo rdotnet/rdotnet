@@ -85,6 +85,10 @@ namespace RDotNet
          Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
       }
 
+      /// <summary>
+      /// Efficient conversion from R vector representation to the array equivalent in the CLR
+      /// </summary>
+      /// <returns>Array equivalent</returns>
       protected override SymbolicExpression[] GetArrayFast()
       {
          var res = new SymbolicExpression[this.Length];
@@ -92,12 +96,19 @@ namespace RDotNet
             res[i] = GetValue(i);
          return res;
       }
+
+      /// <summary>
+      /// Efficient initialisation of R vector values from an array representation in the CLR
+      /// </summary>
       protected override void SetVectorDirect(SymbolicExpression[] values)
       {
          for (int i = 0; i < values.Length; i++)
             SetValue(i, values[i]);
       }
 
+      /// <summary>
+      /// Gets the size of each item in this vector
+      /// </summary>
       protected override int DataSize
       {
          get { return Marshal.SizeOf(typeof(IntPtr)); }
@@ -112,6 +123,11 @@ namespace RDotNet
          return new Pairlist(Engine, Engine.GetFunction<Rf_VectorToPairList>()(handle));
       }
 
+      /// <summary>
+      /// returns a new ListDynamicMeta for this Generic Vector
+      /// </summary>
+      /// <param name="parameter"></param>
+      /// <returns></returns>
       public override DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)
       {
          return new ListDynamicMeta(parameter, this);

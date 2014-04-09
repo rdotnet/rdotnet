@@ -21,7 +21,10 @@ namespace RDotNet
          {
             throw new ArgumentNullException();
          }
-         return expression.Engine.GetFunction<Rf_isList>()(expression.DangerousGetHandle());
+         // See issue 81. Rf_isList in the R API is NOT the correct thing to use (yes, hard to be more conter-intuitive)
+         return (expression.Type == SymbolicExpressionType.List ||
+            // ?is.list ==> "is.list returns TRUE if and only if its argument is a list or a pairlist of length > 0"
+            (expression.Type == SymbolicExpressionType.Pairlist && expression.Engine.GetFunction<Rf_length>()(expression.DangerousGetHandle()) > 0)); 
       }
 
       /// <summary>
@@ -31,12 +34,27 @@ namespace RDotNet
       /// <returns>The GenericVector. Returns <c>null</c> if the specified expression is not vector.</returns>
       public static GenericVector AsList(this SymbolicExpression expression)
       {
-         if (!expression.IsVector())
-         {
-            return null;
-         }
-         return new GenericVector(expression.Engine, expression.DangerousGetHandle());
+         return asList(expression);
       }
+
+      /// <summary>
+      /// A cache of the REngine - WARNING this assumes there can be only one per process, initialized once only.
+      /// </summary>
+      private static REngine engine = null;
+      private static Function asListFunction = null;
+      private static GenericVector asList(SymbolicExpression expression)
+      {
+         if (!object.ReferenceEquals(engine, expression.Engine) || engine == null)
+         {
+            engine = expression.Engine;
+            asListFunction = null;
+         }
+         if(asListFunction==null) 
+            asListFunction = engine.Evaluate("as.list").AsFunction();
+         var newExpression = asListFunction.Invoke(expression);
+         return new GenericVector(newExpression.Engine, newExpression.DangerousGetHandle());
+      }
+
 
       /// <summary>
       /// Gets whether the specified expression is data frame.
@@ -151,7 +169,11 @@ namespace RDotNet
          {
             return null;
          }
-         IntPtr coerced = expression.Engine.GetFunction<Rf_coerceVector>()(expression.DangerousGetHandle(), SymbolicExpressionType.CharacterVector);
+         IntPtr coerced = IntPtr.Zero;
+         if (expression.IsFactor())
+            coerced = expression.Engine.GetFunction<Rf_asCharacterFactor>()(expression.DangerousGetHandle());
+         else
+            coerced = expression.Engine.GetFunction<Rf_coerceVector>()(expression.DangerousGetHandle(), SymbolicExpressionType.CharacterVector);
          return new CharacterVector(expression.Engine, coerced);
       }
 

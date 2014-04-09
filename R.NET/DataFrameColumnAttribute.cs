@@ -55,7 +55,7 @@ namespace RDotNet
       /// <summary>
       /// Initializes a new instance by index.
       /// </summary>
-      /// <param name="name">The index.</param>
+      /// <param name="index">The index.</param>
       public DataFrameColumnAttribute(int index)
       {
          if (index < 0)

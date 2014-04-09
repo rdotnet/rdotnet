@@ -39,7 +39,8 @@ namespace RDotNet
       public string[] GetFactors()
       {
          var levels = GetLevels();
-         return this.Select(value => levels[value - 1]).ToArray();
+         var levelIndices = this.GetArrayFast();
+         return Array.ConvertAll(levelIndices, value => (value == NACode ? null : levels[value - 1]));
       }
 
       /// <summary>
@@ -102,6 +103,40 @@ namespace RDotNet
          get
          {
             return Engine.GetFunction<Rf_isOrdered>()(this.handle);
+         }
+      }
+
+      /// <summary>
+      /// Gets the value of the vector of factors at an index
+      /// </summary>
+      /// <param name="index">the zero-based index of the vector</param>
+      /// <returns>The string representation of the factor, or a null reference if the value in R is NA</returns>
+      public string GetFactor(int index)
+      {
+         var intValue = this[index];
+         if (intValue <= 0)
+            return null;
+         else
+            return this.GetLevels()[intValue - 1]; // zero-based index in C#, but 1-based in R
+      }
+
+      /// <summary>
+      /// Sets the value of a factor vector at an index
+      /// </summary>
+      /// <param name="index">the zero-based index item to set in the vector</param>
+      /// <param name="factorValue">The value of the factor - can be a null reference</param>
+      public void SetFactor(int index, string factorValue)
+      {
+         if (factorValue == null)
+            this[index] = NACode;
+         else
+         {
+            var levels = this.GetLevels();
+            int factIndex = Array.IndexOf(levels, factorValue);
+            if (factIndex >= 0)
+               this[index] = factIndex + 1; // zero-based index in C#, but 1-based in R
+            else
+               this[index] = NACode;
          }
       }
    }

@@ -20,14 +20,14 @@ namespace RDotNet
    {
       private const string RRowNamesSymbolName = "R_RowNamesSymbol";
 
-      /// <summary>
-      /// Creates a new instance.
-      /// </summary>
-      /// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
-      /// <param name="coerced">The pointer to a data frame.</param>
+	  /// <summary>
+	  /// Creates a new instance.
+	  /// </summary>
+	  /// <param name="engine">The <see cref="REngine"/> handling this instance.</param>
+	  /// <param name="coerced">The pointer to a data frame.</param>
       protected internal DataFrame(REngine engine, IntPtr coerced)
-         : base(engine, coerced)
-      { }
+	 	 : base(engine, coerced)
+	  { }
 
       /// <summary>
       /// Gets or sets the column at the specified index as a vector.
@@ -60,6 +60,10 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Gets an array of the columns of this R data frame object
+      /// </summary>
+      /// <returns></returns>
       protected override DynamicVector[] GetArrayFast()
       {
          var res = new DynamicVector[this.Length];
@@ -81,6 +85,9 @@ namespace RDotNet
          Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
       }
 
+      /// <summary>
+      /// Efficient initialisation of R vector values from an array representation in the CLR
+      /// </summary>
       protected override void SetVectorDirect(DynamicVector[] values)
       {
          for (int i = 0; i < values.Length; i++)
@@ -197,6 +204,9 @@ namespace RDotNet
          get { return Names; }
       }
 
+      /// <summary>
+      /// Gets the data size of each element in this vector, i.e. the offset in memory between elements.
+      /// </summary>
       protected override int DataSize
       {
          get { return Marshal.SizeOf(typeof(IntPtr)); }
@@ -265,6 +275,11 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// returns a new DataFrameDynamicMeta for this DataFrame
+      /// </summary>
+      /// <param name="parameter"></param>
+      /// <returns></returns>
       public override DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)
       {
          return new DataFrameDynamicMeta(parameter, this);

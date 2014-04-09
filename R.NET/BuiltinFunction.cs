@@ -1,6 +1,5 @@
-﻿using RDotNet.Internals;
+﻿using System.Collections.Generic;
 using System;
-using System.Linq;
 
 namespace RDotNet
 {
@@ -18,17 +17,24 @@ namespace RDotNet
          : base(engine, pointer)
       { }
 
-      public override SymbolicExpression Invoke(SymbolicExpression[] args)
+      /// <summary>
+      /// Invoke this builtin function, using an ordered list of unnamed arguments.
+      /// </summary>
+      /// <param name="args">The arguments of the function</param>
+      /// <returns>The result of the evaluation</returns>
+      public override SymbolicExpression Invoke(params SymbolicExpression[] args)
       {
-         IntPtr argument = Engine.NilValue.DangerousGetHandle();
-         foreach (SymbolicExpression arg in args.Reverse())
-         {
-            argument = Engine.GetFunction<Rf_cons>()(arg.DangerousGetHandle(), argument);
-         }
-         IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argument);
+         return InvokeOrderedArguments(args);
+      }
 
-         IntPtr result = Engine.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
-         return new SymbolicExpression(Engine, result);
+      /// <summary>
+      /// NotSupportedException
+      /// </summary>
+      /// <param name="args">key-value pairs</param>
+      /// <returns>Always throws an exception</returns>
+      public override SymbolicExpression Invoke(IDictionary<string, SymbolicExpression> args)
+      {
+         throw new NotSupportedException();
       }
    }
 }

@@ -34,6 +34,9 @@ namespace RDotNet
          Preserve();
       }
 
+      /// <summary>
+      /// Is the handle of this SEXP invalid (zero, i.e. null pointer)
+      /// </summary>
       public override bool IsInvalid
       {
          get { return handle == IntPtr.Zero; }
@@ -65,6 +68,11 @@ namespace RDotNet
 
       #region IDynamicMetaObjectProvider Members
 
+      /// <summary>
+      /// returns a new SymbolicExpressionDynamicMeta for this SEXP
+      /// </summary>
+      /// <param name="parameter"></param>
+      /// <returns></returns>
       public virtual DynamicMetaObject GetMetaObject(System.Linq.Expressions.Expression parameter)
       {
          return new SymbolicExpressionDynamicMeta(parameter, this);
@@ -74,6 +82,11 @@ namespace RDotNet
 
       #region IEquatable<SymbolicExpression> Members
 
+      /// <summary>
+      /// Testing the equality of SEXP, based on handle equality.
+      /// </summary>
+      /// <param name="other">other SEXP</param>
+      /// <returns>True if the objects have a handle that is the same, i.e. pointing to the same address in unmanaged memory</returns>
       public bool Equals(SymbolicExpression other)
       {
          return other != null && handle == other.handle;
@@ -202,7 +215,12 @@ namespace RDotNet
       {
          if (!IsInvalid && !isProtected)
          {
-            Engine.GetFunction<R_PreserveObject>()(handle);
+            if (Engine.EnableLock)
+            {
+               lock (Engine) { Engine.GetFunction<R_PreserveObject>()(handle); }
+            }
+            else
+               Engine.GetFunction<R_PreserveObject>()(handle);
             this.isProtected = true;
          }
       }
@@ -215,11 +233,20 @@ namespace RDotNet
       {
          if (!IsInvalid && IsProtected)
          {
-            Engine.GetFunction<R_ReleaseObject>()(handle);
+            if (Engine.EnableLock)
+            {
+               lock (Engine) { Engine.GetFunction<R_ReleaseObject>()(handle); ; }
+            }
+            else
+               Engine.GetFunction<R_ReleaseObject>()(handle);
             this.isProtected = false;
          }
       }
 
+      /// <summary>
+      /// Release the handle on the symbolic expression, i.e. tells R to decrement the reference count to the expression in unmanaged memory
+      /// </summary>
+      /// <returns></returns>
       protected override bool ReleaseHandle()
       {
          if (IsProtected)
@@ -229,11 +256,20 @@ namespace RDotNet
          return true;
       }
 
+      /// <summary>
+      /// Returns the hash code for this instance.
+      /// </summary>
+      /// <returns>Hash code</returns>
       public override int GetHashCode()
       {
          return handle.GetHashCode();
       }
 
+      /// <summary>
+      /// Test the equality of this object with another. If this object is also a SymbolicExpression and points to the same R expression, returns true.
+      /// </summary>
+      /// <param name="obj">Other object to test for equality</param>
+      /// <returns>Returns true if pointing to the same R expression in memory.</returns>
       public override bool Equals(object obj)
       {
          return Equals(obj as SymbolicExpression);

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Runtime.ConstrainedExecution;
-using System.Runtime.InteropServices;
-using System.Security.Permissions;
-#if UNIX
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-#endif
+using System.Runtime.InteropServices;
+using System.Security.Permissions;
 
 namespace RDotNet.NativeLibrary
 {
@@ -15,10 +13,15 @@ namespace RDotNet.NativeLibrary
    [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
    public class UnmanagedDll : SafeHandle
    {
+      /// <summary>
+      /// Gets whether the current handle is equal to the invalid handle
+      /// </summary>
       public override bool IsInvalid
       {
          get { return handle == IntPtr.Zero; }
       }
+
+      private IDynamicLibraryLoader libraryLoader;
 
       /// <summary>
       /// Creates a proxy for the specified dll.
@@ -29,20 +32,89 @@ namespace RDotNet.NativeLibrary
       {
          if (dllName == null)
          {
-            throw new ArgumentNullException("dllName");
+            throw new ArgumentNullException("dllName", "The name of the library to load is a null reference");
          }
          if (dllName == string.Empty)
          {
-            throw new ArgumentException("dllName");
+            throw new ArgumentException("The name of the library to load is an empty string", "dllName");
          }
+         if (IsUnix)
+            libraryLoader = new UnixLibraryLoader();
+         else
+            libraryLoader = new WindowsLibraryLoader ();
 
-         IntPtr handle = LoadLibrary(dllName);
+         IntPtr handle = libraryLoader.LoadLibrary (dllName);
          if (handle == IntPtr.Zero)
          {
-            throw new DllNotFoundException();
+            ReportLoadLibError(dllName);
          }
          SetHandle(handle);
       }
+
+      private void ReportLoadLibError(string dllName)
+      {
+         string dllFullName = dllName;
+         if (File.Exists(dllFullName))
+            ThrowFailedLibraryLoad(dllFullName);
+         else
+         {
+            // This below assumes that the PATH environment variable is what is relied on
+            // TODO: check whether there is more to it: http://msdn.microsoft.com/en-us/library/ms682586.aspx
+
+            // Also some pointers to relevant information if we want to check whether the attempt to load 
+            // was made on a 32 or 64 bit library
+            // For Windows:
+            // http://stackoverflow.com/questions/1345632/determine-if-an-executable-or-library-is-32-or-64-bits-on-windows
+            // http://www.neowin.net/forum/topic/732648-check-if-exe-is-x64/?p=590544108#entry590544108
+            // Linux, and perhaps MacOS; the 'file' command seems the way to go.
+            // http://stackoverflow.com/questions/5665228/in-linux-determine-if-a-a-library-archive-32-bit-or-64-bit
+
+            dllFullName = FindFullPath(dllName);
+            if (string.IsNullOrEmpty(dllFullName))
+               throw new DllNotFoundException(string.Format("Could not find the library named {0} in the search paths", dllName));
+            else
+               ThrowFailedLibraryLoad(dllFullName);
+         }
+      }
+
+      private static string FindFullPath(string dllName)
+      {
+         string dllFullName;
+         var searchPaths = (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator);
+         dllFullName = searchPaths.Select(directory => Path.Combine(directory, dllName)).FirstOrDefault(File.Exists);
+         return dllFullName;
+      }
+
+      private string createLdLibPathMsg()
+      {
+         if (!NativeUtility.IsUnix)
+            return null;
+         var sampleldLibPaths = "/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server";
+         var ldLibPathEnv = Environment.GetEnvironmentVariable ("LD_LIBRARY_PATH");
+         string msg="";
+         if (string.IsNullOrEmpty(ldLibPathEnv))
+            msg = msg + "The environment variable LD_LIBRARY_PATH is not set";
+         else
+            msg = msg + string.Format("The environment variable LD_LIBRARY_PATH is set to {0}", ldLibPathEnv);
+
+         msg = msg + string.Format(". For some Unix-like operating systems you may need to set it before launching the application to e.g. {0}", sampleldLibPaths);
+         return msg;
+      }
+
+      private void ThrowFailedLibraryLoad(string dllFullName)
+      {
+         var strMsg = string.Format("This {0}-bit process failed to load the library {1}",
+                                    (Environment.Is64BitProcess ? "64" : "32"), dllFullName);
+         var nativeError = libraryLoader.GetLastError();
+         if (!string.IsNullOrEmpty(nativeError))
+            strMsg = strMsg + string.Format(". Native error message is '{0}'", nativeError);
+         var ldLibPathMsg = createLdLibPathMsg();
+         if (!string.IsNullOrEmpty(ldLibPathMsg))
+            strMsg = strMsg + string.Format(". {0}", ldLibPathMsg);
+         throw new Exception(strMsg);
+      }
+
+      private Dictionary<string, object> delegateFunctionPointers = new Dictionary<string, object>();
 
       /// <summary>
       /// Creates the delegate function for the specified function defined in the DLL.
@@ -53,16 +125,21 @@ namespace RDotNet.NativeLibrary
          where TDelegate : class
       {
          Type delegateType = typeof(TDelegate);
+         var functionName = delegateType.Name;
+         if (delegateFunctionPointers.ContainsKey(functionName))
+            return (TDelegate)delegateFunctionPointers[functionName];
          if (!delegateType.IsSubclassOf(typeof(Delegate)))
          {
             throw new ArgumentException();
          }
-         IntPtr function = GetFunctionAddress(handle, delegateType.Name);
+         IntPtr function = GetFunctionAddress(functionName);
          if (function == IntPtr.Zero)
          {
             throw new EntryPointNotFoundException();
          }
-         return Marshal.GetDelegateForFunctionPointer(function, delegateType) as TDelegate;
+         var dFunc = Marshal.GetDelegateForFunctionPointer(function, delegateType) as TDelegate;
+         delegateFunctionPointers.Add(functionName, dFunc);
+         return dFunc;
       }
 
       /// <summary>
@@ -82,12 +159,45 @@ namespace RDotNet.NativeLibrary
          {
             throw new ArgumentNullException("entryPoint");
          }
-         IntPtr function = GetFunctionAddress(handle, entryPoint);
+         IntPtr function = GetFunctionAddress(entryPoint);
          if (function == IntPtr.Zero)
          {
             throw new EntryPointNotFoundException();
          }
          return Marshal.GetDelegateForFunctionPointer(function, typeof(TDelegate)) as TDelegate;
+      }
+
+      private bool IsUnix {
+         get { return NativeUtility.IsUnix; }
+      }
+
+      private IntPtr GetFunctionAddress(string lpProcName)
+      {
+         return libraryLoader.GetFunctionAddress(handle, lpProcName);
+      }
+
+      private bool FreeLibrary()
+      {
+         bool freed = false;
+         if (libraryLoader == null)
+         {
+            if (!this.IsInvalid)
+            {
+               try
+               {
+                  throw new ApplicationException("Warning: unexpected condition of library loader and native handle - some native resources may not be properly disposed of");
+               }
+               finally
+               {
+                  freed = false;
+               }
+            }
+            else
+               freed = true;
+            return freed;
+         }
+         else
+            return libraryLoader.FreeLibrary(handle);
       }
 
       /// <summary>
@@ -101,114 +211,30 @@ namespace RDotNet.NativeLibrary
          {
             throw new ArgumentNullException("entryPoint");
          }
-         return GetFunctionAddress(handle, entryPoint);
+         return GetFunctionAddress(entryPoint);
       }
 
+      /// <summary>
+      /// Frees the native library this objects represents
+      /// </summary>
+      /// <returns>The result of the call to FreeLibrary</returns>
       protected override bool ReleaseHandle()
       {
-         return FreeLibrary(handle);
+         return FreeLibrary();
       }
 
+      /// <summary>
+      /// Frees the native library this objects represents
+      /// </summary>
+      /// <param name="disposing"></param>
       protected override void Dispose(bool disposing)
       {
-         if (FreeLibrary(handle))
+         if (FreeLibrary())
          {
             SetHandleAsInvalid();
          }
          base.Dispose(disposing);
       }
 
-      /// <summary>
-      /// Adds a directory to the search path used to locate DLLs for the application.
-      /// </summary>
-      /// <remarks>
-      /// Calls <c>SetDllDirectory</c> in the kernel32.dll on Windows.
-      /// </remarks>
-      /// <param name="dllDirectory">
-      /// The directory to be added to the search path.
-      /// If this parameter is an empty string (""), the call removes the current directory from the default DLL search order.
-      /// If this parameter is NULL, the function restores the default search order.
-      /// </param>
-      /// <returns>If the function succeeds, the return value is nonzero.</returns>
-      [Obsolete("Set environment variable 'PATH' instead.")]
-#if UNIX
-      public static bool SetDllDirectory(string dllDirectory)
-      {
-         if (dllDirectory == null)
-         {
-            System.Environment.SetEnvironmentVariable(LibraryPath, DefaultSearchPath, EnvironmentVariableTarget.Process);
-         }
-         else if (dllDirectory == string.Empty)
-         {
-            throw new NotImplementedException();
-         }
-         else
-         {
-            if (!Directory.Exists(dllDirectory))
-            {
-               return false;
-            }
-            string path = System.Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
-            if (string.IsNullOrEmpty(path))
-            {
-               path = dllDirectory;
-            }
-            else
-            {
-               path = dllDirectory + Path.PathSeparator + path;
-            }
-            System.Environment.SetEnvironmentVariable(LibraryPath, path, EnvironmentVariableTarget.Process);
-         }
-         return true;
-      }
-
-      private const string LibraryPath = "PATH";
-      private static readonly string DefaultSearchPath = System.Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
-#else
-      [DllImport("kernel32.dll")]
-      [return: MarshalAs(UnmanagedType.Bool)]
-      public static extern bool SetDllDirectory([MarshalAs(UnmanagedType.LPStr)] string dllDirectory);
-
-#endif
-
-#if UNIX
-      private static IntPtr LoadLibrary(string filename)
-      {
-         const int RTLD_LAZY = 0x1;
-         if (filename.StartsWith("/"))
-         {
-            return dlopen(filename, RTLD_LAZY);
-         }
-         var searchPaths = (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator);
-         var dll = searchPaths.Select(directory => Path.Combine(directory, filename)).FirstOrDefault(File.Exists);
-         return dll == null ? IntPtr.Zero : dlopen(dll, RTLD_LAZY);
-      }
-
-      [DllImport("libdl")]
-      private static extern IntPtr dlopen([MarshalAs(UnmanagedType.LPStr)] string filename, int flag);
-#else
-
-      [DllImport("kernel32.dll")]
-      private static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
-
-#endif
-
-#if UNIX
-      [DllImport("libdl", EntryPoint = "dlclose")]
-#else
-
-      [DllImport("kernel32.dll")]
-#endif
-      [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-      [return: MarshalAs(UnmanagedType.Bool)]
-      private static extern bool FreeLibrary(IntPtr hModule);
-
-#if UNIX
-      [DllImport("libdl", EntryPoint = "dlsym")]
-#else
-
-      [DllImport("kernel32.dll", EntryPoint = "GetProcAddress")]
-#endif
-      private static extern IntPtr GetFunctionAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);
    }
 }

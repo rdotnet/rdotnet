@@ -13,7 +13,7 @@ type MatrixTest () =
    [<Test>]
    member this.``can slice matrix all`` () =
       let matrix =
-         let engine = REngine.GetInstanceFromID (this.EngineName)
+         let engine = this.Engine
          engine.Evaluate ("""matrix(1:12, 3, 4)""") |> S.AsIntegerMatrix
       let actual = matrix.[*, *]
       Assert.That (actual, Is.TypeOf<IntegerMatrix> ())
@@ -37,7 +37,7 @@ type MatrixTest () =
    [<Test>]
    member this.``can slice matrix rows from start to specific index`` () =
       let matrix =
-         let engine = REngine.GetInstanceFromID (this.EngineName)
+         let engine = this.Engine
          engine.Evaluate ("""matrix(1:12, 3, 4)""") |> S.AsIntegerMatrix
       let actual = matrix.[..1, *]
       Assert.That (actual, Is.TypeOf<IntegerMatrix> ())
@@ -57,7 +57,7 @@ type MatrixTest () =
    [<Test>]
    member this.``can slice matrix rows from specific index to end`` () =
       let matrix =
-         let engine = REngine.GetInstanceFromID (this.EngineName)
+         let engine = this.Engine
          engine.Evaluate ("""matrix(1:12, 3, 4)""") |> S.AsIntegerMatrix
       let actual = matrix.[1.., *]
       Assert.That (actual, Is.TypeOf<IntegerMatrix> ())
@@ -78,7 +78,7 @@ type MatrixTest () =
    [<Test>]
    member this.``can slice matrix rows from specific index to specific index`` () =
       let matrix =
-         let engine = REngine.GetInstanceFromID (this.EngineName)
+         let engine = this.Engine
          engine.Evaluate ("""matrix(1:12, 3, 4)""") |> S.AsIntegerMatrix
       let actual = matrix.[1..1, *]
       Assert.That (actual, Is.TypeOf<IntegerMatrix> ())
@@ -96,7 +96,7 @@ type MatrixTest () =
    //[<Test>]
    //member this.``can slice matrix specific row`` () =
    //   let matrix =
-   //      let engine = REngine.GetInstanceFromID (this.EngineName)
+   //      let engine = this.Engine
    //      engine.Evaluate ("""matrix(1:12, 3, 4)""") |> S.AsIntegerMatrix
    //   let actual = matrix.[1, *]
    //   Assert.That (actual, Is.TypeOf<IntegerVector> ())
@@ -110,7 +110,7 @@ type MatrixTest () =
    [<Test>]
    member this.``can slice matrix columns from start to specific index`` () =
       let matrix =
-         let engine = REngine.GetInstanceFromID (this.EngineName)
+         let engine = this.Engine
          engine.Evaluate ("""matrix(1:12, 3, 4)""") |> S.AsIntegerMatrix
       let actual = matrix.[*, ..2]
       Assert.That (actual, Is.TypeOf<IntegerMatrix> ())
@@ -132,7 +132,7 @@ type MatrixTest () =
    [<Test>]
    member this.``can slice matrix columns from specific index to end`` () =
       let matrix =
-         let engine = REngine.GetInstanceFromID (this.EngineName)
+         let engine = this.Engine
          engine.Evaluate ("""matrix(1:12, 3, 4)""") |> S.AsIntegerMatrix
       let actual = matrix.[*, 2..]
       Assert.That (actual, Is.TypeOf<IntegerMatrix> ())
@@ -151,7 +151,7 @@ type MatrixTest () =
    [<Test>]
    member this.``can slice matrix columns from specific index to specific index`` () =
       let matrix =
-         let engine = REngine.GetInstanceFromID (this.EngineName)
+         let engine = this.Engine
          engine.Evaluate ("""matrix(1:12, 3, 4)""") |> S.AsIntegerMatrix
       let actual = matrix.[*, 1..2]
       Assert.That (actual, Is.TypeOf<IntegerMatrix> ())
@@ -171,7 +171,7 @@ type MatrixTest () =
    //[<Test>]
    //member this.``can slice matrix specific column`` () =
    //   let matrix =
-   //      let engine = REngine.GetInstanceFromID (this.EngineName)
+   //      let engine = this.Engine
    //      engine.Evaluate ("""matrix(1:12, 3, 4)""") |> S.AsIntegerMatrix
    //   let actual = matrix.[*, 1]
    //   Assert.That (actual, Is.TypeOf<IntegerVector> ())

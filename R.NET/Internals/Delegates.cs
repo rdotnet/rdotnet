@@ -12,6 +12,12 @@ namespace RDotNet.Internals
    internal delegate int Rf_initialize_R(int ac, string[] argv);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate void R_DefParams_Unix(ref UnixRStart start);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate void R_DefParams_Windows(ref WindowsRStart start);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate void R_SetParams_Unix(ref UnixRStart start);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -23,6 +29,27 @@ namespace RDotNet.Internals
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate void setup_Rmainloop();
 
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate void R_ReplDLLinit();
+
+   /// <summary>
+   /// Initialise R for embedding
+   /// </summary>
+   /// <param name="argc">The length of argv</param>
+   /// <param name="argv">arguments passed to the embedded engine</param>
+   /// <remarks>
+   /// <code>
+   /// int Rf_initEmbeddedR(int argc, char **argv)
+   ///{
+   ///    Rf_initialize_R(argc, argv);
+   ///   // R_Interactive is set to true in unix Rembedded.c, not gnuwin
+   ///    R_Interactive = TRUE;  /* Rf_initialize_R set this based on isatty */
+   ///    setup_Rmainloop();
+   ///    return(1);
+   ///}
+   /// </code>
+   /// </remarks>
+   /// <returns></returns>
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate int Rf_initEmbeddedR(int argc, string[] argv);
 
@@ -61,6 +88,9 @@ namespace RDotNet.Internals
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate IntPtr Rf_mkChar(string s);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate IntPtr Rf_asCharacterFactor(IntPtr sexp);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate IntPtr Rf_allocVector(SymbolicExpressionType type, int length);
@@ -109,6 +139,9 @@ namespace RDotNet.Internals
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate void Rf_setVar(IntPtr name, IntPtr value, IntPtr environment);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate void Rf_defineVar(IntPtr name, IntPtr value, IntPtr environment);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate IntPtr Rf_getAttrib(IntPtr sexp, IntPtr name);
