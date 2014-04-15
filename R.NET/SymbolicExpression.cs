@@ -274,5 +274,15 @@ namespace RDotNet
       {
          return Equals(obj as SymbolicExpression);
       }
+
+      public static SymbolicExpression op_Dynamic<K>(SymbolicExpression sexp, string name)
+      {
+         throw new NotImplementedException();
+      }
+
+      public static void op_DynamicAssignment<K>(SymbolicExpression sexp, string name, dynamic value)
+      {
+
+      }
    }
 }
