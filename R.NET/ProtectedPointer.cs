@@ -8,6 +8,11 @@ namespace RDotNet
    internal class ProtectedPointer : IDisposable
    {
       private readonly REngine engine;
+      protected TDelegate GetFunction<TDelegate>() where TDelegate : class
+      {
+         return engine.GetFunction<TDelegate>();
+      }
+
       private readonly IntPtr sexp;
 
       public ProtectedPointer(REngine engine, IntPtr sexp)
@@ -15,7 +20,7 @@ namespace RDotNet
          this.sexp = sexp;
          this.engine = engine;
 
-         engine.GetFunction<Rf_protect>()(this.sexp);
+         this.GetFunction<Rf_protect>()(this.sexp);
       }
 
       public ProtectedPointer(SymbolicExpression sexp)
@@ -23,14 +28,14 @@ namespace RDotNet
          this.sexp = sexp.DangerousGetHandle();
          this.engine = sexp.Engine;
 
-         this.engine.GetFunction<Rf_protect>()(this.sexp);
+         this.GetFunction<Rf_protect>()(this.sexp);
       }
 
       #region IDisposable Members
 
       public void Dispose()
       {
-         this.engine.GetFunction<Rf_unprotect_ptr>()(this.sexp);
+         this.GetFunction<Rf_unprotect_ptr>()(this.sexp);
       }
 
       #endregion IDisposable Members

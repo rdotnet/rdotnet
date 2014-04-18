@@ -147,7 +147,7 @@ namespace RDotNet
       /// </summary>
       public int RowCount
       {
-         get { return Engine.GetFunction<Rf_nrows>()(handle); }
+         get { return this.GetFunction<Rf_nrows>()(handle); }
       }
 
       /// <summary>
@@ -155,7 +155,7 @@ namespace RDotNet
       /// </summary>
       public int ColumnCount
       {
-         get { return Engine.GetFunction<Rf_ncols>()(handle); }
+         get { return this.GetFunction<Rf_ncols>()(handle); }
       }
 
       /// <summary>

@@ -30,6 +30,11 @@ namespace RDotNet.Graphics
          get { return this.engine; }
       }
 
+      protected TDelegate GetFunction<TDelegate>() where TDelegate : class
+      {
+         return Engine.GetFunction<TDelegate>();
+      }
+
       public void Dispose()
       {
          Dispose(true);
@@ -47,7 +52,7 @@ namespace RDotNet.Graphics
 
       public void Kill()
       {
-         Engine.GetFunction<GEkillDevice>()(this.description.DangerousGetHandle());
+         this.GetFunction<GEkillDevice>()(this.description.DangerousGetHandle());
          this.gdd = IntPtr.Zero;
       }
 
@@ -71,20 +76,20 @@ namespace RDotNet.Graphics
          }
          this.engine = engine;
 
-         //engine.GetFunction<R_GE_checkVersionOrDie>()(this.device.Version);
-         engine.GetFunction<R_CheckDeviceAvailable>()();
+         //this.GetFunction<R_GE_checkVersionOrDie>()(this.device.Version);
+         this.GetFunction<R_CheckDeviceAvailable>()();
          var oldSuspended = GetInterruptsSuspended(engine);
          SetInterruptsSuspended(engine, true);
 
          this.description = new DeviceDescription();
          SetMethod();
-         gdd = engine.GetFunction<GEcreateDevDesc>()(this.description.DangerousGetHandle());
-         engine.GetFunction<GEaddDevice2>()(gdd, this.device.Name);
+         gdd = this.GetFunction<GEcreateDevDesc>()(this.description.DangerousGetHandle());
+         this.GetFunction<GEaddDevice2>()(gdd, this.device.Name);
 
          SetInterruptsSuspended(engine, oldSuspended);
          if (GetInterruptsPending(engine) && !GetInterruptsSuspended(engine))
          {
-            engine.GetFunction<Rf_onintr>()();
+            this.GetFunction<Rf_onintr>()();
          }
       }
 

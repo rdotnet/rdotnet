@@ -137,7 +137,7 @@ namespace RDotNet
       /// </summary>
       public int Length
       {
-         get { return Engine.GetFunction<Rf_length>()(handle); }
+         get { return this.GetFunction<Rf_length>()(handle); }
       }
 
       /// <summary>

@@ -12,9 +12,9 @@ type private FunctionType =
    | Eval
 let private invoke (engine:REngine) =
    function
-      | Cons -> engine.GetFunction<F> ("Rf_cons")
-      | LCons -> engine.GetFunction<F> ("Rf_lcons")
-      | Eval -> engine.GetFunction<F> ("Rf_eval")
+      | Cons -> this.GetFunction<F> ("Rf_cons")
+      | LCons -> this.GetFunction<F> ("Rf_lcons")
+      | Eval -> this.GetFunction<F> ("Rf_eval")
    >> fun del -> del.Invoke
 let private getHandle (sexp:SymbolicExpression) = sexp.DangerousGetHandle ()
 

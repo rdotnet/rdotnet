@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="S4ClassesTest.cs" />
     <Compile Include="ListsTest.cs" />
     <Compile Include="CharacterVectorTest.cs" />
     <Compile Include="REngineInitTest.cs" />

@@ -105,6 +105,9 @@ namespace RDotNet.Internals
    internal delegate bool Rf_isFrame(IntPtr sexp);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate bool Rf_isS4(IntPtr sexp);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate int Rf_length(IntPtr sexp);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -148,6 +151,17 @@ namespace RDotNet.Internals
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate IntPtr Rf_setAttrib(IntPtr sexp, IntPtr name, IntPtr value);
+
+   //SEXP R_do_slot(SEXP obj, SEXP name);
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate IntPtr R_do_slot(IntPtr sexp, IntPtr name);
+
+   //SEXP R_do_slot_assign(SEXP obj, SEXP name, SEXP value);
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate IntPtr R_do_slot_assign(IntPtr sexp, IntPtr name, IntPtr value);
+
+   //int R_has_slot(SEXP obj, SEXP name)
+   internal delegate bool R_has_slot(IntPtr sexp, IntPtr name);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate bool Rf_isEnvironment(IntPtr sexp);
