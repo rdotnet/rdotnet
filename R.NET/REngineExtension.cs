@@ -578,7 +578,10 @@ namespace RDotNet
          var logicals = values as IEnumerable<bool>;
          var nums = values as IEnumerable<double>;
          var raws = values as IEnumerable<byte>;
+         var sexpVec = values as SymbolicExpression;
 
+         if (sexpVec != null && sexpVec.IsVector())
+            return sexpVec;
          if (ints != null)
             return engine.CreateIntegerVector(ints);
          if (chars != null)
