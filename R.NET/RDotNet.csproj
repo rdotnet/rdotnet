@@ -49,6 +49,9 @@
     <Compile Include="CharacterMatrix.cs" />
     <Compile Include="ComplexMatrix.cs" />
     <Compile Include="BuiltinFunction.cs" />
+    <Compile Include="Diagnostics\S4ObjectSlotDisplay.cs" />
+    <Compile Include="Diagnostics\S4ObjectDebugView.cs" />
+    <Compile Include="S4Object.cs" />
     <Compile Include="DataFrameColumnAttribute.cs" />
     <Compile Include="DataFrameRowAttribute.cs" />
     <Compile Include="Devices\CharacterDeviceAdapter.cs" />

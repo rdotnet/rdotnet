@@ -147,6 +147,9 @@ namespace RDotNet
          Marshal.Copy(pointer, destination, destinationIndex, length);
       }
 
+      /// <summary>
+      /// Gets the code used for NA for integer vectors
+      /// </summary>
       protected int NACode { get { return int.MinValue; } }
    }
 }

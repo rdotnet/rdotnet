@@ -40,6 +40,11 @@ namespace RDotNet.Devices
          get { return this.engine; }
       }
 
+      protected TDelegate GetFunction<TDelegate>() where TDelegate : class
+      {
+         return Engine.GetFunction<TDelegate>();
+      }
+
       #region IDisposable Members
 
       public void Dispose()
@@ -69,12 +74,12 @@ namespace RDotNet.Devices
       {
          if (parameter.RHome == null)
          {
-            string rhome = Marshal.PtrToStringAnsi(this.engine.GetFunction<getValue>("get_R_HOME")());
+            string rhome = Marshal.PtrToStringAnsi(Engine.GetFunction<getValue>("get_R_HOME")());
             parameter.start.rhome = Marshal.StringToHGlobalAnsi(ConvertSeparatorToUnixStylePath(rhome));
          }
          if (parameter.Home == null)
          {
-            string home = Marshal.PtrToStringAnsi(this.engine.GetFunction<getValue>("getRUser")());
+            string home = Marshal.PtrToStringAnsi(Engine.GetFunction<getValue>("getRUser")());
             parameter.start.home = Marshal.StringToHGlobalAnsi(ConvertSeparatorToUnixStylePath(home));
          }
          parameter.start.ReadConsole = ReadConsole;

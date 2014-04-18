@@ -56,8 +56,8 @@ namespace RDotNet
             throw new ArgumentException();
          }
 
-         IntPtr installedName = Engine.GetFunction<Rf_install>()(name);
-         IntPtr value = Engine.GetFunction<Rf_findVar>()(installedName, handle);
+         IntPtr installedName = this.GetFunction<Rf_install>()(name);
+         IntPtr value = this.GetFunction<Rf_findVar>()(installedName, handle);
          if (Engine.CheckUnbound(value))
          {
             throw new EvaluationException(string.Format("Error: object '{0}' not found", name));
@@ -66,7 +66,7 @@ namespace RDotNet
          var sexp = (SEXPREC)Marshal.PtrToStructure(value, typeof(SEXPREC));
          if (sexp.sxpinfo.type == SymbolicExpressionType.Promise)
          {
-            value = Engine.GetFunction<Rf_eval>()(value, handle);
+            value = this.GetFunction<Rf_eval>()(value, handle);
          }
          return new SymbolicExpression(Engine, value);
       }
@@ -94,8 +94,8 @@ namespace RDotNet
          {
             throw new ArgumentException();
          }
-         IntPtr installedName = Engine.GetFunction<Rf_install>()(name);
-         Engine.GetFunction<Rf_defineVar>()(installedName, expression.DangerousGetHandle(), handle);
+         IntPtr installedName = this.GetFunction<Rf_install>()(name);
+         this.GetFunction<Rf_defineVar>()(installedName, expression.DangerousGetHandle(), handle);
       }
 
       /// <summary>
@@ -105,7 +105,7 @@ namespace RDotNet
       /// <returns>Symbol names.</returns>
       public string[] GetSymbolNames(bool all = false)
       {
-         var symbolNames = new CharacterVector(Engine, Engine.GetFunction<R_lsInternal>()(handle, all));
+         var symbolNames = new CharacterVector(Engine, this.GetFunction<R_lsInternal>()(handle, all));
          int length = symbolNames.Length;
          var copy = new string[length];
          symbolNames.CopyTo(copy, length);

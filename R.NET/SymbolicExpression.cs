@@ -51,6 +51,16 @@ namespace RDotNet
       }
 
       /// <summary>
+      /// Creates the delegate function for the specified function defined in the DLL.
+      /// </summary>
+      /// <typeparam name="TDelegate">The type of delegate.</typeparam>
+      /// <returns>The delegate.</returns>
+      public TDelegate GetFunction<TDelegate>() where TDelegate : class
+      {
+         return Engine.GetFunction<TDelegate>();
+      }
+
+      /// <summary>
       /// Gets whether this expression is protected from the garbage collection.
       /// </summary>
       public bool IsProtected
@@ -105,7 +115,7 @@ namespace RDotNet
       /// <returns>The names of attributes</returns>
       public string[] GetAttributeNames()
       {
-         int length = Engine.GetFunction<Rf_length>()(this.sexp.attrib);
+         int length = this.GetFunction<Rf_length>()(this.sexp.attrib);
          var names = new string[length];
          IntPtr pointer = this.sexp.attrib;
          for (int index = 0; index < length; index++)
@@ -135,8 +145,8 @@ namespace RDotNet
             throw new ArgumentException();
          }
 
-         IntPtr installedName = Engine.GetFunction<Rf_install>()(attributeName);
-         IntPtr attribute = Engine.GetFunction<Rf_getAttrib>()(handle, installedName);
+         IntPtr installedName = this.GetFunction<Rf_install>()(attributeName);
+         IntPtr attribute = this.GetFunction<Rf_getAttrib>()(handle, installedName);
          if (Engine.CheckNil(attribute))
          {
             return null;
@@ -155,7 +165,7 @@ namespace RDotNet
             throw new ArgumentException();
          }
 
-         IntPtr attribute = Engine.GetFunction<Rf_getAttrib>()(handle, symbol.handle);
+         IntPtr attribute = this.GetFunction<Rf_getAttrib>()(handle, symbol.handle);
          if (Engine.CheckNil(attribute))
          {
             return null;
@@ -184,8 +194,8 @@ namespace RDotNet
             value = Engine.NilValue;
          }
 
-         IntPtr installedName = Engine.GetFunction<Rf_install>()(attributeName);
-         Engine.GetFunction<Rf_setAttrib>()(handle, installedName, value.handle);
+         IntPtr installedName = this.GetFunction<Rf_install>()(attributeName);
+         this.GetFunction<Rf_setAttrib>()(handle, installedName, value.handle);
       }
 
       internal void SetAttribute(SymbolicExpression symbol, SymbolicExpression value)
@@ -204,7 +214,7 @@ namespace RDotNet
             value = Engine.NilValue;
          }
 
-         Engine.GetFunction<Rf_setAttrib>()(handle, symbol.handle, value.handle);
+         this.GetFunction<Rf_setAttrib>()(handle, symbol.handle, value.handle);
       }
 
       /// <summary>
@@ -217,10 +227,10 @@ namespace RDotNet
          {
             if (Engine.EnableLock)
             {
-               lock (Engine) { Engine.GetFunction<R_PreserveObject>()(handle); }
+               lock (Engine) { this.GetFunction<R_PreserveObject>()(handle); }
             }
             else
-               Engine.GetFunction<R_PreserveObject>()(handle);
+               this.GetFunction<R_PreserveObject>()(handle);
             this.isProtected = true;
          }
       }
@@ -235,10 +245,10 @@ namespace RDotNet
          {
             if (Engine.EnableLock)
             {
-               lock (Engine) { Engine.GetFunction<R_ReleaseObject>()(handle); ; }
+               lock (Engine) { this.GetFunction<R_ReleaseObject>()(handle); ; }
             }
             else
-               Engine.GetFunction<R_ReleaseObject>()(handle);
+               this.GetFunction<R_ReleaseObject>()(handle);
             this.isProtected = false;
          }
       }
@@ -275,11 +285,25 @@ namespace RDotNet
          return Equals(obj as SymbolicExpression);
       }
 
+      /// <summary>
+      /// Experimental
+      /// </summary>
+      /// <typeparam name="K"></typeparam>
+      /// <param name="sexp"></param>
+      /// <param name="name"></param>
+      /// <returns></returns>
       public static SymbolicExpression op_Dynamic<K>(SymbolicExpression sexp, string name)
       {
          throw new NotImplementedException();
       }
 
+      /// <summary>
+      /// Experimental
+      /// </summary>
+      /// <typeparam name="K"></typeparam>
+      /// <param name="sexp"></param>
+      /// <param name="name"></param>
+      /// <param name="value"></param>
       public static void op_DynamicAssignment<K>(SymbolicExpression sexp, string name, dynamic value)
       {
 

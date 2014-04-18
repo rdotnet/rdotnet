@@ -73,12 +73,12 @@ namespace RDotNet
 
          try
          {
-            //IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);
-            //IntPtr result = Engine.GetFunction<Rf_applyClosure>()(Body.DangerousGetHandle(), handle,
+            //IntPtr newEnvironment = this.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);
+            //IntPtr result = this.GetFunction<Rf_applyClosure>()(Body.DangerousGetHandle(), handle,
             //                                                      argPairList.DangerousGetHandle(),
             //                                                      Environment.DangerousGetHandle(), newEnvironment);
-            IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argPairList.DangerousGetHandle());
-            IntPtr result = Engine.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
+            IntPtr call = this.GetFunction<Rf_lcons>()(handle, argPairList.DangerousGetHandle());
+            IntPtr result = this.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
 
             return new SymbolicExpression(Engine, result);
          }
@@ -98,11 +98,11 @@ namespace RDotNet
          IntPtr argument = Engine.NilValue.DangerousGetHandle();
          foreach (SymbolicExpression arg in args.Reverse())
          {
-            argument = Engine.GetFunction<Rf_cons>()(arg.DangerousGetHandle(), argument);
+            argument = this.GetFunction<Rf_cons>()(arg.DangerousGetHandle(), argument);
          }
-         IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argument);
+         IntPtr call = this.GetFunction<Rf_lcons>()(handle, argument);
 
-         IntPtr result = Engine.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
+         IntPtr result = this.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
          return new SymbolicExpression(Engine, result);
       }
 

@@ -101,7 +101,7 @@ namespace RDotNet
       private IntPtr mkChar(string value) 
       {
          if (_mkChar == null)
-            _mkChar = Engine.GetFunction<Rf_mkChar>();
+            _mkChar = this.GetFunction<Rf_mkChar>();
          return _mkChar(value);
       }
 

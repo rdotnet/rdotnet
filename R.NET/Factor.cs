@@ -102,7 +102,7 @@ namespace RDotNet
       {
          get
          {
-            return Engine.GetFunction<Rf_isOrdered>()(this.handle);
+            return this.GetFunction<Rf_isOrdered>()(this.handle);
          }
       }
 

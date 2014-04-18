@@ -33,7 +33,7 @@ namespace RDotNet
             throw new ArgumentException(null, "environment");
          }
 
-         return new SymbolicExpression(Engine, Engine.GetFunction<Rf_eval>()(handle, environment.DangerousGetHandle()));
+         return new SymbolicExpression(Engine, this.GetFunction<Rf_eval>()(handle, environment.DangerousGetHandle()));
       }
 
       /// <summary>
@@ -54,7 +54,7 @@ namespace RDotNet
          }
 
          bool errorOccurred;
-         IntPtr pointer = Engine.GetFunction<R_tryEval>()(handle, environment.DangerousGetHandle(), out errorOccurred);
+         IntPtr pointer = this.GetFunction<R_tryEval>()(handle, environment.DangerousGetHandle(), out errorOccurred);
          result = errorOccurred ? null : new SymbolicExpression(Engine, pointer);
          return !errorOccurred;
       }
