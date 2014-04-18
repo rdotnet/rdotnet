@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using RDotNet.Internals;
 using System.Linq;
+using System.Runtime.ExceptionServices;
+using System.Security;
 
 
 namespace RDotNet
@@ -71,21 +73,34 @@ namespace RDotNet
          arguments.SetAttribute(Engine.GetPredefinedSymbol("R_NamesSymbol"), names);
          var argPairList = arguments.ToPairlist();
 
+         //IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);
+         //IntPtr result = Engine.GetFunction<Rf_applyClosure>()(Body.DangerousGetHandle(), handle,
+         //                                                      argPairList.DangerousGetHandle(),
+         //                                                      Environment.DangerousGetHandle(), newEnvironment);
+         IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argPairList.DangerousGetHandle());
+         IntPtr result = evaluateCall(call);
+
+         return new SymbolicExpression(Engine, result);
+      }
+
+      // http://msdn.microsoft.com/en-us/magazine/dd419661.aspx
+      [HandleProcessCorruptedStateExceptions]
+      [SecurityCritical]
+      private IntPtr evaluateCall(IntPtr call)
+      {
+         IntPtr result;
+         bool errorOccurred = false;
          try
          {
-            //IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);
-            //IntPtr result = Engine.GetFunction<Rf_applyClosure>()(Body.DangerousGetHandle(), handle,
-            //                                                      argPairList.DangerousGetHandle(),
-            //                                                      Environment.DangerousGetHandle(), newEnvironment);
-            IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argPairList.DangerousGetHandle());
-            IntPtr result = Engine.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
-
-            return new SymbolicExpression(Engine, result);
+            result = Engine.GetFunction<R_tryEval>()(call, Engine.GlobalEnvironment.DangerousGetHandle(), out errorOccurred);
          }
-         catch (Exception ex)
+         catch (Exception ex) // TODO: this is usually dubious to catch all that, but given the inner exception is preserved
          {
             throw new EvaluationException(Engine.LastErrorMessage, ex);
          }
+         if (errorOccurred)
+            throw new EvaluationException(Engine.LastErrorMessage);
+         return result;
       }
 
       /// <summary>
@@ -102,7 +117,7 @@ namespace RDotNet
          }
          IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argument);
 
-         IntPtr result = Engine.GetFunction<Rf_eval>()(call, Engine.GlobalEnvironment.DangerousGetHandle());
+         IntPtr result = evaluateCall(call);
          return new SymbolicExpression(Engine, result);
       }
 

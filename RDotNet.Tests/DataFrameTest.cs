@@ -55,6 +55,9 @@ namespace RDotNet
          checkDataFrameContent(df);
 
          columns[1] = new int[] { 1, 2, 3, 4, 5, 6, 7 };
+         // NOTE: on at least one machine, this fails at the first test run with an OutOfMemoryException
+         // It is unclear at what level this occurs; if I follow the instructions at http://stackoverflow.com/questions/36014/why-is-net-exception-not-caught-by-try-catch-block
+         // and disable "Just my code" the stack trace shows a TargetInvocationException in a NUnit only call stack
          Assert.Throws(typeof(EvaluationException), (() => df = engine.CreateDataFrame(columns, columnNames: null)));
 
       }
