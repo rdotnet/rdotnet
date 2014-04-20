@@ -1,34 +1,40 @@
-﻿using System;
-using System.Linq;
-using RDotNet.Internals;
+﻿using System.Collections.Generic;
+using System;
 
 namespace RDotNet
 {
-	/// <summary>
-	/// A built-in function.
-	/// </summary>
-	public class BuiltinFunction : Function
-	{
-		/// <summary>
-		/// Creates a built-in function proxy.
-		/// </summary>
-		/// <param name="engine">The engine.</param>
-		/// <param name="pointer">The pointer.</param>
-		protected internal BuiltinFunction(REngine engine, IntPtr pointer)
-			: base(engine, pointer)
-		{}
+   /// <summary>
+   /// A built-in function.
+   /// </summary>
+   public class BuiltinFunction : Function
+   {
+      /// <summary>
+      /// Creates a built-in function proxy.
+      /// </summary>
+      /// <param name="engine">The engine.</param>
+      /// <param name="pointer">The pointer.</param>
+      protected internal BuiltinFunction(REngine engine, IntPtr pointer)
+         : base(engine, pointer)
+      { }
 
-		public override SymbolicExpression Invoke(SymbolicExpression[] args)
-		{
-			IntPtr argument = Engine.NilValue.DangerousGetHandle();
-			foreach (SymbolicExpression arg in args.Reverse())
-			{
-				argument = Engine.GetFunction<Rf_cons>("Rf_cons")(arg.DangerousGetHandle(), argument);
-			}
-			IntPtr call = Engine.GetFunction<Rf_lcons>("Rf_lcons")(handle, argument);
+      /// <summary>
+      /// Invoke this builtin function, using an ordered list of unnamed arguments.
+      /// </summary>
+      /// <param name="args">The arguments of the function</param>
+      /// <returns>The result of the evaluation</returns>
+      public override SymbolicExpression Invoke(params SymbolicExpression[] args)
+      {
+         return InvokeOrderedArguments(args);
+      }
 
-			IntPtr result = Engine.GetFunction<Rf_eval>("Rf_eval")(call, Engine.GlobalEnvironment.DangerousGetHandle());
-			return new SymbolicExpression(Engine, result);
-		}
-	}
+      /// <summary>
+      /// NotSupportedException
+      /// </summary>
+      /// <param name="args">key-value pairs</param>
+      /// <returns>Always throws an exception</returns>
+      public override SymbolicExpression Invoke(IDictionary<string, SymbolicExpression> args)
+      {
+         throw new NotSupportedException();
+      }
+   }
 }

@@ -1,7 +1,6 @@
 ﻿using RDotNet.Diagnostics;
 using RDotNet.Internals;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Permissions;
@@ -23,7 +22,7 @@ namespace RDotNet
       /// <param name="coerced">The pointer to a factor vector.</param>
       protected internal Factor(REngine engine, IntPtr coerced)
          : base(engine, coerced)
-      {}
+      { }
 
       /// <summary>
       /// Gets the levels of the factor.
@@ -37,10 +36,11 @@ namespace RDotNet
       /// Gets the levels of the factor.
       /// </summary>
       /// <returns>Factors.</returns>
-      public IEnumerable<string> GetFactors()
+      public string[] GetFactors()
       {
          var levels = GetLevels();
-         return this.Select(value => levels[value - 1]);
+         var levelIndices = this.GetArrayFast();
+         return Array.ConvertAll(levelIndices, value => (value == NACode ? null : levels[value - 1]));
       }
 
       /// <summary>
@@ -57,7 +57,7 @@ namespace RDotNet
       ///    Treatment = 1,
       ///    Control = 2
       /// }
-      /// 
+      ///
       /// // You must set 'levels' and 'labels' arguments explicitly in this case
       /// // because levels of factor is sorted by default and the names in R and in enum names are different.
       /// var code = @"factor(
@@ -75,7 +75,7 @@ namespace RDotNet
       /// <typeparam name="TEnum">The type of enum.</typeparam>
       /// <param name="ignoreCase">The value indicating case-sensitivity.</param>
       /// <returns>Factors.</returns>
-      public IEnumerable<TEnum> GetFactors<TEnum>(bool ignoreCase = false)
+      public TEnum[] GetFactors<TEnum>(bool ignoreCase = false)
          where TEnum : struct
       {
          Type enumType = typeof(TEnum);
@@ -89,7 +89,10 @@ namespace RDotNet
          //{
          //   throw new ArgumentException("Only Int32 is supported");
          //}
-         return GetFactors().Select(value => (TEnum)Enum.Parse(enumType, value, ignoreCase));
+         var levels = GetLevels();
+         return this.Select(value => levels[value - 1])
+            .Select(value => (TEnum)Enum.Parse(enumType, value, ignoreCase))
+            .ToArray();
       }
 
       /// <summary>
@@ -99,7 +102,41 @@ namespace RDotNet
       {
          get
          {
-            return Engine.GetFunction<Rf_isOrdered>()(this.handle);
+            return this.GetFunction<Rf_isOrdered>()(this.handle);
+         }
+      }
+
+      /// <summary>
+      /// Gets the value of the vector of factors at an index
+      /// </summary>
+      /// <param name="index">the zero-based index of the vector</param>
+      /// <returns>The string representation of the factor, or a null reference if the value in R is NA</returns>
+      public string GetFactor(int index)
+      {
+         var intValue = this[index];
+         if (intValue <= 0)
+            return null;
+         else
+            return this.GetLevels()[intValue - 1]; // zero-based index in C#, but 1-based in R
+      }
+
+      /// <summary>
+      /// Sets the value of a factor vector at an index
+      /// </summary>
+      /// <param name="index">the zero-based index item to set in the vector</param>
+      /// <param name="factorValue">The value of the factor - can be a null reference</param>
+      public void SetFactor(int index, string factorValue)
+      {
+         if (factorValue == null)
+            this[index] = NACode;
+         else
+         {
+            var levels = this.GetLevels();
+            int factIndex = Array.IndexOf(levels, factorValue);
+            if (factIndex >= 0)
+               this[index] = factIndex + 1; // zero-based index in C#, but 1-based in R
+            else
+               this[index] = NACode;
          }
       }
    }
