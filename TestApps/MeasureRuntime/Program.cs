@@ -15,7 +15,6 @@ namespace MeasureRuntime
       private static void Main(string[] args)
       {
          REngine.SetEnvironmentVariables();
-         var engineName = "R_engine";
          using (var engine = REngine.GetInstance())
          {
             engine.Initialize(device: device);
@@ -51,10 +50,15 @@ namespace MeasureRuntime
          // R by default would spit the dummy, even running 64 bits, with 
          // 1: Reached total allocation of 2047Mb: see help(memory.size)
          for (int n = 1; n < 11; n++)
-            MeasureRuntimeOperation(r, RuntimeDiagnostics.RtoDotNetNumericMatrixFast, n * tenMillions, "numeric", operation: "ReadFast", what:"matrix");
+         {
+            engine.ForceGarbageCollection();
+            MeasureRuntimeOperation(r, RuntimeDiagnostics.RtoDotNetNumericMatrix, n * tenMillions, "numeric", operation: "Read    ", what: "matrix");
+         }
          for (int n = 1; n < 11; n++)
-            MeasureRuntimeOperation(r, RuntimeDiagnostics.RtoDotNetIntegerMatrixFast, n * tenMillions, "integer", operation: "ReadFast", what:"matrix");
-
+         {
+            engine.ForceGarbageCollection();
+            MeasureRuntimeOperation(r, RuntimeDiagnostics.RtoDotNetIntegerMatrix, n * tenMillions, "integer", operation: "Read    ", what: "matrix");
+         }
       }
 
       private static void DoMeasuresVectors(REngine engine)
@@ -84,33 +88,25 @@ namespace MeasureRuntime
          for (int n = 1; n < 2e7; n = n*10)
          {
             MeasureRuntimeOperation(r, RuntimeDiagnostics.RtoDotNetNumericVector, n, "numeric", operation: "Read    ");
-            MeasureRuntimeOperation(r, RuntimeDiagnostics.RtoDotNetNumericVectorFast, n, "numeric",
-                                       operation: "ReadFast");
          }
          for (int n = 1; n < 2e7; n = n * 10)
          {
             MeasureRuntimeOperation(r, RuntimeDiagnostics.RtoDotNetIntegerVector, n, "integer", operation: "Read    ");
-            MeasureRuntimeOperation(r, RuntimeDiagnostics.RtoDotNetIntegerVectorFast, n, "integer", operation: "ReadFast");
          }
-
-         Console.WriteLine();
-         Console.WriteLine("*** Now keep going only with faster version of read operations ***");
-         Console.WriteLine();
 
          const int tenMillions = 10000000;
          // Cannot go past 1 billion elements, 
          // R by default would spit the dummy, even running 64 bits, with 
          // 1: Reached total allocation of 2047Mb: see help(memory.size)
          for (int n = 1; n < 11; n++)
-            MeasureRuntimeOperation(r, RuntimeDiagnostics.RtoDotNetNumericVectorFast, n * tenMillions, "numeric", operation: "ReadFast");
+            MeasureRuntimeOperation(r, RuntimeDiagnostics.RtoDotNetNumericVector, n * tenMillions, "numeric", operation: "Read    ");
          for (int n = 1; n < 11; n++)
-            MeasureRuntimeOperation(r, RuntimeDiagnostics.RtoDotNetIntegerVectorFast, n * tenMillions, "integer", operation: "ReadFast");
+            MeasureRuntimeOperation(r, RuntimeDiagnostics.RtoDotNetIntegerVector, n * tenMillions, "integer", operation: "Read    ");
       }
 
       private static void MeasureRuntimeOperation(RuntimeDiagnostics r, Action<REngine, int, Stopwatch> fun, int n, string type, string operation = "Create", string what = "vector")
       {
-         var dt = r.MeasureRuntime(fun, n);
-         Console.WriteLine("{0} {1} {4}; n={2:e01}, deltaT={3} ms", operation, type, n, dt, what);
+         Console.WriteLine(r.PrintRuntimeOperation(fun, n, type, operation, what));
       }
    }
 }

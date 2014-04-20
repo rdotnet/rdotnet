@@ -8,6 +8,9 @@ using NUnit.Framework;
 
 namespace RDotNet
 {
+   /// <summary>
+   /// Supports runtime performance diagnosis and measurements
+   /// </summary>
    public class RuntimeDiagnostics
    {
       private REngine engine;
@@ -16,11 +19,25 @@ namespace RDotNet
          this.engine = engine;
       }
 
-      public long MeasureRuntime(Action<REngine, int, Stopwatch> fun, int n)
+      public double MeasureRuntime(Action<REngine, int, Stopwatch> fun, int n)
       {
          var s = new Stopwatch();
          fun(engine, n, s);
-         return s.ElapsedMilliseconds;
+         var ticks = s.ElapsedTicks;
+         long ticksPerSec = Stopwatch.Frequency;
+         return (ticks * 1000.0) / ticksPerSec; // milliseconds
+      }
+
+      public string PrintRuntimeOperation(Action<REngine, int, Stopwatch> fun, int n, string type, string operation = "Create", string what = "vector")
+      {
+         var dt = this.MeasureRuntime(fun, n);
+         return string.Format("{0} {1} {4}; n={2:e01}, deltaT={3} ms", operation, type, n, dt, what);
+      }
+
+      public Measurement MeasureRuntimeOperation(Action<REngine, int, Stopwatch> fun, int n, string type, string operation = "Create", string what = "vector")
+      {
+         var dt = this.MeasureRuntime(fun, n);
+         return new Measurement(){ Operation=operation, Type=type, N=n, Time=dt, What=what, Tag=""};
       }
 
       public static void CreateNumericMatrix(REngine engine, int n, Stopwatch s)
@@ -80,57 +97,33 @@ namespace RDotNet
          s.Stop();
       }
 
-      public static void RtoDotNetNumericMatrixFast(REngine engine, int n, Stopwatch s)
-      {
-         RtoDotNetNumericMatrix(engine, n, s, e => e.GetSymbol("x").AsNumericMatrix().ToArray());
-      }
-
-      private static void RtoDotNetNumericMatrix(REngine engine, int n, Stopwatch s, Func<REngine, Array> fun)
-      {
-         var m = (int)Math.Floor(Math.Sqrt(n));
-         var vStatement = string.Format("matrix(as.numeric(1:({0}*{0})), nrow={0}, ncol={0})", m.ToString(CultureInfo.InvariantCulture));
-         engine.SetSymbol("x", engine.Evaluate(vStatement));
-         //engine.Evaluate("cat(ls())");
-         s.Start();
-         var nvec = fun(engine);
-         s.Stop();
-      }
-
-      public static void RtoDotNetIntegerMatrixFast(REngine engine, int n, Stopwatch s)
-      {
-         RtoDotNetNumericMatrix(engine, n, s, e => e.GetSymbol("x").AsIntegerMatrix().ToArray());
-      }
-
-      private static void RtoDotNetIntegerMatrix(REngine engine, int n, Stopwatch s, Func<REngine, Array> fun)
-      {
-         var m = (int)Math.Floor(Math.Sqrt(n));
-         var vStatement = string.Format("matrix(as.integer(1:({0}*{0})), nrow={0}, ncol={0})", m.ToString(CultureInfo.InvariantCulture));
-         engine.SetSymbol("x", engine.Evaluate(vStatement));
-         //engine.Evaluate("cat(ls())");
-         s.Start();
-         var nvec = fun(engine);
-         s.Stop();
-      }
-
-
-      private static void RtoDotNetNumericVector(REngine engine, int n, Stopwatch s, Func<REngine,Array> fun)
-      {
-         var vStatement = string.Format("as.numeric(1:{0})", n.ToString(CultureInfo.InvariantCulture));
-         engine.SetSymbol("x", engine.Evaluate(vStatement));
-         //engine.Evaluate("cat(ls())");
-         s.Start();
-         var nvec = fun(engine);
-         s.Stop();
-      }
-
       public static void RtoDotNetNumericVector(REngine engine, int n, Stopwatch s)
       {
          RtoDotNetNumericVector(engine, n, s, e => e.GetSymbol("x").AsNumeric().ToArray());
       }
 
-      public static void RtoDotNetNumericVectorFast(REngine engine, int n, Stopwatch s)
+      public static void RtoDotNetIntegerVector(REngine engine, int n, Stopwatch s)
       {
-         RtoDotNetNumericVector(engine, n, s, e => e.GetSymbol("x").AsNumeric().ToArray());
+         RtoDotNetIntegerVector(engine, n, s, e => e.Evaluate("x").AsInteger().ToArray());
+      }
+
+      public static void RtoDotNetCharacterVector(REngine engine, int n, Stopwatch s)
+      {
+         var vStatement = string.Format("x <- rep('abcd',{0})", n.ToString(CultureInfo.InvariantCulture));
+         engine.Evaluate(vStatement);
+         s.Start();
+         var nvec = engine.Evaluate("x").AsCharacter().ToArray();
+         s.Stop();
+      }
+
+      public static void RtoDotNetNumericMatrix(REngine engine, int n, Stopwatch s)
+      {
+         RtoDotNetNumericMatrix(engine, n, s, e => e.GetSymbol("x").AsNumericMatrix().ToArray());
+      }
+
+      public static void RtoDotNetIntegerMatrix(REngine engine, int n, Stopwatch s)
+      {
+         RtoDotNetNumericMatrix(engine, n, s, e => e.GetSymbol("x").AsIntegerMatrix().ToArray());
       }
 
       public static void RtoDotNetIntegerVector(REngine engine, int n, Stopwatch s, Func<REngine, Array> fun)
@@ -142,22 +135,35 @@ namespace RDotNet
          s.Stop();
       }
 
-      public static void RtoDotNetIntegerVector(REngine engine, int n, Stopwatch s)
+      public static void RtoDotNetIntegerMatrix(REngine engine, int n, Stopwatch s, Func<REngine, Array> fun)
       {
-         RtoDotNetIntegerVector(engine, n, s, e => e.Evaluate("x").AsInteger().ToArray());
-      }
-
-      public static void RtoDotNetIntegerVectorFast(REngine engine, int n, Stopwatch s)
-      {
-         RtoDotNetIntegerVector(engine, n, s, e => e.Evaluate("x").AsInteger().ToArray());
-      }
-
-      public static void RtoDotNetCharacterVector(REngine engine, int n, Stopwatch s)
-      {
-         var vStatement = string.Format("x <- rep('abcd',{0})", n.ToString(CultureInfo.InvariantCulture));
-         engine.Evaluate(vStatement);
+         var m = (int)Math.Floor(Math.Sqrt(n));
+         var vStatement = string.Format("matrix(as.integer(1:({0}*{0})), nrow={0}, ncol={0})", m.ToString(CultureInfo.InvariantCulture));
+         engine.SetSymbol("x", engine.Evaluate(vStatement));
+         //engine.Evaluate("cat(ls())");
          s.Start();
-         var nvec = engine.Evaluate("x").AsCharacter().ToArray();
+         var nvec = fun(engine);
+         s.Stop();
+      }
+
+      public static void RtoDotNetNumericMatrix(REngine engine, int n, Stopwatch s, Func<REngine, Array> fun)
+      {
+         var m = (int)Math.Floor(Math.Sqrt(n));
+         var vStatement = string.Format("matrix(as.numeric(1:({0}*{0})), nrow={0}, ncol={0})", m.ToString(CultureInfo.InvariantCulture));
+         engine.SetSymbol("x", engine.Evaluate(vStatement));
+         //engine.Evaluate("cat(ls())");
+         s.Start();
+         var nvec = fun(engine);
+         s.Stop();
+      }
+
+      public static void RtoDotNetNumericVector(REngine engine, int n, Stopwatch s, Func<REngine, Array> fun)
+      {
+         var vStatement = string.Format("as.numeric(1:{0})", n.ToString(CultureInfo.InvariantCulture));
+         engine.SetSymbol("x", engine.Evaluate(vStatement));
+         //engine.Evaluate("cat(ls())");
+         s.Start();
+         var nvec = fun(engine);
          s.Stop();
       }
       // Not much difference for character as yet, the way they are done.
@@ -225,7 +231,20 @@ namespace RDotNet
                a[i, j] = (r.Next(max)<128);
          return a;
       }
-
       
+   }
+
+   public class Measurement
+   {
+      public string Operation;
+
+      public string Type;
+
+      public int N;
+
+      public double Time;
+
+      public string What;
+      public string Tag;
    }
 }
