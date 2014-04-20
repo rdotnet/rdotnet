@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
-<package>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata>
       <id>R.NET</id>
-      <version>1.5.1</version>
+      <version>1.5.8</version>
       <title>R.NET</title>
       <authors>RecycleBin</authors>
       <owners>kos59125</owners>
       <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
       <projectUrl>http://rdotnet.codeplex.com/</projectUrl>
       <requireLicenseAcceptance>true</requireLicenseAcceptance>
-      <description>Collaboration of .NET Framework with R statistical computing. This requires the R binaries, which are available on http://www.r-project.org/</description>
-      <summary>Collaboration of .NET Framework with R statistical computing.</summary>
-      <copyright>Copyright 2012 RecycleBin</copyright>
+      <description>Library for interoperability in-process of the .NET Framework with the R statistical computing software. This requires the R binaries, which are available at http://www.r-project.org </description>
+      <summary>Library for interoperability of the .NET Framework with the R statistical computing software</summary>
+      <copyright>Copyright 2014 RecycleBin</copyright>
       <references>
          <reference file="RDotNet.dll" />
          <reference file="RDotNet.NativeLibrary.dll" />
@@ -19,10 +19,12 @@
       <frameworkAssemblies>
          <frameworkAssembly assemblyName="System.Numerics" />
       </frameworkAssemblies>
-      <tags>R statistics</tags>
+      <tags>R R.NET statistics</tags>
    </metadata>
    <files>
-      <file src="R.NET\bin\Release\*.dll" target="lib\net40" />
-      <file src="R.NET\bin\Release\*.xml" target="lib\net40" />
+      <file src="R.NET\bin\Release\RDotNet.dll" target="lib\net40" />
+      <file src="R.NET\bin\Release\RDotNet.XML" target="lib\net40" />
+      <file src="RDotNet.NativeLibrary\bin\Release\RDotNet.NativeLibrary.dll" target="lib\net40" />
+      <file src="RDotNet.NativeLibrary\bin\Release\RDotNet.NativeLibrary.XML" target="lib\net40" />
    </files>
 </package>

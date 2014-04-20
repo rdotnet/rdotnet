@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet", "R.NET\RDotNet.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.NativeLibrary", "RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj", "{2A089A59-0F22-4484-B442-0FE8BDA10879}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.Graphics", "Graphics\RDotNet.Graphics.csproj", "{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,6 +20,10 @@ Global
 		{2A089A59-0F22-4484-B442-0FE8BDA10879}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A089A59-0F22-4484-B442-0FE8BDA10879}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A089A59-0F22-4484-B442-0FE8BDA10879}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

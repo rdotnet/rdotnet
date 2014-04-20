@@ -7,36 +7,50 @@ using System.Reflection;
 
 namespace RDotNet.Dynamic
 {
-	public class ListDynamicMeta : SymbolicExpressionDynamicMeta
-	{
-		private static readonly Type[] IndexerNameType = new[] { typeof(string) };
+   /// <summary>
+   /// Dynamic and binding logic for R lists
+   /// </summary>
+   public class ListDynamicMeta : SymbolicExpressionDynamicMeta
+   {
+      private static readonly Type[] IndexerNameType = new[] { typeof(string) };
 
-		public ListDynamicMeta(System.Linq.Expressions.Expression parameter, GenericVector list)
-			: base(parameter, list)
-		{}
+      /// <summary>
+      /// Creates a new object dealing with the dynamic and binding logic for R lists
+      /// </summary>
+      /// <param name="parameter">The expression representing this new ListDynamicMeta in the binding process</param>
+      /// <param name="list">The runtime value of the GenericVector, that this new ListDynamicMeta represents</param>
+      public ListDynamicMeta(System.Linq.Expressions.Expression parameter, GenericVector list)
+         : base(parameter, list)
+      { }
 
-		public override IEnumerable<string> GetDynamicMemberNames()
-		{
-			return base.GetDynamicMemberNames().Concat(GetNames());
-		}
+      /// <summary>
+      /// Returns the enumeration of all dynamic member names.
+      /// </summary>
+      /// <returns>The list of dynamic member names</returns>
+      public override IEnumerable<string> GetDynamicMemberNames()
+      {
+         return base.GetDynamicMemberNames().Concat(GetNames());
+      }
 
-		public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
-		{
-			if (!GetNames().Contains(binder.Name))
-			{
-				return base.BindGetMember(binder);
-			}
+      /// <summary>
+      /// Performs the binding of the dynamic get member operation.
+      /// </summary>
+      /// <param name="binder">
+      /// An instance of the System.Dynamic.GetMemberBinder that represents the details of the dynamic operation.
+      /// </param>
+      /// <returns>The new System.Dynamic.DynamicMetaObject representing the result of the binding.</returns>
+      public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
+      {
+         if (!GetNames().Contains(binder.Name))
+         {
+            return base.BindGetMember(binder);
+         }
+         return BindGetMember<GenericVector, SymbolicExpression>(binder, IndexerNameType);
+      }
 
-			ConstantExpression instance = System.Linq.Expressions.Expression.Constant(Value, typeof(GenericVector));
-			ConstantExpression name = System.Linq.Expressions.Expression.Constant(binder.Name, typeof(string));
-			PropertyInfo indexer = typeof(GenericVector).GetProperty("Item", IndexerNameType);
-			IndexExpression call = System.Linq.Expressions.Expression.Property(instance, indexer, name);
-			return new DynamicMetaObject(call, BindingRestrictions.GetTypeRestriction(call, typeof(SymbolicExpression)));
-		}
-
-		private string[] GetNames()
-		{
-			return ((GenericVector)Value).Names ?? Empty;
-		}
-	}
+      private string[] GetNames()
+      {
+         return ((GenericVector)Value).Names ?? Empty;
+      }
+   }
 }
