@@ -15,9 +15,12 @@ namespace MeasureRuntime
       private static void Main(string[] args)
       {
          REngine.SetEnvironmentVariables();
-         using (var engine = REngine.GetInstance())
+         StartupParameter parameter = args.Length > 0 ?
+            new StartupParameter() { MaxMemorySize = ulong.Parse(args[0]) * (1024 * 1024) } :
+            new StartupParameter() { };
+
+         using (var engine = REngine.GetInstance(device:device, parameter:parameter))
          {
-            engine.Initialize(device: device);
             //DoMeasuresVectors(engine);
             DoMeasuresMatrices(engine);
             engine.Dispose();
