@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.SetEnv.Tests.64", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleTest", "TestApps\SimpleTest\SimpleTest.csproj", "{72A25F52-04C2-4C7D-9096-EC86B74D55FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.StressTests", "Tests\RDotNet.StressTests\RDotNet.StressTests.csproj", "{BB7879A0-CC31-4405-81D4-47BB68E2DD3C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{72A25F52-04C2-4C7D-9096-EC86B74D55FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72A25F52-04C2-4C7D-9096-EC86B74D55FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72A25F52-04C2-4C7D-9096-EC86B74D55FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB7879A0-CC31-4405-81D4-47BB68E2DD3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB7879A0-CC31-4405-81D4-47BB68E2DD3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB7879A0-CC31-4405-81D4-47BB68E2DD3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB7879A0-CC31-4405-81D4-47BB68E2DD3C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
