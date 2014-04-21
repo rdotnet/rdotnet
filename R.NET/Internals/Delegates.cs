@@ -11,6 +11,15 @@ namespace RDotNet.Internals
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate int Rf_initialize_R(int ac, string[] argv);
 
+   /// <summary>
+   /// Necessary to call at initialization on Windows, otherwise some (all?) of the startup parameters are NOT picked
+   /// </summary>
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate void cmdlineoptions(int ac, string[] argv);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate void R_set_command_line_arguments(int argc, string[] argv);
+
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate void R_DefParams_Unix(ref UnixRStart start);
 
@@ -22,9 +31,6 @@ namespace RDotNet.Internals
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate void R_SetParams_Windows(ref WindowsRStart start);
-
-   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-   internal delegate void R_set_command_line_arguments(int argc, string[] argv);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate void setup_Rmainloop();
