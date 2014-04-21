@@ -21,7 +21,10 @@ namespace MeasureRuntime
 
          using (var engine = REngine.GetInstance(device:device, parameter:parameter))
          {
-            //DoMeasuresVectors(engine);
+             Console.WriteLine("************");
+             Console.WriteLine("*** NOTE: memory.limit() returns: " + engine.Evaluate("memory.limit()").AsNumeric()[0]);
+             Console.WriteLine("************");
+             //DoMeasuresVectors(engine);
             DoMeasuresMatrices(engine);
             engine.Dispose();
          }
