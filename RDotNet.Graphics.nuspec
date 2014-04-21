@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+   <metadata>
+      <id>RDotNet.Graphics</id>
+      <version>0.1-alpha</version>
+      <title>R.NET Graphics Engine</title>
+      <authors>RecycleBin</authors>
+      <owners>kos59125</owners>
+      <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
+      <projectUrl>http://rdotnet.codeplex.com/</projectUrl>
+      <requireLicenseAcceptance>true</requireLicenseAcceptance>
+      <description>Provides interfaces to build up R's graphics engine.</description>
+      <summary>Provides interfaces to build up R's graphics engine.</summary>
+      <copyright>Copyright 2013 RecycleBin</copyright>
+      <references>
+         <reference file="RDotNet.Graphics.dll" />
+      </references>
+      <dependencies>
+         <dependency id="R.NET" />
+      </dependencies>
+      <tags>R R.NET graphics</tags>
+   </metadata>
+   <files>
+      <file src="RDotNet.Graphics\bin\Release\RDotNet.Graphics.dll" target="lib\net40" />
+      <file src="RDotNet.Graphics\bin\Release\RDotNet.Graphics.XML" target="lib\net40" />
+   </files>
+</package>
