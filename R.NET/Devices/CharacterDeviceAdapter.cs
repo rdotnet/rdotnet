@@ -74,7 +74,8 @@ namespace RDotNet.Devices
       {
          if (parameter.RHome == null)
          {
-            string rhome = Marshal.PtrToStringAnsi(Engine.GetFunction<getValue>("get_R_HOME")());
+            //string rhome = Marshal.PtrToStringAnsi(Engine.GetFunction<getValue>("get_R_HOME")());
+            string rhome = NativeUtility.GetRHomeEnvironmentVariable();
             parameter.start.rhome = Marshal.StringToHGlobalAnsi(ConvertSeparatorToUnixStylePath(rhome));
          }
          if (parameter.Home == null)

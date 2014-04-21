@@ -86,7 +86,7 @@ namespace RDotNet.NativeLibrary
          SetenvPrependToPath(rPath);
 
          if (string.IsNullOrEmpty(rHome))
-            rHome = Environment.GetEnvironmentVariable("R_HOME");
+            rHome = GetRHomeEnvironmentVariable();
          if (string.IsNullOrEmpty(rHome)) {
             // R_HOME is neither specified by the user nor as an environmental variable. Rely on default locations specific to platforms
             rHome = FindRHome(rPath);
@@ -114,6 +114,15 @@ namespace RDotNet.NativeLibrary
             // so all we can do is an intelligible error message for the user, explaining he needs to set the LD_LIBRARY_PATH env variable 
             // Let's delay the notification about a missing LD_LIBRARY_PATH till loading libR.so fails, if it does.
          }
+      }
+
+      /// <summary>
+      /// Gets the value, if any, of the R_HOME environment variable of the current process
+      /// </summary>
+      /// <returns>The value, or null if not set</returns>
+      public static string GetRHomeEnvironmentVariable()
+      {
+         return Environment.GetEnvironmentVariable("R_HOME");
       }
 
       /// <summary>
