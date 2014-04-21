@@ -325,6 +325,17 @@ namespace RDotNet
          //rdotnet_app --quiet --interactive --no-save --no-restore-data --max-mem-size=18446744073709551615 --max-ppsize=50000  
          GetFunction<R_setStartTime>()();
          int R_argc = R_argv.Length;
+
+         if (NativeUtility.GetPlatform() == PlatformID.Win32NT)
+         {
+            // Attempted Fix for https://rdotnet.codeplex.com/workitem/110; not working
+            // Tried to make sure that the command line options are taken into account. They are NOT effectively so via Rf_initialize_R only.
+            // The problem is that cmdlineoptions assumes it is called by RGui.exe or RTerm.exe, and overrides R_HOME
+
+            //   GetFunction<R_set_command_line_arguments>()(R_argc, R_argv);
+            //   GetFunction<cmdlineoptions>()(R_argc, R_argv);
+         }
+         
          var status = GetFunction<Rf_initialize_R>()(R_argc, R_argv);
          if (status != 0)
             throw new Exception("A call to Rf_initialize_R returned a non-zero; status=" + status);
@@ -346,6 +357,13 @@ namespace RDotNet
          }
          GetFunction<setup_Rmainloop>()();
          this.isRunning = true;
+
+         // Partial Workaround (hopefully temporary) for https://rdotnet.codeplex.com/workitem/110
+         if (NativeUtility.GetPlatform() == PlatformID.Win32NT)
+         {
+            Evaluate( string.Format( "memory.limit({0})", (this.parameter.MaxMemorySize / 1048576UL)));
+         }
+
       }
 
       /// <summary>
@@ -372,7 +390,8 @@ namespace RDotNet
 
          //[MarshalAs(UnmanagedType.Bool)]
          //public bool R_Interactive;
-         if (parameter.Interactive) argv.Add("--interactive");
+         if (NativeUtility.GetPlatform() != PlatformID.Win32NT) // RTerm.exe --help shows no such option; Unix only.
+            if (parameter.Interactive) argv.Add("--interactive");
 
          //[MarshalAs(UnmanagedType.Bool)]
          //public bool R_Verbose;
