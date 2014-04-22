@@ -27,7 +27,7 @@ namespace RDotNet
       }
 
       public Measurement[] DoMeasures(IDictionary<string, Action<REngine, int, Stopwatch>> funMap,
-         string[] types = null, int[] sizes = null, string what = null, string operation = null, string tag = null, bool printToConsole=true)
+         string[] types = null, int[] sizes = null, string what = null, string operation = null, string tag = null, bool printToConsole=true, bool forceGC=true)
       {
          if (types == null) types = this.Types;
          if (sizes == null) sizes = this.Sizes;
@@ -39,6 +39,8 @@ namespace RDotNet
          {
             for (int i = 0; i < sizes.Length; i++)
             {
+               if (forceGC)
+                  engine.ForceGarbageCollection();
                var m = MeasureRuntimeOperation(funMap[type], sizes[i], type, operation, what, tag);
                measures.Add(m);
                if(printToConsole)
