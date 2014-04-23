@@ -36,19 +36,25 @@ namespace MeasureRuntime
             };
 
             var funMap = RuntimeDiagnostics.GetMatrixCreationFunctions();
-            measures.AddRange(r.DoMeasures(funMap, what: "matrix", operation: "create", tag: ""));
+            measures.AddRange(r.DoMeasures(funMap, what: "matrix", operation: ".NET->R", tag: ""));
 
             funMap = RuntimeDiagnostics.GetVectorCreationFunctions();
-            measures.AddRange(r.DoMeasures(funMap, what: "vector", operation: "create", tag: ""));
+            measures.AddRange(r.DoMeasures(funMap, what: "vector", operation: ".NET->R", tag: ""));
 
             funMap = RuntimeDiagnostics.GetMatrixRetrievalFunctions();
-            measures.AddRange(r.DoMeasures(funMap, what: "matrix", operation: "read", tag: ""));
+            measures.AddRange(r.DoMeasures(funMap, what: "matrix", operation: "R->.NET", tag: ""));
 
             funMap = RuntimeDiagnostics.GetVectorRetrievalFunctions();
-            measures.AddRange(r.DoMeasures(funMap, what: "vector", operation: "read", tag: ""));
+            measures.AddRange(r.DoMeasures(funMap, what: "vector", operation: "R->.NET", tag: ""));
 
             engine.SetSymbol("runtimes", r.CollateResults(measures));
             engine.Evaluate(string.Format("write.table(runtimes, '{0}', row.names=FALSE, col.names=TRUE, quote=FALSE, sep = ',')", outputfile));
+
+// rt <- read.csv('c:/tmp/runtimes.csv')
+// d <- ggplot(rt, aes_string(x='Size', y="Duration", color='Type', shape='What')) 
+// d <- d + geom_point() + facet_wrap( ~ Operation ) 
+// d <- d + scale_y_log10() + scale_x_log10() + annotation_logticks(sides='bl')
+// d + ggtitle('Data conversion') + xlab("data size") + ylab('duration (ms)')
 
             engine.Dispose();
          }
