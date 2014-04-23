@@ -694,11 +694,17 @@ namespace RDotNet
                geterrmessage = vector.First();
             }
             SymbolicExpression result;
-            geterrmessage.TryEvaluate(GlobalEnvironment, out result);
-            var msgs = SymbolicExpressionExtension.AsCharacter(result).ToArray();
-            if (msgs.Length > 1) throw new Exception("Unexpected multiple error messages returned");
-            if (msgs.Length == 0) throw new Exception("No error messages returned (zero length)");
-            return msgs[0];
+            if (geterrmessage.TryEvaluate(GlobalEnvironment, out result))
+            {
+               var msgs = SymbolicExpressionExtension.AsCharacter(result).ToArray();
+               if (msgs.Length > 1)
+                  throw new Exception("Unexpected multiple error messages returned");
+               if (msgs.Length == 0)
+                  throw new Exception("No error messages returned (zero length)");
+               return msgs[0];
+            }
+            else
+               throw new EvaluationException("Unable to retrieve an R error message. Evaluating 'geterrmessage()' fails. The R engine is not in a working state.");
          }
       }
 
