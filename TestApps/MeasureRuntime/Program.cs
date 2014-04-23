@@ -19,6 +19,7 @@ namespace MeasureRuntime
             new StartupParameter() { MaxMemorySize = ulong.Parse(args[0]) * (1024 * 1024) } :
             new StartupParameter() { };
          uint maxPowTwo = args.Length > 1 ? uint.Parse(args[1]) : 24;
+         string outputfile = args.Length > 2 ? args[2] : "c:/tmp/runtimes.csv";
 
          using (var engine = REngine.GetInstance(device: device, parameter: parameter))
          {
@@ -47,7 +48,7 @@ namespace MeasureRuntime
             measures.AddRange(r.DoMeasures(funMap, what: "vector", operation: "read", tag: ""));
 
             engine.SetSymbol("runtimes", r.CollateResults(measures));
-            engine.Evaluate("write.table(runtimes, 'c:/tmp/runtimes.csv', row.names=FALSE, col.names=TRUE, quote=FALSE, sep = ',')");
+            engine.Evaluate(string.Format("write.table(runtimes, '{0}', row.names=FALSE, col.names=TRUE, quote=FALSE, sep = ',')", outputfile));
 
             engine.Dispose();
          }

@@ -26,16 +26,16 @@ namespace RDotNet.NativeLibrary
 
       public bool FreeLibrary(IntPtr hModule)
       {
-         return dlclose(hModule);
+         // according to the manual page on a Debian box
+         // The function dlclose() returns 0 on success, and nonzero on error.
+         var status = dlclose(hModule);
+         return status == 0;
       }
 
       public IntPtr GetFunctionAddress(IntPtr hModule, string lpProcName)
       {
          return dlsym(hModule, lpProcName);
       }
-
-      private const string LibraryPath = "PATH";
-      private static readonly string DefaultSearchPath = System.Environment.GetEnvironmentVariable(LibraryPath, EnvironmentVariableTarget.Process);
 
       internal static IntPtr InternalLoadLibrary(string filename)
       {
@@ -61,8 +61,8 @@ namespace RDotNet.NativeLibrary
 
       [DllImport("libdl", EntryPoint = "dlclose")]
       [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-      [return: MarshalAs(UnmanagedType.Bool)]
-      private static extern bool dlclose(IntPtr hModule);
+      //[return: MarshalAs(UnmanagedType.u)]
+      private static extern int dlclose(IntPtr hModule);
 
       [DllImport("libdl", EntryPoint = "dlsym")]
       private static extern IntPtr dlsym(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);

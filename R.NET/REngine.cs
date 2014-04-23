@@ -741,27 +741,23 @@ namespace RDotNet
       /// <param name="disposing">if true, release native resources, using the native R API to clean up.</param>
       protected override void Dispose(bool disposing)
       {
-         if (isRunning)
-         {
-            this.isRunning = false;
-            //instances.Remove(ID);
-         }
+         this.isRunning = false;
          OnDisposing(EventArgs.Empty);
-         if (disposing)
+         if (disposing && !Disposed)
          {
             GetFunction<R_RunExitFinalizers>()();
             GetFunction<Rf_CleanEd>()();
             GetFunction<R_CleanTempDir>()();
             Disposed = true;
          }
-         this.isRunning = false;
 
          if (disposing && this.adapter != null)
          {
             this.adapter.Dispose();
             this.adapter = null;
          }
-
+         if (Disposed)
+            return;
          GC.KeepAlive(this.parameter);
          base.Dispose(disposing);
       }

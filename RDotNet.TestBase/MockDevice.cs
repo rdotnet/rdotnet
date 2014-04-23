@@ -38,7 +38,7 @@ namespace RDotNet
 
       public void Busy(BusyType which)
       {
-         throw new NotImplementedException();
+         //throw new NotImplementedException();
       }
 
       public void Callback()
@@ -52,27 +52,27 @@ namespace RDotNet
 
       public void Suicide(string message)
       {
-         throw new NotImplementedException();
+         throw new Exception(message);
       }
 
       public void ResetConsole()
       {
-         throw new NotImplementedException();
+         this.builder.Clear();
       }
 
       public void FlushConsole()
       {
-         throw new NotImplementedException();
+         //throw new NotImplementedException();
       }
 
       public void ClearErrorConsole()
       {
-         throw new NotImplementedException();
+         //throw new NotImplementedException();
       }
 
       public void CleanUp(StartupSaveAction saveAction, int status, bool runLast)
       {
-         throw new NotImplementedException();
+         Environment.Exit(status);
       }
 
       public bool ShowFiles(string[] files, string[] headers, string title, bool delete, string pager)
