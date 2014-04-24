@@ -394,6 +394,29 @@ namespace RDotNet
          m["character"] = RuntimeDiagnostics.RtoDotNetCharacterVector;
          return m;
       }
+
+      public NumericVector[] CreateNumericVectors(int n, int sizeEach)
+      {
+         var res = new NumericVector[n];
+         var f = engine.Evaluate("function(vecLen) {rnorm(vecLen)}").AsFunction();
+         var vecLen = engine.CreateIntegerVector(sizeEach);
+         for (int i = 0; i < n; i++)
+         {
+            res[i] = f.Invoke(vecLen).AsNumeric();
+         }
+         return res;
+      }
+
+      public NumericVector[] Lapply(NumericVector[] nVecs, string functionExpression)
+      {
+         var f = engine.Evaluate(functionExpression).AsFunction();
+         var res = new NumericVector[nVecs.Length];
+         for (int i = 0; i < res.Length; i++)
+         {
+            res[i] = f.Invoke(nVecs[i]).AsNumeric();
+         }
+         return res;
+      }
    }
 
    public class Measurement
