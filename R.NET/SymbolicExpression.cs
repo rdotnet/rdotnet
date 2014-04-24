@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Dynamic;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
+using System.Text;
 
 namespace RDotNet
 {
@@ -17,6 +18,14 @@ namespace RDotNet
    {
       private readonly REngine engine;
       private readonly SEXPREC sexp;
+
+      /// <summary>
+      /// An object to use to get a lock on if EnableLock is true;
+      /// </summary>
+      /// <remarks>
+      /// Following recommended practices in http://msdn.microsoft.com/en-us/library/vstudio/c5kehkcz(v=vs.120).aspx
+      /// </remarks>
+      private static readonly Object lockObject = new Object();
 
       private bool isProtected;
 
@@ -227,7 +236,7 @@ namespace RDotNet
          {
             if (Engine.EnableLock)
             {
-               lock (Engine) { this.GetFunction<R_PreserveObject>()(handle); }
+               lock (lockObject) { this.GetFunction<R_PreserveObject>()(handle); }
             }
             else
                this.GetFunction<R_PreserveObject>()(handle);
@@ -245,7 +254,7 @@ namespace RDotNet
          {
             if (Engine.EnableLock)
             {
-               lock (Engine) { this.GetFunction<R_ReleaseObject>()(handle); ; }
+               lock (lockObject) { this.GetFunction<R_ReleaseObject>()(handle); ; }
             }
             else
                this.GetFunction<R_ReleaseObject>()(handle);

@@ -49,14 +49,14 @@ namespace RDotNet
          this.id = id;
          this.isRunning = false;
          this.Disposed = false;
-         this.EnableLock = false;
+         this.EnableLock = true; // See https://rdotnet.codeplex.com/workitem/113; it seems wise to enable it by default.
       }
 
       /// <summary>
       /// Gets/sets whether the call to Preserve and Unpreserve on symbolic expressions 
       /// should be using a lock to prevent thread concurrency issues. Default is false;
       /// </summary>
-      /// <remarks>See https://rdotnet.codeplex.com/workitem/67 for details</remarks>
+      /// <remarks>Thanks to gchapman for proposing the fix. See https://rdotnet.codeplex.com/workitem/67 for details</remarks>
       public bool EnableLock { get; set; }
 
       /// <summary>

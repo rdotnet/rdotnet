@@ -48,8 +48,8 @@ set BuildConfiguration=Debug
 :: Setting the variable named 'Platform' seems to interfere with the nuget pack command, so 
 :: we deliberately set a variable BuildPlatform for use with MSBuild.exe
 set BuildPlatform="Any CPU"
-set Mode=Rebuild
-:: set Mode=Build
+:: set Mode=Rebuild
+set Mode=Build
 
 :: ================== Start build process ========================
 :: EVERYTHING else below this line should use paths relative to the lines above, or environment variables
@@ -75,7 +75,7 @@ set SLN=%rdotnet_dir%RDotNet.Release.sln
 set pack_options=-OutputDirectory %rdotnet_dir%build %common_ng_pack_options%
 if exist %repo_dir%R.NET.1.5.*.nupkg del %repo_dir%R.NET.1.5.*.nupkg  
 %nuget_exe% pack %rdotnet_dir%RDotNet.nuspec %pack_options%
-REM %nuget_exe% pack %rdotnet_dir%RDotNet.FSharp.nuspec %pack_options%
+%nuget_exe% pack %rdotnet_dir%RDotNet.FSharp.nuspec %pack_options%
 :: %repo_dir%RDotNet.FSharp.0.*.nupkg
 xcopy %rdotnet_dir%build\*.nupkg %repo_dir% %COPYOPTIONS%
 goto completed
