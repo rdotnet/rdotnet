@@ -293,7 +293,7 @@ namespace RDotNet.NativeLibrary
       }
 
       /// <summary>
-      /// Is the platform a unix like (Unis or MacOX)
+      /// Is the platform a unix like (Unix or MacOX)
       /// </summary>
       public static bool IsUnix {
          get {

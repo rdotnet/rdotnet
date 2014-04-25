@@ -13,7 +13,6 @@ namespace RDotNet
       public void TestInitParams()
       {
          MockDevice device = new MockDevice();
-         string EngineName = "RDotNet";
          REngine.SetEnvironmentVariables();
          using (var engine = REngine.GetInstance())
          {

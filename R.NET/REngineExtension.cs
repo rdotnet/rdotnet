@@ -245,7 +245,7 @@ namespace RDotNet
       /// <param name="engine">The engine.</param>
       /// <param name="value">The value</param>
       /// <returns>The new vector.</returns>
-      public static CharacterVector CreateCharacterVector(this REngine engine, string value)
+      public static CharacterVector CreateCharacter(this REngine engine, string value)
       {
          return CreateCharacterVector(engine, new[] { value });
       }
@@ -256,7 +256,7 @@ namespace RDotNet
       /// <param name="engine">The engine.</param>
       /// <param name="value">The value</param>
       /// <returns>The new vector.</returns>
-      public static ComplexVector CreateComplexVector(this REngine engine, Complex value)
+      public static ComplexVector CreateComplex(this REngine engine, Complex value)
       {
          return CreateComplexVector(engine, new[] {value});
       }
@@ -267,7 +267,7 @@ namespace RDotNet
       /// <param name="engine">The engine.</param>
       /// <param name="value">The value</param>
       /// <returns>The new vector.</returns>
-      public static LogicalVector CreateLogicalVector(this REngine engine, bool value)
+      public static LogicalVector CreateLogical(this REngine engine, bool value)
       {
          return CreateLogicalVector(engine, new[] {value});
       }
@@ -278,9 +278,20 @@ namespace RDotNet
       /// <param name="engine">The engine.</param>
       /// <param name="value">The value</param>
       /// <returns>The new vector.</returns>
-      public static NumericVector CreateNumericVector(this REngine engine, double value)
+      public static NumericVector CreateNumeric(this REngine engine, double value)
       {
-         return CreateNumericVector(engine, new[] {value});
+         return CreateNumericVector(engine, new[] { value });
+      }
+
+      /// <summary>
+      /// Create an integer vector with a single value
+      /// </summary>
+      /// <param name="engine">The engine.</param>
+      /// <param name="value">The value</param>
+      /// <returns>The new vector.</returns>
+      public static IntegerVector CreateInteger(this REngine engine, int value)
+      {
+         return CreateIntegerVector(engine, new[] { value });
       }
 
       /// <summary>
@@ -289,7 +300,7 @@ namespace RDotNet
       /// <param name="engine">The engine.</param>
       /// <param name="value">The value</param>
       /// <returns>The new vector.</returns>
-      public static RawVector CreateRawVector(this REngine engine, byte value)
+      public static RawVector CreateRaw(this REngine engine, byte value)
       {
          return CreateRawVector(engine, new[] {value});
       }
@@ -547,9 +558,9 @@ namespace RDotNet
          Tuple<string,SymbolicExpression>[] namedColArgs = CreateNamedArgs(colVectors, columnNames);
          var args = new List<Tuple<string,SymbolicExpression>>(namedColArgs);
          if (rowNames != null) args.Add(Tuple.Create("row.names", (SymbolicExpression)engine.CreateCharacterVector(rowNames)));
-         args.Add(Tuple.Create("check.rows", (SymbolicExpression)engine.CreateLogicalVector(checkRows)));
-         args.Add(Tuple.Create("check.names", (SymbolicExpression)engine.CreateLogicalVector(checkNames)));
-         args.Add(Tuple.Create("stringsAsFactors", (SymbolicExpression)engine.CreateLogicalVector(stringsAsFactors)));
+         args.Add(Tuple.Create("check.rows", (SymbolicExpression)engine.CreateLogical(checkRows)));
+         args.Add(Tuple.Create("check.names", (SymbolicExpression)engine.CreateLogical(checkNames)));
+         args.Add(Tuple.Create("stringsAsFactors", (SymbolicExpression)engine.CreateLogical(stringsAsFactors)));
          var result = df.InvokeNamed(args.ToArray()).AsDataFrame();
          return result;
       }
@@ -597,7 +608,6 @@ namespace RDotNet
          throw new NotSupportedException(string.Format("Cannot convert type {0} to an R vector", values.GetType()));
 
       }         
-      
 
       /// <summary>
       /// Creates a new environment.

@@ -240,17 +240,15 @@ g <- function(x, ..., y) {
          var t = value.GetType();
          var engine = this.Engine;
          if (t == typeof(int))
-         {
-            var res = engine.CreateIntegerVector(1);
-            res[0] = (int)value;
-            return res;
-         }
+            return engine.CreateInteger((int)value);
          if (t == typeof(double))
-            return engine.CreateNumericVector((double)value);
+            return engine.CreateNumeric((double)value);
          if (t == typeof(string))
-            return engine.CreateCharacterVector((string)value);
+            return engine.CreateCharacter((string)value);
          if (t == typeof(bool))
-            return engine.CreateLogicalVector((bool)value);
+            return engine.CreateLogical((bool)value);
+         if (t == typeof(byte))
+            return engine.CreateRaw((byte)value);
 
          throw new NotSupportedException();
       }

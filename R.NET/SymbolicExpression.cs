@@ -64,7 +64,7 @@ namespace RDotNet
       /// </summary>
       /// <typeparam name="TDelegate">The type of delegate.</typeparam>
       /// <returns>The delegate.</returns>
-      public TDelegate GetFunction<TDelegate>() where TDelegate : class
+      protected internal TDelegate GetFunction<TDelegate>() where TDelegate : class
       {
          return Engine.GetFunction<TDelegate>();
       }

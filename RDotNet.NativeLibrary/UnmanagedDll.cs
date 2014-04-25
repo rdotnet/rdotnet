@@ -43,13 +43,20 @@ namespace RDotNet.NativeLibrary
          else
             libraryLoader = new WindowsLibraryLoader ();
 
-         IntPtr handle = libraryLoader.LoadLibrary (dllName);
+         IntPtr handle = libraryLoader.LoadLibrary(dllName);
          if (handle == IntPtr.Zero)
          {
             ReportLoadLibError(dllName);
          }
          SetHandle(handle);
+         this.DllFilename = dllName;
       }
+
+      /// <summary>
+      /// Gets the Dll file name used for this native Dll wrapper.
+      /// </summary>
+      public string DllFilename { get; private set; }
+
 
       private void ReportLoadLibError(string dllName)
       {
@@ -69,19 +76,25 @@ namespace RDotNet.NativeLibrary
             // Linux, and perhaps MacOS; the 'file' command seems the way to go.
             // http://stackoverflow.com/questions/5665228/in-linux-determine-if-a-a-library-archive-32-bit-or-64-bit
 
-            dllFullName = FindFullPath(dllName);
-            if (string.IsNullOrEmpty(dllFullName))
-               throw new DllNotFoundException(string.Format("Could not find the library named {0} in the search paths", dllName));
-            else
-               ThrowFailedLibraryLoad(dllFullName);
+            dllFullName = FindFullPath(dllName, throwIfNotFound:true);
+            ThrowFailedLibraryLoad(dllFullName);
          }
       }
 
-      private static string FindFullPath(string dllName)
+      private static string FindFullPath(string dllName, bool throwIfNotFound=false)
       {
          string dllFullName;
+         if (File.Exists(dllName))
+         {
+            dllFullName = Path.GetFullPath(dllName);
+            if (File.Exists(dllFullName))
+               return dllFullName;
+         }
          var searchPaths = (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator);
          dllFullName = searchPaths.Select(directory => Path.Combine(directory, dllName)).FirstOrDefault(File.Exists);
+         if (throwIfNotFound)
+            if (string.IsNullOrEmpty(dllFullName) || !File.Exists(dllFullName))
+               throw new DllNotFoundException(string.Format("Could not find the library named {0} in the search paths", dllName));
          return dllFullName;
       }
 
@@ -91,13 +104,18 @@ namespace RDotNet.NativeLibrary
             return null;
          var sampleldLibPaths = "/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server";
          var ldLibPathEnv = Environment.GetEnvironmentVariable ("LD_LIBRARY_PATH");
-         string msg="";
+         string msg = Environment.NewLine + Environment.NewLine;
          if (string.IsNullOrEmpty(ldLibPathEnv))
-            msg = msg + "The environment variable LD_LIBRARY_PATH is not set";
+            msg = msg + "The environment variable LD_LIBRARY_PATH is not set.";
          else
-            msg = msg + string.Format("The environment variable LD_LIBRARY_PATH is set to {0}", ldLibPathEnv);
+            msg = msg + string.Format("The environment variable LD_LIBRARY_PATH is set to {0}.", ldLibPathEnv);
 
-         msg = msg + string.Format(". For some Unix-like operating systems you may need to set it before launching the application to e.g. {0}", sampleldLibPaths);
+         msg = msg + string.Format(" For some Unix-like operating systems you may need to set it BEFORE launching the application. For instance to {0}.", sampleldLibPaths);
+         msg = msg + " You can get the value as set by the R console application for your system, with the statement Sys.getenv('LD_LIBRARY_PATH'). For instance from your shell prompt:";
+         msg = msg + Environment.NewLine;
+         msg = msg + "export LD_LIBRARY_PATH=`RScript -e \"Sys.getenv('LD_LIBRARY_PATH')\"`";
+         msg = msg + Environment.NewLine + Environment.NewLine;
+         
          return msg;
       }
 
@@ -119,52 +137,45 @@ namespace RDotNet.NativeLibrary
       /// <summary>
       /// Creates the delegate function for the specified function defined in the DLL.
       /// </summary>
-      /// <typeparam name="TDelegate">The type of delegate.</typeparam>
+      /// <typeparam name="TDelegate">The type of delegate. The name of the native function is assumed to be the same as the delegate type name.</typeparam>
       /// <returns>The delegate.</returns>
       public TDelegate GetFunction<TDelegate>()
          where TDelegate : class
       {
-         Type delegateType = typeof(TDelegate);
-         var functionName = delegateType.Name;
-         if (delegateFunctionPointers.ContainsKey(functionName))
-            return (TDelegate)delegateFunctionPointers[functionName];
-         if (!delegateType.IsSubclassOf(typeof(Delegate)))
-         {
-            throw new ArgumentException();
-         }
-         IntPtr function = GetFunctionAddress(functionName);
-         if (function == IntPtr.Zero)
-         {
-            throw new EntryPointNotFoundException();
-         }
-         var dFunc = Marshal.GetDelegateForFunctionPointer(function, delegateType) as TDelegate;
-         delegateFunctionPointers.Add(functionName, dFunc);
-         return dFunc;
+         return GetFunction<TDelegate>(typeof(TDelegate).Name);
       }
 
       /// <summary>
       /// Creates the delegate function for the specified function defined in the DLL.
       /// </summary>
       /// <typeparam name="TDelegate">The type of delegate.</typeparam>
-      /// <param name="entryPoint">The name of function.</param>
+      /// <param name="entryPoint">The name of the function exported by the DLL</param>
       /// <returns>The delegate.</returns>
       public TDelegate GetFunction<TDelegate>(string entryPoint)
          where TDelegate : class
       {
-         if (!typeof(TDelegate).IsSubclassOf(typeof(Delegate)))
+         if (string.IsNullOrEmpty(entryPoint))
+            throw new ArgumentNullException("entryPoint", "Native function name cannot be null or empty");
+         Type delegateType = typeof(TDelegate);
+         if (delegateFunctionPointers.ContainsKey(entryPoint))
+            return (TDelegate)delegateFunctionPointers[entryPoint];
+         if (!delegateType.IsSubclassOf(typeof(Delegate)))
          {
-            throw new ArgumentException();
-         }
-         if (entryPoint == null)
-         {
-            throw new ArgumentNullException("entryPoint");
+            throw new InvalidCastException();
          }
          IntPtr function = GetFunctionAddress(entryPoint);
          if (function == IntPtr.Zero)
          {
-            throw new EntryPointNotFoundException();
+            throwEntryPointNotFound(entryPoint);
          }
-         return Marshal.GetDelegateForFunctionPointer(function, typeof(TDelegate)) as TDelegate;
+         var dFunc = Marshal.GetDelegateForFunctionPointer(function, delegateType) as TDelegate;
+         delegateFunctionPointers.Add(entryPoint, dFunc);
+         return dFunc;
+      }
+
+      private void throwEntryPointNotFound(string entryPoint)
+      {
+         throw new EntryPointNotFoundException(string.Format("Function {0} not found in native library {1}", entryPoint, this.DllFilename));
       }
 
       private bool IsUnix {
