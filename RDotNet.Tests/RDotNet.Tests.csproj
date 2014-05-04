@@ -64,6 +64,7 @@
     <Compile Include="REngineCleanupTest.cs" />
     <Compile Include="REngineTest.cs" />
     <Compile Include="RFunctionsTest.cs" />
+    <Compile Include="UtilityTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\R.NET\RDotNet.csproj">
