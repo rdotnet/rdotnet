@@ -282,6 +282,21 @@ namespace RDotNet
       }
 
       /// <summary>
+      /// Gets the value of a a global variable in native memory, of type int or compatible (e.g. uintptr_t)
+      /// </summary>
+      /// <param name="varname">variable name</param>
+      /// <example>
+      /// <code>
+      /// int stackLimit = GetDangerousInt32 ("R_CStackLimit")
+      /// </code></example>
+      /// <returns>The value, as read by Marshal.ReadInt32</returns>
+      internal int GetDangerousInt32(string varname)
+      {
+         var addr = this.DangerousGetHandle(varname);
+         return System.Runtime.InteropServices.Marshal.ReadInt32(addr);
+      }
+
+      /// <summary>
       /// Gets the value of a character string
       /// </summary>
       /// <param name="varname">The variable name exported by the R dynamic library, e.g. R_ParseErrorMsg</param>
@@ -311,15 +326,6 @@ namespace RDotNet
             return;
          }
 
-
-         switch (NativeUtility.GetPlatform())
-         {
-            case PlatformID.MacOSX:
-            case PlatformID.Unix:
-               SetDangerousInt32("R_SignalHandlers", 0); // RInside does that for non WIN32
-               SetDangerousInt32("R_CStackLimit", -1); // Don't do any stack checking, see R Exts, '8.1.5 Threading issues'
-               break;
-         }
          string[] R_argv = BuildRArgv(this.parameter);
          //string[] R_argv = new[]{"rdotnet_app",  "--interactive",  "--no-save",  "--no-restore-data",  "--max-ppsize=50000"};
          //rdotnet_app --quiet --interactive --no-save --no-restore-data --max-mem-size=18446744073709551615 --max-ppsize=50000  
@@ -356,6 +362,19 @@ namespace RDotNet
                break;
          }
          GetFunction<setup_Rmainloop>()();
+
+         // Don't do any stack checking, see R Exts, '8.1.5 Threading issues', 
+         // https://rdotnet.codeplex.com/discussions/462947
+         // https://rdotnet.codeplex.com/workitem/115
+         SetDangerousInt32("R_CStackLimit", -1); 
+         switch (NativeUtility.GetPlatform())
+         {
+            case PlatformID.MacOSX:
+            case PlatformID.Unix:
+               SetDangerousInt32("R_SignalHandlers", 0); // RInside does this for non-WIN32. 
+               break;
+         }
+
          this.isRunning = true;
 
          // Partial Workaround (hopefully temporary) for https://rdotnet.codeplex.com/workitem/110
