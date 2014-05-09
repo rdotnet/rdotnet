@@ -22,7 +22,7 @@ namespace RDotNet
                MaxMemorySize = maxMemSize,
             };
             engine.Initialize(parameter: parameter, device: device);
-            Assert.That(engine.Evaluate("memory.limit()").AsNumeric()[0], Is.LessThan(128)); // returns 122 using command line R.exe
+            Assert.AreEqual(engine.Evaluate("memory.limit()").AsNumeric()[0], 128.0);
          }
       }
 

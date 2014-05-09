@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Numerics;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace RDotNet
 {
@@ -78,8 +75,8 @@ namespace RDotNet
 
       internal static double[] SerializeComplexToDouble(Complex[] values)
       {
-         double[] data = new double[2 * values.Length];
-         for (int i = 0; i < data.Length; i++)
+         var data = new double[2 * values.Length];
+         for (int i = 0; i < values.Length; i++)
          {
             data[2 * i] = values[i].Real;
             data[2 * i + 1] = values[i].Imaginary;
