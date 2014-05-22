@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata>
-      <id>R.NET</id>
-      <version>1.5.12</version>
+      <id>R.NET.Community</id>
+      <version>1.5.13</version>
       <title>R.NET</title>
       <authors>RecycleBin, jperraud</authors>
       <owners>kos59125</owners>
@@ -11,7 +11,7 @@
       <requireLicenseAcceptance>true</requireLicenseAcceptance>
       <description>Library for in-process interoperability of the .NET Framework with the R statistical computing software. This requires the R binaries, which are available at http://www.r-project.org</description>
       <summary>Library for interoperability of the .NET Framework with the R statistical computing software</summary>
-      <copyright>Copyright 2014 RecycleBin</copyright>
+      <copyright>Copyright 2014 RecycleBin, Copyright 2014 CSIRO</copyright>
       <references>
          <reference file="RDotNet.dll" />
          <reference file="RDotNet.NativeLibrary.dll" />
