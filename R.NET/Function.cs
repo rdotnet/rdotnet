@@ -86,13 +86,13 @@ namespace RDotNet
       // http://msdn.microsoft.com/en-us/magazine/dd419661.aspx
       [HandleProcessCorruptedStateExceptions]
       [SecurityCritical]
-      private IntPtr evaluateCall(IntPtr call)
+      private ProtectedPointer evaluateCall(IntPtr call)
       {
-         IntPtr result;
+         ProtectedPointer result;
          bool errorOccurred = false;
          try
          {
-            result = Engine.GetFunction<R_tryEval>()(call, Engine.GlobalEnvironment.DangerousGetHandle(), out errorOccurred);
+            result = new ProtectedPointer(Engine, Engine.GetFunction<R_tryEval>()(call, Engine.GlobalEnvironment.DangerousGetHandle(), out errorOccurred));
          }
          catch (Exception ex) // TODO: this is usually dubious to catch all that, but given the inner exception is preserved
          {
@@ -115,10 +115,12 @@ namespace RDotNet
          {
             argument = this.GetFunction<Rf_cons>()(arg.DangerousGetHandle(), argument);
          }
-         IntPtr call = this.GetFunction<Rf_lcons>()(handle, argument);
+         using (var call = new ProtectedPointer(Engine, this.GetFunction<Rf_lcons>()(handle, argument)))
+         {
+            var result = evaluateCall(call);
+            return new SymbolicExpression(Engine, result);
+         }
 
-         IntPtr result = evaluateCall(call);
-         return new SymbolicExpression(Engine, result);
       }
 
 
