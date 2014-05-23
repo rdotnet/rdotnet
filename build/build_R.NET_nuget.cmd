@@ -1,4 +1,8 @@
-f:
+@echo off
+
+:: Use the %0 variable modifier to change to the same logical drive as this
+:: batch file
+%~d0
 
 set MSB=%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe
 if not exist %MSB% goto MSBuild_not_found
@@ -6,6 +10,7 @@ if not exist %MSB% goto MSBuild_not_found
 :: ======= NuGet settings
 :: Get the nuget tools from nuget.org. There is also one coming with the NuGet plug-on from Visual Studio.
 set nuget_exe=f:\bin\NuGet.exe
+if not exist %nuget_exe% set nuget_exe=c:\bin\nuget.exe
 if not exist %nuget_exe% goto Nuget_not_found
 
 :: Section on NuGet.config for nuget update (NOT YET USED - CAME ACCROSS ISSUE WITH NUGET 2.8)
@@ -42,8 +47,8 @@ set rdotnet_dir=%~d0%~p0..\
 set COPYOPTIONS=/Y /R /D
 
 :: ================== code compilation settings
-set BuildConfiguration=Release
-set BuildConfiguration=Debug
+if not "%BuildConfiguration%"=="Release" if not "%BuildConfiguration%"=="Debug" set BuildConfiguration=Release
+
 
 :: Setting the variable named 'Platform' seems to interfere with the nuget pack command, so 
 :: we deliberately set a variable BuildPlatform for use with MSBuild.exe
@@ -82,14 +87,17 @@ goto completed
 
 :MSBuild_not_found
 echo "ERROR: MSBuild.exe not found at the location given"
+pause
 exit 1
 
 :Nuget_not_found
 echo "ERROR: NuGet.exe not found at the location given"
+pause
 exit 1
 
 :Nuget_config_not_found
 echo "ERROR: NuGet.config not found at the location given"
+pause
 exit 1
 
 :completed
