@@ -9,7 +9,7 @@
       <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
       <projectUrl>http://rdotnet.codeplex.com/</projectUrl>
       <requireLicenseAcceptance>true</requireLicenseAcceptance>
-      <description>Library for in-process interoperability of the .NET Framework with the R statistical computing software. This requires the R binaries, which are available at http://www.r-project.org</description>
+      <description>Library for in-process interoperability of the .NET Framework with the R statistical computing software. This requires the R binaries, which are available at http://www.r-project.org. This nuget package is a newer version of R.NET previously found at https://www.nuget.org/packages/R.NET. For logistical reasons, the previous nuget feed cannot be used yet.</description>
       <summary>Library for interoperability of the .NET Framework with the R statistical computing software</summary>
       <copyright>Copyright 2014 RecycleBin, Copyright 2014 CSIRO</copyright>
       <references>
