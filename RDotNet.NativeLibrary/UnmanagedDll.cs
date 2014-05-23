@@ -113,7 +113,9 @@ namespace RDotNet.NativeLibrary
          msg = msg + string.Format(" For some Unix-like operating systems you may need to set it BEFORE launching the application. For instance to {0}.", sampleldLibPaths);
          msg = msg + " You can get the value as set by the R console application for your system, with the statement Sys.getenv('LD_LIBRARY_PATH'). For instance from your shell prompt:";
          msg = msg + Environment.NewLine;
-         msg = msg + "export LD_LIBRARY_PATH=`RScript -e \"Sys.getenv('LD_LIBRARY_PATH')\"`";
+         msg = msg + "Rscript -e \"Sys.getenv('LD_LIBRARY_PATH')\"";
+         msg = msg + Environment.NewLine;
+         msg = msg + "export LD_LIBRARY_PATH=/usr/the/paths/you/just/got/from/Rscript";
          msg = msg + Environment.NewLine + Environment.NewLine;
          
          return msg;
