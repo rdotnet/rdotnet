@@ -19,7 +19,8 @@ namespace MeasureRuntime
             new StartupParameter() { MaxMemorySize = ulong.Parse(args[0]) * (1024 * 1024) } :
             new StartupParameter() { };
          uint maxPowTwo = args.Length > 1 ? uint.Parse(args[1]) : 24;
-         string outputfile = args.Length > 2 ? args[2] : "c:/tmp/runtimes.csv";
+         string outputfile = args.Length > 2 ? args[2] : 
+            (RDotNet.NativeLibrary.NativeUtility.IsUnix ? "~/tmp/rdotnetruntimes.csv" : "c:/tmp/runtimes.csv");
 
          using (var engine = REngine.GetInstance(device: device, parameter: parameter))
          {
@@ -47,6 +48,7 @@ namespace MeasureRuntime
             funMap = RuntimeDiagnostics.GetVectorRetrievalFunctions();
             measures.AddRange(r.DoMeasures(funMap, what: "vector", operation: "R->.NET", tag: ""));
 
+            Console.WriteLine("Writing results to {0}", outputfile);
             engine.SetSymbol("runtimes", r.CollateResults(measures));
             engine.Evaluate(string.Format("write.table(runtimes, '{0}', row.names=FALSE, col.names=TRUE, quote=FALSE, sep = ',')", outputfile));
 
