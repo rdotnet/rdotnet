@@ -99,7 +99,7 @@ namespace RDotNet
       }
 
       /// <summary>
-      /// Converts the specified expression to a DataFrame.
+      /// Coerce the specified expression to an S4 object.
       /// </summary>
       /// <param name="expression">The expression.</param>
       /// <returns>The DataFrame. Returns <c>null</c> if the specified expression is not vector.</returns>
