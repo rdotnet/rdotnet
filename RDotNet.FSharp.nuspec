@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata>
       <id>R.NET.Community.FSharp</id>
-      <version>0.1.6</version>
+      <version>0.1.7</version>
       <title>R.NET F# Utility</title>
       <authors>RecycleBin</authors>
       <owners>kos59125</owners>
@@ -16,7 +16,7 @@
          <reference file="RDotNet.FSharp.dll" />
       </references>
       <dependencies>
-         <dependency id="R.NET.Community" version="1.5.13" />
+         <dependency id="R.NET.Community" version="1.5.14" />
       </dependencies>
       <tags>R R.NET F# statistics</tags>
    </metadata>
