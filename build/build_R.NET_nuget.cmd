@@ -79,7 +79,9 @@ set SLN=%rdotnet_dir%RDotNet.Release.sln
 
 set pack_options=-OutputDirectory %rdotnet_dir%build %common_ng_pack_options%
 if exist %repo_dir%R.NET.1.5.*.nupkg del %repo_dir%R.NET.1.5.*.nupkg  
-%nuget_exe% pack %rdotnet_dir%RDotNet.nuspec %pack_options%
+if "%BuildConfiguration%"=="Release" set nuspec_file=RDotNet.nuspec
+if "%BuildConfiguration%"=="Debug" set nuspec_file=RDotNet_debug.nuspec
+%nuget_exe% pack %rdotnet_dir%%nuspec_file% %pack_options%
 %nuget_exe% pack %rdotnet_dir%RDotNet.FSharp.nuspec %pack_options%
 :: %repo_dir%RDotNet.FSharp.0.*.nupkg
 xcopy %rdotnet_dir%build\*.nupkg %repo_dir% %COPYOPTIONS%
