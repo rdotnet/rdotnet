@@ -396,6 +396,7 @@ namespace RDotNet
       /// after much trial and error.</remarks>
       public static string[] BuildRArgv(StartupParameter parameter)
       {
+         var platform = NativeUtility.GetPlatform();
          var argv = new List<string>();
          argv.Add("rdotnet_app");
          // Not sure whether I should add no-readline
@@ -409,7 +410,7 @@ namespace RDotNet
 
          //[MarshalAs(UnmanagedType.Bool)]
          //public bool R_Interactive;
-         if (NativeUtility.GetPlatform() != PlatformID.Win32NT) // RTerm.exe --help shows no such option; Unix only.
+         if (platform != PlatformID.Win32NT) // RTerm.exe --help shows no such option; Unix only.
             if (parameter.Interactive) argv.Add("--interactive");
 
          //[MarshalAs(UnmanagedType.Bool)]
@@ -466,7 +467,8 @@ namespace RDotNet
          }
          else
          {
-            argv.Add("--max-mem-size=" + parameter.MaxMemorySize);
+            if (platform == PlatformID.Win32NT) // On unix, otherwise led to https://rdotnet.codeplex.com/workitem/137
+               argv.Add("--max-mem-size=" + parameter.MaxMemorySize);
          }
          argv.Add("--max-ppsize=" + parameter.StackSize);
          return argv.ToArray();
