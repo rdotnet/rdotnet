@@ -320,6 +320,12 @@ namespace RDotNet
             return;
          this.parameter = parameter ?? new StartupParameter();
          this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
+         // Disabling the stack checking here, to try to avoid the issue on Linux. 
+         // The disabling used to be here around end Nov 2013. Was moved later in this 
+         // function to cater for disabling on Windows, @ rev 305, however this may have 
+         // re-broken on Linux. so we may need to call it twice.    
+         SetCstackChecking();
+        
          if (!setupMainLoop)
          {
             this.isRunning = true;
@@ -362,19 +368,8 @@ namespace RDotNet
                break;
          }
          GetFunction<setup_Rmainloop>()();
-
-         // Don't do any stack checking, see R Exts, '8.1.5 Threading issues', 
-         // https://rdotnet.codeplex.com/discussions/462947
-         // https://rdotnet.codeplex.com/workitem/115
-         SetDangerousInt32("R_CStackLimit", -1); 
-         switch (NativeUtility.GetPlatform())
-         {
-            case PlatformID.MacOSX:
-            case PlatformID.Unix:
-               SetDangerousInt32("R_SignalHandlers", 0); // RInside does this for non-WIN32. 
-               break;
-         }
-
+         // See comments in the first call to SetCstackChecking in this function as to why we (may) need it twice.
+         SetCstackChecking();
          this.isRunning = true;
 
          // Partial Workaround (hopefully temporary) for https://rdotnet.codeplex.com/workitem/110
@@ -383,6 +378,22 @@ namespace RDotNet
             Evaluate( string.Format( "memory.limit({0})", (this.parameter.MaxMemorySize / 1048576UL)));
          }
 
+      }
+
+      void SetCstackChecking()
+      {
+         // Don't do any stack checking, see R Exts, '8.1.5 Threading issues', 
+         // https://rdotnet.codeplex.com/discussions/462947
+         // https://rdotnet.codeplex.com/workitem/115
+         SetDangerousInt32("R_CStackLimit", -1);
+         switch (NativeUtility.GetPlatform())
+         {
+         case PlatformID.MacOSX:
+         case PlatformID.Unix:
+            SetDangerousInt32("R_SignalHandlers", 0);
+            // RInside does this for non-WIN32. 
+            break;
+         }
       }
 
       /// <summary>
