@@ -37,6 +37,8 @@ namespace RDotNet
       private CharacterDeviceAdapter adapter;
       private bool isRunning;
       private StartupParameter parameter;
+      private static bool environmentIsSet = false;
+      private static REngine engine = null;
 
       /// <summary>
       /// Create a new REngine instance
@@ -161,9 +163,6 @@ namespace RDotNet
             return GetPredefinedSymbol("R_UnboundValue");
          }
       }
-
-      private static bool environmentIsSet = false;
-      private static REngine engine = null;
 
       /// <summary>
       /// Gets the name of the R engine instance (singleton).
@@ -316,8 +315,10 @@ namespace RDotNet
       /// <param name="setupMainLoop">if true, call the functions to initialise the embedded R</param>
       public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null, bool setupMainLoop = true)
       {
+//         Console.WriteLine("REngine.Initialize start");
          if (this.isRunning)
             return;
+//         Console.WriteLine("REngine.Initialize, after isRunning checked as false");
          this.parameter = parameter ?? new StartupParameter();
          this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
          // Disabling the stack checking here, to try to avoid the issue on Linux. 
@@ -325,7 +326,8 @@ namespace RDotNet
          // function to cater for disabling on Windows, @ rev 305, however this may have 
          // re-broken on Linux. so we may need to call it twice.    
          SetCstackChecking();
-        
+//         Console.WriteLine("Initialize-SetCstackChecking; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
+
          if (!setupMainLoop)
          {
             this.isRunning = true;
@@ -337,6 +339,7 @@ namespace RDotNet
          //rdotnet_app --quiet --interactive --no-save --no-restore-data --max-mem-size=18446744073709551615 --max-ppsize=50000  
          GetFunction<R_setStartTime>()();
          int R_argc = R_argv.Length;
+//         Console.WriteLine("Initialize-R_setStartTime; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
 
          if (NativeUtility.GetPlatform() == PlatformID.Win32NT)
          {
@@ -351,11 +354,14 @@ namespace RDotNet
          var status = GetFunction<Rf_initialize_R>()(R_argc, R_argv);
          if (status != 0)
             throw new Exception("A call to Rf_initialize_R returned a non-zero; status=" + status);
+//         Console.WriteLine("Initialize-Rf_initialize_R; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
+         SetCstackChecking();
 
          // following in RInside: may not be needed.
          //GetFunction<R_ReplDLLinit> () ();
          //this.parameter.Interactive = true; 
          this.adapter.Install(this, this.parameter);
+         //Console.WriteLine("Initialize-adapter installation; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
          switch (NativeUtility.GetPlatform())
          {
             case PlatformID.Win32NT:
@@ -365,12 +371,17 @@ namespace RDotNet
             case PlatformID.MacOSX:
             case PlatformID.Unix:
                GetFunction<R_SetParams_Unix>("R_SetParams")(ref this.parameter.start.Common);
+               //Console.WriteLine("Initialize-R_SetParams_Unix; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
                break;
          }
          GetFunction<setup_Rmainloop>()();
+         //Console.WriteLine("Initialize-after setup_Rmainloop; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
+        
          // See comments in the first call to SetCstackChecking in this function as to why we (may) need it twice.
          SetCstackChecking();
          this.isRunning = true;
+
+         //Console.WriteLine("Initialize-just before leaving; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
 
          // Partial Workaround (hopefully temporary) for https://rdotnet.codeplex.com/workitem/110
          if (NativeUtility.GetPlatform() == PlatformID.Win32NT)
@@ -791,6 +802,7 @@ namespace RDotNet
 
          if (disposing && this.adapter != null)
          {
+//            Console.WriteLine("Disposing of an existing console adapter");
             this.adapter.Dispose();
             this.adapter = null;
          }
