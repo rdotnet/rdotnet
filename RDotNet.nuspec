@@ -3,8 +3,8 @@
   <metadata>
     <id>R.NET.Community</id>
     <title>R.NET</title>
-    <version>1.5.16</version>
-    <releaseNotes>FIX: Disables the C Stack checking in R, necessary to run R.NET on *nix platforms. A previous fix for Windows unfortunately also broke the library for Linux.</releaseNotes>
+    <version>1.5.17</version>
+    <releaseNotes>Under development</releaseNotes>
     <authors>RecycleBin, jperraud</authors>
     <owners>kos59125</owners>
     <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>

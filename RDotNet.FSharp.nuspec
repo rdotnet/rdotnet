@@ -3,8 +3,8 @@
   <metadata>
     <id>R.NET.Community.FSharp</id>
     <title>R.NET F# Utility</title>
-    <version>0.1.9</version>
-    <releaseNotes>Update to R.NET.Community 1.5.16, which disables the C Stack checking in R, necessary to run R.NET on *nix platforms</releaseNotes>
+    <version>0.1.10</version>
+    <releaseNotes>Under development</releaseNotes>
     <authors>RecycleBin</authors>
     <owners>kos59125</owners>
     <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
@@ -17,7 +17,7 @@
       <reference file="RDotNet.FSharp.dll" />
     </references>
     <dependencies>
-      <dependency id="R.NET.Community" version="1.5.16" />
+      <dependency id="R.NET.Community" version="1.5.17" />
     </dependencies>
     <tags>R R.NET F# statistics</tags>
   </metadata>

@@ -1,6 +1,7 @@
 ﻿using RDotNet.Devices;
 using RDotNet.Internals;
 using RDotNet.NativeLibrary;
+using RDotNet.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -758,7 +759,7 @@ namespace RDotNet
       public void SetCommandLineArguments(string[] args)
       {
          CheckEngineIsRunning();
-         var newArgs = Utility.AddFirst(ID, args);
+         var newArgs = ArrayConverter.Prepend(ID, args);
          GetFunction<R_set_command_line_arguments>()(newArgs.Length, newArgs);
       }
 
