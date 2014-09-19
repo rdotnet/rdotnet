@@ -115,7 +115,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="REngine.cs" />
     <Compile Include="SymbolicExpressionExtension.cs" />
-    <Compile Include="Utility.cs" />
+    <Compile Include="Utilities\ArrayConverter.cs" />
+    <Compile Include="Utilities\REngineExtensionsAdvanced.cs" />
+    <Compile Include="Utilities\RTypesUtil.cs" />
     <Compile Include="Vector.cs" />
     <Compile Include="LogicalVector.cs" />
     <Compile Include="CharacterVector.cs" />
