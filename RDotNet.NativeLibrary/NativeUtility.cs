@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using Microsoft.Win32;
 
 namespace RDotNet.NativeLibrary
@@ -24,46 +23,55 @@ namespace RDotNet.NativeLibrary
       /// <returns>The current platform.</returns>
       public static PlatformID GetPlatform()
       {
-         if (!curPlatform.HasValue) {
-            var platform = Environment.OSVersion.Platform;
-            if (platform != PlatformID.Unix) {
-               curPlatform = platform;
-            } else {
-               try {
-                  var kernelName = ExecCommand("uname", "-s");
-                  curPlatform = (kernelName == "Darwin" ? PlatformID.MacOSX : platform);
-               } catch (Win32Exception) { // probably no PATH to uname.
+          if (!curPlatform.HasValue)
+          {
+              var platform = Environment.OSVersion.Platform;
+              if (platform != PlatformID.Unix)
+              {
                   curPlatform = platform;
-               }
-            }
-         }
-         return curPlatform.Value;
+              }
+              else
+              {
+                  try
+                  {
+                      var kernelName = ExecCommand("uname", "-s");
+                      curPlatform = (kernelName == "Darwin" ? PlatformID.MacOSX : platform);
+                  }
+                  catch (Win32Exception)
+                  {
+                      // probably no PATH to uname.
+                      curPlatform = platform;
+                  }
+              }
+          }
+          return curPlatform.Value;
       }
 
-      private static PlatformID? curPlatform = null;
+      private static PlatformID? curPlatform;
 
-      /// <summary>
-      /// Execute a command in a new process
-      /// </summary>
-      /// <param name="processName">Process name e.g. "uname"</param>
-      /// <param name="arguments">Arguments e.g. "-s"</param>
-      /// <returns>The output of the command to the standard output stream</returns>
-      public static string ExecCommand(string processName, string arguments)
-      {
-         using (var uname = new Process()) {
-            uname.StartInfo.FileName = processName;
-            uname.StartInfo.Arguments = arguments;
-            uname.StartInfo.RedirectStandardOutput = true;
-            uname.StartInfo.UseShellExecute = false;
-            uname.StartInfo.CreateNoWindow = true;
-            uname.Start();
-            var kernelName = uname.StandardOutput.ReadLine();
-            uname.WaitForExit();
-            return kernelName;
-         }
-      }
+       /// <summary>
+       /// Execute a command in a new process
+       /// </summary>
+       /// <param name="processName">Process name e.g. "uname"</param>
+       /// <param name="arguments">Arguments e.g. "-s"</param>
+       /// <returns>The output of the command to the standard output stream</returns>
+       public static string ExecCommand(string processName, string arguments)
+       {
+           using (var uname = new Process())
+           {
+               uname.StartInfo.FileName = processName;
+               uname.StartInfo.Arguments = arguments;
+               uname.StartInfo.RedirectStandardOutput = true;
+               uname.StartInfo.UseShellExecute = false;
+               uname.StartInfo.CreateNoWindow = true;
+               uname.Start();
+               var kernelName = uname.StandardOutput.ReadLine();
+               uname.WaitForExit();
+               return kernelName;
+           }
+       }
 
-      /// <summary>
+       /// <summary>
       /// Sets the PATH and R_HOME environment variables if needed.
       /// </summary>
       /// <param name="rPath">The path of the directory containing the R native library. 
@@ -73,47 +81,25 @@ namespace RDotNet.NativeLibrary
       /// <remarks>
       /// This function has been designed to limit the tedium for users, while allowing custom settings for unusual installations.
       /// </remarks>
-      public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
+      public static void SetEnvironmentVariables(string rHome = null)
       {
          var platform = GetPlatform();
-         if (rPath != null)
-            CheckDirExists(rPath);
-         if (rHome != null)
-            CheckDirExists(rHome);
 
-         if (rPath == null)
-            rPath = FindRPath();
-         SetenvPrependToPath(rPath);
+          if (string.IsNullOrEmpty(rHome))
+          {
+              rHome = GetRHomeEnvironmentVariable();
 
-         if (string.IsNullOrEmpty(rHome))
-            rHome = GetRHomeEnvironmentVariable();
-         if (string.IsNullOrEmpty(rHome)) {
-            // R_HOME is neither specified by the user nor as an environmental variable. Rely on default locations specific to platforms
-            rHome = FindRHome(rPath);
-         }
-         if (string.IsNullOrEmpty(rHome))
-            throw new NotSupportedException("R_HOME was not provided and could not be found by R.NET");
-         else
-         {
-            // It is highly recommended to use the 8.3 short path format on windows. 
-            // See the manual page of R.home function in R. Solves at least the issue R.NET 97.
-            if (platform == PlatformID.Win32NT)
-               rHome = WindowsLibraryLoader.GetShortPath(rHome);
-            if (!Directory.Exists(rHome))
-               throw new DirectoryNotFoundException("Directory for R_HOME does not exist");
-            Environment.SetEnvironmentVariable("R_HOME", rHome);
-         }
-         if (platform == PlatformID.Unix) {
-            // Let's check that LD_LIBRARY_PATH is set if this is a custom installation of R.
-            // Normally in an R session from a custom build/install we get something typically like:
-            // > Sys.getenv('LD_LIBRARY_PATH')
-            // [1] "/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server"
-            // The R script sets LD_LIBRARY_PATH before it starts the native executable under e.g. /usr/local/lib/R/bin/exec/R
-            // This would be useless to set LD_LIBRARY_PATH in the current function:
-            // it must be set as en env var BEFORE the process is started (see man page for dlopen)
-            // so all we can do is an intelligible error message for the user, explaining he needs to set the LD_LIBRARY_PATH env variable 
-            // Let's delay the notification about a missing LD_LIBRARY_PATH till loading libR.so fails, if it does.
-         }
+              // It is highly recommended to use the 8.3 short path format on windows. 
+              // See the manual page of R.home function in R. Solves at least the issue R.NET 97.
+              if (platform == PlatformID.Win32NT)
+                  rHome = WindowsLibraryLoader.GetShortPath(rHome);
+          }
+
+
+          CheckDirExists(rHome);
+          CheckDirExists(rPath);
+          Environment.SetEnvironmentVariable(rPath, PrependToPath(rPath, envVarName));
+          Environment.SetEnvironmentVariable("R_HOME", rHome);
       }
 
       /// <summary>
@@ -206,10 +192,6 @@ namespace RDotNet.NativeLibrary
          }
       }
 
-      private static void SetenvPrependToPath(string rPath, string envVarName="PATH")
-      {
-         Environment.SetEnvironmentVariable(envVarName, PrependToPath(rPath, envVarName));
-      }
 
       private static string PrependToPath(string rPath, string envVarName = "PATH")
       {
