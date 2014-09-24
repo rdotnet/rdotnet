@@ -162,8 +162,8 @@ namespace RDotNet
          }
       }
 
-      private static bool environmentIsSet = false;
-      private static REngine engine = null;
+      private static bool environmentIsSet;
+      private static REngine _engine;
 
       /// <summary>
       /// Gets the name of the R engine instance (singleton).
@@ -199,15 +199,17 @@ namespace RDotNet
       {
          if (!environmentIsSet) // should there be a warning? and how?
             SetEnvironmentVariables();
-         if (engine == null)
+         if (_engine == null)
          {
-            engine = CreateInstance(EngineName, dll);
-            if (initialize)
-               engine.Initialize(parameter, device);
+            _engine = CreateInstance(EngineName, dll);
+             if (initialize)
+             {
+                 _engine.Initialize(parameter, device);
+             }
          }
-         if (engine.Disposed)
-            throw new Exception("The single REngine instance has already been disposed of (i.e. shut down). Multiple engine restart is not possible.");
-         return engine;
+         if (_engine.Disposed)
+            throw new InvalidOperationException("The single REngine instance has already been disposed of (i.e. shut down). Multiple engine restart is not possible.");
+         return _engine;
       }
 
       /// <summary>
@@ -226,13 +228,8 @@ namespace RDotNet
          {
             throw new ArgumentException("Empty ID is not allowed.", "id");
          }
-         //if (instances.ContainsKey(id))
-         //{
-         //   throw new ArgumentException();
-         //}
          dll = ProcessRDllFileName(dll);
          var engine = new REngine(id, dll);
-         //instances.Add(id, engine);
          return engine;
       }
 
@@ -243,27 +240,22 @@ namespace RDotNet
       /// <returns>A candidate for the file name of the R shared library</returns>
       protected static string ProcessRDllFileName(string dll)
       {
-         if (string.IsNullOrEmpty(dll))
-         {
-            dll = NativeUtility.GetRDllFileName();
-         }
-         return dll;
+          if (!string.IsNullOrEmpty(dll)) return dll;
+          return NativeUtility.GetRLibraryFileName();
       }
 
       /// <summary>
       /// Perform the necessary setup for the PATH and R_HOME environment variables.
       /// </summary>
-      /// <param name="rPath">The path of the directory containing the R native library. 
-      /// If null (default), this function tries to locate the path via the Windows registry, or commonly used locations on MacOS and Linux</param>
       /// <param name="rHome">The path for R_HOME. If null (default), the function checks the R_HOME environment variable. If none is set, 
       /// the function uses platform specific sensible default behaviors.</param>
       /// <remarks>
       /// This function has been designed to limit the tedium for users, while allowing custom settings for unusual installations.
       /// </remarks>
-      public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
+      public static void SetEnvironmentVariables(string rHome = null)
       {
          environmentIsSet = true;
-         NativeUtility.SetEnvironmentVariables(rPath: rPath, rHome: rHome);
+         NativeUtility.SetEnvironmentVariables(rHome);
       }
 
       /// <summary>
@@ -776,13 +768,6 @@ namespace RDotNet
             Disposed = true;
          }
 
-         if (disposing && this.adapter != null)
-         {
-            this.adapter.Dispose();
-            this.adapter = null;
-         }
-         if (Disposed)
-            return;
          GC.KeepAlive(this.parameter);
          base.Dispose(disposing);
       }
