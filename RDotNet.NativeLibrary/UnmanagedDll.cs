@@ -13,46 +13,46 @@ namespace RDotNet.NativeLibrary
    [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
    public class UnmanagedDll : SafeHandle
    {
-      /// <summary>
+       private readonly IDynamicLibraryLoader _libraryLoader;
+
+       /// <summary>
       /// Gets whether the current handle is equal to the invalid handle
       /// </summary>
       public override bool IsInvalid
       {
          get { return handle == IntPtr.Zero; }
       }
+       /// <summary>
+       /// Creates a proxy for the specified dll.
+       /// </summary>
+       /// <param name="dllName">The DLL's name.</param>
+       public UnmanagedDll(string dllName)
+           : base(IntPtr.Zero, true)
+       {
+           if (dllName == null)
+           {
+               throw new ArgumentNullException("dllName", "The name of the library to load is a null reference");
+           }
+           if (dllName == string.Empty)
+           {
+               throw new ArgumentException("The name of the library to load is an empty string", "dllName");
+           }
 
-      private IDynamicLibraryLoader libraryLoader;
+           if (NativeUtility.IsUnix)
+               _libraryLoader = new UnixLibraryLoader();
+           else
+               _libraryLoader = new WindowsLibraryLoader();
 
-      /// <summary>
-      /// Creates a proxy for the specified dll.
-      /// </summary>
-      /// <param name="dllName">The DLL's name.</param>
-      public UnmanagedDll(string dllName)
-         : base(IntPtr.Zero, true)
-      {
-         if (dllName == null)
-         {
-            throw new ArgumentNullException("dllName", "The name of the library to load is a null reference");
-         }
-         if (dllName == string.Empty)
-         {
-            throw new ArgumentException("The name of the library to load is an empty string", "dllName");
-         }
-         if (IsUnix)
-            libraryLoader = new UnixLibraryLoader();
-         else
-            libraryLoader = new WindowsLibraryLoader ();
+           IntPtr handle = _libraryLoader.LoadLibrary(dllName);
+           if (handle == IntPtr.Zero)
+           {
+               ReportLoadLibError(dllName);
+           }
+           SetHandle(handle);
+           DllFilename = dllName;
+       }
 
-         IntPtr handle = libraryLoader.LoadLibrary(dllName);
-         if (handle == IntPtr.Zero)
-         {
-            ReportLoadLibError(dllName);
-         }
-         SetHandle(handle);
-         this.DllFilename = dllName;
-      }
-
-      /// <summary>
+       /// <summary>
       /// Gets the Dll file name used for this native Dll wrapper.
       /// </summary>
       public string DllFilename { get; private set; }
@@ -123,7 +123,7 @@ namespace RDotNet.NativeLibrary
       {
          var strMsg = string.Format("This {0}-bit process failed to load the library {1}",
                                     (Environment.Is64BitProcess ? "64" : "32"), dllFullName);
-         var nativeError = libraryLoader.GetLastError();
+         var nativeError = _libraryLoader.GetLastError();
          if (!string.IsNullOrEmpty(nativeError))
             strMsg = strMsg + string.Format(". Native error message is '{0}'", nativeError);
          var ldLibPathMsg = createLdLibPathMsg();
@@ -178,19 +178,15 @@ namespace RDotNet.NativeLibrary
          throw new EntryPointNotFoundException(string.Format("Function {0} not found in native library {1}", entryPoint, this.DllFilename));
       }
 
-      private bool IsUnix {
-         get { return NativeUtility.IsUnix; }
-      }
-
       private IntPtr GetFunctionAddress(string lpProcName)
       {
-         return libraryLoader.GetFunctionAddress(handle, lpProcName);
+         return _libraryLoader.GetFunctionAddress(handle, lpProcName);
       }
 
       private bool FreeLibrary()
       {
          bool freed = false;
-         if (libraryLoader == null)
+         if (_libraryLoader == null)
          {
             if (!this.IsInvalid)
             {
@@ -208,7 +204,7 @@ namespace RDotNet.NativeLibrary
             return freed;
          }
          else
-            return libraryLoader.FreeLibrary(handle);
+            return _libraryLoader.FreeLibrary(handle);
       }
 
       /// <summary>
