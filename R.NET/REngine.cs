@@ -690,6 +690,11 @@ namespace RDotNet
                      {
                         throw new EvaluationException(LastErrorMessage);
                      }
+
+                      if (!result.IsInvalid && GetVisible())
+                     {
+                         GetFunction<Rf_PrintValue>()(result.DangerousGetHandle());
+                     }
                      return result;
                   }
                case ParseStatus.Incomplete:
@@ -708,8 +713,15 @@ namespace RDotNet
          }
       }
 
+       private bool GetVisible()
+       {
+           var symbol = DangerousGetHandle("R_Visible");
+           var value = Marshal.ReadInt32(symbol);
+           var result = Convert.ToBoolean(value);
+           return result;
+       }
 
-      /// <summary>
+       /// <summary>
       /// A cache of the unevaluated R expression 'geterrmessage'
       /// </summary>
       /// <remarks>do_geterrmessage is in Rdll.hide, so we cannot access at the C API level. 

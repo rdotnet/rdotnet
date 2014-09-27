@@ -141,6 +141,9 @@ namespace RDotNet.Internals
    internal delegate IntPtr R_tryEval(IntPtr statement, IntPtr environment, out bool errorOccurred);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   public delegate void Rf_PrintValue(IntPtr value);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate IntPtr R_ParseVector(IntPtr statement, int statementCount, out ParseStatus status, IntPtr _);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
