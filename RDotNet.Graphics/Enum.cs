@@ -36,8 +36,8 @@
    public enum Adjustment
    {
       None = 0,
-      Half = 1,
-      All = 2,
+      LeftMiddleRight = 1,
+      Continuous = 2,
    }
 
    public enum FontFace

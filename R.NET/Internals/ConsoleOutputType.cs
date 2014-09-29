@@ -3,11 +3,16 @@
    /// <summary>
    /// Specifies console to output.
    /// </summary>
-   public enum ConsoleOutputType
-   {
-      /// <summary>
-      /// The default value.
-      /// </summary>
-      None = 0,
-   }
+    public enum ConsoleOutputType
+    {
+        /// <summary>
+        /// Normal Output.
+        /// </summary>
+        Output = 0,
+
+        /// <summary>
+        /// Errors.
+        /// </summary>
+        Errors = 1
+    }
 }
