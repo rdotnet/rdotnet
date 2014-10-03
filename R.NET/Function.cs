@@ -117,12 +117,11 @@ namespace RDotNet
          }
          using (var call = new ProtectedPointer(Engine, this.GetFunction<Rf_lcons>()(handle, argument)))
          {
-            var result = evaluateCall(call);
-            return new SymbolicExpression(Engine, result);
+             using (var result = evaluateCall(call))
+             {
+                 return new SymbolicExpression(Engine, result);
+             }
          }
-
       }
-
-
    }
 }
