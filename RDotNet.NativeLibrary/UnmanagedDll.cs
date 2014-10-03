@@ -13,46 +13,46 @@ namespace RDotNet.NativeLibrary
    [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
    public class UnmanagedDll : SafeHandle
    {
-       private readonly IDynamicLibraryLoader _libraryLoader;
+      private readonly IDynamicLibraryLoader libraryLoader;
 
-       /// <summary>
+      /// <summary>
       /// Gets whether the current handle is equal to the invalid handle
       /// </summary>
       public override bool IsInvalid
       {
          get { return handle == IntPtr.Zero; }
       }
-       /// <summary>
-       /// Creates a proxy for the specified dll.
-       /// </summary>
-       /// <param name="dllName">The DLL's name.</param>
-       public UnmanagedDll(string dllName)
-           : base(IntPtr.Zero, true)
-       {
-           if (dllName == null)
-           {
-               throw new ArgumentNullException("dllName", "The name of the library to load is a null reference");
-           }
-           if (dllName == string.Empty)
-           {
-               throw new ArgumentException("The name of the library to load is an empty string", "dllName");
-           }
+      /// <summary>
+      /// Creates a proxy for the specified dll.
+      /// </summary>
+      /// <param name="dllName">The DLL's name.</param>
+      public UnmanagedDll(string dllName)
+         : base(IntPtr.Zero, true)
+      {
+         if (dllName == null)
+         {
+            throw new ArgumentNullException("dllName", "The name of the library to load is a null reference");
+         }
+         if (dllName == string.Empty)
+         {
+            throw new ArgumentException("The name of the library to load is an empty string", "dllName");
+         }
 
-           if (NativeUtility.IsUnix)
-               _libraryLoader = new UnixLibraryLoader();
-           else
-               _libraryLoader = new WindowsLibraryLoader();
+         if (NativeUtility.IsUnix)
+            libraryLoader = new UnixLibraryLoader();
+         else
+            libraryLoader = new WindowsLibraryLoader();
 
-           IntPtr handle = _libraryLoader.LoadLibrary(dllName);
-           if (handle == IntPtr.Zero)
-           {
-               ReportLoadLibError(dllName);
-           }
-           SetHandle(handle);
-           DllFilename = dllName;
-       }
+         IntPtr handle = libraryLoader.LoadLibrary(dllName);
+         if (handle == IntPtr.Zero)
+         {
+            ReportLoadLibError(dllName);
+         }
+         SetHandle(handle);
+         DllFilename = dllName;
+      }
 
-       /// <summary>
+      /// <summary>
       /// Gets the Dll file name used for this native Dll wrapper.
       /// </summary>
       public string DllFilename { get; private set; }
@@ -76,12 +76,12 @@ namespace RDotNet.NativeLibrary
             // Linux, and perhaps MacOS; the 'file' command seems the way to go.
             // http://stackoverflow.com/questions/5665228/in-linux-determine-if-a-a-library-archive-32-bit-or-64-bit
 
-            dllFullName = FindFullPath(dllName, throwIfNotFound:true);
+            dllFullName = FindFullPath(dllName, throwIfNotFound: true);
             ThrowFailedLibraryLoad(dllFullName);
          }
       }
 
-      private static string FindFullPath(string dllName, bool throwIfNotFound=false)
+      private static string FindFullPath(string dllName, bool throwIfNotFound = false)
       {
          string dllFullName;
          if (File.Exists(dllName))
@@ -103,7 +103,7 @@ namespace RDotNet.NativeLibrary
          if (!NativeUtility.IsUnix)
             return null;
          var sampleldLibPaths = "/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server";
-         var ldLibPathEnv = Environment.GetEnvironmentVariable ("LD_LIBRARY_PATH");
+         var ldLibPathEnv = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH");
          string msg = Environment.NewLine + Environment.NewLine;
          if (string.IsNullOrEmpty(ldLibPathEnv))
             msg = msg + "The environment variable LD_LIBRARY_PATH is not set.";
@@ -113,9 +113,11 @@ namespace RDotNet.NativeLibrary
          msg = msg + string.Format(" For some Unix-like operating systems you may need to set it BEFORE launching the application. For instance to {0}.", sampleldLibPaths);
          msg = msg + " You can get the value as set by the R console application for your system, with the statement Sys.getenv('LD_LIBRARY_PATH'). For instance from your shell prompt:";
          msg = msg + Environment.NewLine;
-         msg = msg + "export LD_LIBRARY_PATH=`RScript -e \"Sys.getenv('LD_LIBRARY_PATH')\"`";
+         msg = msg + "Rscript -e \"Sys.getenv('LD_LIBRARY_PATH')\"";
+         msg = msg + Environment.NewLine;
+         msg = msg + "export LD_LIBRARY_PATH=/usr/the/paths/you/just/got/from/Rscript";
          msg = msg + Environment.NewLine + Environment.NewLine;
-         
+
          return msg;
       }
 
@@ -123,7 +125,7 @@ namespace RDotNet.NativeLibrary
       {
          var strMsg = string.Format("This {0}-bit process failed to load the library {1}",
                                     (Environment.Is64BitProcess ? "64" : "32"), dllFullName);
-         var nativeError = _libraryLoader.GetLastError();
+         var nativeError = libraryLoader.GetLastError();
          if (!string.IsNullOrEmpty(nativeError))
             strMsg = strMsg + string.Format(". Native error message is '{0}'", nativeError);
          var ldLibPathMsg = createLdLibPathMsg();
@@ -180,13 +182,13 @@ namespace RDotNet.NativeLibrary
 
       private IntPtr GetFunctionAddress(string lpProcName)
       {
-         return _libraryLoader.GetFunctionAddress(handle, lpProcName);
+         return libraryLoader.GetFunctionAddress(handle, lpProcName);
       }
 
       private bool FreeLibrary()
       {
          bool freed = false;
-         if (_libraryLoader == null)
+         if (libraryLoader == null)
          {
             if (!this.IsInvalid)
             {
@@ -204,7 +206,7 @@ namespace RDotNet.NativeLibrary
             return freed;
          }
          else
-            return _libraryLoader.FreeLibrary(handle);
+            return libraryLoader.FreeLibrary(handle);
       }
 
       /// <summary>

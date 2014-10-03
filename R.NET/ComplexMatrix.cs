@@ -1,4 +1,5 @@
 ﻿using RDotNet.Internals;
+using RDotNet.Utilities;
 using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
@@ -95,8 +96,8 @@ namespace RDotNet
       /// <param name="matrix"></param>
       protected override void InitMatrixFastDirect(Complex[,] matrix)
       {
-         var vectorCplx = Utility.ArrayConvertOneDim(matrix);
-         var data = Utility.SerializeComplexToDouble(vectorCplx);
+         var vectorCplx = ArrayConverter.ArrayConvertOneDim(matrix);
+         var data = RTypesUtil.SerializeComplexToDouble(vectorCplx);
          Marshal.Copy(data, 0, DataPointer, data.Length);
       }
 
@@ -109,8 +110,8 @@ namespace RDotNet
          int n = this.ItemCount;
          var data = new double[2 * n];
          Marshal.Copy(DataPointer, data, 0, 2 * n);
-         var oneDim = Utility.DeserializeComplexFromDouble(data);
-         return Utility.ArrayConvertAllTwoDim(oneDim, this.RowCount, this.ColumnCount);
+         var oneDim = RTypesUtil.DeserializeComplexFromDouble(data);
+         return ArrayConverter.ArrayConvertAllTwoDim(oneDim, this.RowCount, this.ColumnCount);
       }
 
       /// <summary>
