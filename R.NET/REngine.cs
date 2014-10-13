@@ -37,8 +37,6 @@ namespace RDotNet
       private CharacterDeviceAdapter adapter;
       private bool isRunning;
       private StartupParameter parameter;
-      private static bool environmentIsSet = false;
-      private static REngine engine = null;
 
       /// <summary>
       /// Create a new REngine instance
@@ -164,6 +162,9 @@ namespace RDotNet
          }
       }
 
+      private static bool environmentIsSet;
+      private static REngine _engine;
+
       /// <summary>
       /// Gets the name of the R engine instance (singleton).
       /// </summary>
@@ -198,15 +199,17 @@ namespace RDotNet
       {
          if (!environmentIsSet) // should there be a warning? and how?
             SetEnvironmentVariables();
-         if (engine == null)
+         if (_engine == null)
          {
-            engine = CreateInstance(EngineName, dll);
-            if (initialize)
-               engine.Initialize(parameter, device);
+            _engine = CreateInstance(EngineName, dll);
+             if (initialize)
+             {
+                 _engine.Initialize(parameter, device);
+             }
          }
-         if (engine.Disposed)
-            throw new Exception("The single REngine instance has already been disposed of (i.e. shut down). Multiple engine restart is not possible.");
-         return engine;
+         if (_engine.Disposed)
+            throw new InvalidOperationException("The single REngine instance has already been disposed of (i.e. shut down). Multiple engine restart is not possible.");
+         return _engine;
       }
 
       /// <summary>
@@ -225,13 +228,8 @@ namespace RDotNet
          {
             throw new ArgumentException("Empty ID is not allowed.", "id");
          }
-         //if (instances.ContainsKey(id))
-         //{
-         //   throw new ArgumentException();
-         //}
          dll = ProcessRDllFileName(dll);
          var engine = new REngine(id, dll);
-         //instances.Add(id, engine);
          return engine;
       }
 
@@ -242,27 +240,22 @@ namespace RDotNet
       /// <returns>A candidate for the file name of the R shared library</returns>
       protected static string ProcessRDllFileName(string dll)
       {
-         if (string.IsNullOrEmpty(dll))
-         {
-            dll = NativeUtility.GetRDllFileName();
-         }
-         return dll;
+          if (!string.IsNullOrEmpty(dll)) return dll;
+          return NativeUtility.GetRLibraryFileName();
       }
 
       /// <summary>
       /// Perform the necessary setup for the PATH and R_HOME environment variables.
       /// </summary>
-      /// <param name="rPath">The path of the directory containing the R native library. 
-      /// If null (default), this function tries to locate the path via the Windows registry, or commonly used locations on MacOS and Linux</param>
       /// <param name="rHome">The path for R_HOME. If null (default), the function checks the R_HOME environment variable. If none is set, 
       /// the function uses platform specific sensible default behaviors.</param>
       /// <remarks>
       /// This function has been designed to limit the tedium for users, while allowing custom settings for unusual installations.
       /// </remarks>
-      public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
+      public static void SetEnvironmentVariables(string rHome = null)
       {
          environmentIsSet = true;
-         NativeUtility.SetEnvironmentVariables(rPath: rPath, rHome: rHome);
+         NativeUtility.SetEnvironmentVariables(rHome);
       }
 
       /// <summary>
@@ -315,19 +308,10 @@ namespace RDotNet
       /// <param name="setupMainLoop">if true, call the functions to initialise the embedded R</param>
       public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null, bool setupMainLoop = true)
       {
-//         Console.WriteLine("REngine.Initialize start");
          if (this.isRunning)
             return;
-//         Console.WriteLine("REngine.Initialize, after isRunning checked as false");
          this.parameter = parameter ?? new StartupParameter();
          this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
-         // Disabling the stack checking here, to try to avoid the issue on Linux. 
-         // The disabling used to be here around end Nov 2013. Was moved later in this 
-         // function to cater for disabling on Windows, @ rev 305, however this may have 
-         // re-broken on Linux. so we may need to call it twice.    
-         SetCstackChecking();
-//         Console.WriteLine("Initialize-SetCstackChecking; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
-
          if (!setupMainLoop)
          {
             this.isRunning = true;
@@ -339,7 +323,6 @@ namespace RDotNet
          //rdotnet_app --quiet --interactive --no-save --no-restore-data --max-mem-size=18446744073709551615 --max-ppsize=50000  
          GetFunction<R_setStartTime>()();
          int R_argc = R_argv.Length;
-//         Console.WriteLine("Initialize-R_setStartTime; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
 
          if (NativeUtility.GetPlatform() == PlatformID.Win32NT)
          {
@@ -354,14 +337,11 @@ namespace RDotNet
          var status = GetFunction<Rf_initialize_R>()(R_argc, R_argv);
          if (status != 0)
             throw new Exception("A call to Rf_initialize_R returned a non-zero; status=" + status);
-//         Console.WriteLine("Initialize-Rf_initialize_R; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
-         SetCstackChecking();
 
          // following in RInside: may not be needed.
          //GetFunction<R_ReplDLLinit> () ();
          //this.parameter.Interactive = true; 
          this.adapter.Install(this, this.parameter);
-         //Console.WriteLine("Initialize-adapter installation; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
          switch (NativeUtility.GetPlatform())
          {
             case PlatformID.Win32NT:
@@ -371,17 +351,23 @@ namespace RDotNet
             case PlatformID.MacOSX:
             case PlatformID.Unix:
                GetFunction<R_SetParams_Unix>("R_SetParams")(ref this.parameter.start.Common);
-               //Console.WriteLine("Initialize-R_SetParams_Unix; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
                break;
          }
          GetFunction<setup_Rmainloop>()();
-         //Console.WriteLine("Initialize-after setup_Rmainloop; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
-        
-         // See comments in the first call to SetCstackChecking in this function as to why we (may) need it twice.
-         SetCstackChecking();
-         this.isRunning = true;
 
-         //Console.WriteLine("Initialize-just before leaving; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
+         // Don't do any stack checking, see R Exts, '8.1.5 Threading issues', 
+         // https://rdotnet.codeplex.com/discussions/462947
+         // https://rdotnet.codeplex.com/workitem/115
+         SetDangerousInt32("R_CStackLimit", -1); 
+         switch (NativeUtility.GetPlatform())
+         {
+            case PlatformID.MacOSX:
+            case PlatformID.Unix:
+               SetDangerousInt32("R_SignalHandlers", 0); // RInside does this for non-WIN32. 
+               break;
+         }
+
+         this.isRunning = true;
 
          // Partial Workaround (hopefully temporary) for https://rdotnet.codeplex.com/workitem/110
          if (NativeUtility.GetPlatform() == PlatformID.Win32NT)
@@ -389,22 +375,6 @@ namespace RDotNet
             Evaluate( string.Format( "memory.limit({0})", (this.parameter.MaxMemorySize / 1048576UL)));
          }
 
-      }
-
-      void SetCstackChecking()
-      {
-         // Don't do any stack checking, see R Exts, '8.1.5 Threading issues', 
-         // https://rdotnet.codeplex.com/discussions/462947
-         // https://rdotnet.codeplex.com/workitem/115
-         SetDangerousInt32("R_CStackLimit", -1);
-         switch (NativeUtility.GetPlatform())
-         {
-         case PlatformID.MacOSX:
-         case PlatformID.Unix:
-            SetDangerousInt32("R_SignalHandlers", 0);
-            // RInside does this for non-WIN32. 
-            break;
-         }
       }
 
       /// <summary>
@@ -418,7 +388,6 @@ namespace RDotNet
       /// after much trial and error.</remarks>
       public static string[] BuildRArgv(StartupParameter parameter)
       {
-         var platform = NativeUtility.GetPlatform();
          var argv = new List<string>();
          argv.Add("rdotnet_app");
          // Not sure whether I should add no-readline
@@ -432,7 +401,7 @@ namespace RDotNet
 
          //[MarshalAs(UnmanagedType.Bool)]
          //public bool R_Interactive;
-         if (platform != PlatformID.Win32NT) // RTerm.exe --help shows no such option; Unix only.
+         if (NativeUtility.GetPlatform() != PlatformID.Win32NT) // RTerm.exe --help shows no such option; Unix only.
             if (parameter.Interactive) argv.Add("--interactive");
 
          //[MarshalAs(UnmanagedType.Bool)]
@@ -489,8 +458,7 @@ namespace RDotNet
          }
          else
          {
-            if (platform == PlatformID.Win32NT) // On unix, otherwise led to https://rdotnet.codeplex.com/workitem/137
-               argv.Add("--max-mem-size=" + parameter.MaxMemorySize);
+            argv.Add("--max-mem-size=" + parameter.MaxMemorySize);
          }
          argv.Add("--max-ppsize=" + parameter.StackSize);
          return argv.ToArray();
@@ -800,14 +768,6 @@ namespace RDotNet
             Disposed = true;
          }
 
-         if (disposing && this.adapter != null)
-         {
-//            Console.WriteLine("Disposing of an existing console adapter");
-            this.adapter.Dispose();
-            this.adapter = null;
-         }
-         if (Disposed)
-            return;
          GC.KeepAlive(this.parameter);
          base.Dispose(disposing);
       }

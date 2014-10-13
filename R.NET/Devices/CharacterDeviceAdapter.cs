@@ -8,7 +8,7 @@ using RDotNet.NativeLibrary;
 
 namespace RDotNet.Devices
 {
-   internal class CharacterDeviceAdapter : IDisposable
+   internal class CharacterDeviceAdapter
    {
       private readonly ICharacterDevice device;
 
@@ -45,15 +45,6 @@ namespace RDotNet.Devices
          return Engine.GetFunction<TDelegate>();
       }
 
-      #region IDisposable Members
-
-      public void Dispose()
-      {
-         GC.KeepAlive(this);
-      }
-
-      #endregion IDisposable Members
-
       internal void Install(REngine engine, StartupParameter parameter)
       {
          this.engine = engine;
@@ -74,8 +65,7 @@ namespace RDotNet.Devices
       {
          if (parameter.RHome == null)
          {
-            //string rhome = Marshal.PtrToStringAnsi(Engine.GetFunction<getValue>("get_R_HOME")());
-            string rhome = NativeUtility.GetRHomeEnvironmentVariable();
+            string rhome = Environment.GetEnvironmentVariable("R_HOME");
             parameter.start.rhome = Marshal.StringToHGlobalAnsi(ConvertSeparatorToUnixStylePath(rhome));
          }
          if (parameter.Home == null)

@@ -226,10 +226,18 @@ namespace RDotNet.Graphics
 
       private void Close(IntPtr dd)
       {
-         this.device.OnClosed(this.description);
+          device.OnClosed(description);
+          ClearDevDesc();
       }
 
-      private bool ConfirmNewFrame(IntPtr dd)
+       private void ClearDevDesc()
+       {
+           var geDevDesc = (GEDevDesc) Marshal.PtrToStructure(gdd, typeof (GEDevDesc));
+           geDevDesc.dev = IntPtr.Zero;
+           Marshal.StructureToPtr(geDevDesc, gdd, false);
+       }
+
+       private bool ConfirmNewFrame(IntPtr dd)
       {
          return this.device.ConfirmNewFrame(this.description);
       }
