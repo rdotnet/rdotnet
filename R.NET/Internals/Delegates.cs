@@ -196,8 +196,8 @@ namespace RDotNet.Internals
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate bool Rf_isOrdered(IntPtr sexp);
 
-	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	internal delegate IntPtr R_lsInternal(IntPtr environment, bool all);
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate IntPtr R_lsInternal(IntPtr environment, bool all);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate IntPtr Rf_applyClosure(IntPtr call, IntPtr value, IntPtr arguments, IntPtr environment, IntPtr suppliedEnvironment);
