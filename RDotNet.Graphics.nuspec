@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata>
-      <id>RDotNet.Graphics</id>
-      <version>0.1-alpha</version>
+      <id>R.NET.Community.Graphics</id>
+      <version>0.1.2-alpha</version>
       <title>R.NET Graphics Engine</title>
       <authors>RecycleBin</authors>
       <owners>kos59125</owners>
@@ -16,7 +16,7 @@
          <reference file="RDotNet.Graphics.dll" />
       </references>
       <dependencies>
-         <dependency id="R.NET" />
+        <dependency id="R.NET.Community" version="1.5.16" />
       </dependencies>
       <tags>R R.NET graphics</tags>
    </metadata>
