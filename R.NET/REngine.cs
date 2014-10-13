@@ -238,8 +238,8 @@ namespace RDotNet
       /// <returns>A candidate for the file name of the R shared library</returns>
       protected static string ProcessRDllFileName(string dll)
       {
-          if (!string.IsNullOrEmpty(dll)) return dll;
-          return NativeUtility.GetRLibraryFileName();
+         if (!string.IsNullOrEmpty(dll)) return dll;
+         return NativeUtility.GetRLibraryFileName();
       }
 
       /// <summary>
@@ -308,10 +308,10 @@ namespace RDotNet
       /// <param name="setupMainLoop">if true, call the functions to initialise the embedded R</param>
       public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null, bool setupMainLoop = true)
       {
-//         Console.WriteLine("REngine.Initialize start");
+         //         Console.WriteLine("REngine.Initialize start");
          if (this.isRunning)
             return;
-//         Console.WriteLine("REngine.Initialize, after isRunning checked as false");
+         //         Console.WriteLine("REngine.Initialize, after isRunning checked as false");
          this.parameter = parameter ?? new StartupParameter();
          this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
          // Disabling the stack checking here, to try to avoid the issue on Linux. 
@@ -319,7 +319,7 @@ namespace RDotNet
          // function to cater for disabling on Windows, @ rev 305, however this may have 
          // re-broken on Linux. so we may need to call it twice.    
          SetCstackChecking();
-//         Console.WriteLine("Initialize-SetCstackChecking; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
+         //         Console.WriteLine("Initialize-SetCstackChecking; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
 
          if (!setupMainLoop)
          {
@@ -332,7 +332,7 @@ namespace RDotNet
          //rdotnet_app --quiet --interactive --no-save --no-restore-data --max-mem-size=18446744073709551615 --max-ppsize=50000  
          GetFunction<R_setStartTime>()();
          int R_argc = R_argv.Length;
-//         Console.WriteLine("Initialize-R_setStartTime; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
+         //         Console.WriteLine("Initialize-R_setStartTime; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
 
          if (NativeUtility.GetPlatform() == PlatformID.Win32NT)
          {
@@ -343,11 +343,11 @@ namespace RDotNet
             //   GetFunction<R_set_command_line_arguments>()(R_argc, R_argv);
             //   GetFunction<cmdlineoptions>()(R_argc, R_argv);
          }
-         
+
          var status = GetFunction<Rf_initialize_R>()(R_argc, R_argv);
          if (status != 0)
             throw new Exception("A call to Rf_initialize_R returned a non-zero; status=" + status);
-//         Console.WriteLine("Initialize-Rf_initialize_R; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
+         //         Console.WriteLine("Initialize-Rf_initialize_R; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
          SetCstackChecking();
 
          // following in RInside: may not be needed.
@@ -369,7 +369,7 @@ namespace RDotNet
          }
          GetFunction<setup_Rmainloop>()();
          //Console.WriteLine("Initialize-after setup_Rmainloop; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
-        
+
          // See comments in the first call to SetCstackChecking in this function as to why we (may) need it twice.
          SetCstackChecking();
          this.isRunning = true;
@@ -379,7 +379,7 @@ namespace RDotNet
          // Partial Workaround (hopefully temporary) for https://rdotnet.codeplex.com/workitem/110
          if (NativeUtility.GetPlatform() == PlatformID.Win32NT)
          {
-            Evaluate( string.Format( "memory.limit({0})", (this.parameter.MaxMemorySize / 1048576UL)));
+            Evaluate(string.Format("memory.limit({0})", (this.parameter.MaxMemorySize / 1048576UL)));
          }
 
       }
@@ -392,11 +392,11 @@ namespace RDotNet
          SetDangerousInt32("R_CStackLimit", -1);
          switch (NativeUtility.GetPlatform())
          {
-         case PlatformID.MacOSX:
-         case PlatformID.Unix:
-            SetDangerousInt32("R_SignalHandlers", 0);
-            // RInside does this for non-WIN32. 
-            break;
+            case PlatformID.MacOSX:
+            case PlatformID.Unix:
+               SetDangerousInt32("R_SignalHandlers", 0);
+               // RInside does this for non-WIN32. 
+               break;
          }
       }
 
@@ -683,6 +683,11 @@ namespace RDotNet
                      {
                         throw new EvaluationException(LastErrorMessage);
                      }
+
+                     if (!result.IsInvalid && GetVisible())
+                     {
+                        GetFunction<Rf_PrintValue>()(result.DangerousGetHandle());
+                     }
                      return result;
                   }
                case ParseStatus.Incomplete:
@@ -701,6 +706,13 @@ namespace RDotNet
          }
       }
 
+      private bool GetVisible()
+      {
+         var symbol = DangerousGetHandle("R_Visible");
+         var value = Marshal.ReadInt32(symbol);
+         var result = Convert.ToBoolean(value);
+         return result;
+      }
 
       /// <summary>
       /// A cache of the unevaluated R expression 'geterrmessage'
@@ -795,7 +807,7 @@ namespace RDotNet
 
          if (disposing && this.adapter != null)
          {
-//            Console.WriteLine("Disposing of an existing console adapter");
+            //            Console.WriteLine("Disposing of an existing console adapter");
             this.adapter.Dispose();
             this.adapter = null;
          }
