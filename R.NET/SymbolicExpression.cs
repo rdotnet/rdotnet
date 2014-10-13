@@ -1,5 +1,6 @@
 ﻿using RDotNet.Dynamic;
 using RDotNet.Internals;
+using RDotNet.Utilities;
 using System;
 using System.Diagnostics;
 using System.Dynamic;
@@ -156,7 +157,7 @@ namespace RDotNet
 
          IntPtr installedName = this.GetFunction<Rf_install>()(attributeName);
          IntPtr attribute = this.GetFunction<Rf_getAttrib>()(handle, installedName);
-         if (Engine.CheckNil(attribute))
+         if (Engine.EqualsRNilValue(attribute))
          {
             return null;
          }
@@ -175,7 +176,7 @@ namespace RDotNet
          }
 
          IntPtr attribute = this.GetFunction<Rf_getAttrib>()(handle, symbol.handle);
-         if (Engine.CheckNil(attribute))
+         if (Engine.EqualsRNilValue(attribute))
          {
             return null;
          }

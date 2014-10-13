@@ -1,6 +1,7 @@
 ﻿using RDotNet.Devices;
 using RDotNet.Internals;
 using RDotNet.NativeLibrary;
+using RDotNet.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -205,7 +206,7 @@ namespace RDotNet
                engine.Initialize(parameter, device);
          }
          if (engine.Disposed)
-            throw new Exception("The single REngine instance has already been disposed of (i.e. shut down). Multiple engine restart is not possible.");
+            throw new InvalidOperationException("The single REngine instance has already been disposed of (i.e. shut down). Multiple engine restart is not possible.");
          return engine;
       }
 
@@ -225,13 +226,8 @@ namespace RDotNet
          {
             throw new ArgumentException("Empty ID is not allowed.", "id");
          }
-         //if (instances.ContainsKey(id))
-         //{
-         //   throw new ArgumentException();
-         //}
          dll = ProcessRDllFileName(dll);
          var engine = new REngine(id, dll);
-         //instances.Add(id, engine);
          return engine;
       }
 
@@ -242,11 +238,8 @@ namespace RDotNet
       /// <returns>A candidate for the file name of the R shared library</returns>
       protected static string ProcessRDllFileName(string dll)
       {
-         if (string.IsNullOrEmpty(dll))
-         {
-            dll = NativeUtility.GetRDllFileName();
-         }
-         return dll;
+          if (!string.IsNullOrEmpty(dll)) return dll;
+          return NativeUtility.GetRLibraryFileName();
       }
 
       /// <summary>
@@ -770,7 +763,7 @@ namespace RDotNet
       public void SetCommandLineArguments(string[] args)
       {
          CheckEngineIsRunning();
-         var newArgs = Utility.AddFirst(ID, args);
+         var newArgs = ArrayConverter.Prepend(ID, args);
          GetFunction<R_set_command_line_arguments>()(newArgs.Length, newArgs);
       }
 

@@ -32,7 +32,7 @@ namespace RDotNet
       {
          string rLibPath = NativeUtility.FindRPath();
          var files = Directory.GetFiles(rLibPath);
-         var fnmatch = files.Where(fn => fn.ToLower() == Path.Combine(rLibPath.ToLower(), NativeUtility.GetRDllFileName().ToLower()));
+         var fnmatch = files.Where(fn => fn.ToLower() == Path.Combine(rLibPath.ToLower(), NativeUtility.GetRLibraryFileName().ToLower()));
          Assert.AreEqual(1, fnmatch.Count());
       }
 

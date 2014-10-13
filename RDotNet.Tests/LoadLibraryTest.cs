@@ -53,7 +53,7 @@ namespace RDotNet
             if (!rDllPath.Contains("x64")) // Odd, but not what we are testing here.
                return;
             rDllPath = rDllPath.Replace("x64", "i386");
-            var rDllFullFilePath = Path.Combine(rDllPath, NativeUtility.GetRDllFileName());
+            var rDllFullFilePath = Path.Combine(rDllPath, NativeUtility.GetRLibraryFileName());
             if (!File.Exists(rDllFullFilePath))
                return;
             Assert.Throws(typeof(Exception), () => { var lib = new MockLoadLib(rDllFullFilePath); });

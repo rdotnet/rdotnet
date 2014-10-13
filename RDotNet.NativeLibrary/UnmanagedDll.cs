@@ -13,6 +13,8 @@ namespace RDotNet.NativeLibrary
    [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
    public class UnmanagedDll : SafeHandle
    {
+      private readonly IDynamicLibraryLoader libraryLoader;
+
       /// <summary>
       /// Gets whether the current handle is equal to the invalid handle
       /// </summary>
@@ -20,9 +22,6 @@ namespace RDotNet.NativeLibrary
       {
          get { return handle == IntPtr.Zero; }
       }
-
-      private IDynamicLibraryLoader libraryLoader;
-
       /// <summary>
       /// Creates a proxy for the specified dll.
       /// </summary>
@@ -38,10 +37,11 @@ namespace RDotNet.NativeLibrary
          {
             throw new ArgumentException("The name of the library to load is an empty string", "dllName");
          }
-         if (IsUnix)
+
+         if (NativeUtility.IsUnix)
             libraryLoader = new UnixLibraryLoader();
          else
-            libraryLoader = new WindowsLibraryLoader ();
+            libraryLoader = new WindowsLibraryLoader();
 
          IntPtr handle = libraryLoader.LoadLibrary(dllName);
          if (handle == IntPtr.Zero)
@@ -49,7 +49,7 @@ namespace RDotNet.NativeLibrary
             ReportLoadLibError(dllName);
          }
          SetHandle(handle);
-         this.DllFilename = dllName;
+         DllFilename = dllName;
       }
 
       /// <summary>
@@ -76,12 +76,12 @@ namespace RDotNet.NativeLibrary
             // Linux, and perhaps MacOS; the 'file' command seems the way to go.
             // http://stackoverflow.com/questions/5665228/in-linux-determine-if-a-a-library-archive-32-bit-or-64-bit
 
-            dllFullName = FindFullPath(dllName, throwIfNotFound:true);
+            dllFullName = FindFullPath(dllName, throwIfNotFound: true);
             ThrowFailedLibraryLoad(dllFullName);
          }
       }
 
-      private static string FindFullPath(string dllName, bool throwIfNotFound=false)
+      private static string FindFullPath(string dllName, bool throwIfNotFound = false)
       {
          string dllFullName;
          if (File.Exists(dllName))
@@ -103,7 +103,7 @@ namespace RDotNet.NativeLibrary
          if (!NativeUtility.IsUnix)
             return null;
          var sampleldLibPaths = "/usr/local/lib/R/lib:/usr/local/lib:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/amd64/server";
-         var ldLibPathEnv = Environment.GetEnvironmentVariable ("LD_LIBRARY_PATH");
+         var ldLibPathEnv = Environment.GetEnvironmentVariable("LD_LIBRARY_PATH");
          string msg = Environment.NewLine + Environment.NewLine;
          if (string.IsNullOrEmpty(ldLibPathEnv))
             msg = msg + "The environment variable LD_LIBRARY_PATH is not set.";
@@ -117,7 +117,7 @@ namespace RDotNet.NativeLibrary
          msg = msg + Environment.NewLine;
          msg = msg + "export LD_LIBRARY_PATH=/usr/the/paths/you/just/got/from/Rscript";
          msg = msg + Environment.NewLine + Environment.NewLine;
-         
+
          return msg;
       }
 
@@ -178,10 +178,6 @@ namespace RDotNet.NativeLibrary
       private void throwEntryPointNotFound(string entryPoint)
       {
          throw new EntryPointNotFoundException(string.Format("Function {0} not found in native library {1}", entryPoint, this.DllFilename));
-      }
-
-      private bool IsUnix {
-         get { return NativeUtility.IsUnix; }
       }
 
       private IntPtr GetFunctionAddress(string lpProcName)
