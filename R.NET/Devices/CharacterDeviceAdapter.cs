@@ -8,7 +8,7 @@ using RDotNet.NativeLibrary;
 
 namespace RDotNet.Devices
 {
-   internal class CharacterDeviceAdapter
+   internal class CharacterDeviceAdapter : IDisposable
    {
       private readonly ICharacterDevice device;
 
@@ -45,6 +45,15 @@ namespace RDotNet.Devices
          return Engine.GetFunction<TDelegate>();
       }
 
+      #region IDisposable Members
+
+      public void Dispose()
+      {
+         GC.KeepAlive(this);
+      }
+
+      #endregion IDisposable Members
+
       internal void Install(REngine engine, StartupParameter parameter)
       {
          this.engine = engine;
@@ -65,13 +74,12 @@ namespace RDotNet.Devices
       {
          if (parameter.RHome == null)
          {
-            string rhome = Environment.GetEnvironmentVariable("R_HOME");
-            parameter.start.rhome = Marshal.StringToHGlobalAnsi(ConvertSeparatorToUnixStylePath(rhome));
+            parameter.start.rhome = ToNativeUnixPath(NativeUtility.GetRHomeEnvironmentVariable());
          }
          if (parameter.Home == null)
          {
             string home = Marshal.PtrToStringAnsi(Engine.GetFunction<getValue>("getRUser")());
-            parameter.start.home = Marshal.StringToHGlobalAnsi(ConvertSeparatorToUnixStylePath(home));
+            parameter.start.home = ToNativeUnixPath(home);
          }
          parameter.start.ReadConsole = ReadConsole;
          parameter.start.WriteConsole = WriteConsole;
@@ -80,6 +88,11 @@ namespace RDotNet.Devices
          parameter.start.ShowMessage = ShowMessage;
          parameter.start.YesNoCancel = Ask;
          parameter.start.Busy = Busy;
+      }
+
+      private static IntPtr ToNativeUnixPath(string path)
+      {
+         return Marshal.StringToHGlobalAnsi(ConvertSeparatorToUnixStylePath(path));
       }
 
       private void SetupUnixDevice()

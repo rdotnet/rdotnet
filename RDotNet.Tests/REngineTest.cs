@@ -7,6 +7,15 @@ namespace RDotNet
 {
    internal class REngineTest : RDotNetTestFixture
    {
+
+      [Test]
+      public void TestCStackCheckDisabled()
+      {
+         var engine = this.Engine;
+         var cStackLimit = engine.GetDangerousInt32("R_CStackLimit");
+         Assert.AreEqual(-1, cStackLimit);
+      }
+
       [Test]
       public void TestSetCommandLineArguments()
       {
