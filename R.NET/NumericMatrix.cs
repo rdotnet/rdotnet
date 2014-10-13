@@ -1,4 +1,5 @@
 ﻿using RDotNet.Internals;
+using RDotNet.Utilities;
 using System;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
@@ -100,7 +101,7 @@ namespace RDotNet
       /// <param name="matrix"></param>
       protected override void InitMatrixFastDirect(double[,] matrix)
       {
-         var values = Utility.ArrayConvertOneDim(matrix);
+         var values = ArrayConverter.ArrayConvertOneDim(matrix);
          Marshal.Copy(values, 0, DataPointer, values.Length);
       }
 
@@ -112,7 +113,7 @@ namespace RDotNet
       {
          var values = new double[this.ItemCount];
          Marshal.Copy(DataPointer, values, 0, values.Length);
-         return Utility.ArrayConvertAllTwoDim(values, this.RowCount, this.ColumnCount);
+         return ArrayConverter.ArrayConvertAllTwoDim(values, this.RowCount, this.ColumnCount);
       }
 
       /// <summary>

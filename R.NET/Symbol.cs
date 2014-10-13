@@ -1,4 +1,5 @@
 ﻿using RDotNet.Internals;
+using RDotNet.Utilities;
 using System;
 using System.Runtime.InteropServices;
 
@@ -44,7 +45,7 @@ namespace RDotNet
          get
          {
             SEXPREC sexp = GetInternalStructure();
-            if (Engine.CheckNil(sexp.symsxp.value))
+            if (Engine.EqualsRNilValue(sexp.symsxp.value))
             {
                return null;
             }
@@ -60,7 +61,7 @@ namespace RDotNet
          get
          {
             SEXPREC sexp = GetInternalStructure();
-            if (Engine.CheckNil(sexp.symsxp.value))
+            if (Engine.EqualsRNilValue(sexp.symsxp.value))
             {
                return null;
             }

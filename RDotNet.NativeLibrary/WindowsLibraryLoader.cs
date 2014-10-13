@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Security.Permissions;
 using System.Text;
+using Microsoft.Win32;
 
 namespace RDotNet.NativeLibrary
 {
@@ -12,7 +13,14 @@ namespace RDotNet.NativeLibrary
    {
       public IntPtr LoadLibrary(string filename)
       {
-         return InternalLoadLibrary(filename);
+         new SecurityPermission(SecurityPermissionFlag.UnmanagedCode).Demand();
+         var handle = Win32.LoadLibrary(filename);
+         if (handle == IntPtr.Zero)
+         {
+            var error = new Win32Exception(Marshal.GetLastWin32Error()).Message;
+            Console.WriteLine(error);
+         }
+         return handle;
       }
 
       public string GetLastError()
@@ -25,53 +33,72 @@ namespace RDotNet.NativeLibrary
 
       public bool FreeLibrary(IntPtr handle)
       {
-         return InternalFreeLibrary(handle);
+         return Win32.FreeLibrary(handle);
       }
 
       public IntPtr GetFunctionAddress(IntPtr hModule, string lpProcName)
       {
-         return InternalGetProcAddress(hModule, lpProcName);
+         return Win32.GetProcAddress(hModule, lpProcName);
       }
 
-      [DllImport("kernel32.dll", EntryPoint = "LoadLibrary",  SetLastError=true)]
-      private static extern IntPtr InternalLoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
-
-      [DllImport("kernel32.dll", EntryPoint = "FreeLibrary")]
-      [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-      [return: MarshalAs(UnmanagedType.Bool)]
-      private static extern bool InternalFreeLibrary(IntPtr hModule);
-
-      [DllImport("kernel32.dll", EntryPoint = "GetProcAddress")]
-      private static extern IntPtr InternalGetProcAddress(IntPtr hModule, [MarshalAs(UnmanagedType.LPStr)] string lpProcName);
-
-      [DllImport("kernel32.dll", EntryPoint = "GetLastError")]
-      [return: MarshalAs(UnmanagedType.LPStr)]
-      private static extern string InternalGetLastError();
-
-      const int MAX_PATH_LENGTH = 255;
-
-      [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-      private static extern int GetShortPathName(
-          [MarshalAs(UnmanagedType.LPTStr)]
-         string path,
-          [MarshalAs(UnmanagedType.LPTStr)]
-         StringBuilder shortPath,
-          int shortPathLength
-          );
-
-      /// <summary>
-      /// Gets the old style DOS short path (8.3 format) given a path name
-      /// </summary>
-      /// <param name="path">A path</param>
-      /// <returns>The short path name according to the Windows kernel32 API</returns>
       internal protected static string GetShortPath(string path)
       {
-         var shortPath = new StringBuilder(MAX_PATH_LENGTH);
-         GetShortPathName(path, shortPath, MAX_PATH_LENGTH);
+         var shortPath = new StringBuilder(Win32.MaxPathLength);
+         Win32.GetShortPathName(path, shortPath, Win32.MaxPathLength);
          return shortPath.ToString();
       }
 
+      public static string GetRHomeFromRegistry()
+      {
+         var rCoreKey = GetRCoreRegistryKey();
+         var path = rCoreKey.GetValue("InstallPath") as string;
+         return GetShortPath(path);
+      }
 
+      public static Version GetRVersionFromRegistry()
+      {
+         var rCoreKey = GetRCoreRegistryKey();
+         var version = rCoreKey.GetValue("Current Version") as string;
+         if (string.IsNullOrEmpty(version)) return null;
+         return new Version(version);
+      }
+
+      private static RegistryKey GetRCoreRegistryKey()
+      {
+         if (Environment.OSVersion.Platform != PlatformID.Win32NT) return null;
+
+         var rCore = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
+         if (rCore == null)
+         {
+            rCore = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\R-core");
+            if (rCore == null) return null;
+         }
+
+         var subKey = Environment.Is64BitProcess ? "R64" : "R";
+         var r = rCore.OpenSubKey(subKey);
+         return r;
+      }
+   }
+
+   internal static class Win32
+   {
+      [DllImport("kernel32.dll", SetLastError = true)]
+      public static extern IntPtr LoadLibrary([MarshalAs(UnmanagedType.LPStr)] string lpFileName);
+
+      [DllImport("kernel32.dll")]
+      [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+      [return: MarshalAs(UnmanagedType.Bool)]
+      public static extern bool FreeLibrary(IntPtr hModule);
+
+      [DllImport("kernel32.dll")]
+      public static extern IntPtr GetProcAddress(IntPtr hModule,
+                                                 [MarshalAs(UnmanagedType.LPStr)] string lpProcName);
+
+      public const int MaxPathLength = 248; //MaxPath is 248. MaxFileName is 260.
+
+      [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+      public static extern int GetShortPathName([MarshalAs(UnmanagedType.LPTStr)] string path,
+                                                [MarshalAs(UnmanagedType.LPTStr)] StringBuilder shortPath,
+                                                int shortPathLength);
    }
 }
-	  

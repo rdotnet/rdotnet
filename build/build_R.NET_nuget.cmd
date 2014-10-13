@@ -83,6 +83,7 @@ if "%BuildConfiguration%"=="Release" set nuspec_file=RDotNet.nuspec
 if "%BuildConfiguration%"=="Debug" set nuspec_file=RDotNet_debug.nuspec
 %nuget_exe% pack %rdotnet_dir%%nuspec_file% %pack_options%
 %nuget_exe% pack %rdotnet_dir%RDotNet.FSharp.nuspec %pack_options%
+%nuget_exe% pack %rdotnet_dir%RDotNet.Graphics.nuspec %pack_options%
 :: %repo_dir%RDotNet.FSharp.0.*.nupkg
 xcopy %rdotnet_dir%build\*.nupkg %repo_dir% %COPYOPTIONS%
 goto completed

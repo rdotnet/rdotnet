@@ -1,4 +1,5 @@
 ﻿using RDotNet.Internals;
+using RDotNet.Utilities;
 using System;
 using System.Runtime.InteropServices;
 
@@ -36,7 +37,7 @@ namespace RDotNet
          {
             SEXPREC sexp = GetInternalStructure();
             IntPtr parent = sexp.envsxp.enclos;
-            return Engine.CheckNil(parent) ? null : new REnvironment(Engine, parent);
+            return Engine.EqualsRNilValue(parent) ? null : new REnvironment(Engine, parent);
          }
       }
 
