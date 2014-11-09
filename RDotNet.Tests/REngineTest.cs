@@ -186,6 +186,8 @@ namespace RDotNet
       public void TestReadConsole()
       {
          var engine = this.Engine;
+         string additionalMsg = "https://rdotnet.codeplex.com/workitem/146";
+         ReportFailOnLinux(additionalMsg);
          Device.Input = "Hello, World!";
          Assert.That(engine.Evaluate("readline()").AsCharacter()[0], Is.EqualTo(Device.Input));
       }

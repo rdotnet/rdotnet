@@ -3,6 +3,8 @@
     <PropertyGroup>
         <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildProjectDirectory)\..\</SolutionDir>
         
+        <!-- Setting Restore Packages to false on 2014-11, as this causes a nuisance batch build failure on Linux. This is a workaround only-->
+        <RestorePackages>false</RestorePackages>
         <!-- Enable the restore command to run before builds -->
         <RestorePackages Condition="  '$(RestorePackages)' == '' ">false</RestorePackages>
 
