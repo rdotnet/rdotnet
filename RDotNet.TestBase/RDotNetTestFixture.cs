@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using NUnit.Framework;
+using RDotNet.NativeLibrary;
 
 namespace RDotNet
 {
@@ -18,6 +19,12 @@ namespace RDotNet
       protected REngine Engine { get { return engine; } }
 
       private readonly bool initializeOnceOnly = true;
+
+      protected static void ReportFailOnLinux(string additionalMsg)
+      {
+         if (NativeUtility.IsUnix)
+            throw new NotSupportedException("On at least one Linux platform, this creates a crash " + additionalMsg);
+      }
 
       [TestFixtureSetUp]
       protected virtual void SetUpFixture()

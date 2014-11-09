@@ -169,8 +169,11 @@ namespace RDotNet.NativeLibrary
                rHome = "/Library/Frameworks/R.framework/Resources";
                break;
             case PlatformID.Unix:
-               // if rPath is e.g. /usr/local/lib/R/lib/ , 
-               rHome = Path.GetDirectoryName(rPath);
+               if(!string.IsNullOrEmpty(rPath))
+                  // if rPath is e.g. /usr/local/lib/R/lib/ , 
+                  rHome = Path.GetDirectoryName(rPath);
+               else
+                  rHome = "/usr/lib/R";
                if (!rHome.EndsWith("R"))
                   // if rPath is e.g. /usr/lib/ (symlink)  then default 
                   rHome = "/usr/lib/R";
@@ -235,6 +238,7 @@ namespace RDotNet.NativeLibrary
 
       private static string FindRPathUnix(string rHome)
       {
+         // TODO: too many default strings here. R.NET should not try to overcome variance in Unix setups. 
          var shlibFilename = GetRLibraryFileName();
          var rexepath = ExecCommand("which", "R"); // /usr/bin/R,  or /usr/local/bin/R
          if (string.IsNullOrEmpty(rexepath)) return "/usr/lib";
