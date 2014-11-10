@@ -120,7 +120,7 @@ namespace RDotNet
       {
          var engine = this.Engine;
          engine.Evaluate("if (exists('x')) {rm(x)}");
-         //Thread.Sleep(100);
+         Thread.Sleep(100);
          var memoryInitial = GetBaselineRengineMemory(engine);
          engine.Evaluate(statementCreateX);
          T sexp = coercionFun(engine.GetSymbol("x"));
@@ -128,7 +128,7 @@ namespace RDotNet
          Assert.That(memoryAfterAlloc - memoryInitial, Is.GreaterThan(expectedMinMegaBytesDifference));
          engine.Evaluate("rm(x)");
          sexp = null;
-         //Thread.Sleep(100);
+         Thread.Sleep(100);
          var memoryAfterGC = GetBaselineRengineMemory(engine);
          Assert.That(memoryAfterAlloc - memoryAfterGC, Is.GreaterThan(expectedMinMegaBytesDifference));  // x should be collected.
       }
@@ -143,7 +143,7 @@ namespace RDotNet
       {
          GarbageCollectRandClr(engine);
          var tmp = GetRMemorySize(engine);
-         //Thread.Sleep(100);
+         Thread.Sleep(100);
          GarbageCollectRandClr(engine);
          return GetRMemorySize(engine);
       }
