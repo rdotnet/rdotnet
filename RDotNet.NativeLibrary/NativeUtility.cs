@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Text;
 using Microsoft.Win32;
 
 namespace RDotNet.NativeLibrary
@@ -208,7 +208,15 @@ namespace RDotNet.NativeLibrary
 
       private static void SetenvPrependToPath(string rPath, string envVarName="PATH")
       {
-         Environment.SetEnvironmentVariable(envVarName, PrependToPath(rPath, envVarName));
+          var platform = GetPlatform();
+          if (platform == PlatformID.Win32NT)
+          {
+              var result = WindowsLibraryLoader.SetDllDirectory(rPath);
+              var buffer = new StringBuilder(100);
+              WindowsLibraryLoader.GetDllDirectory(100, buffer);
+              Console.WriteLine("DLLPath:" + buffer.ToString());
+          }
+          //Environment.SetEnvironmentVariable(envVarName, PrependToPath(rPath, envVarName));
       }
 
       private static string PrependToPath(string rPath, string envVarName = "PATH")
