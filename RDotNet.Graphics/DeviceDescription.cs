@@ -252,28 +252,28 @@ namespace RDotNet.Graphics
          set { WriteIntPtr("deviceSpecific", value); }
       }
 
-      private void SetDefaultParameter()
-      {
-         StartForeground = Colors.Black;
-         StartBackground = Colors.White;
-         StartLineType = LineType.Solid;
-         StartFont = 1;
-         StartFontSize = 12.0;
-         StartGamma = 1.0;
-         CharOffsetX = 0.4900;
-         CharOffsetY = 0.3333;
-         CharacterSizeInRasterX = 9.0;
-         CharacterSizeInRasterY = 12.0;
-         InchesPerRasterX = 1.0 / 72.0;
-         InchesPerRasterY = 1.0 / 72.0;
-         LineBiasY = 0.20;
-         IsClippable = true;
-         Adjustment = Adjustment.All;
-         IsGammaModifiable = false;
-         DisplayListOn = false;
-      }
+       private void SetDefaultParameter()
+       {
+           StartForeground = Colors.Black;
+           StartBackground = Colors.White;
+           StartLineType = LineType.Solid;
+           StartFont = 1;
+           StartFontSize = 14.0;
+           StartGamma = 1.0;
+           CharOffsetX = 0.4900;
+           CharOffsetY = 0.3333;
+           CharacterSizeInRasterX = StartFontSize * 0.9;
+           CharacterSizeInRasterY = StartFontSize * 1.2;
+           InchesPerRasterX = 1.0/72.0;
+           InchesPerRasterY = 1.0/72.0;
+           LineBiasY = 0.20;
+           IsClippable = true;
+           Adjustment = Adjustment.None;
+           IsGammaModifiable = false;
+           DisplayListOn = false;
+       }
 
-      private void WriteDouble(string fieldName, double value)
+       private void WriteDouble(string fieldName, double value)
       {
          var bytes = BitConverter.GetBytes(value);
          var offset = Marshal.OffsetOf(typeof(DevDesc), fieldName).ToInt32();

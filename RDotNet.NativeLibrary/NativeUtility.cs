@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using Microsoft.Win32;
 
 namespace RDotNet.NativeLibrary
@@ -169,8 +170,11 @@ namespace RDotNet.NativeLibrary
                rHome = "/Library/Frameworks/R.framework/Resources";
                break;
             case PlatformID.Unix:
-               // if rPath is e.g. /usr/local/lib/R/lib/ , 
-               rHome = Path.GetDirectoryName(rPath);
+               if (!string.IsNullOrEmpty(rPath))
+                  // if rPath is e.g. /usr/local/lib/R/lib/ , 
+                  rHome = Path.GetDirectoryName(rPath);
+               else
+                  rHome = "/usr/lib/R";
                if (!rHome.EndsWith("R"))
                   // if rPath is e.g. /usr/lib/ (symlink)  then default 
                   rHome = "/usr/lib/R";
@@ -217,7 +221,7 @@ namespace RDotNet.NativeLibrary
       /// Attempt to find a suitable path to the R shared library. This is used by R.NET by default; users may want to use it to diagnose problematic behaviors.
       /// </summary>
       /// <returns>The path to the directory where the R shared library is expected to be</returns>
-      public static string FindRPath(string rHome=null)
+      public static string FindRPath(string rHome = null)
       {
          var platform = GetPlatform();
          switch (platform)
@@ -235,6 +239,7 @@ namespace RDotNet.NativeLibrary
 
       private static string FindRPathUnix(string rHome)
       {
+         // TODO: too many default strings here. R.NET should not try to overcome variance in Unix setups. 
          var shlibFilename = GetRLibraryFileName();
          var rexepath = ExecCommand("which", "R"); // /usr/bin/R,  or /usr/local/bin/R
          if (string.IsNullOrEmpty(rexepath)) return "/usr/lib";
@@ -267,7 +272,22 @@ namespace RDotNet.NativeLibrary
 
       private static void SetenvPrependToPath(string rPath, string envVarName = "PATH")
       {
+         // this function results from a merge of PR https://rdotnet.codeplex.com/SourceControl/network/forks/skyguy94/PRFork/contribution/7684
+         //  Not sure of the intent, and why a SetDllDirectory was used, where we moved away from. May need discussion with skyguy94
+         //  relying on this too platform-specific way to specify the search path where
+         //  Environment.SetEnvironmentVariable is multi-platform.
+
          Environment.SetEnvironmentVariable(envVarName, PrependToPath(rPath, envVarName));
+         /*
+         var platform = GetPlatform();
+         if (platform == PlatformID.Win32NT)
+         {
+            var result = WindowsLibraryLoader.SetDllDirectory(rPath);
+            var buffer = new StringBuilder(100);
+            WindowsLibraryLoader.GetDllDirectory(100, buffer);
+            Console.WriteLine("DLLPath:" + buffer.ToString());
+         }
+         */
       }
 
       private static string PrependToPath(string rPath, string envVarName = "PATH")
