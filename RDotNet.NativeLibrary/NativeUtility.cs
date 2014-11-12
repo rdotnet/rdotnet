@@ -170,7 +170,7 @@ namespace RDotNet.NativeLibrary
                rHome = "/Library/Frameworks/R.framework/Resources";
                break;
             case PlatformID.Unix:
-               if(!string.IsNullOrEmpty(rPath))
+               if (!string.IsNullOrEmpty(rPath))
                   // if rPath is e.g. /usr/local/lib/R/lib/ , 
                   rHome = Path.GetDirectoryName(rPath);
                else
@@ -221,7 +221,7 @@ namespace RDotNet.NativeLibrary
       /// Attempt to find a suitable path to the R shared library. This is used by R.NET by default; users may want to use it to diagnose problematic behaviors.
       /// </summary>
       /// <returns>The path to the directory where the R shared library is expected to be</returns>
-      public static string FindRPath(string rHome=null)
+      public static string FindRPath(string rHome = null)
       {
          var platform = GetPlatform();
          switch (platform)
@@ -272,15 +272,22 @@ namespace RDotNet.NativeLibrary
 
       private static void SetenvPrependToPath(string rPath, string envVarName = "PATH")
       {
-          var platform = GetPlatform();
-          if (platform == PlatformID.Win32NT)
-          {
-              var result = WindowsLibraryLoader.SetDllDirectory(rPath);
-              var buffer = new StringBuilder(100);
-              WindowsLibraryLoader.GetDllDirectory(100, buffer);
-              Console.WriteLine("DLLPath:" + buffer.ToString());
-      }
-          //Environment.SetEnvironmentVariable(envVarName, PrependToPath(rPath, envVarName));
+         // this function results from a merge of PR https://rdotnet.codeplex.com/SourceControl/network/forks/skyguy94/PRFork/contribution/7684
+         //  Not sure of the intent, and why a SetDllDirectory was used, where we moved away from. May need discussion with skyguy94
+         //  relying on this too platform-specific way to specify the search path where
+         //  Environment.SetEnvironmentVariable is multi-platform.
+
+         Environment.SetEnvironmentVariable(envVarName, PrependToPath(rPath, envVarName));
+         /*
+         var platform = GetPlatform();
+         if (platform == PlatformID.Win32NT)
+         {
+            var result = WindowsLibraryLoader.SetDllDirectory(rPath);
+            var buffer = new StringBuilder(100);
+            WindowsLibraryLoader.GetDllDirectory(100, buffer);
+            Console.WriteLine("DLLPath:" + buffer.ToString());
+         }
+         */
       }
 
       private static string PrependToPath(string rPath, string envVarName = "PATH")
