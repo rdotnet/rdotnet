@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,6 +40,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MockDevice.cs" />
@@ -51,15 +51,12 @@
     <Compile Include="RuntimeDiagnostics.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\R.NET\RDotNet.csproj">
-      <Project>{0923e1a0-2032-4997-ab73-49e42c4034a9}</Project>
+      <Project>{0923E1A0-2032-4997-AB73-49E42C4034A9}</Project>
       <Name>RDotNet</Name>
     </ProjectReference>
     <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj">
-      <Project>{2a089a59-0f22-4484-b442-0fe8bda10879}</Project>
+      <Project>{2A089A59-0F22-4484-B442-0FE8BDA10879}</Project>
       <Name>RDotNet.NativeLibrary</Name>
     </ProjectReference>
   </ItemGroup>
@@ -72,4 +69,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

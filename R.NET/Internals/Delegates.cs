@@ -141,6 +141,9 @@ namespace RDotNet.Internals
    internal delegate IntPtr R_tryEval(IntPtr statement, IntPtr environment, out bool errorOccurred);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   public delegate void Rf_PrintValue(IntPtr value);
+
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate IntPtr R_ParseVector(IntPtr statement, int statementCount, out ParseStatus status, IntPtr _);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -193,8 +196,8 @@ namespace RDotNet.Internals
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate bool Rf_isOrdered(IntPtr sexp);
 
-	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	internal delegate IntPtr R_lsInternal(IntPtr environment, bool all);
+   [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+   internal delegate IntPtr R_lsInternal(IntPtr environment, bool all);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate IntPtr Rf_applyClosure(IntPtr call, IntPtr value, IntPtr arguments, IntPtr environment, IntPtr suppliedEnvironment);

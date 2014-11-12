@@ -32,7 +32,7 @@ namespace RDotNet
       {
          string rLibPath = NativeUtility.FindRPath();
          var files = Directory.GetFiles(rLibPath);
-         var fnmatch = files.Where(fn => fn.ToLower() == Path.Combine(rLibPath.ToLower(), NativeUtility.GetRDllFileName().ToLower()));
+         var fnmatch = files.Where(fn => fn.ToLower() == Path.Combine(rLibPath.ToLower(), NativeUtility.GetRLibraryFileName().ToLower()));
          Assert.AreEqual(1, fnmatch.Count());
       }
 
@@ -40,8 +40,10 @@ namespace RDotNet
       public void TestFindRHomePath()
       {
          string rHomePath = NativeUtility.FindRHome();
-         var files = Directory.GetFiles(rHomePath);
-         var fnmatch = files.Where(fn => Path.GetFileName(fn) == "CHANGES");
+         var files = Directory.GetDirectories(rHomePath);
+         var fnmatch = files.Where(fn => Path.GetFileName(fn) == "library");
+         Assert.AreEqual(1, fnmatch.Count());
+         fnmatch = Directory.GetDirectories(fnmatch.First()).Where(fn => Path.GetFileName(fn) == "base");
          Assert.AreEqual(1, fnmatch.Count());
       }
    }

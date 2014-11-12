@@ -1,4 +1,5 @@
 ﻿using RDotNet.Internals;
+using RDotNet.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -89,7 +90,7 @@ namespace RDotNet
          int n = this.Length;
          var data = new double[2*n];
          Marshal.Copy(DataPointer, data, 0, 2 * n);
-         return Utility.DeserializeComplexFromDouble(data);
+         return RTypesUtil.DeserializeComplexFromDouble(data);
       }
 
       /// <summary>
@@ -97,7 +98,7 @@ namespace RDotNet
       /// </summary>
       protected override void SetVectorDirect(Complex[] values)
       {
-         double[] data = Utility.SerializeComplexToDouble(values);
+         double[] data = RTypesUtil.SerializeComplexToDouble(values);
          IntPtr pointer = IntPtr.Add(DataPointer, 0);
          Marshal.Copy(data, 0, pointer, data.Length);
       }

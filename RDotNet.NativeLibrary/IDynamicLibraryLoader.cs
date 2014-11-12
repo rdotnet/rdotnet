@@ -38,4 +38,3 @@ namespace RDotNet.NativeLibrary
       IntPtr GetFunctionAddress(IntPtr hModule, string lpProcName);
    }
 }
-
