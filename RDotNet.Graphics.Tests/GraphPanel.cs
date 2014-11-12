@@ -82,24 +82,28 @@ namespace RDotNet.Graphics
          }
       }
 
-      MetricsInfo IGraphicsDevice.GetMetricInfo(int character, GraphicsContext context, DeviceDescription description)
-      {
-         var style = GetStyle(context.FontFace);
-         var family = Font.FontFamily;
-         int width;
-         using (var g = CreateGraphics())
-         {
-            width = (int)g.MeasureString(((char)character).ToString(CultureInfo.InvariantCulture), Font).Width;
-         }
-         return new MetricsInfo
-         {
-            Ascent = family.GetCellAscent(style),
-            Descent = family.GetCellDescent(style),
-            Width = width
-         };
-      }
+       public MetricsInfo GetMetricInfo(int character, GraphicsContext context, DeviceDescription description)
+       {
+           return GetTextMetrics(character.ToString(CultureInfo.InvariantCulture), context, description);
+       }
 
-      void IGraphicsDevice.DrawPolygon(IEnumerable<Point> points, GraphicsContext context, DeviceDescription description)
+       private MetricsInfo GetTextMetrics(string s, GraphicsContext context, DeviceDescription description)
+       {
+           var style = GetStyle(context.FontFace);
+           var family = Font.FontFamily;
+           var conversion = Font.SizeInPoints / family.GetEmHeight(style);
+           using (var g = CreateGraphics())
+           {
+               return new MetricsInfo
+               {
+                   Ascent = family.GetCellAscent(style) * conversion,
+                   Descent = family.GetCellDescent(style) * conversion,
+                   Width = g.MeasureString(s, Font).Width
+               };
+           }
+       }
+
+       void IGraphicsDevice.DrawPolygon(IEnumerable<Point> points, GraphicsContext context, DeviceDescription description)
       {
          var color = ConvertColor(context.Foreground);
          using (var g = CreateGraphics())
@@ -158,11 +162,8 @@ namespace RDotNet.Graphics
 
       double IGraphicsDevice.MeasureWidth(string s, GraphicsContext context, DeviceDescription description)
       {
-         var rectangle = ConvertRectangle(description.Bounds);
-         using (var g = CreateGraphics())
-         {
-            return g.MeasureString(s, Font, rectangle.Size).Width;
-         }
+          var metrics = GetTextMetrics(s, context, description);
+          return metrics.Width;
       }
 
       void IGraphicsDevice.DrawText(string s, Point location, double rotation, double adjustment, GraphicsContext context, DeviceDescription description)
@@ -171,7 +172,7 @@ namespace RDotNet.Graphics
          using (var g = CreateGraphics())
          using (var brush = new SolidBrush(color))
          {
-            g.DrawString(s, Font, brush, ConvertPointF(location));
+             g.DrawString(s, Font, brush, ConvertPointF(location));
          }
       }
 
