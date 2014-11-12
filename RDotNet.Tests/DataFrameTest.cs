@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
+using RDotNet.NativeLibrary;
+using System;
 
 namespace RDotNet
 {
@@ -41,6 +43,14 @@ namespace RDotNet
          return mpg;
       }
 
+      //[Test]
+      public void TestDataFrameInMemoryCreationTwice()
+      {
+         // https://rdotnet.codeplex.com/workitem/146
+         TestDataFrameInMemoryCreation();
+         TestDataFrameInMemoryCreation();
+      }
+         
       [Test]
       public void TestDataFrameInMemoryCreation()
       {
@@ -53,6 +63,9 @@ namespace RDotNet
          Assert.AreEqual(columnNames, df.ColumnNames);
          df = engine.CreateDataFrame(columns, columnNames: null);
          checkDataFrameContent(df);
+
+         string additionalMsg = "https://rdotnet.codeplex.com/workitem/146";
+         ReportFailOnLinux(additionalMsg);
 
          columns[1] = new int[] { 1, 2, 3, 4, 5, 6, 7 };
          // NOTE: on at least one machine, this fails at the first test run with an OutOfMemoryException

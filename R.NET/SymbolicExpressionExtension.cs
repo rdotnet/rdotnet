@@ -50,7 +50,7 @@ namespace RDotNet
             asListFunction = null;
          }
          if(asListFunction==null) 
-            asListFunction = engine.Evaluate("as.list").AsFunction();
+            asListFunction = engine.Evaluate("invisible(as.list)").AsFunction();
          var newExpression = asListFunction.Invoke(expression);
          return new GenericVector(newExpression.Engine, newExpression.DangerousGetHandle());
       }

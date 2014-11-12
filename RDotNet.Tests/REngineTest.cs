@@ -7,6 +7,15 @@ namespace RDotNet
 {
    internal class REngineTest : RDotNetTestFixture
    {
+
+      [Test]
+      public void TestCStackCheckDisabled()
+      {
+         var engine = this.Engine;
+         var cStackLimit = engine.GetDangerousInt32("R_CStackLimit");
+         Assert.AreEqual(-1, cStackLimit);
+      }
+
       [Test]
       public void TestSetCommandLineArguments()
       {
@@ -111,7 +120,7 @@ namespace RDotNet
       {
          var engine = this.Engine;
          engine.Evaluate("if (exists('x')) {rm(x)}");
-         //Thread.Sleep(100);
+         Thread.Sleep(100);
          var memoryInitial = GetBaselineRengineMemory(engine);
          engine.Evaluate(statementCreateX);
          T sexp = coercionFun(engine.GetSymbol("x"));
@@ -119,7 +128,7 @@ namespace RDotNet
          Assert.That(memoryAfterAlloc - memoryInitial, Is.GreaterThan(expectedMinMegaBytesDifference));
          engine.Evaluate("rm(x)");
          sexp = null;
-         //Thread.Sleep(100);
+         Thread.Sleep(100);
          var memoryAfterGC = GetBaselineRengineMemory(engine);
          Assert.That(memoryAfterAlloc - memoryAfterGC, Is.GreaterThan(expectedMinMegaBytesDifference));  // x should be collected.
       }
@@ -134,7 +143,7 @@ namespace RDotNet
       {
          GarbageCollectRandClr(engine);
          var tmp = GetRMemorySize(engine);
-         //Thread.Sleep(100);
+         Thread.Sleep(100);
          GarbageCollectRandClr(engine);
          return GetRMemorySize(engine);
       }
@@ -177,6 +186,8 @@ namespace RDotNet
       public void TestReadConsole()
       {
          var engine = this.Engine;
+         string additionalMsg = "https://rdotnet.codeplex.com/workitem/146";
+         ReportFailOnLinux(additionalMsg);
          Device.Input = "Hello, World!";
          Assert.That(engine.Evaluate("readline()").AsCharacter()[0], Is.EqualTo(Device.Input));
       }

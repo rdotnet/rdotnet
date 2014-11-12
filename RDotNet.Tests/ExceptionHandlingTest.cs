@@ -31,6 +31,9 @@ namespace RDotNet
          //> fail <- function(msg) {stop(paste( 'the message is', msg))} 
          //> fail('bailing out')
          //Error in fail("bailing out") : the message is bailing out
+
+         ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
+
          var engine = this.Engine;
          engine.Evaluate("fail <- function(msg) {stop(paste( 'the message is', msg))}");
          object expr = engine.Evaluate("fail('bailing out')");
@@ -41,12 +44,14 @@ namespace RDotNet
       public void TestFailedExpressionUnboundSymbol()
       {
           var engine = this.Engine;
+          ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
           var x = engine.GetSymbol("x");
       }
 
       [Test, ExpectedExceptionAttribute(typeof(EvaluationException), ExpectedMessage = "Error: object 'x' not found\n")]
       public void TestFailedExpressionUnboundSymbolEvaluation()
       {
+          ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
           var engine = this.Engine;
           var x = engine.Evaluate("x");
       }
@@ -54,6 +59,7 @@ namespace RDotNet
       [Test, ExpectedExceptionAttribute(typeof(EvaluationException), ExpectedMessage = "Error: object 'x' not found\n")]
       public void TestFailedExpressionParsingMissingParenthesis()
       {
+          ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
           //> x <- rep(c(TRUE,FALSE), 55
           //+ 
           //+ x
