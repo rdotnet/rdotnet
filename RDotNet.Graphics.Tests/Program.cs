@@ -22,7 +22,8 @@ namespace RDotNet.Graphics
          };
          var form = new GraphForm()
          {
-            Code = @"plot(1:10, pch=1:10, col=1:10, cex=seq(1, 2, length=10))",
+             Code = @"plot(1:10, pch=1:10, col=1:10, cex=seq(1, 2, length=10))
+                  text(c(1), c(1), c('Text here'), col=c('red'))",
             TempImagePath = path,
          };
          REngine.SetEnvironmentVariables();

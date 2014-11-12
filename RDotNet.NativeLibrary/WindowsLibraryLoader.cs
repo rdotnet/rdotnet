@@ -8,7 +8,7 @@ using System.Text;
 namespace RDotNet.NativeLibrary
 {
    [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-   internal class WindowsLibraryLoader : IDynamicLibraryLoader
+   public class WindowsLibraryLoader : IDynamicLibraryLoader
    {
       public IntPtr LoadLibrary(string filename)
       {
@@ -48,7 +48,14 @@ namespace RDotNet.NativeLibrary
       [return: MarshalAs(UnmanagedType.LPStr)]
       private static extern string InternalGetLastError();
 
-      const int MAX_PATH_LENGTH = 255;
+      [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+      [return: MarshalAs(UnmanagedType.Bool)]
+      public static extern bool SetDllDirectory(string lpPathName);
+
+      [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+      public static extern int GetDllDirectory(int nBufferLength, StringBuilder lpPathName);
+       
+       const int MAX_PATH_LENGTH = 255;
 
       [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
       private static extern int GetShortPathName(
@@ -70,7 +77,6 @@ namespace RDotNet.NativeLibrary
          GetShortPathName(path, shortPath, MAX_PATH_LENGTH);
          return shortPath.ToString();
       }
-
 
    }
 }
