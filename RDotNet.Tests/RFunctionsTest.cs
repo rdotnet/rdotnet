@@ -143,6 +143,43 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
       }
 
       [Test]
+      public void TestDataFrameReturned()
+      {
+         // Investigates http://stackoverflow.com/questions/26803752/r-net-invoke-function-does-not-work/26950937#26950937
+         // Consider removing or morphing into another test on data coercion; there did not appear to be any issue as reported.
+
+         var engine = this.Engine;
+
+         var funcDef = @"function() {return(data.frame(a=1:4, b=5:8))}";
+         var f = engine.Evaluate(funcDef).AsFunction();
+         var x = f.Invoke();
+         Assert.True(x.IsDataFrame());
+         Assert.True(x.IsList());
+         var df = x.AsDataFrame();
+         Assert.NotNull(df);
+         // above passes.
+         // Now try to get closer to user's report test case with a character passed in
+         funcDef = @"function(lyrics) {return(data.frame(a=1:4, b=5:8))}";
+         f = engine.Evaluate(funcDef).AsFunction();
+         x = f.Invoke(engine.CreateCharacter("Wo willst du hin?"));
+         Assert.True(x.IsDataFrame());
+         Assert.True(x.IsList());
+         df = x.AsDataFrame();
+         Assert.NotNull(df);
+
+         funcDef = @"function() {return(as.matrix(data.frame(a=1:4, b=5:8)))}";
+         f = engine.Evaluate(funcDef).AsFunction();
+         x = f.Invoke();
+         Assert.False(x.IsDataFrame());
+         Assert.False(x.IsList());
+         df = x.AsDataFrame();
+         Assert.Null(df);
+         var nm = x.AsNumericMatrix();
+         Assert.NotNull(nm);
+      }
+
+
+      [Test]
       public void TestArgumentMatching()
       {
          var engine = this.Engine;
