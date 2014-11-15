@@ -836,6 +836,11 @@ namespace RDotNet
          }
       }
 
+      public SymbolicExpression CreateFromNativeSexp(IntPtr sexp)
+      {
+         return new SymbolicExpression(this, sexp);
+      }
+
       #region Nested type: _getDLLVersion
 
       [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
