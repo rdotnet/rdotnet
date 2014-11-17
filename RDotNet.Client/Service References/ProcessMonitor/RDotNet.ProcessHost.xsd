@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/RDotNet.ProcessHost" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/RDotNet.ProcessHost" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="ServiceState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Faulted" />
+      <xs:enumeration value="Initializing" />
+      <xs:enumeration value="Ready" />
+      <xs:enumeration value="Terminating" />
+      <xs:enumeration value="Closed" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ServiceState" nillable="true" type="tns:ServiceState" />
+</xs:schema>

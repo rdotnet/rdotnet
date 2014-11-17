@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="f872e72a-b368-44b4-b8c0-2988e4b2273a" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.Generic.List`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8733/Design_Time_Addresses/RLanguageService/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="f4093acf-2409-4f26-9ee2-e782908e749f" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/RLanguageService/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="60c9fb6f-e3ff-4110-a181-136d6477a5d1" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/RLanguageService/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="24ccd146-808e-46a6-91a6-6d94667dd1d7" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/RLanguageService/mex" />
+    <MetadataFile FileName="RDotNet.Server.xsd" MetadataType="Schema" ID="766f45b1-aabe-476c-80ba-c84649914280" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/RLanguageService/mex" />
+    <MetadataFile FileName="System.xsd" MetadataType="Schema" ID="81fa9127-1eb7-4bae-a14c-46ef6d5ea205" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/RLanguageService/mex" />
+    <MetadataFile FileName="RDotNet.R.Adapter.xsd" MetadataType="Schema" ID="acc66675-21c1-4c8e-970e-25c191cb09d5" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/RLanguageService/mex" />
+    <MetadataFile FileName="Arrays.xsd" MetadataType="Schema" ID="00088eb4-c8a2-4893-a1e1-e42bcf6487a1" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/RLanguageService/mex" />
+    <MetadataFile FileName="System.Numerics.xsd" MetadataType="Schema" ID="dc3133b3-30f7-4ceb-9e52-5912154262d0" SourceId="1" SourceUrl="http://localhost:8733/Design_Time_Addresses/RLanguageService/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

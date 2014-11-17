@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ROutputService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IROutputService_ClearAll_InputMessage">
+    <wsdl:part name="parameters" element="tns:ClearAll" />
+  </wsdl:message>
+  <wsdl:message name="IROutputService_ClearAll_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ClearAllResponse" />
+  </wsdl:message>
+  <wsdl:message name="IROutputService_ClearPlots_InputMessage">
+    <wsdl:part name="parameters" element="tns:ClearPlots" />
+  </wsdl:message>
+  <wsdl:message name="IROutputService_ClearPlots_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ClearPlotsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IROutputService_ClearText_InputMessage">
+    <wsdl:part name="parameters" element="tns:ClearText" />
+  </wsdl:message>
+  <wsdl:message name="IROutputService_ClearText_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ClearTextResponse" />
+  </wsdl:message>
+  <wsdl:message name="IROutputService_GetPendingPlotCount_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPendingPlotCount" />
+  </wsdl:message>
+  <wsdl:message name="IROutputService_GetPendingPlotCount_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPendingPlotCountResponse" />
+  </wsdl:message>
+  <wsdl:message name="IROutputService_GetAllPlots_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllPlots" />
+  </wsdl:message>
+  <wsdl:message name="IROutputService_GetAllPlots_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllPlotsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IROutputService_GetText_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetText" />
+  </wsdl:message>
+  <wsdl:message name="IROutputService_GetText_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTextResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IROutputService">
+    <wsdl:operation name="ClearAll">
+      <wsdl:input wsaw:Action="http://tempuri.org/IROutputService/ClearAll" message="tns:IROutputService_ClearAll_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IROutputService/ClearAllResponse" message="tns:IROutputService_ClearAll_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ClearPlots">
+      <wsdl:input wsaw:Action="http://tempuri.org/IROutputService/ClearPlots" message="tns:IROutputService_ClearPlots_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IROutputService/ClearPlotsResponse" message="tns:IROutputService_ClearPlots_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ClearText">
+      <wsdl:input wsaw:Action="http://tempuri.org/IROutputService/ClearText" message="tns:IROutputService_ClearText_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IROutputService/ClearTextResponse" message="tns:IROutputService_ClearText_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPendingPlotCount">
+      <wsdl:input wsaw:Action="http://tempuri.org/IROutputService/GetPendingPlotCount" message="tns:IROutputService_GetPendingPlotCount_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IROutputService/GetPendingPlotCountResponse" message="tns:IROutputService_GetPendingPlotCount_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllPlots">
+      <wsdl:input wsaw:Action="http://tempuri.org/IROutputService/GetAllPlots" message="tns:IROutputService_GetAllPlots_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IROutputService/GetAllPlotsResponse" message="tns:IROutputService_GetAllPlots_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetText">
+      <wsdl:input wsaw:Action="http://tempuri.org/IROutputService/GetText" message="tns:IROutputService_GetText_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IROutputService/GetTextResponse" message="tns:IROutputService_GetText_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IROutputService" type="tns:IROutputService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="ClearAll">
+      <soap:operation soapAction="http://tempuri.org/IROutputService/ClearAll" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ClearPlots">
+      <soap:operation soapAction="http://tempuri.org/IROutputService/ClearPlots" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ClearText">
+      <soap:operation soapAction="http://tempuri.org/IROutputService/ClearText" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPendingPlotCount">
+      <soap:operation soapAction="http://tempuri.org/IROutputService/GetPendingPlotCount" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllPlots">
+      <soap:operation soapAction="http://tempuri.org/IROutputService/GetAllPlots" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetText">
+      <soap:operation soapAction="http://tempuri.org/IROutputService/GetText" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ROutputService">
+    <wsdl:port name="BasicHttpBinding_IROutputService" binding="tns:BasicHttpBinding_IROutputService">
+      <soap:address location="http://localhost:8733/Design_Time_Addresses/ROutputService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

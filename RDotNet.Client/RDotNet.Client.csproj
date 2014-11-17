@@ -1,0 +1,284 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0923E1A0-2032-4997-AB73-49E42C4034A9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RDotNet.Client</RootNamespace>
+    <AssemblyName>RDotNet.Client</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DocumentationFile>
+    </DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BuiltinFunction.cs" />
+    <Compile Include="Closure.cs" />
+    <Compile Include="ComplexVector.cs" />
+    <Compile Include="CharacterMatrix.cs" />
+    <Compile Include="ComplexMatrix.cs" />
+    <Compile Include="Diagnostics\S4ObjectSlotDisplay.cs" />
+    <Compile Include="Diagnostics\S4ObjectDebugView.cs" />
+    <Compile Include="DynamicVector.cs" />
+    <Compile Include="EvaluationException.cs" />
+    <Compile Include="HostConfiguration.cs" />
+    <Compile Include="Interfaces.cs" />
+    <Compile Include="IProcess.cs" />
+    <Compile Include="IProcessFactory.cs" />
+    <Compile Include="IRManagementAPI.cs" />
+    <Compile Include="IRObjectAPI.cs" />
+    <Compile Include="IROutputAPI.cs" />
+    <Compile Include="LocalInstance.cs" />
+    <Compile Include="ParseException.cs" />
+    <Compile Include="ProcessFactory.cs" />
+    <Compile Include="ProcessWrapper.cs" />
+    <Compile Include="ProtectedPointer.cs" />
+    <Compile Include="RRemoteAPIFactory.cs" />
+    <Compile Include="RemoteRObjectAPI.cs" />
+    <Compile Include="RemoteROuputAPI.cs" />
+    <Compile Include="RemoteRManagementAPI.cs" />
+    <Compile Include="REngine.cs" />
+    <Compile Include="REngineFactory.cs" />
+    <Compile Include="Service References\ProcessMonitor\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\RLanguageService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\RManagementService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ROutputService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="SymbolicExpression.cs" />
+    <Compile Include="S4Object.cs" />
+    <Compile Include="DataFrameColumnAttribute.cs" />
+    <Compile Include="DataFrameRowAttribute.cs" />
+    <Compile Include="Diagnostics\DataFrameDebugView.cs" />
+    <Compile Include="Diagnostics\DataFrameColumnDisplay.cs" />
+    <Compile Include="Diagnostics\FactorDebugView.cs" />
+    <Compile Include="Diagnostics\MatrixDebugView.cs" />
+    <Compile Include="Diagnostics\VectorDebugView.cs" />
+    <Compile Include="Factor.cs" />
+    <Compile Include="SpecialFunction.cs" />
+    <Compile Include="REnvironment.cs" />
+    <Compile Include="Expression.cs" />
+    <Compile Include="ExpressionVector.cs" />
+    <Compile Include="DataFrame.cs" />
+    <Compile Include="DataFrameRow.cs" />
+    <Compile Include="Function.cs" />
+    <Compile Include="GenericVector.cs" />
+    <Compile Include="Language.cs" />
+    <Compile Include="LogicalMatrix.cs" />
+    <Compile Include="PairList.cs" />
+    <Compile Include="RawMatrix.cs" />
+    <Compile Include="NumericMatrix.cs" />
+    <Compile Include="IntegerMatrix.cs" />
+    <Compile Include="Matrix.cs" />
+    <Compile Include="RawVector.cs" />
+    <Compile Include="NumericVector.cs" />
+    <Compile Include="IntegerVector.cs" />
+    <Compile Include="Symbol.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RSafeHandle.cs" />
+    <Compile Include="Vector.cs" />
+    <Compile Include="LogicalVector.cs" />
+    <Compile Include="CharacterVector.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\DataSources\RDotNet.Server.SymbolicExpressionContext.datasource" />
+    <None Include="Properties\DataSources\System.Numerics.Complex.datasource" />
+    <None Include="Service References\ProcessMonitor\RDotNet.Client.ProcessMonitor.ServiceState.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ProcessMonitor\RDotNet.ProcessHost.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ProcessMonitor\service.wsdl" />
+    <None Include="Service References\ProcessMonitor\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ProcessMonitor\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\RLanguageService\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\RLanguageService\RDotNet.Client.RLanguageService.ParseVectorResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\RLanguageService\RDotNet.Client.RLanguageService.TryEvaluateResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\RLanguageService\RDotNet.R.Adapter.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\RLanguageService\RDotNet.Server.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\RLanguageService\service.wsdl" />
+    <None Include="Service References\RLanguageService\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\RLanguageService\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\RLanguageService\System.Numerics.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\RLanguageService\System.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\RManagementService\RDotNet.Server.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\RManagementService\service.wsdl" />
+    <None Include="Service References\RManagementService\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\RManagementService\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ROutputService\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ROutputService\service.wsdl" />
+    <None Include="Service References\ROutputService\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ROutputService\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RDotNet.R.Adapter\RDotNet.R.Adapter.csproj">
+      <Project>{2A089A59-0F22-4484-B442-0FE8BDA10879}</Project>
+      <Name>RDotNet.R.Adapter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RDotNet.Server\RDotNet.Server.csproj">
+      <Project>{259a96db-368c-45a4-9290-3bc64d4bbf09}</Project>
+      <Name>RDotNet.Server</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ProcessMonitor\" />
+    <WCFMetadataStorage Include="Service References\RLanguageService\" />
+    <WCFMetadataStorage Include="Service References\RManagementService\" />
+    <WCFMetadataStorage Include="Service References\ROutputService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RLanguageService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RLanguageService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RLanguageService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RManagementService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RManagementService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\RManagementService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ROutputService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ROutputService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ROutputService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ProcessMonitor\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ProcessMonitor\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ProcessMonitor\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
