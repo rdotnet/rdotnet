@@ -11,12 +11,13 @@ namespace RDotNet.Client
         {
             var psi = new ProcessStartInfo(path, args)
             {
-/*                CreateNoWindow = true,
+                
+                CreateNoWindow = false,
                 ErrorDialog = false,
-                WindowStyle = ProcessWindowStyle.Hidden
-            */};
+                WindowStyle = ProcessWindowStyle.Normal,
+                UseShellExecute = true,
+            };
 
-            psi.UseShellExecute = false;
             foreach (var environmentVariable in environmentVariables)
             {
                 Environment.SetEnvironmentVariable( environmentVariable.Key, environmentVariable.Value );

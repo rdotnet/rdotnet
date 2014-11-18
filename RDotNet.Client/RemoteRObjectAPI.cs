@@ -29,9 +29,7 @@ namespace RDotNet.Client
             {
                 _client.ReleaseObject(handle.Context);
             }
-            catch (NullReferenceException)
-            { }
-            catch (CommunicationException)
+            catch (Exception)
             { }
         }
 
