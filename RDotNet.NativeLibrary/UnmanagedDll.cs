@@ -180,7 +180,7 @@ namespace RDotNet.NativeLibrary
          throw new EntryPointNotFoundException(string.Format("Function {0} not found in native library {1}", entryPoint, this.DllFilename));
       }
 
-      private IntPtr GetFunctionAddress(string lpProcName)
+      public IntPtr GetFunctionAddress(string lpProcName)
       {
          return libraryLoader.GetFunctionAddress(handle, lpProcName);
       }
