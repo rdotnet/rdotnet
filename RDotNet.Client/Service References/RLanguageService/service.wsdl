@@ -1,0 +1,2304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="RLanguageService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/RDotNet.Server" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/System" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/RDotNet.R.Adapter" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/System.Numerics" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IRLanguageService_PreserveObject_InputMessage">
+    <wsdl:part name="parameters" element="tns:PreserveObject" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_PreserveObject_OutputMessage">
+    <wsdl:part name="parameters" element="tns:PreserveObjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_ReleaseObject_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReleaseObject" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_ReleaseObject_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReleaseObjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_Protect_InputMessage">
+    <wsdl:part name="parameters" element="tns:Protect" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_Protect_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ProtectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_Unprotect_InputMessage">
+    <wsdl:part name="parameters" element="tns:Unprotect" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_Unprotect_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UnprotectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_UnprotectPtr_InputMessage">
+    <wsdl:part name="parameters" element="tns:UnprotectPtr" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_UnprotectPtr_OutputMessage">
+    <wsdl:part name="parameters" element="tns:UnprotectPtrResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_Install_InputMessage">
+    <wsdl:part name="parameters" element="tns:Install" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_Install_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InstallResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_MakeString_InputMessage">
+    <wsdl:part name="parameters" element="tns:MakeString" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_MakeString_OutputMessage">
+    <wsdl:part name="parameters" element="tns:MakeStringResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_MakeChar_InputMessage">
+    <wsdl:part name="parameters" element="tns:MakeChar" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_MakeChar_OutputMessage">
+    <wsdl:part name="parameters" element="tns:MakeCharResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_AsCharacterFactor_InputMessage">
+    <wsdl:part name="parameters" element="tns:AsCharacterFactor" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_AsCharacterFactor_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AsCharacterFactorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_AllocateVector_InputMessage">
+    <wsdl:part name="parameters" element="tns:AllocateVector" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_AllocateVector_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AllocateVectorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_CoerceVector_InputMessage">
+    <wsdl:part name="parameters" element="tns:CoerceVector" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_CoerceVector_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CoerceVectorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsVector_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsVector" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsVector_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsVectorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsFrame_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsFrame" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsFrame_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsFrameResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsS4_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsS4" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsS4_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsS4Response" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLength_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLength" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLength_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLengthResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_AllocateMatrix_InputMessage">
+    <wsdl:part name="parameters" element="tns:AllocateMatrix" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_AllocateMatrix_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AllocateMatrixResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsMatrix_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsMatrix" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsMatrix_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsMatrixResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_NumberOfRows_InputMessage">
+    <wsdl:part name="parameters" element="tns:NumberOfRows" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_NumberOfRows_OutputMessage">
+    <wsdl:part name="parameters" element="tns:NumberOfRowsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_NumberOfColumns_InputMessage">
+    <wsdl:part name="parameters" element="tns:NumberOfColumns" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_NumberOfColumns_OutputMessage">
+    <wsdl:part name="parameters" element="tns:NumberOfColumnsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_AllocateList_InputMessage">
+    <wsdl:part name="parameters" element="tns:AllocateList" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_AllocateList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AllocateListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsList_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsList" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_Evaluate_InputMessage">
+    <wsdl:part name="parameters" element="tns:Evaluate" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_Evaluate_OutputMessage">
+    <wsdl:part name="parameters" element="tns:EvaluateResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_TryEvaluate_InputMessage">
+    <wsdl:part name="parameters" element="tns:TryEvaluate" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_TryEvaluate_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TryEvaluateResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_ParseVector_InputMessage">
+    <wsdl:part name="parameters" element="tns:ParseVector" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_ParseVector_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ParseVectorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_FindVar_InputMessage">
+    <wsdl:part name="parameters" element="tns:FindVar" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_FindVar_OutputMessage">
+    <wsdl:part name="parameters" element="tns:FindVarResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetVar_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetVar" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetVar_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetVarResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_DefineVar_InputMessage">
+    <wsdl:part name="parameters" element="tns:DefineVar" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_DefineVar_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DefineVarResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetAttrib_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAttrib" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetAttrib_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAttribResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetAttrib_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetAttrib" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetAttrib_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetAttribResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_DoSlot_InputMessage">
+    <wsdl:part name="parameters" element="tns:DoSlot" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_DoSlot_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DoSlotResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_DoSlotAssign_InputMessage">
+    <wsdl:part name="parameters" element="tns:DoSlotAssign" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_DoSlotAssign_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DoSlotAssignResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetClassDefinition_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetClassDefinition" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetClassDefinition_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetClassDefinitionResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_HasSlot_InputMessage">
+    <wsdl:part name="parameters" element="tns:HasSlot" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_HasSlot_OutputMessage">
+    <wsdl:part name="parameters" element="tns:HasSlotResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsEnvironment_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsEnvironment" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsEnvironment_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsEnvironmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsExpression_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsExpression" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsExpression_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsExpressionResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsSymbol_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsSymbol" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsSymbol_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsSymbolResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsLanguage_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsLanguage" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsLanguage_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsLanguageResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsFunction_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsFunction" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsFunction_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsFunctionResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsFactor_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsFactor" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsFactor_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsFactorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsOrdered_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsOrdered" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsOrdered_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsOrderedResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_LsInternal_InputMessage">
+    <wsdl:part name="parameters" element="tns:LsInternal" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_LsInternal_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LsInternalResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_ApplyClosure_InputMessage">
+    <wsdl:part name="parameters" element="tns:ApplyClosure" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_ApplyClosure_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ApplyClosureResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_VectorToPairList_InputMessage">
+    <wsdl:part name="parameters" element="tns:VectorToPairList" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_VectorToPairList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:VectorToPairListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_AllocateSEXP_InputMessage">
+    <wsdl:part name="parameters" element="tns:AllocateSEXP" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_AllocateSEXP_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AllocateSEXPResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_NewEnvironment_InputMessage">
+    <wsdl:part name="parameters" element="tns:NewEnvironment" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_NewEnvironment_OutputMessage">
+    <wsdl:part name="parameters" element="tns:NewEnvironmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_Cons_InputMessage">
+    <wsdl:part name="parameters" element="tns:Cons" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_Cons_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ConsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_LCons_InputMessage">
+    <wsdl:part name="parameters" element="tns:LCons" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_LCons_OutputMessage">
+    <wsdl:part name="parameters" element="tns:LConsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsNil_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsNil" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsNil_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsNilResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsNaString_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsNaString" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsNaString_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsNaStringResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetParseError_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetParseError" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetParseError_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetParseErrorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetGlobalEnvironment_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetGlobalEnvironment" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetGlobalEnvironment_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetGlobalEnvironmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetNames_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetNames" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetNames_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetNamesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetCharacterVectorValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCharacterVectorValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetCharacterVectorValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCharacterVectorValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetExpressionVectorValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetExpressionVectorValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetExpressionVectorValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetExpressionVectorValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetIntegerVectorValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetIntegerVectorValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetIntegerVectorValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetIntegerVectorValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetNumericVectorValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetNumericVectorValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetNumericVectorValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetNumericVectorValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLogicalVectorValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLogicalVectorValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLogicalVectorValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLogicalVectorValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetRawVectorValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRawVectorValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetRawVectorValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRawVectorValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetComplexVectorValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetComplexVectorValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetComplexVectorValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetComplexVectorValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetCharacterVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCharacterVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetCharacterVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCharacterVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetCharacterVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetCharacterVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetCharacterVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetCharacterVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetExpressionVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetExpressionVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetExpressionVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetExpressionVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetExpressionVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetExpressionVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetExpressionVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetExpressionVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetIntegerVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetIntegerVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetIntegerVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetIntegerVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetIntegerVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetIntegerVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetIntegerVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetIntegerVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetNumericVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetNumericVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetNumericVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetNumericVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetNumericVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetNumericVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetNumericVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetNumericVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLogicalVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLogicalVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLogicalVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLogicalVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetLogicalVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetLogicalVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetLogicalVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetLogicalVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetRawVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRawVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetRawVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRawVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetRawVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetRawVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetRawVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetRawVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetComplexVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetComplexVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetComplexVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetComplexVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetComplexVectorValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetComplexVectorValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetComplexVectorValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetComplexVectorValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeCharacterVector_InputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeCharacterVector" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeCharacterVector_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeCharacterVectorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeIntegerVector_InputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeIntegerVector" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeIntegerVector_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeIntegerVectorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeNumericVector_InputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeNumericVector" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeNumericVector_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeNumericVectorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeLogicalVector_InputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeLogicalVector" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeLogicalVector_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeLogicalVectorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeRawVector_InputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeRawVector" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeRawVector_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeRawVectorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeComplexVector_InputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeComplexVector" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeComplexVector_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeComplexVectorResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetSymbols_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetSymbols" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetSymbols_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetSymbolsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetUnboundValue_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetUnboundValue" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetUnboundValue_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetUnboundValueResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetNilValue_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetNilValue" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetNilValue_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetNilValueResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetAttributeNames_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAttributeNames" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetAttributeNames_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAttributeNamesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetPrintName_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetPrintName" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetPrintName_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetPrintNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetPrintName_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetPrintName" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetPrintName_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetPrintNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetDimNames_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetDimNames" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetDimNames_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetDimNamesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsPromise_InputMessage">
+    <wsdl:part name="parameters" element="tns:IsPromise" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_IsPromise_OutputMessage">
+    <wsdl:part name="parameters" element="tns:IsPromiseResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetClosureBody_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetClosureBody" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetClosureBody_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetClosureBodyResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetClosureFormals_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetClosureFormals" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetClosureFormals_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetClosureFormalsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetClosureEnvironment_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetClosureEnvironment" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetClosureEnvironment_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetClosureEnvironmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLanguageList_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLanguageList" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLanguageList_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLanguageListResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetClass_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetClass" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetClass_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetClassResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetInternal_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetInternal" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetInternal_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetInternalResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetValue_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetValue" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetValue_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetValueResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLevels_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLevels" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLevels_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLevelsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetNumericMatrixValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetNumericMatrixValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetNumericMatrixValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetNumericMatrixValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetIntegerMatrixValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetIntegerMatrixValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetIntegerMatrixValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetIntegerMatrixValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetCharacterMatrixValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCharacterMatrixValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetCharacterMatrixValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCharacterMatrixValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLogicalMatrixValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLogicalMatrixValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLogicalMatrixValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLogicalMatrixValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetRawMatrixValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRawMatrixValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetRawMatrixValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRawMatrixValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetComplexMatrixValues_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetComplexMatrixValues" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetComplexMatrixValues_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetComplexMatrixValuesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetCharacterMatrixValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetCharacterMatrixValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetCharacterMatrixValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetCharacterMatrixValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetCharacterMatrixValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetCharacterMatrixValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetCharacterMatrixValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetCharacterMatrixValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetIntegerMatrixValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetIntegerMatrixValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetIntegerMatrixValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetIntegerMatrixValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetIntegerMatrixValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetIntegerMatrixValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetIntegerMatrixValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetIntegerMatrixValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetNumericMatrixValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetNumericMatrixValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetNumericMatrixValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetNumericMatrixValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetNumericMatrixValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetNumericMatrixValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetNumericMatrixValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetNumericMatrixValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLogicalMatrixValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLogicalMatrixValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetLogicalMatrixValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLogicalMatrixValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetLogicalMatrixValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetLogicalMatrixValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetLogicalMatrixValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetLogicalMatrixValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetRawMatrixValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetRawMatrixValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetRawMatrixValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetRawMatrixValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetRawMatrixValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetRawMatrixValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetRawMatrixValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetRawMatrixValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetComplexMatrixValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetComplexMatrixValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetComplexMatrixValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetComplexMatrixValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetComplexMatrixValueAt_InputMessage">
+    <wsdl:part name="parameters" element="tns:SetComplexMatrixValueAt" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_SetComplexMatrixValueAt_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SetComplexMatrixValueAtResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeCharacterMatrix_InputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeCharacterMatrix" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeCharacterMatrix_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeCharacterMatrixResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeIntegerMatrix_InputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeIntegerMatrix" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeIntegerMatrix_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeIntegerMatrixResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeNumericMatrix_InputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeNumericMatrix" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeNumericMatrix_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeNumericMatrixResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeLogicalMatrix_InputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeLogicalMatrix" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeLogicalMatrix_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeLogicalMatrixResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeRawMatrix_InputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeRawMatrix" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeRawMatrix_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeRawMatrixResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeComplexMatrix_InputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeComplexMatrix" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_InitializeComplexMatrix_OutputMessage">
+    <wsdl:part name="parameters" element="tns:InitializeComplexMatrixResponse" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetParentEnvironment_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetParentEnvironment" />
+  </wsdl:message>
+  <wsdl:message name="IRLanguageService_GetParentEnvironment_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetParentEnvironmentResponse" />
+  </wsdl:message>
+  <wsdl:portType name="IRLanguageService">
+    <wsdl:operation name="PreserveObject">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/PreserveObject" message="tns:IRLanguageService_PreserveObject_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/PreserveObjectResponse" message="tns:IRLanguageService_PreserveObject_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseObject">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/ReleaseObject" message="tns:IRLanguageService_ReleaseObject_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/ReleaseObjectResponse" message="tns:IRLanguageService_ReleaseObject_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Protect">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/Protect" message="tns:IRLanguageService_Protect_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/ProtectResponse" message="tns:IRLanguageService_Protect_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Unprotect">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/Unprotect" message="tns:IRLanguageService_Unprotect_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/UnprotectResponse" message="tns:IRLanguageService_Unprotect_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="UnprotectPtr">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/UnprotectPtr" message="tns:IRLanguageService_UnprotectPtr_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/UnprotectPtrResponse" message="tns:IRLanguageService_UnprotectPtr_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Install">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/Install" message="tns:IRLanguageService_Install_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InstallResponse" message="tns:IRLanguageService_Install_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="MakeString">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/MakeString" message="tns:IRLanguageService_MakeString_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/MakeStringResponse" message="tns:IRLanguageService_MakeString_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="MakeChar">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/MakeChar" message="tns:IRLanguageService_MakeChar_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/MakeCharResponse" message="tns:IRLanguageService_MakeChar_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AsCharacterFactor">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/AsCharacterFactor" message="tns:IRLanguageService_AsCharacterFactor_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/AsCharacterFactorResponse" message="tns:IRLanguageService_AsCharacterFactor_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AllocateVector">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/AllocateVector" message="tns:IRLanguageService_AllocateVector_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/AllocateVectorResponse" message="tns:IRLanguageService_AllocateVector_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CoerceVector">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/CoerceVector" message="tns:IRLanguageService_CoerceVector_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/CoerceVectorResponse" message="tns:IRLanguageService_CoerceVector_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsVector">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsVector" message="tns:IRLanguageService_IsVector_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsVectorResponse" message="tns:IRLanguageService_IsVector_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsFrame">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsFrame" message="tns:IRLanguageService_IsFrame_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsFrameResponse" message="tns:IRLanguageService_IsFrame_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsS4">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsS4" message="tns:IRLanguageService_IsS4_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsS4Response" message="tns:IRLanguageService_IsS4_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLength">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetLength" message="tns:IRLanguageService_GetLength_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetLengthResponse" message="tns:IRLanguageService_GetLength_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AllocateMatrix">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/AllocateMatrix" message="tns:IRLanguageService_AllocateMatrix_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/AllocateMatrixResponse" message="tns:IRLanguageService_AllocateMatrix_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsMatrix">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsMatrix" message="tns:IRLanguageService_IsMatrix_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsMatrixResponse" message="tns:IRLanguageService_IsMatrix_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NumberOfRows">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/NumberOfRows" message="tns:IRLanguageService_NumberOfRows_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/NumberOfRowsResponse" message="tns:IRLanguageService_NumberOfRows_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NumberOfColumns">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/NumberOfColumns" message="tns:IRLanguageService_NumberOfColumns_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/NumberOfColumnsResponse" message="tns:IRLanguageService_NumberOfColumns_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AllocateList">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/AllocateList" message="tns:IRLanguageService_AllocateList_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/AllocateListResponse" message="tns:IRLanguageService_AllocateList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsList">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsList" message="tns:IRLanguageService_IsList_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsListResponse" message="tns:IRLanguageService_IsList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Evaluate">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/Evaluate" message="tns:IRLanguageService_Evaluate_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/EvaluateResponse" message="tns:IRLanguageService_Evaluate_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="TryEvaluate">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/TryEvaluate" message="tns:IRLanguageService_TryEvaluate_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/TryEvaluateResponse" message="tns:IRLanguageService_TryEvaluate_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ParseVector">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/ParseVector" message="tns:IRLanguageService_ParseVector_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/ParseVectorResponse" message="tns:IRLanguageService_ParseVector_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="FindVar">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/FindVar" message="tns:IRLanguageService_FindVar_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/FindVarResponse" message="tns:IRLanguageService_FindVar_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetVar">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetVar" message="tns:IRLanguageService_SetVar_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetVarResponse" message="tns:IRLanguageService_SetVar_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DefineVar">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/DefineVar" message="tns:IRLanguageService_DefineVar_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/DefineVarResponse" message="tns:IRLanguageService_DefineVar_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAttrib">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetAttrib" message="tns:IRLanguageService_GetAttrib_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetAttribResponse" message="tns:IRLanguageService_GetAttrib_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetAttrib">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetAttrib" message="tns:IRLanguageService_SetAttrib_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetAttribResponse" message="tns:IRLanguageService_SetAttrib_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DoSlot">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/DoSlot" message="tns:IRLanguageService_DoSlot_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/DoSlotResponse" message="tns:IRLanguageService_DoSlot_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DoSlotAssign">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/DoSlotAssign" message="tns:IRLanguageService_DoSlotAssign_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/DoSlotAssignResponse" message="tns:IRLanguageService_DoSlotAssign_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetClassDefinition">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetClassDefinition" message="tns:IRLanguageService_GetClassDefinition_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetClassDefinitionResponse" message="tns:IRLanguageService_GetClassDefinition_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="HasSlot">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/HasSlot" message="tns:IRLanguageService_HasSlot_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/HasSlotResponse" message="tns:IRLanguageService_HasSlot_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsEnvironment">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsEnvironment" message="tns:IRLanguageService_IsEnvironment_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsEnvironmentResponse" message="tns:IRLanguageService_IsEnvironment_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsExpression">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsExpression" message="tns:IRLanguageService_IsExpression_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsExpressionResponse" message="tns:IRLanguageService_IsExpression_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsSymbol">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsSymbol" message="tns:IRLanguageService_IsSymbol_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsSymbolResponse" message="tns:IRLanguageService_IsSymbol_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsLanguage">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsLanguage" message="tns:IRLanguageService_IsLanguage_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsLanguageResponse" message="tns:IRLanguageService_IsLanguage_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsFunction">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsFunction" message="tns:IRLanguageService_IsFunction_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsFunctionResponse" message="tns:IRLanguageService_IsFunction_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsFactor">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsFactor" message="tns:IRLanguageService_IsFactor_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsFactorResponse" message="tns:IRLanguageService_IsFactor_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsOrdered">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsOrdered" message="tns:IRLanguageService_IsOrdered_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsOrderedResponse" message="tns:IRLanguageService_IsOrdered_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="LsInternal">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/LsInternal" message="tns:IRLanguageService_LsInternal_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/LsInternalResponse" message="tns:IRLanguageService_LsInternal_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ApplyClosure">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/ApplyClosure" message="tns:IRLanguageService_ApplyClosure_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/ApplyClosureResponse" message="tns:IRLanguageService_ApplyClosure_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="VectorToPairList">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/VectorToPairList" message="tns:IRLanguageService_VectorToPairList_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/VectorToPairListResponse" message="tns:IRLanguageService_VectorToPairList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AllocateSEXP">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/AllocateSEXP" message="tns:IRLanguageService_AllocateSEXP_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/AllocateSEXPResponse" message="tns:IRLanguageService_AllocateSEXP_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NewEnvironment">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/NewEnvironment" message="tns:IRLanguageService_NewEnvironment_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/NewEnvironmentResponse" message="tns:IRLanguageService_NewEnvironment_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Cons">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/Cons" message="tns:IRLanguageService_Cons_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/ConsResponse" message="tns:IRLanguageService_Cons_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="LCons">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/LCons" message="tns:IRLanguageService_LCons_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/LConsResponse" message="tns:IRLanguageService_LCons_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsNil">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsNil" message="tns:IRLanguageService_IsNil_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsNilResponse" message="tns:IRLanguageService_IsNil_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsNaString">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsNaString" message="tns:IRLanguageService_IsNaString_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsNaStringResponse" message="tns:IRLanguageService_IsNaString_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetParseError">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetParseError" message="tns:IRLanguageService_GetParseError_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetParseErrorResponse" message="tns:IRLanguageService_GetParseError_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetGlobalEnvironment">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetGlobalEnvironment" message="tns:IRLanguageService_GetGlobalEnvironment_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetGlobalEnvironmentResponse" message="tns:IRLanguageService_GetGlobalEnvironment_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNames">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetNames" message="tns:IRLanguageService_GetNames_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetNamesResponse" message="tns:IRLanguageService_GetNames_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCharacterVectorValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetCharacterVectorValues" message="tns:IRLanguageService_GetCharacterVectorValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetCharacterVectorValuesResponse" message="tns:IRLanguageService_GetCharacterVectorValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetExpressionVectorValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetExpressionVectorValues" message="tns:IRLanguageService_GetExpressionVectorValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetExpressionVectorValuesResponse" message="tns:IRLanguageService_GetExpressionVectorValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIntegerVectorValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetIntegerVectorValues" message="tns:IRLanguageService_GetIntegerVectorValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetIntegerVectorValuesResponse" message="tns:IRLanguageService_GetIntegerVectorValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNumericVectorValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetNumericVectorValues" message="tns:IRLanguageService_GetNumericVectorValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetNumericVectorValuesResponse" message="tns:IRLanguageService_GetNumericVectorValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLogicalVectorValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetLogicalVectorValues" message="tns:IRLanguageService_GetLogicalVectorValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetLogicalVectorValuesResponse" message="tns:IRLanguageService_GetLogicalVectorValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRawVectorValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetRawVectorValues" message="tns:IRLanguageService_GetRawVectorValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetRawVectorValuesResponse" message="tns:IRLanguageService_GetRawVectorValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetComplexVectorValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetComplexVectorValues" message="tns:IRLanguageService_GetComplexVectorValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetComplexVectorValuesResponse" message="tns:IRLanguageService_GetComplexVectorValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCharacterVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetCharacterVectorValueAt" message="tns:IRLanguageService_GetCharacterVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetCharacterVectorValueAtResponse" message="tns:IRLanguageService_GetCharacterVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetCharacterVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetCharacterVectorValueAt" message="tns:IRLanguageService_SetCharacterVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetCharacterVectorValueAtResponse" message="tns:IRLanguageService_SetCharacterVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetExpressionVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetExpressionVectorValueAt" message="tns:IRLanguageService_GetExpressionVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetExpressionVectorValueAtResponse" message="tns:IRLanguageService_GetExpressionVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetExpressionVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetExpressionVectorValueAt" message="tns:IRLanguageService_SetExpressionVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetExpressionVectorValueAtResponse" message="tns:IRLanguageService_SetExpressionVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIntegerVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetIntegerVectorValueAt" message="tns:IRLanguageService_GetIntegerVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetIntegerVectorValueAtResponse" message="tns:IRLanguageService_GetIntegerVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetIntegerVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetIntegerVectorValueAt" message="tns:IRLanguageService_SetIntegerVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetIntegerVectorValueAtResponse" message="tns:IRLanguageService_SetIntegerVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNumericVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetNumericVectorValueAt" message="tns:IRLanguageService_GetNumericVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetNumericVectorValueAtResponse" message="tns:IRLanguageService_GetNumericVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetNumericVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetNumericVectorValueAt" message="tns:IRLanguageService_SetNumericVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetNumericVectorValueAtResponse" message="tns:IRLanguageService_SetNumericVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLogicalVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetLogicalVectorValueAt" message="tns:IRLanguageService_GetLogicalVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetLogicalVectorValueAtResponse" message="tns:IRLanguageService_GetLogicalVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetLogicalVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetLogicalVectorValueAt" message="tns:IRLanguageService_SetLogicalVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetLogicalVectorValueAtResponse" message="tns:IRLanguageService_SetLogicalVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRawVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetRawVectorValueAt" message="tns:IRLanguageService_GetRawVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetRawVectorValueAtResponse" message="tns:IRLanguageService_GetRawVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetRawVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetRawVectorValueAt" message="tns:IRLanguageService_SetRawVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetRawVectorValueAtResponse" message="tns:IRLanguageService_SetRawVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetComplexVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetComplexVectorValueAt" message="tns:IRLanguageService_GetComplexVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetComplexVectorValueAtResponse" message="tns:IRLanguageService_GetComplexVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetComplexVectorValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetComplexVectorValueAt" message="tns:IRLanguageService_SetComplexVectorValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetComplexVectorValueAtResponse" message="tns:IRLanguageService_SetComplexVectorValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InitializeCharacterVector">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/InitializeCharacterVector" message="tns:IRLanguageService_InitializeCharacterVector_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InitializeCharacterVectorResponse" message="tns:IRLanguageService_InitializeCharacterVector_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InitializeIntegerVector">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/InitializeIntegerVector" message="tns:IRLanguageService_InitializeIntegerVector_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InitializeIntegerVectorResponse" message="tns:IRLanguageService_InitializeIntegerVector_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InitializeNumericVector">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/InitializeNumericVector" message="tns:IRLanguageService_InitializeNumericVector_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InitializeNumericVectorResponse" message="tns:IRLanguageService_InitializeNumericVector_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InitializeLogicalVector">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/InitializeLogicalVector" message="tns:IRLanguageService_InitializeLogicalVector_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InitializeLogicalVectorResponse" message="tns:IRLanguageService_InitializeLogicalVector_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InitializeRawVector">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/InitializeRawVector" message="tns:IRLanguageService_InitializeRawVector_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InitializeRawVectorResponse" message="tns:IRLanguageService_InitializeRawVector_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InitializeComplexVector">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/InitializeComplexVector" message="tns:IRLanguageService_InitializeComplexVector_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InitializeComplexVectorResponse" message="tns:IRLanguageService_InitializeComplexVector_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSymbols">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetSymbols" message="tns:IRLanguageService_GetSymbols_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetSymbolsResponse" message="tns:IRLanguageService_GetSymbols_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetUnboundValue">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetUnboundValue" message="tns:IRLanguageService_GetUnboundValue_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetUnboundValueResponse" message="tns:IRLanguageService_GetUnboundValue_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNilValue">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetNilValue" message="tns:IRLanguageService_GetNilValue_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetNilValueResponse" message="tns:IRLanguageService_GetNilValue_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAttributeNames">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetAttributeNames" message="tns:IRLanguageService_GetAttributeNames_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetAttributeNamesResponse" message="tns:IRLanguageService_GetAttributeNames_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPrintName">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetPrintName" message="tns:IRLanguageService_GetPrintName_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetPrintNameResponse" message="tns:IRLanguageService_GetPrintName_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetPrintName">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetPrintName" message="tns:IRLanguageService_SetPrintName_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetPrintNameResponse" message="tns:IRLanguageService_SetPrintName_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDimNames">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetDimNames" message="tns:IRLanguageService_GetDimNames_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetDimNamesResponse" message="tns:IRLanguageService_GetDimNames_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="IsPromise">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/IsPromise" message="tns:IRLanguageService_IsPromise_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/IsPromiseResponse" message="tns:IRLanguageService_IsPromise_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetClosureBody">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetClosureBody" message="tns:IRLanguageService_GetClosureBody_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetClosureBodyResponse" message="tns:IRLanguageService_GetClosureBody_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetClosureFormals">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetClosureFormals" message="tns:IRLanguageService_GetClosureFormals_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetClosureFormalsResponse" message="tns:IRLanguageService_GetClosureFormals_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetClosureEnvironment">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetClosureEnvironment" message="tns:IRLanguageService_GetClosureEnvironment_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetClosureEnvironmentResponse" message="tns:IRLanguageService_GetClosureEnvironment_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLanguageList">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetLanguageList" message="tns:IRLanguageService_GetLanguageList_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetLanguageListResponse" message="tns:IRLanguageService_GetLanguageList_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetClass">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetClass" message="tns:IRLanguageService_GetClass_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetClassResponse" message="tns:IRLanguageService_GetClass_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetInternal">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetInternal" message="tns:IRLanguageService_GetInternal_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetInternalResponse" message="tns:IRLanguageService_GetInternal_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetValue">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetValue" message="tns:IRLanguageService_GetValue_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetValueResponse" message="tns:IRLanguageService_GetValue_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLevels">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetLevels" message="tns:IRLanguageService_GetLevels_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetLevelsResponse" message="tns:IRLanguageService_GetLevels_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNumericMatrixValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetNumericMatrixValues" message="tns:IRLanguageService_GetNumericMatrixValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetNumericMatrixValuesResponse" message="tns:IRLanguageService_GetNumericMatrixValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIntegerMatrixValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetIntegerMatrixValues" message="tns:IRLanguageService_GetIntegerMatrixValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetIntegerMatrixValuesResponse" message="tns:IRLanguageService_GetIntegerMatrixValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCharacterMatrixValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetCharacterMatrixValues" message="tns:IRLanguageService_GetCharacterMatrixValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetCharacterMatrixValuesResponse" message="tns:IRLanguageService_GetCharacterMatrixValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLogicalMatrixValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetLogicalMatrixValues" message="tns:IRLanguageService_GetLogicalMatrixValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetLogicalMatrixValuesResponse" message="tns:IRLanguageService_GetLogicalMatrixValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRawMatrixValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetRawMatrixValues" message="tns:IRLanguageService_GetRawMatrixValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetRawMatrixValuesResponse" message="tns:IRLanguageService_GetRawMatrixValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetComplexMatrixValues">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetComplexMatrixValues" message="tns:IRLanguageService_GetComplexMatrixValues_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetComplexMatrixValuesResponse" message="tns:IRLanguageService_GetComplexMatrixValues_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCharacterMatrixValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetCharacterMatrixValueAt" message="tns:IRLanguageService_GetCharacterMatrixValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetCharacterMatrixValueAtResponse" message="tns:IRLanguageService_GetCharacterMatrixValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetCharacterMatrixValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetCharacterMatrixValueAt" message="tns:IRLanguageService_SetCharacterMatrixValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetCharacterMatrixValueAtResponse" message="tns:IRLanguageService_SetCharacterMatrixValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIntegerMatrixValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetIntegerMatrixValueAt" message="tns:IRLanguageService_GetIntegerMatrixValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetIntegerMatrixValueAtResponse" message="tns:IRLanguageService_GetIntegerMatrixValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetIntegerMatrixValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetIntegerMatrixValueAt" message="tns:IRLanguageService_SetIntegerMatrixValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetIntegerMatrixValueAtResponse" message="tns:IRLanguageService_SetIntegerMatrixValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNumericMatrixValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetNumericMatrixValueAt" message="tns:IRLanguageService_GetNumericMatrixValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetNumericMatrixValueAtResponse" message="tns:IRLanguageService_GetNumericMatrixValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetNumericMatrixValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetNumericMatrixValueAt" message="tns:IRLanguageService_SetNumericMatrixValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetNumericMatrixValueAtResponse" message="tns:IRLanguageService_SetNumericMatrixValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLogicalMatrixValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetLogicalMatrixValueAt" message="tns:IRLanguageService_GetLogicalMatrixValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetLogicalMatrixValueAtResponse" message="tns:IRLanguageService_GetLogicalMatrixValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetLogicalMatrixValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetLogicalMatrixValueAt" message="tns:IRLanguageService_SetLogicalMatrixValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetLogicalMatrixValueAtResponse" message="tns:IRLanguageService_SetLogicalMatrixValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetRawMatrixValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetRawMatrixValueAt" message="tns:IRLanguageService_GetRawMatrixValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetRawMatrixValueAtResponse" message="tns:IRLanguageService_GetRawMatrixValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetRawMatrixValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetRawMatrixValueAt" message="tns:IRLanguageService_SetRawMatrixValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetRawMatrixValueAtResponse" message="tns:IRLanguageService_SetRawMatrixValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetComplexMatrixValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetComplexMatrixValueAt" message="tns:IRLanguageService_GetComplexMatrixValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetComplexMatrixValueAtResponse" message="tns:IRLanguageService_GetComplexMatrixValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SetComplexMatrixValueAt">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/SetComplexMatrixValueAt" message="tns:IRLanguageService_SetComplexMatrixValueAt_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/SetComplexMatrixValueAtResponse" message="tns:IRLanguageService_SetComplexMatrixValueAt_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InitializeCharacterMatrix">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/InitializeCharacterMatrix" message="tns:IRLanguageService_InitializeCharacterMatrix_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InitializeCharacterMatrixResponse" message="tns:IRLanguageService_InitializeCharacterMatrix_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InitializeIntegerMatrix">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/InitializeIntegerMatrix" message="tns:IRLanguageService_InitializeIntegerMatrix_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InitializeIntegerMatrixResponse" message="tns:IRLanguageService_InitializeIntegerMatrix_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InitializeNumericMatrix">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/InitializeNumericMatrix" message="tns:IRLanguageService_InitializeNumericMatrix_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InitializeNumericMatrixResponse" message="tns:IRLanguageService_InitializeNumericMatrix_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InitializeLogicalMatrix">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/InitializeLogicalMatrix" message="tns:IRLanguageService_InitializeLogicalMatrix_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InitializeLogicalMatrixResponse" message="tns:IRLanguageService_InitializeLogicalMatrix_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InitializeRawMatrix">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/InitializeRawMatrix" message="tns:IRLanguageService_InitializeRawMatrix_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InitializeRawMatrixResponse" message="tns:IRLanguageService_InitializeRawMatrix_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="InitializeComplexMatrix">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/InitializeComplexMatrix" message="tns:IRLanguageService_InitializeComplexMatrix_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/InitializeComplexMatrixResponse" message="tns:IRLanguageService_InitializeComplexMatrix_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetParentEnvironment">
+      <wsdl:input wsaw:Action="http://tempuri.org/IRLanguageService/GetParentEnvironment" message="tns:IRLanguageService_GetParentEnvironment_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IRLanguageService/GetParentEnvironmentResponse" message="tns:IRLanguageService_GetParentEnvironment_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_IRLanguageService" type="tns:IRLanguageService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="PreserveObject">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/PreserveObject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReleaseObject">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/ReleaseObject" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Protect">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/Protect" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Unprotect">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/Unprotect" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UnprotectPtr">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/UnprotectPtr" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Install">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/Install" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MakeString">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/MakeString" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MakeChar">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/MakeChar" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AsCharacterFactor">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/AsCharacterFactor" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AllocateVector">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/AllocateVector" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CoerceVector">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/CoerceVector" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsVector">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsVector" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsFrame">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsFrame" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsS4">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsS4" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLength">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetLength" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AllocateMatrix">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/AllocateMatrix" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsMatrix">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsMatrix" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NumberOfRows">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/NumberOfRows" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NumberOfColumns">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/NumberOfColumns" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AllocateList">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/AllocateList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsList">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Evaluate">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/Evaluate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="TryEvaluate">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/TryEvaluate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ParseVector">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/ParseVector" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindVar">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/FindVar" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetVar">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetVar" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DefineVar">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/DefineVar" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAttrib">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetAttrib" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetAttrib">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetAttrib" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoSlot">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/DoSlot" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DoSlotAssign">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/DoSlotAssign" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetClassDefinition">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetClassDefinition" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HasSlot">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/HasSlot" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsEnvironment">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsEnvironment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsExpression">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsExpression" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsSymbol">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsSymbol" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsLanguage">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsLanguage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsFunction">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsFunction" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsFactor">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsFactor" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsOrdered">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsOrdered" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LsInternal">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/LsInternal" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ApplyClosure">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/ApplyClosure" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VectorToPairList">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/VectorToPairList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AllocateSEXP">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/AllocateSEXP" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NewEnvironment">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/NewEnvironment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Cons">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/Cons" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LCons">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/LCons" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsNil">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsNil" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsNaString">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsNaString" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetParseError">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetParseError" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetGlobalEnvironment">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetGlobalEnvironment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNames">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetNames" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCharacterVectorValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetCharacterVectorValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExpressionVectorValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetExpressionVectorValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIntegerVectorValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetIntegerVectorValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNumericVectorValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetNumericVectorValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLogicalVectorValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetLogicalVectorValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRawVectorValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetRawVectorValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetComplexVectorValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetComplexVectorValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCharacterVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetCharacterVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetCharacterVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetCharacterVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetExpressionVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetExpressionVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetExpressionVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetExpressionVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIntegerVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetIntegerVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetIntegerVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetIntegerVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNumericVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetNumericVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetNumericVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetNumericVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLogicalVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetLogicalVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetLogicalVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetLogicalVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRawVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetRawVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetRawVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetRawVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetComplexVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetComplexVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetComplexVectorValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetComplexVectorValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitializeCharacterVector">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/InitializeCharacterVector" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitializeIntegerVector">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/InitializeIntegerVector" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitializeNumericVector">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/InitializeNumericVector" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitializeLogicalVector">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/InitializeLogicalVector" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitializeRawVector">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/InitializeRawVector" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitializeComplexVector">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/InitializeComplexVector" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSymbols">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetSymbols" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetUnboundValue">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetUnboundValue" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNilValue">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetNilValue" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAttributeNames">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetAttributeNames" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPrintName">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetPrintName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetPrintName">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetPrintName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDimNames">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetDimNames" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IsPromise">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/IsPromise" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetClosureBody">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetClosureBody" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetClosureFormals">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetClosureFormals" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetClosureEnvironment">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetClosureEnvironment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLanguageList">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetLanguageList" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetClass">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetClass" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetInternal">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetInternal" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetValue">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetValue" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLevels">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetLevels" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNumericMatrixValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetNumericMatrixValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIntegerMatrixValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetIntegerMatrixValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCharacterMatrixValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetCharacterMatrixValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLogicalMatrixValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetLogicalMatrixValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRawMatrixValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetRawMatrixValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetComplexMatrixValues">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetComplexMatrixValues" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCharacterMatrixValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetCharacterMatrixValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetCharacterMatrixValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetCharacterMatrixValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIntegerMatrixValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetIntegerMatrixValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetIntegerMatrixValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetIntegerMatrixValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNumericMatrixValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetNumericMatrixValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetNumericMatrixValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetNumericMatrixValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLogicalMatrixValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetLogicalMatrixValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetLogicalMatrixValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetLogicalMatrixValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetRawMatrixValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetRawMatrixValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetRawMatrixValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetRawMatrixValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetComplexMatrixValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetComplexMatrixValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetComplexMatrixValueAt">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/SetComplexMatrixValueAt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitializeCharacterMatrix">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/InitializeCharacterMatrix" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitializeIntegerMatrix">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/InitializeIntegerMatrix" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitializeNumericMatrix">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/InitializeNumericMatrix" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitializeLogicalMatrix">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/InitializeLogicalMatrix" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitializeRawMatrix">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/InitializeRawMatrix" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InitializeComplexMatrix">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/InitializeComplexMatrix" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetParentEnvironment">
+      <soap:operation soapAction="http://tempuri.org/IRLanguageService/GetParentEnvironment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="RLanguageService">
+    <wsdl:port name="BasicHttpBinding_IRLanguageService" binding="tns:BasicHttpBinding_IRLanguageService">
+      <soap:address location="http://localhost:8733/Design_Time_Addresses/RLanguageService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

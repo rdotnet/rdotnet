@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2A089A59-0F22-4484-B442-0FE8BDA10879}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RDotNet.R.Adapter</RootNamespace>
+    <AssemblyName>RDotNet.R.Adapter</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BusyType.cs" />
+    <Compile Include="ConsoleOutputType.cs" />
+    <Compile Include="DelegateCache.cs" />
+    <Compile Include="Delegates.cs" />
+    <Compile Include="DynamicLibrarySafeHandle.cs" />
+    <Compile Include="Graphics\Color.cs" />
+    <Compile Include="Graphics\Colors.cs" />
+    <Compile Include="Graphics\Delegates.cs" />
+    <Compile Include="Graphics\DevDesc.cs" />
+    <Compile Include="Graphics\DeviceDescription.cs" />
+    <Compile Include="Graphics\Enum.cs" />
+    <Compile Include="Graphics\GEcontext.cs" />
+    <Compile Include="Graphics\GraphicsDeviceEventArgs.cs" />
+    <Compile Include="Graphics\GraphicsDeviceManager.cs" />
+    <Compile Include="Graphics\GraphicsEngineDeviceDescription.cs" />
+    <Compile Include="Graphics\GraphicsContext.cs" />
+    <Compile Include="Graphics\IGraphicsDevice.cs" />
+    <Compile Include="Graphics\MetricsInfo.cs" />
+    <Compile Include="Graphics\NullCharacterDevice.cs" />
+    <Compile Include="Graphics\Point.cs" />
+    <Compile Include="Graphics\Raster.cs" />
+    <Compile Include="Graphics\Rectangle.cs" />
+    <Compile Include="Graphics\Size.cs" />
+    <Compile Include="Graphics\Utility.cs" />
+    <Compile Include="ICharacterDevice.cs" />
+    <Compile Include="InstanceStartupParameter.cs" />
+    <Compile Include="InterruptManager.cs" />
+    <Compile Include="OutputMode.cs" />
+    <Compile Include="ParseStatus.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaveActions.cs" />
+    <Compile Include="SEXPREC.cs" />
+    <Compile Include="SEXPREC_HEADER.cs" />
+    <Compile Include="sxpinfo.cs" />
+    <Compile Include="SymbolicExpressionType.cs" />
+    <Compile Include="Unix\UnixPlatformManager.cs" />
+    <Compile Include="Unix\Delegates.cs" />
+    <Compile Include="Unix\Common.cs" />
+    <Compile Include="RInstance.cs" />
+    <Compile Include="VECTOR_SEXPREC.cs" />
+    <Compile Include="Windows\WindowsPlatformManager.cs" />
+    <Compile Include="IPlatformManager.cs" />
+    <Compile Include="Windows\Delegates.cs" />
+    <Compile Include="Windows\UiMode.cs" />
+    <Compile Include="Windows\RStartupParameter.cs" />
+    <Compile Include="YesNoCancel.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

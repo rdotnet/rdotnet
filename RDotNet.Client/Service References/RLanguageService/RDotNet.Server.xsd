@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/RDotNet.Server" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/RDotNet.Server" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/System" />
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/RDotNet.R.Adapter" />
+  <xs:complexType name="SymbolicExpressionContext">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/System" minOccurs="0" name="Handle" type="q1:IntPtr" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/RDotNet.R.Adapter" minOccurs="0" name="RawSEXP" type="q2:SEXPREC" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/RDotNet.R.Adapter" minOccurs="0" name="Type" type="q3:SymbolicExpressionType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="SymbolicExpressionContext" nillable="true" type="tns:SymbolicExpressionContext" />
+  <xs:complexType name="ArrayOfSymbolicExpressionContext">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SymbolicExpressionContext" nillable="true" type="tns:SymbolicExpressionContext" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSymbolicExpressionContext" nillable="true" type="tns:ArrayOfSymbolicExpressionContext" />
+</xs:schema>
