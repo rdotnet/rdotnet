@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using RDotNet.NativeLibrary;
+using DynamicInterop;
 
 namespace RDotNet
 {

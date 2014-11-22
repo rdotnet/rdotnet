@@ -30,7 +30,7 @@ namespace RDotNet
    /// </code>
    /// </example>
    [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-   public class REngine : UnmanagedDll
+   public class REngine : DynamicInterop.UnmanagedDll
    {
       private static readonly ICharacterDevice DefaultDevice = new ConsoleDevice();
 
@@ -807,7 +807,6 @@ namespace RDotNet
 
          if (disposing && this.adapter != null)
          {
-            //            Console.WriteLine("Disposing of an existing console adapter");
             this.adapter.Dispose();
             this.adapter = null;
          }

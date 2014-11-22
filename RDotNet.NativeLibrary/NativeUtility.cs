@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Microsoft.Win32;
+using System.Runtime.InteropServices;
+using DynamicInterop;
 
 namespace RDotNet.NativeLibrary
 {
@@ -24,30 +26,9 @@ namespace RDotNet.NativeLibrary
       /// <returns>The current platform.</returns>
       public static PlatformID GetPlatform()
       {
-         if (!curPlatform.HasValue)
-         {
-            var platform = Environment.OSVersion.Platform;
-            if (platform != PlatformID.Unix)
-            {
-               curPlatform = platform;
-            }
-            else
-            {
-               try
-               {
-                  var kernelName = ExecCommand("uname", "-s");
-                  curPlatform = (kernelName == "Darwin" ? PlatformID.MacOSX : platform);
-               }
-               catch (Win32Exception)
-               { // probably no PATH to uname.
-                  curPlatform = platform;
-               }
-            }
-         }
-         return curPlatform.Value;
+         return PlatformUtility.GetPlatform();
       }
 
-      private static PlatformID? curPlatform = null;
 
       /// <summary>
       /// Execute a command in a new process
@@ -57,18 +38,7 @@ namespace RDotNet.NativeLibrary
       /// <returns>The output of the command to the standard output stream</returns>
       public static string ExecCommand(string processName, string arguments)
       {
-         using (var uname = new Process())
-         {
-            uname.StartInfo.FileName = processName;
-            uname.StartInfo.Arguments = arguments;
-            uname.StartInfo.RedirectStandardOutput = true;
-            uname.StartInfo.UseShellExecute = false;
-            uname.StartInfo.CreateNoWindow = true;
-            uname.Start();
-            var kernelName = uname.StandardOutput.ReadLine();
-            uname.WaitForExit();
-            return kernelName;
-         }
+         return PlatformUtility.ExecCommand(processName, arguments);
       }
 
       /// <summary>
@@ -118,7 +88,7 @@ namespace RDotNet.NativeLibrary
          // It is highly recommended to use the 8.3 short path format on windows. 
          // See the manual page of R.home function in R. Solves at least the issue R.NET 97.
          if (platform == PlatformID.Win32NT)
-            rHome = WindowsLibraryLoader.GetShortPath(rHome);
+            rHome = GetShortPath(rHome);
          if (!Directory.Exists(rHome))
             throw new DirectoryNotFoundException(string.Format("Directory '{0}' does not exist - cannot set the environment variable R_HOME to that value", rHome));
          Environment.SetEnvironmentVariable("R_HOME", rHome);
@@ -135,6 +105,20 @@ namespace RDotNet.NativeLibrary
             // Let's delay the notification about a missing LD_LIBRARY_PATH till loading libR.so fails, if it does.
          }
       }
+
+      private static string GetShortPath(string path)
+      {
+         var shortPath = new StringBuilder(MaxPathLength);
+         GetShortPathName(path, shortPath, MaxPathLength);
+         return shortPath.ToString();
+      }
+
+      private const int MaxPathLength = 248; //MaxPath is 248. MaxFileName is 260.
+
+      [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+      private static extern int GetShortPathName([MarshalAs(UnmanagedType.LPTStr)] string path,
+                                                [MarshalAs(UnmanagedType.LPTStr)] StringBuilder shortPath,
+                                                int shortPathLength);
 
       /// <summary>
       /// Gets the value, if any, of the R_HOME environment variable of the current process
@@ -206,7 +190,7 @@ namespace RDotNet.NativeLibrary
          {
             case PlatformID.Win32NT:
                var rPath = Path.Combine(rHome, "bin");
-               var rVersion = WindowsLibraryLoader.GetRVersionFromRegistry();
+               Version rVersion = GetRVersionFromRegistry();
                if (rVersion.Major > 2 || (rVersion.Major == 2 && rVersion.Minor >= 12))
                {
                   var bitness = Environment.Is64BitProcess ? "x64" : "i386";
@@ -217,6 +201,31 @@ namespace RDotNet.NativeLibrary
                throw new PlatformNotSupportedException();
          }
       }
+
+      private static RegistryKey GetRCoreRegistryKey()
+      {
+          if (Environment.OSVersion.Platform != PlatformID.Win32NT) return null;
+
+          var rCore = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
+          if (rCore == null)
+          {
+              rCore = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\R-core");
+              if (rCore == null) return null;
+          }
+
+          var subKey = Environment.Is64BitProcess ? "R64" : "R";
+          var r = rCore.OpenSubKey(subKey);
+          return r;
+      }
+
+      public static Version GetRVersionFromRegistry()
+      {
+          var rCoreKey = GetRCoreRegistryKey();
+          var version = rCoreKey.GetValue("Current Version") as string;
+          if (string.IsNullOrEmpty(version)) return null;
+          return new Version(version);
+      }
+
       /// <summary>
       /// Attempt to find a suitable path to the R shared library. This is used by R.NET by default; users may want to use it to diagnose problematic behaviors.
       /// </summary>
