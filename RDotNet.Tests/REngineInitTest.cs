@@ -46,5 +46,12 @@ namespace RDotNet
          fnmatch = Directory.GetDirectories(fnmatch.First()).Where(fn => Path.GetFileName(fn) == "base");
          Assert.AreEqual(1, fnmatch.Count());
       }
+
+      [Test]
+      public void TestGetPathInitSearchLog()
+      {
+         throw new NotImplementedException();
+      }
+
    }
 }

@@ -41,6 +41,10 @@ namespace RDotNet.NativeLibrary
          return PlatformUtility.ExecCommand(processName, arguments);
       }
 
+      private static StringBuilder logSetEnvVar = new StringBuilder();
+
+      public static string SetEnvironmentVariablesLog { get { return logSetEnvVar.ToString(); } }
+
       /// <summary>
       /// Sets the PATH to the R binaries and R_HOME environment variables if needed.
       /// </summary>
@@ -59,32 +63,55 @@ namespace RDotNet.NativeLibrary
           * Use rHome, whether from the method parameter or from the environment variable, 
           * to deduce the path to the binaries, in preference to the registry key.
           */
+
+         logSetEnvVar.Clear();
+
          var platform = GetPlatform();
          if (rPath != null)
             CheckDirExists(rPath);
          if (rHome != null)
             CheckDirExists(rHome);
 
+         doLogSetEnvVar("Info", string.Format("caller provided rPath={0}, rHome={1}",
+            rPath == null ? "null" : rPath,
+            rHome == null ? "null" : rHome ));
+
          if (string.IsNullOrEmpty(rHome))
+         {
             rHome = GetRHomeEnvironmentVariable();
+            doLogSetEnvVar("Info", string.Format("R.NET looked for preset R_HOME env. var. Found {0}",
+               rHome == null ? "null" : rHome));
+         }
          if (string.IsNullOrEmpty(rHome))
          {
             rHome = FindRHome();
+            doLogSetEnvVar("Info", string.Format("R.NET looked for platform-specific way (e.g. win registry). Found {0}",
+               rHome == null ? "null" : rHome));
             if (!string.IsNullOrEmpty(rHome))
             {
                if (rPath == null)
+               {
                   rPath = FindRPath(rHome);
+                  doLogSetEnvVar("Info", string.Format("R.NET trying to find rPath based on rHome; Deduced {0}",
+                     rPath == null ? "null" : rPath));
+               }
                if (rPath == null)
+               {
                   rPath = FindRPath();
+                  doLogSetEnvVar("Info", string.Format("R.NET trying to find rPath, independently of rHome; Deduced {0}",
+                     rPath == null ? "null" : rPath));
+               }
             }
             else
             {
                rHome = FindRHome(rPath);
+               doLogSetEnvVar("Info", string.Format("R.NET trying to find rHome based on rPath; Deduced {0}",
+                  rHome == null ? "null" : rHome));
             }
          }
          if (string.IsNullOrEmpty(rHome))
-            throw new NotSupportedException("R_HOME was not provided and could not be found by R.NET");
-         SetenvPrependToPath(rPath);
+            throw new NotSupportedException("R_HOME was not provided and a suitable path could not be found by R.NET");
+         SetenvPrepend(rPath);
          // It is highly recommended to use the 8.3 short path format on windows. 
          // See the manual page of R.home function in R. Solves at least the issue R.NET 97.
          if (platform == PlatformID.Win32NT)
@@ -104,6 +131,13 @@ namespace RDotNet.NativeLibrary
             // so all we can do is an intelligible error message for the user, explaining he needs to set the LD_LIBRARY_PATH env variable 
             // Let's delay the notification about a missing LD_LIBRARY_PATH till loading libR.so fails, if it does.
          }
+      }
+
+      private static void doLogSetEnvVar(string level, string msg)
+      {
+         logSetEnvVar.Append(level);
+         logSetEnvVar.Append(": ");
+         logSetEnvVar.AppendLine(msg);
       }
 
       private static string GetShortPath(string path)
@@ -279,14 +313,14 @@ namespace RDotNet.NativeLibrary
             return FindRPathFromRegistry();
       }
 
-      private static void SetenvPrependToPath(string rPath, string envVarName = "PATH")
+      private static void SetenvPrepend(string rPath, string envVarName = "PATH")
       {
          // this function results from a merge of PR https://rdotnet.codeplex.com/SourceControl/network/forks/skyguy94/PRFork/contribution/7684
          //  Not sure of the intent, and why a SetDllDirectory was used, where we moved away from. May need discussion with skyguy94
          //  relying on this too platform-specific way to specify the search path where
          //  Environment.SetEnvironmentVariable is multi-platform.
 
-         Environment.SetEnvironmentVariable(envVarName, PrependToPath(rPath, envVarName));
+         Environment.SetEnvironmentVariable(envVarName, PrependToEnv(rPath, envVarName));
          /*
          var platform = GetPlatform();
          if (platform == PlatformID.Win32NT)
@@ -299,7 +333,7 @@ namespace RDotNet.NativeLibrary
          */
       }
 
-      private static string PrependToPath(string rPath, string envVarName = "PATH")
+      private static string PrependToEnv(string rPath, string envVarName = "PATH")
       {
          var currentPathEnv = Environment.GetEnvironmentVariable(envVarName);
          var paths = currentPathEnv.Split(new[] { Path.PathSeparator }, StringSplitOptions.RemoveEmptyEntries);
