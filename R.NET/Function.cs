@@ -77,10 +77,7 @@ namespace RDotNet
          //IntPtr result = Engine.GetFunction<Rf_applyClosure>()(Body.DangerousGetHandle(), handle,
          //                                                      argPairList.DangerousGetHandle(),
          //                                                      Environment.DangerousGetHandle(), newEnvironment);
-         IntPtr call = Engine.GetFunction<Rf_lcons>()(handle, argPairList.DangerousGetHandle());
-         IntPtr result = evaluateCall(call);
-
-         return new SymbolicExpression(Engine, result);
+         return createCallAndEvaluate(argPairList.DangerousGetHandle());
       }
 
       // http://msdn.microsoft.com/en-us/magazine/dd419661.aspx
@@ -115,13 +112,18 @@ namespace RDotNet
          {
             argument = this.GetFunction<Rf_cons>()(arg.DangerousGetHandle(), argument);
          }
-         using (var call = new ProtectedPointer(Engine, this.GetFunction<Rf_lcons>()(handle, argument)))
-         {
-             using (var result = evaluateCall(call))
-             {
-                 return new SymbolicExpression(Engine, result);
-             }
-         }
+         return createCallAndEvaluate(argument);
+      }
+
+      private SymbolicExpression createCallAndEvaluate(IntPtr argument)
+      {
+          using (var call = new ProtectedPointer(Engine, this.GetFunction<Rf_lcons>()(handle, argument)))
+          {
+              using (var result = evaluateCall(call))
+              {
+                  return new SymbolicExpression(Engine, result);
+              }
+          }
       }
    }
 }
