@@ -56,6 +56,13 @@ namespace RDotNet.Utilities
             return res;
         }
 
+        /// <summary>
+        /// Creates a jagged array with elements of the same length
+        /// </summary>
+        /// <typeparam name="T">The element type of the array</typeparam>
+        /// <param name="outerDim">length of the outer dimension</param>
+        /// <param name="innerDim">length of the inner dimension</param>
+        /// <returns></returns>
         public static T[][] CreateMatrixJagged<T>(int outerDim, int innerDim)
         {
             var result = new T[outerDim][];

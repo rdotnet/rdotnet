@@ -379,7 +379,7 @@ namespace RDotNet
          // Partial Workaround (hopefully temporary) for https://rdotnet.codeplex.com/workitem/110
          if (NativeUtility.GetPlatform() == PlatformID.Win32NT)
          {
-            Evaluate(string.Format("memory.limit({0})", (this.parameter.MaxMemorySize / 1048576UL)));
+            Evaluate(string.Format("invisible(memory.limit({0}))", (this.parameter.MaxMemorySize / 1048576UL)));
          }
 
       }
@@ -835,6 +835,11 @@ namespace RDotNet
          }
       }
 
+      /// <summary>
+      /// Create a SymbolicExpression wrapping an existing native R symbolic expression
+      /// </summary>
+      /// <param name="sexp">A pointer to the R symbolic expression</param>
+      /// <returns></returns>
       public SymbolicExpression CreateFromNativeSexp(IntPtr sexp)
       {
          return new SymbolicExpression(this, sexp);

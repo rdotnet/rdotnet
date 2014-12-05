@@ -140,6 +140,10 @@ namespace RDotNet.Internals
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate IntPtr R_tryEval(IntPtr statement, IntPtr environment, out bool errorOccurred);
 
+   /// <summary>
+   /// A delegate for the R native Rf_PrintValue function
+   /// </summary>
+   /// <param name="value">Pointer to a symbolic expression</param>
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    public delegate void Rf_PrintValue(IntPtr value);
 

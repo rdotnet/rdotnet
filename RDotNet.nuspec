@@ -4,9 +4,9 @@
     <id>R.NET.Community</id>
     <title>R.NET</title>
     <version>1.5.18</version>
-    <releaseNotes>Under development</releaseNotes>
+    <releaseNotes>Fixes: stack imbalance issue; R_HOME now takes precedence to checking the Windows registry. Refactor: support classes for upcoming rclr.codeplex.com; use a separate DynamicInterop NuGet dependency.</releaseNotes>
     <authors>RecycleBin, jperraud</authors>
-    <owners>kos59125</owners>
+    <owners>kos59125, jperraud</owners>
     <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
     <projectUrl>http://rdotnet.codeplex.com/</projectUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>

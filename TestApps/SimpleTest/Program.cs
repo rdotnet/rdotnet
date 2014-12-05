@@ -11,17 +11,29 @@ namespace SimpleTest
    {
       static void Main(string[] args)
       {
-         REngine.SetEnvironmentVariables();
+         string rHome = null;
+         string rPath = null;
+         if (args.Length > 0)
+            rPath = args[0];
+         if (args.Length > 1)
+            rHome = args[1];
+
+         REngine.SetEnvironmentVariables(rPath: rPath, rHome:rHome);
          REngine e = REngine.GetInstance();
-         //TestPendingFinalizersThreadingIssues(e);
+
+         System.Console.WriteLine(RDotNet.NativeLibrary.NativeUtility.SetEnvironmentVariablesLog);
+
+         e.Dispose();
+      }
+
+      private static void TestPlot(REngine e)
+      {
          e.Evaluate("library(DAAG)");
          for (int i = 0; i < 100; i++)
          {
             e.Evaluate("p <- plot(northing ~ easting, data=frogs, pch=c(1,16)[frogs$pres.abs+1], xlab='Meters east of reference point', ylab='Meters north')");
             e.Evaluate(string.Format("print(paste('plot iteration number', {0}))", i));
          }
-
-         e.Dispose();
       }
 
       private static void TestPendingFinalizersThreadingIssues(REngine e)
