@@ -268,6 +268,7 @@ namespace RDotNet
       /// <code>
       /// SetDangerousInt32 ("R_CStackLimit", -1)
       /// </code></example>
+      [Obsolete("Will be replaced by DynamicInterop features", false)]
       internal void SetDangerousInt32(string varname, int value)
       {
          var addr = this.DangerousGetHandle(varname);
@@ -283,6 +284,7 @@ namespace RDotNet
       /// int stackLimit = GetDangerousInt32 ("R_CStackLimit")
       /// </code></example>
       /// <returns>The value, as read by Marshal.ReadInt32</returns>
+      [Obsolete("Will be replaced by DynamicInterop features", false)]
       internal int GetDangerousInt32(string varname)
       {
          var addr = this.DangerousGetHandle(varname);
@@ -295,6 +297,7 @@ namespace RDotNet
       /// <param name="varname">The variable name exported by the R dynamic library, e.g. R_ParseErrorMsg</param>
       /// <returns>The Unicode equivalent of the native ANSI string</returns>
       /// <example><code></code></example>
+      [Obsolete("Will be replaced by DynamicInterop features", false)]
       public string GetDangerousChar(string varname)
       {
          var addr = this.DangerousGetHandle(varname);
