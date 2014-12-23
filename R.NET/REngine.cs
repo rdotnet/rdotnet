@@ -53,6 +53,7 @@ namespace RDotNet
          this.isRunning = false;
          this.Disposed = false;
          this.EnableLock = true; // See https://rdotnet.codeplex.com/workitem/113; it seems wise to enable it by default.
+         this.AutoPrint = false;
       }
 
       /// <summary>
@@ -684,7 +685,7 @@ namespace RDotNet
                         throw new EvaluationException(LastErrorMessage);
                      }
 
-                     if (!result.IsInvalid && GetVisible())
+                     if (AutoPrint && !result.IsInvalid && GetVisible())
                      {
                         GetFunction<Rf_PrintValue>()(result.DangerousGetHandle());
                      }
@@ -705,6 +706,12 @@ namespace RDotNet
             }
          }
       }
+
+      /// <summary>
+      /// Gets or sets a value indicating whether this <see cref="RDotNet.REngine"/> auto print R evaluation results, if they are visible.
+      /// </summary>
+      /// <value><c>true</c> if auto print; otherwise, <c>false</c>.</value>
+      public bool AutoPrint { get; set; }
 
       private bool GetVisible()
       {
