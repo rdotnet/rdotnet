@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
    <metadata>
       <id>R.NET.Community.Graphics</id>
-      <version>0.2-alpha</version>
+      <version>0.2.0-alpha</version>
       <title>R.NET Graphics Engine</title>
      <releaseNotes>Font handling and other improvements to the graphics module</releaseNotes>
      <authors>RecycleBin, skyguy94</authors>
