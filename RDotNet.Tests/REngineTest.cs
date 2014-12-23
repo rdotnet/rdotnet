@@ -109,8 +109,7 @@ namespace RDotNet
          ## [1] 18.62
          */
          var statementCreateX = "ltrs <- letters[1:26] ; x <- expand.grid(ltrs,ltrs,ltrs,ltrs,ltrs[1:5]) ; rm(ltrs) ; x <- rep(paste0(x[,1], x[,2], x[,3], x[,4], x[,5]), 1)";
-         // For some reasons the delta is not 40MB spot on. Use 35 MB as a threshold
-         double expectedMinMegaBytesDifference = 80.0;
+         double expectedMinMegaBytesDifference = 75.0;
 
          Func<SymbolicExpression, CharacterVector> coercionFun = SymbolicExpressionExtension.AsCharacter;
          CheckProperMemoryReclaimR(statementCreateX, expectedMinMegaBytesDifference, coercionFun);
