@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace SimpleTest
 {
@@ -23,7 +24,68 @@ namespace SimpleTest
 
          System.Console.WriteLine(RDotNet.NativeLibrary.NativeUtility.SetEnvironmentVariablesLog);
 
+         counter = 0;
+         for (int i = 0; i < 6; i++)
+            TestDataFrameInMemoryCreation(e);
+
+         for (int i = 0; i < 6; i++)
+            TestCallStop(e);
+
          e.Dispose();
+      }
+
+      static int counter=0;
+
+
+      static void TestCallStop(REngine engine)
+      {
+         try
+         {
+            engine.Evaluate("stop('Just stop')");
+         }
+         catch (Exception ex)
+         {
+            counter++;
+            Console.WriteLine(string.Format("Caught an exception ({0})", counter));
+            Console.WriteLine(ex.ToString());
+         }
+         Console.WriteLine("Recovered from evaluation exception?");
+      }
+      static void TestDataFrameInMemoryCreation(REngine engine)
+      {
+         IEnumerable[] columns;
+         string[] columnNames;
+         DataFrame df;
+         createTestDataFrame(engine, out columns, out columnNames, out df);
+         df = engine.CreateDataFrame(columns, columnNames: null);
+         columns[1] = new int[] { 1, 2, 3, 4, 5, 6, 7 };
+         try
+         {
+            df = engine.CreateDataFrame(columns, columnNames: null);
+         }
+         catch (Exception ex)
+         {
+            counter++;
+            Console.WriteLine(string.Format("Caught an exception ({0})", counter));
+            Console.WriteLine(ex.ToString());
+         }
+         Console.WriteLine("Recovered from evaluation exception?");
+      }
+
+      private static void createTestDataFrame(REngine engine, out IEnumerable[] columns, out string[] columnNames, out DataFrame df)
+      {
+         columns = createTestDfColumns();
+         columnNames = new[] { "Category", "No.", "Measure" };
+         df = engine.CreateDataFrame(columns, columnNames: columnNames);
+      }
+
+      private static IEnumerable[] createTestDfColumns()
+      {
+         IEnumerable[] columns = new IEnumerable[3];
+         columns[0] = new string[] { "a", "a", "a", "a", "a", "b", "b", "b", "b", "b" };
+         columns[1] = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+         columns[2] = new double[] { 1.1, 2.1, 3.1, 4.1, 5.1, 6.1, 7.1, 8.1, 9.1, 10.1 };
+         return columns;
       }
 
       private static void TestPlot(REngine e)

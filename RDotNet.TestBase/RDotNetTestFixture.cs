@@ -23,7 +23,7 @@ namespace RDotNet
       protected static void ReportFailOnLinux(string additionalMsg)
       {
          if (NativeUtility.IsUnix)
-            throw new NotSupportedException("On at least one Linux platform, this creates a crash " + additionalMsg);
+            throw new NotSupportedException("This unit test is problematic to run from NUnit on Linux " + additionalMsg);
       }
 
       [TestFixtureSetUp]
