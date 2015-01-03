@@ -205,22 +205,30 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
          //> f(a='a')
          //[1] "a=a;b=missing_b;cc=null_c;d=d;e=1;f=FALSE;g=123.4"
          checkInvoke(f.InvokeNamed(tc("a", "a")), "a=a;b=missing_b;cc=null_c;d=d;e=1;f=FALSE;g=123.4");
+         checkInvoke(f.InvokeNamedFast(tc("a", "a")), "a=a;b=missing_b;cc=null_c;d=d;e=1;f=FALSE;g=123.4");
          //> f(b='b')
          //[1] "a=missing_a;b=b;cc=null_c;d=d;e=1;f=FALSE;g=123.4"
          checkInvoke(f.InvokeNamed(tc("b", "b")), "a=missing_a;b=b;cc=null_c;d=d;e=1;f=FALSE;g=123.4");
+         checkInvoke(f.InvokeNamedFast(tc("b", "b")), "a=missing_a;b=b;cc=null_c;d=d;e=1;f=FALSE;g=123.4");
          //> f(b='b',cc='cc')
          //[1] "a=missing_a;b=b;cc=cc;d=d;e=1;f=FALSE;g=123.4"
          checkInvoke(f.InvokeNamed(tc("b", "b"), tc("cc", "cc")), "a=missing_a;b=b;cc=cc;d=d;e=1;f=FALSE;g=123.4");
+         checkInvoke(f.InvokeNamedFast(tc("b", "b"), tc("cc", "cc")), "a=missing_a;b=b;cc=cc;d=d;e=1;f=FALSE;g=123.4");
          //> f(cc='cc',b='b')
          //[1] "a=missing_a;b=b;cc=cc;d=d;e=1;f=FALSE;g=123.4"
          checkInvoke(f.InvokeNamed(tc("cc", "cc"), tc("b", "b")), "a=missing_a;b=b;cc=cc;d=d;e=1;f=FALSE;g=123.4");
+         checkInvoke(f.InvokeNamedFast(tc("cc", "cc"), tc("b", "b")), "a=missing_a;b=b;cc=cc;d=d;e=1;f=FALSE;g=123.4");
          //> f(d='ddd')
          //[1] "a=missing_a;b=missing_b;cc=null_c;d=ddd;e=1;f=FALSE;g=123.4"
          checkInvoke(f.InvokeNamed(tc("d", "ddd")), "a=missing_a;b=missing_b;cc=null_c;d=ddd;e=1;f=FALSE;g=123.4");
+         checkInvoke(f.InvokeNamedFast(tc("d", "ddd")), "a=missing_a;b=missing_b;cc=null_c;d=ddd;e=1;f=FALSE;g=123.4");
          //> f(f=TRUE)
          //[1] "a=missing_a;b=missing_b;cc=null_c;d=d;e=1;f=TRUE;g=123.4"
          checkInvoke(f.InvokeNamed(tc("f", "TRUE")), "a=missing_a;b=missing_b;cc=null_c;d=d;e=1;f=TRUE;g=123.4");
-
+         checkInvoke(f.InvokeNamedFast(tc("f", "TRUE")), "a=missing_a;b=missing_b;cc=null_c;d=d;e=1;f=TRUE;g=123.4");
+         //> f(g=456,'a',f=TRUE,'b','cc',e=11)
+         //[1] "a=a;b=b;cc=cc;d=d;e=11;f=TRUE;g=456"
+         checkInvoke(f.InvokeNamedFast(tc("g", 456), tc("", "a"), tc("f", true), tc(null, "b"), tc("", "cc"), tc("e", 11)), "a=a;b=b;cc=cc;d=d;e=11;f=TRUE;g=456");
       }
 
       [Test]
