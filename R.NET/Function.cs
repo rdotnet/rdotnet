@@ -57,7 +57,10 @@ namespace RDotNet
       /// <returns>The result of the function evaluation</returns>
       public SymbolicExpression InvokeNamed(params Tuple<string, SymbolicExpression>[] args)
       {
-         return InvokeViaPairlist(Array.ConvertAll(args, x => x.Item1), Array.ConvertAll(args, x => x.Item2));
+         return InvokeNamedFast(args);
+         // 2015-01-04 used to call InvokeViaPairlist
+         // If no unforeseen changes (all unit tests pass), just remove this comment
+         // return InvokeViaPairlist(Array.ConvertAll(args, x => x.Item1), Array.ConvertAll(args, x => x.Item2));
       }
 
       /// <summary>
@@ -132,7 +135,7 @@ namespace RDotNet
       /// <param name="args">one or more tuples, conceptually a pairlist of arguments.
       /// The argument names must be unique; null or empty string indicates unnamed argument. </param>
       /// <returns>The result of the function evaluation</returns>
-      public SymbolicExpression InvokeNamedFast(params Tuple<string, SymbolicExpression>[] args)
+      private SymbolicExpression InvokeNamedFast(params Tuple<string, SymbolicExpression>[] args)
       {
           IntPtr argument = Engine.NilValue.DangerousGetHandle();
           var rfInstall = GetFunction<Rf_install>();
