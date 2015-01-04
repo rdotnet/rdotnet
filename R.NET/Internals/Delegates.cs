@@ -180,7 +180,7 @@ namespace RDotNet.Internals
    internal delegate bool R_has_slot(IntPtr sexp, IntPtr name);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-   internal delegate IntPtr SET_TAG(IntPtr sexp, IntPtr tag);
+   internal delegate void SET_TAG(IntPtr sexp, IntPtr tag);
 
    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
    internal delegate bool Rf_isEnvironment(IntPtr sexp);
