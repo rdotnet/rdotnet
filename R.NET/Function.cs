@@ -136,7 +136,7 @@ namespace RDotNet
       {
           IntPtr argument = Engine.NilValue.DangerousGetHandle();
           var rfInstall = GetFunction<Rf_install>();
-          var rSetTag = GetFunction<R_SetExternalPtrTag>();
+          var rSetTag = GetFunction<SET_TAG>();
           var rfCons = GetFunction<Rf_cons>();
           foreach (var arg in args.Reverse())
           {
