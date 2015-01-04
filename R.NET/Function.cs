@@ -125,5 +125,30 @@ namespace RDotNet
               }
           }
       }
+
+      /// <summary>
+      /// Invoke the function with optionally named arguments by order.
+      /// </summary>
+      /// <param name="args">one or more tuples, conceptually a pairlist of arguments.
+      /// The argument names must be unique; null or empty string indicates unnamed argument. </param>
+      /// <returns>The result of the function evaluation</returns>
+      public SymbolicExpression InvokeNamedFast(params Tuple<string, SymbolicExpression>[] args)
+      {
+          IntPtr argument = Engine.NilValue.DangerousGetHandle();
+          var rfInstall = GetFunction<Rf_install>();
+          var rSetTag = GetFunction<SET_TAG>();
+          var rfCons = GetFunction<Rf_cons>();
+          foreach (var arg in args.Reverse())
+          {
+              var sexp = arg.Item2;
+              argument = rfCons(sexp.DangerousGetHandle(), argument);
+              string name = arg.Item1;
+              if (!string.IsNullOrEmpty(name))
+              {
+                  rSetTag(argument, rfInstall(name));
+              }
+          }
+          return createCallAndEvaluate(argument);
+      }
    }
 }
