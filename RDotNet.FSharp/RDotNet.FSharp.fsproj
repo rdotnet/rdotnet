@@ -66,7 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DynamicInterop">
-      <HintPath>..\packages\DynamicInterop.0.7.1.0\lib\net40\DynamicInterop.dll</HintPath>
+      <HintPath>..\packages\DynamicInterop.0.7.2.0\lib\net40\DynamicInterop.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
