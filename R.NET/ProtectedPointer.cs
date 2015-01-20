@@ -4,45 +4,46 @@ using System.Security.Permissions;
 
 namespace RDotNet
 {
-   [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-   internal class ProtectedPointer : IDisposable
-   {
-      private readonly REngine engine;
-      protected TDelegate GetFunction<TDelegate>() where TDelegate : class
-      {
-         return engine.GetFunction<TDelegate>();
-      }
+    [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
+    internal class ProtectedPointer : IDisposable
+    {
+        private readonly REngine engine;
 
-      private readonly IntPtr sexp;
+        protected TDelegate GetFunction<TDelegate>() where TDelegate : class
+        {
+            return engine.GetFunction<TDelegate>();
+        }
 
-      public ProtectedPointer(REngine engine, IntPtr sexp)
-      {
-         this.sexp = sexp;
-         this.engine = engine;
+        private readonly IntPtr sexp;
 
-         this.GetFunction<Rf_protect>()(this.sexp);
-      }
+        public ProtectedPointer(REngine engine, IntPtr sexp)
+        {
+            this.sexp = sexp;
+            this.engine = engine;
 
-      public ProtectedPointer(SymbolicExpression sexp)
-      {
-         this.sexp = sexp.DangerousGetHandle();
-         this.engine = sexp.Engine;
+            this.GetFunction<Rf_protect>()(this.sexp);
+        }
 
-         this.GetFunction<Rf_protect>()(this.sexp);
-      }
+        public ProtectedPointer(SymbolicExpression sexp)
+        {
+            this.sexp = sexp.DangerousGetHandle();
+            this.engine = sexp.Engine;
 
-      #region IDisposable Members
+            this.GetFunction<Rf_protect>()(this.sexp);
+        }
 
-      public void Dispose()
-      {
-         this.GetFunction<Rf_unprotect_ptr>()(this.sexp);
-      }
+        #region IDisposable Members
 
-      #endregion IDisposable Members
+        public void Dispose()
+        {
+            this.GetFunction<Rf_unprotect_ptr>()(this.sexp);
+        }
 
-      public static implicit operator IntPtr(ProtectedPointer p)
-      {
-         return p.sexp;
-      }
-   }
+        #endregion IDisposable Members
+
+        public static implicit operator IntPtr(ProtectedPointer p)
+        {
+            return p.sexp;
+        }
+    }
 }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace RDotNet.Utilities
 {
@@ -72,7 +69,7 @@ namespace RDotNet.Utilities
         }
 
         /// <summary>
-        /// Convert all elements of a rectangular array to a vector, using a function to cast/transform each element. 
+        /// Convert all elements of a rectangular array to a vector, using a function to cast/transform each element.
         /// The dimension reduction is column-first, appending each line of the input array into the result vector.
         /// </summary>
         /// <typeparam name="T">The type of the input array elements</typeparam>
@@ -92,7 +89,7 @@ namespace RDotNet.Utilities
         }
 
         /// <summary>
-        /// Convert a rectangular array to a vector. 
+        /// Convert a rectangular array to a vector.
         /// The dimension reduction is column-first, appending each line of the input array into the result vector.
         /// </summary>
         /// <typeparam name="U"></typeparam>
@@ -103,10 +100,9 @@ namespace RDotNet.Utilities
             return ArrayConvertAllOneDim(array, value => value);
         }
 
-
         // TODO: probably room for extension methods around Matrix inheritors
         /// <summary>
-        /// Convert all elements of a vector into a rectangular array, using a function to cast/transform each element. 
+        /// Convert all elements of a vector into a rectangular array, using a function to cast/transform each element.
         /// Vector to matrix augmentation is done column first, i.e. "appending" successive lines to the bottom of the new matrix
         /// </summary>
         /// <typeparam name="T">The type of the input array elements</typeparam>
@@ -130,7 +126,7 @@ namespace RDotNet.Utilities
 
         // TODO: probably room for extension methods around Matrix inheritors
         /// <summary>
-        /// Converts a vector into a rectangular array. 
+        /// Converts a vector into a rectangular array.
         /// Vector to matrix augmentation is done column first, i.e. "appending" successive lines to the bottom of the new matrix
         /// </summary>
         /// <typeparam name="U">The type of the output array elements</typeparam>
@@ -171,6 +167,5 @@ namespace RDotNet.Utilities
             Array.Copy(array, 0, newArray, 1, array.Length);
             return newArray;
         }
-
     }
 }
