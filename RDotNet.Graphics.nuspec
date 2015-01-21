@@ -22,7 +22,7 @@
       <tags>R R.NET graphics</tags>
    </metadata>
    <files>
-      <file src="RDotNet.Graphics\bin\Release\RDotNet.Graphics.dll" target="lib\net40" />
-      <file src="RDotNet.Graphics\bin\Release\RDotNet.Graphics.XML" target="lib\net40" />
+      <file src="RDotNet.Graphics/bin/Release/RDotNet.Graphics.dll" target="lib/net40" />
+      <file src="RDotNet.Graphics/bin/Release/RDotNet.Graphics.XML" target="lib/net40" />
    </files>
 </package>

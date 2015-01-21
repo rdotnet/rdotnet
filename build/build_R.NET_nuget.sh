@@ -59,26 +59,8 @@ pack_options="-OutputDirectory $rdotnet_dir$build $common_ng_pack_options"
 #if "$BuildConfiguration"=="Debug" nuspec_file=RDotNet_debug.nuspec
 nuspec_file=RDotNet.nuspec
 nuget pack $rdotnet_dir$nuspec_file $pack_options
-nuget pack $rdotnet_dir$RDotNet.FSharp.nuspec $pack_options
-nuget pack $rdotnet_dir$RDotNet.Graphics.nuspec $pack_options
-# $repo_dir/RDotNet.FSharp.0.*.nupkg
-xcopy $rdotnet_dir$build\*.nupkg $repo_dir/ %COPYOPTIONS%
-goto completed
+nuget pack $rdotnet_dir/RDotNet.FSharp.nuspec $pack_options
+nuget pack $rdotnet_dir/RDotNet.Graphics.nuspec $pack_options
 
-:MSBuild_not_found
-echo "ERROR: MSBuild.exe not found at the location given"
-pause
-exit 1
+cp $rdotnet_dir$build/*.nupkg $repo_dir
 
-:Nuget_not_found
-echo "ERROR: NuGet.exe not found at the location given"
-pause
-exit 1
-
-:Nuget_config_not_found
-echo "ERROR: NuGet.config not found at the location given"
-pause
-exit 1
-
-:completed
-echo "INFO: Batch build completed with no known error"
