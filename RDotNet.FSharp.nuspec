@@ -3,7 +3,7 @@
   <metadata>
     <id>R.NET.Community.FSharp</id>
     <title>R.NET F# Utility</title>
-    <version>0.1.11</version>
+    <version>0.1.12</version>
     <releaseNotes>Update to reference latest version of R.NET as a dependency</releaseNotes>
     <authors>RecycleBin</authors>
     <owners>kos59125</owners>
@@ -17,7 +17,7 @@
       <reference file="RDotNet.FSharp.dll" />
     </references>
     <dependencies>
-      <dependency id="R.NET.Community" version="1.5.19" />
+      <dependency id="R.NET.Community" version="1.5.21" />
     </dependencies>
     <tags>R R.NET F# statistics</tags>
   </metadata>
