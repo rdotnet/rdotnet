@@ -16,7 +16,7 @@ namespace RDotNet.Devices
         /// from console (this seems to happen on Mono and may be a bug).
         ///
         /// The (somewhat incorrect) workaround is to keep the last device in a static
-		    /// field and use it when 'this == null' (the check is done in 'this.Device').
+        /// field and use it when 'this == null' (the check is done in 'this.Device').
         /// This workarounds: http://rdotnet.codeplex.com/workitem/154
         /// </summary>
         private static ICharacterDevice lastDevice;
