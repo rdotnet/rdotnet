@@ -2,6 +2,7 @@
 using RDotNet.NativeLibrary;
 using System;
 using System.Linq;
+using System.Numerics;
 
 namespace RDotNet
 {
@@ -101,7 +102,28 @@ namespace RDotNet
         {
             Assert.AreEqual(expected.Length, a.Length);
             for (int i = 0; i < a.Length; i++)
-                Assert.AreEqual(expected[i], a[i]); //, 1e-9);
+                AssertElementsAreEqual(expected[i], a[i]); //, 1e-9);
+        }
+
+        public static void AssertComplexAreEqual(Complex actual, Complex expected)
+        {
+            // TestCreateComplexValid test otherwise fails on Mono, for NA values for R complex vectors. 
+            if (double.IsNaN(expected.Real))
+                Assert.True(double.IsNaN(actual.Real));
+            if (double.IsNaN(expected.Imaginary))
+                Assert.True(double.IsNaN(actual.Imaginary));
+            if (!double.IsNaN(expected.Real) && !double.IsNaN(expected.Imaginary))
+                Assert.AreEqual(expected, actual);
+        }
+
+        protected static void AssertElementsAreEqual<T>(T actual, T expected)
+        {
+            // Yuck, but 
+            // TestCreateComplexValid test otherwise fails on Mono, for NA values for R complex vectors. 
+            if (typeof(T) == typeof(Complex))
+                AssertComplexAreEqual((Complex)(object)actual, (Complex)(object)expected);
+           else
+                Assert.AreEqual(expected, actual);
         }
 
         // I thought NUnit was dealing with array equivalence. Cannot see here, so emulate.

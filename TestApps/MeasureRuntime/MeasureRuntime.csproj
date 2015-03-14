@@ -34,10 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DynamicInterop, Version=0.7.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DynamicInterop.0.7.2.0\lib\net40\DynamicInterop.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,6 +41,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="DynamicInterop">
+      <HintPath>..\..\packages\DynamicInterop.0.7.4\lib\net40\DynamicInterop.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -52,20 +51,17 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\R.NET\RDotNet.csproj">
-      <Project>{0923e1a0-2032-4997-ab73-49e42c4034a9}</Project>
+      <Project>{0923E1A0-2032-4997-AB73-49E42C4034A9}</Project>
       <Name>RDotNet</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj">
-      <Project>{2a089a59-0f22-4484-b442-0fe8bda10879}</Project>
+      <Project>{2A089A59-0F22-4484-B442-0FE8BDA10879}</Project>
       <Name>RDotNet.NativeLibrary</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\RDotNet.TestBase\RDotNet.TestBase.csproj">
-      <Project>{b9e15660-096f-45fb-82e3-3c21bbe986df}</Project>
+      <Project>{B9E15660-096F-45FB-82E3-3C21BBE986DF}</Project>
       <Name>RDotNet.TestBase</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
@@ -82,4 +78,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>

@@ -82,8 +82,6 @@ namespace RDotNet
         {
             var a = vec.ToArray();
             CheckArrayEqual(a, expected);
-            a = vec.ToArray();
-            CheckArrayEqual(a, expected);
         }
 
         [Test]

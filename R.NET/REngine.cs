@@ -53,7 +53,7 @@ namespace RDotNet
             this.isRunning = false;
             this.Disposed = false;
             this.EnableLock = true; // See https://rdotnet.codeplex.com/workitem/113; it seems wise to enable it by default.
-            this.AutoPrint = false;
+            this.AutoPrint = true;
         }
 
         /// <summary>
