@@ -1,4 +1,4 @@
-﻿using RDotNet.Internals;
+using RDotNet.Internals;
 using RDotNet.Internals.Unix;
 using RDotNet.NativeLibrary;
 using System;
@@ -10,8 +10,18 @@ namespace RDotNet.Devices
 {
     internal class CharacterDeviceAdapter : IDisposable
     {
-        private readonly ICharacterDevice device;
+        /// <summary>
+        /// When R calls the character device (unamanged R calling managed code),
+        /// it sometimes calls the method with 'this == null' when writing/reading
+        /// from console (this seems to happen on Mono and may be a bug).
+        ///
+        /// The (somewhat incorrect) workaround is to keep the last device in a static
+        /// field and use it when 'this == null' (the check is done in 'this.Device').
+        /// This workarounds: http://rdotnet.codeplex.com/workitem/154
+        /// </summary>
+        private static ICharacterDevice lastDevice;
 
+        private readonly ICharacterDevice device;
         private REngine engine;
 
         /// <summary>
@@ -24,6 +34,7 @@ namespace RDotNet.Devices
             {
                 throw new ArgumentNullException("device");
             }
+            lastDevice = device;
             this.device = device;
         }
 
@@ -32,7 +43,11 @@ namespace RDotNet.Devices
         /// </summary>
         public ICharacterDevice Device
         {
-            get { return this.device; }
+            get
+            {
+                if (this == null) return lastDevice;
+                else return this.device;
+            }
         }
 
         private REngine Engine
