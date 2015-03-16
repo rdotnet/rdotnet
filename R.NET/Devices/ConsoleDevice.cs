@@ -32,7 +32,6 @@ namespace RDotNet.Devices
         /// <param name="outputType">Parameter is ignored</param>
         public void WriteConsole(string output, int length, ConsoleOutputType outputType)
         {
-            output = output.Trim(' ');
             Console.Write(output);
         }
 
