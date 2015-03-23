@@ -3,8 +3,8 @@
   <metadata>
     <id>R.NET.Community</id>
     <title>R.NET</title>
-    <version>1.5.21</version>
-    <releaseNotes>Minor update to upgrade to DynamicInterop 0.7.4</releaseNotes>
+    <version>1.5.22</version>
+    <releaseNotes>Add a workaround to what looks like a Mono specific issue, where an object is garbage collected before it should. Required for RProvider on *nix. Note that AutoPrint is now true by default, to match the default R behavior. You may want to turn this to False to increase the calculation performances on large data sets.</releaseNotes>
     <authors>RecycleBin, jperraud</authors>
     <owners>kos59125, jperraud</owners>
     <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
