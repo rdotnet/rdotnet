@@ -16,10 +16,10 @@ namespace RDotNet
         }
 
         [Test]
-        [ExpectedException(typeof(DllNotFoundException))]
+        [ExpectedException(typeof(Exception))]
         public void TestCreateInstanceWithWrongDllName()
         {
-            Assert.That(TestREngine.CreateTestEngine("R.NET", "NotExist.dll"), Throws.TypeOf<DllNotFoundException>());
+            Assert.That(TestREngine.CreateTestEngine("R.NET", "NotExist.dll"), Throws.TypeOf<Exception>());
         }
 
         /// <summary>

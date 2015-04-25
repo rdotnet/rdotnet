@@ -10,7 +10,7 @@ namespace RDotNet
         public void TestCStackCheckDisabled()
         {
             var engine = this.Engine;
-            var cStackLimit = engine.GetDangerousInt32("R_CStackLimit");
+            var cStackLimit = engine.GetInt32("R_CStackLimit");
             Assert.AreEqual(-1, cStackLimit);
         }
 
@@ -178,6 +178,46 @@ namespace RDotNet
             engine.Evaluate("for(i in 1:3){\ncat(i)\ncat(i)\n}");
             Assert.That(Device.GetString(), Is.EqualTo("112233"));
         }
+
+        [Test]
+        public void TestParseCodeBlockMultiLine()
+        {
+            // Tests suggested by the following issue, but not dealing with it per se.
+            // https://rdotnet.codeplex.com/workitem/165
+            var engine = this.Engine;
+            engine.Evaluate(@"for(i in 1:3){
+cat(i)
+cat(i)
+}");
+            Assert.That(Device.GetString(), Is.EqualTo("112233"));
+
+            Device.Initialize();
+            engine.Evaluate(@"for(i in 1:3){
+cat(i); cat(i)
+}");
+            Assert.That(Device.GetString(), Is.EqualTo("112233"));
+        }
+
+        [Test]
+        public void TestParseComments()
+        {
+            // See
+            // https://rdotnet.codeplex.com/workitem/165
+            var engine = this.Engine;
+            engine.Evaluate(@"for(i in 1:3){
+cat(i) ; # cat(i) ; cat(i)
+}");
+            Assert.That(Device.GetString(), Is.EqualTo("123"));
+
+            Device.Initialize();
+            engine.Evaluate(@"cat('Hi') ; # cat(' there') ; cat(' How\'s it going?')");
+            Assert.That(Device.GetString(), Is.EqualTo("Hi"));
+
+            Device.Initialize();
+            engine.Evaluate("cat(\"Hello!\\n\"); #cat(\"Glad to see you today.\\n\"); cat(\"Goodbye.\\n\")");
+            Assert.That(Device.GetString(), Is.EqualTo("Hello!\n"));
+        }
+
 
         [Test]
         public void TestReadConsole()

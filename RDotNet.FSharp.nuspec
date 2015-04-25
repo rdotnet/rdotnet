@@ -3,8 +3,10 @@
   <metadata>
     <id>R.NET.Community.FSharp</id>
     <title>R.NET F# Utility</title>
-    <version>0.1.13</version>
-    <releaseNotes>Update to reference latest version of R.NET and DynamicInterop</releaseNotes>
+    <version>0.1.14</version>
+    <releaseNotes>
+      * Update to reference latest version of R.NET. Note that R.NET 1.6 includes a fix to issue 165 that should justify upgrading.
+    </releaseNotes>
     <authors>RecycleBin</authors>
     <owners>kos59125</owners>
     <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
@@ -17,7 +19,7 @@
       <reference file="RDotNet.FSharp.dll" />
     </references>
     <dependencies>
-      <dependency id="R.NET.Community" version="1.5.22" />
+      <dependency id="R.NET.Community" version="1.6" />
     </dependencies>
     <tags>R R.NET F# statistics</tags>
   </metadata>

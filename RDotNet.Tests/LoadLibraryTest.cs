@@ -24,7 +24,7 @@ namespace RDotNet
         }
 
         [Test]
-        [ExpectedException(typeof(DllNotFoundException))]
+        [ExpectedException(typeof(Exception))]
         public void TestLoadUnmanagedDllWrongShortName()
         {
             var lib = new MockLoadLib("SomeVeryUnlikelyName.dll");

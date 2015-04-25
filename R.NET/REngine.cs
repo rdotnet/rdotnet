@@ -260,51 +260,6 @@ namespace RDotNet
         }
 
         /// <summary>
-        /// Set a global variable in native memory, of type int or compatible (e.g. uintptr_t)
-        /// </summary>
-        /// <param name="varname">variable name</param>
-        /// <param name="value">Value.</param>
-        /// <example>
-        /// <code>
-        /// SetDangerousInt32 ("R_CStackLimit", -1)
-        /// </code></example>
-        [Obsolete("Will be replaced by DynamicInterop features", false)]
-        internal void SetDangerousInt32(string varname, int value)
-        {
-            var addr = this.DangerousGetHandle(varname);
-            System.Runtime.InteropServices.Marshal.WriteInt32(addr, value);
-        }
-
-        /// <summary>
-        /// Gets the value of a a global variable in native memory, of type int or compatible (e.g. uintptr_t)
-        /// </summary>
-        /// <param name="varname">variable name</param>
-        /// <example>
-        /// <code>
-        /// int stackLimit = GetDangerousInt32 ("R_CStackLimit")
-        /// </code></example>
-        /// <returns>The value, as read by Marshal.ReadInt32</returns>
-        [Obsolete("Will be replaced by DynamicInterop features", false)]
-        internal int GetDangerousInt32(string varname)
-        {
-            var addr = this.DangerousGetHandle(varname);
-            return System.Runtime.InteropServices.Marshal.ReadInt32(addr);
-        }
-
-        /// <summary>
-        /// Gets the value of a character string
-        /// </summary>
-        /// <param name="varname">The variable name exported by the R dynamic library, e.g. R_ParseErrorMsg</param>
-        /// <returns>The Unicode equivalent of the native ANSI string</returns>
-        /// <example><code></code></example>
-        [Obsolete("Will be replaced by DynamicInterop features", false)]
-        public string GetDangerousChar(string varname)
-        {
-            var addr = this.DangerousGetHandle(varname);
-            return Marshal.PtrToStringAnsi(addr);
-        }
-
-        /// <summary>
         /// Initialize this REngine object. Only the first call has an effect. Subsequent calls to this function are ignored.
         /// </summary>
         /// <param name="parameter">The optional startup parameters</param>
@@ -392,12 +347,12 @@ namespace RDotNet
             // Don't do any stack checking, see R Exts, '8.1.5 Threading issues',
             // https://rdotnet.codeplex.com/discussions/462947
             // https://rdotnet.codeplex.com/workitem/115
-            SetDangerousInt32("R_CStackLimit", -1);
+            WriteInt32("R_CStackLimit", -1);
             switch (NativeUtility.GetPlatform())
             {
                 case PlatformID.MacOSX:
                 case PlatformID.Unix:
-                    SetDangerousInt32("R_SignalHandlers", 0);
+                    WriteInt32("R_SignalHandlers", 0);
                     // RInside does this for non-WIN32.
                     break;
             }
@@ -646,7 +601,16 @@ namespace RDotNet
 
         private static IEnumerable<string> Segment(string line)
         {
-            var segments = line.Split(';');
+            // Fix for
+            // https://rdotnet.codeplex.com/workitem/165
+            string[] commentsSegments = line.Split('#');
+            string uncommentedStatements;
+            if (commentsSegments.Length == 0)
+                uncommentedStatements = string.Empty;
+            else
+                uncommentedStatements = commentsSegments[0];
+
+            var segments = uncommentedStatements.Split(';');
             for (var index = 0; index < segments.Length; index++)
             {
                 if (index == segments.Length - 1)
@@ -700,7 +664,7 @@ namespace RDotNet
 
                     case ParseStatus.Error:
                         // TODO: use LastErrorMessage if below is just a subset
-                        var parseErrorMsg = GetDangerousChar("R_ParseErrorMsg");
+                        var parseErrorMsg = this.GetAnsiString("R_ParseErrorMsg");
                         errorStatement = incompleteStatement.ToString();
                         incompleteStatement.Clear();
                         throw new ParseException(status, errorStatement, parseErrorMsg);

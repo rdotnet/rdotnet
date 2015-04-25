@@ -40,6 +40,9 @@ namespace RDotNet.NativeLibrary
 
         private static StringBuilder logSetEnvVar = new StringBuilder();
 
+        /// <summary>
+        /// Gets a log of the changes made to environment variables via the NativeUtility
+        /// </summary>
         public static string SetEnvironmentVariablesLog { get { return logSetEnvVar.ToString(); } }
 
         /// <summary>
@@ -252,6 +255,10 @@ namespace RDotNet.NativeLibrary
             return r;
         }
 
+        /// <summary>
+        /// Gets the R version from the Windows R Registry (if available)
+        /// </summary>
+        /// <returns>a System.Version object</returns>
         public static Version GetRVersionFromRegistry()
         {
             var rCoreKey = GetRCoreRegistryKey();
