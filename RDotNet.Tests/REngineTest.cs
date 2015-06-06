@@ -216,6 +216,23 @@ cat(i) ; # cat(i) ; cat(i)
             Device.Initialize();
             engine.Evaluate("cat(\"Hello!\\n\"); #cat(\"Glad to see you today.\\n\"); cat(\"Goodbye.\\n\")");
             Assert.That(Device.GetString(), Is.EqualTo("Hello!\n"));
+
+            Device.Initialize();
+            engine.Evaluate("cat(\"Hello!\\n\"); #cat(\"Glad to see you today.\\n\");\n cat(\"Goodbye.\\n\")");
+            Assert.That(Device.GetString(), Is.EqualTo("Hello!\nGoodbye.\n"));
+
+            Device.Initialize();
+            engine.Evaluate("cat('Hello!\\n'); #cat('Glad to see you today.\\n');\n cat('Goodbye.\\n')");
+            Assert.That(Device.GetString(), Is.EqualTo("Hello!\nGoodbye.\n"));
+
+            Device.Initialize();
+            engine.Evaluate(@"f <- function() {
+cat('function f ') # some comments
+cat(paste('a','b',  # some more comments there
+sep=''))
+}");
+            engine.Evaluate(@"f()");
+            Assert.That(Device.GetString(), Is.EqualTo("function f ab"));
         }
 
 
