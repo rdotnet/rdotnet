@@ -133,13 +133,20 @@ namespace RDotNet
             return new ListDynamicMeta(parameter, this);
         }
 
-        public void SetNames(string[] names) {
-            if (names.Length != this.Length) {
-                throw new ArgumentException ("Names vector must be same length as list");
+        public void SetNames(params string[] names)
+        {
+            CharacterVector cv = new CharacterVector(this.Engine, names);
+            SetNames(cv);
+        }
+
+        public void SetNames(CharacterVector names)
+        {
+            if (names.Length != this.Length)
+            {
+                throw new ArgumentException("Names vector must be same length as list");
             }
-            CharacterVector cv = new CharacterVector (this.Engine, names);
             SymbolicExpression namesSymbol = Engine.GetPredefinedSymbol("R_NamesSymbol");
-            SetAttribute (namesSymbol, cv);
+            SetAttribute(namesSymbol, names);
         }
     }
 }

@@ -63,9 +63,10 @@ namespace RDotNet
 
         protected static void GarbageCollectRandClr(REngine engine)
         {
-            GC.Collect();
-            // it seems important to call gc() twice to get a proper baseline.
+            // it seems needed to call gc() twice to get a proper baseline.
+            REngine.DoDotNetGarbageCollection();
             engine.ForceGarbageCollection();
+            REngine.DoDotNetGarbageCollection();
             engine.ForceGarbageCollection();
         }
 

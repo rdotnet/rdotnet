@@ -124,6 +124,9 @@ namespace RDotNet
             var memoryAfterAlloc = GetBaselineRengineMemory(engine);
             Assert.That(memoryAfterAlloc - memoryInitial, Is.GreaterThan(expectedMinMegaBytesDifference));
             engine.Evaluate("rm(x)");
+            // We still have a reference from .NET, the variable sexp. Should not have been collected yet.
+            var memoryAfterRemoveRvar = GetBaselineRengineMemory(engine);
+            Assert.That(memoryAfterRemoveRvar - memoryInitial, Is.GreaterThan(expectedMinMegaBytesDifference));
             sexp = null;
             Thread.Sleep(100);
             var memoryAfterGC = GetBaselineRengineMemory(engine);

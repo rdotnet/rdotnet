@@ -25,17 +25,18 @@ namespace RDotNet
         { }
 
         /// <summary>
-        /// Gets the levels of the factor.
+        /// Gets the levels of this factor.
         /// </summary>
+        /// <returns>Levels of this factor</returns>
         public string[] GetLevels()
         {
             return GetAttribute(Engine.GetPredefinedSymbol("R_LevelsSymbol")).AsCharacter().ToArray();
         }
 
         /// <summary>
-        /// Gets the levels of the factor.
+        /// Gets the values in this factor.
         /// </summary>
-        /// <returns>Factors.</returns>
+        /// <returns>Values of this factor</returns>
         public string[] GetFactors()
         {
             var levels = GetLevels();

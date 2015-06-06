@@ -25,19 +25,41 @@ namespace RDotNet
         public void TestDataFrameFactorColumns()
         {
             var engine = this.Engine;
-            // TODO: move to use a package installed by default with R
-            var mpg = getMpgDataFrame(engine);
-            var manufacturer = mpg[0].AsFactor().GetFactors();
-            Assert.AreEqual("audi", manufacturer[0]);
-            manufacturer = mpg[0].AsCharacter().ToArray();
-            Assert.AreEqual("audi", manufacturer[0]);
+            var biopsy = getBiopsyDataFrame(engine);
+            //$ class: Factor w/ 2 levels "benign","malignant": 1 1 1 1 1 2 1 1 1 1 ...
+            var factor = biopsy[10].AsFactor();
+            var classFact = factor.GetFactors();
+            Assert.AreEqual(699, classFact.Length);
+            Assert.AreEqual("benign", classFact[0]);
+            Assert.AreEqual("malignant", classFact[5]);
+            var levels = factor.GetLevels();
+            Assert.AreEqual(2, levels.Length);
+            Assert.AreEqual("benign", levels[0]);
+            Assert.AreEqual("malignant", levels[1]);
+
+            // Check that we get the following:
+//> head(as.character(biopsy$class))
+            //[1] "benign"    "benign"    "benign"    "benign"    "benign"    "malignant"
+            //   NOT:
+            //[1] "1"    "1"    "1"    "1"    "1"    "2" 
+            checkClassString(factor.AsCharacter().ToArray());
+            checkClassString(biopsy[10].AsCharacter().ToArray());
+
         }
 
-        private static DataFrame getMpgDataFrame(REngine engine)
+        private static void checkClassString(string[] values)
         {
-            engine.Evaluate("data(mpg, package='ggplot2')");
-            var mpg = engine.Evaluate("mpg").AsDataFrame();
-            return mpg;
+            Assert.AreEqual(699, values.Length);
+            for (int i = 0; i < 5; i++)
+                Assert.AreEqual("benign", values[i]);
+            Assert.AreEqual("malignant", values[5]);
+        }
+
+        private static DataFrame getBiopsyDataFrame(REngine engine)
+        {
+            engine.Evaluate("data(biopsy, package='MASS')");
+            var biopsy = engine.Evaluate("biopsy").AsDataFrame();
+            return biopsy;
         }
 
         //[Test]
@@ -101,46 +123,47 @@ namespace RDotNet
         public void TestDataElementTwoDimIndex()
         {
             var engine = this.Engine;
-            var mpg = getMpgDataFrame(engine);
+            var biopsy = getBiopsyDataFrame(engine);
 
             /*
-              manufacturer model displ year cyl      trans drv cty hwy fl   class
-   1         audi    a4   1.8 1999   4   auto(l5)   f  18  29  p compact
-   2         audi    a4   1.8 1999   4 manual(m5)   f  21  29  p compact
-   3         audi    a4   2.0 2008   4 manual(m6)   f  20  31  p compact
-   4         audi    a4   2.0 2008   4   auto(av)   f  21  30  p compact
-   5         audi    a4   2.8 1999   6   auto(l5)   f  16  26  p compact
-   6         audi    a4   2.8 1999   6 manual(m5)   f  18  26  p compact
-             * > str(mpg)
-   'data.frame':   234 obs. of  11 variables:
-    $ manufacturer: Factor w/ 15 levels "audi","chevrolet",..: 1 1 1 1 1 1 1 1 1 1 ...
-    $ model       : Factor w/ 38 levels "4runner 4wd",..: 2 2 2 2 2 2 2 3 3 3 ...
-    $ displ       : num  1.8 1.8 2 2 2.8 2.8 3.1 1.8 1.8 2 ...
-    $ year        : int  1999 1999 2008 2008 1999 1999 2008 1999 1999 2008 ...
-    $ cyl         : int  4 4 4 4 6 6 6 4 4 4 ...
-    $ trans       : Factor w/ 10 levels "auto(av)","auto(l3)",..: 4 9 10 1 4 9 1 9 4 10 ...
-    $ drv         : Factor w/ 3 levels "4","f","r": 2 2 2 2 2 2 2 1 1 1 ...
-    $ cty         : int  18 21 20 21 16 18 18 18 16 20 ...
-    $ hwy         : int  29 29 31 30 26 26 27 26 25 28 ...
-    $ fl          : Factor w/ 5 levels "c","d","e","p",..: 4 4 4 4 4 4 4 4 4 4 ...
-    $ class       : Factor w/ 7 levels "2seater","compact",..: 2 2 2 2 2 2 2 2 2 2 ...
+
+             * > head(biopsy)
+       ID V1 V2 V3 V4 V5 V6 V7 V8 V9     class
+1 1000025  5  1  1  1  2  1  3  1  1    benign
+2 1002945  5  4  4  5  7 10  3  2  1    benign
+3 1015425  3  1  1  1  2  2  3  1  1    benign
+4 1016277  6  8  8  1  3  4  3  7  1    benign
+5 1017023  4  1  1  3  2  1  3  1  1    benign
+6 1017122  8 10 10  8  7 10  9  7  1 malignant
+
+             * > str((biopsy))
+'data.frame':   699 obs. of  11 variables:
+ $ ID   : chr  "1000025" "1002945" "1015425" "1016277" ...
+ $ V1   : int  5 5 3 6 4 8 1 2 2 4 ...
+ $ V2   : int  1 4 1 8 1 10 1 1 1 2 ...
+ $ V3   : int  1 4 1 8 1 10 1 2 1 1 ...
+ $ V4   : int  1 5 1 1 3 8 1 1 1 1 ...
+ $ V5   : int  2 7 2 3 2 7 2 2 2 2 ...
+ $ V6   : int  1 10 2 4 1 10 10 1 1 1 ...
+ $ V7   : int  3 3 3 3 3 9 3 3 1 2 ...
+ $ V8   : int  1 2 1 7 1 7 1 1 1 1 ...
+ $ V9   : int  1 1 1 1 1 1 1 1 5 1 ...
+ $ class: Factor w/ 2 levels "benign","malignant": 1 1 1 1 1 2 1 1 1 1 ...
 
             */
 
-            var obj = mpg[0, 0];
+            var obj = biopsy[0, 10];
             Assert.AreEqual(typeof(string), obj.GetType());
             var s = (string)obj;
-            Assert.AreEqual("audi", s);
-            Assert.AreEqual("audi", mpg[0, "manufacturer"]);
+            Assert.AreEqual("benign", s);
+            Assert.AreEqual("benign", biopsy[0, "class"]);
             // While R does 'something' where there is no names defined, the behavior seems inconsistent between rownames in data frames
             // and named vectors. Better not support this for the time being.
             //         Assert.AreEqual("audi", mpg["1", "manufacturer"]);
-            Assert.AreEqual("auto(av)", mpg[3, 5]);
-            Assert.AreEqual("auto(av)", mpg[3, "trans"]);
-            //         Assert.AreEqual("auto(av)", mpg["4", "trans"]);
-            Assert.AreEqual(2008, mpg[2, 3]);
-            Assert.AreEqual(2008, mpg[2, "year"]);
-            //         Assert.AreEqual(2008, mpg["3", "year"]);
+            Assert.AreEqual("malignant", biopsy[5, 10]);
+            Assert.AreEqual("malignant", biopsy[5, "class"]);
+            Assert.AreEqual(4, biopsy[1, 3]);
+            Assert.AreEqual(4, biopsy[1, "V3"]);
 
             IEnumerable[] columns;
             string[] columnNames;

@@ -72,7 +72,7 @@ namespace RDotNet
         {
             var names = new CharacterVector(Engine, argNames);
             var arguments = new GenericVector(Engine, args);
-            arguments.SetAttribute(Engine.GetPredefinedSymbol("R_NamesSymbol"), names);
+            arguments.SetNames(names);
             var argPairList = arguments.ToPairlist();
 
             //IntPtr newEnvironment = Engine.GetFunction<Rf_allocSExp>()(SymbolicExpressionType.Environment);

@@ -21,26 +21,30 @@ namespace RDotNet
 
             var s = engine.Evaluate("search()").AsCharacter().ToArray();
             Assert.IsFalse(s.Contains("package:lattice"));
-            Assert.IsFalse(s.Contains("package:knitr"));
-            Assert.IsFalse(s.Contains("mpg"));
+            Assert.IsFalse(s.Contains("package:Matrix"));
+            Assert.IsFalse(s.Contains("package:MASS"));
+            Assert.IsFalse(s.Contains("biopsy"));
 
             engine.ClearGlobalEnvironment();
             engine.Evaluate("library(lattice)");
-            engine.Evaluate("library(knitr)");
-            engine.Evaluate("data(mpg, package='ggplot2')");
-            engine.Evaluate("attach(mpg)");
+            engine.Evaluate("library(Matrix)");
+            engine.Evaluate("library(MASS)");
+            engine.Evaluate("data(biopsy, package='MASS')");
+            engine.Evaluate("attach(biopsy)");
             s = engine.Evaluate("search()").AsCharacter().ToArray();
 
             Assert.IsTrue(s.Contains("package:lattice"));
-            Assert.IsTrue(s.Contains("package:knitr"));
-            Assert.IsTrue(s.Contains("mpg"));
+            Assert.IsTrue(s.Contains("package:Matrix"));
+            Assert.IsTrue(s.Contains("package:MASS"));
+            Assert.IsTrue(s.Contains("biopsy"));
 
             engine.ClearGlobalEnvironment(detachPackages: true);
 
             s = engine.Evaluate("search()").AsCharacter().ToArray();
             Assert.IsFalse(s.Contains("package:lattice"));
-            Assert.IsFalse(s.Contains("package:knitr"));
-            Assert.IsFalse(s.Contains("mpg"));
+            Assert.IsFalse(s.Contains("package:Matrix"));
+            Assert.IsFalse(s.Contains("package:MASS"));
+            Assert.IsFalse(s.Contains("biopsy"));
         }
     }
 }

@@ -845,8 +845,8 @@ namespace RDotNet
             this.Evaluate(rmStatement);
             if (garbageCollectDotNet)
             {
-                dotNetCollectAndWait();
-                dotNetCollectAndWait();
+                DoDotNetGarbageCollection();
+                DoDotNetGarbageCollection();
             }
             if (garbageCollectR)
                 ForceGarbageCollection();
@@ -864,7 +864,10 @@ namespace RDotNet
             }
         }
 
-        private static void dotNetCollectAndWait()
+        /// <summary>
+        /// Triggers a .NET garbage collection. May be useful in some testing circumstance, but users should avoid using this.
+        /// </summary>
+        public static void DoDotNetGarbageCollection()
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
