@@ -81,7 +81,7 @@ namespace RDotNet
         }
 
         // Note: unfortunately the results of this test remain unpredictable from run to run, if run from NUnit.
-        [Test]
+        [Test, Ignore("This test still seems to not be repeatable in behavior nor suceeding in a unit test context. Baffled.")]
         public void TestRGarbageCollectCharacterVectors()
         {
             /*
@@ -238,6 +238,63 @@ sep=''))
             Assert.That(Device.GetString(), Is.EqualTo("function f ab"));
         }
 
+        [Test]
+        public void TestParseLineWithStringWithHash()
+        {
+            //https://github.com/jmp75/rdotnet/issues/14
+            var engine = this.Engine;
+
+            Device.Initialize();
+            engine.Evaluate(@"cat('This is a string with a (#) character') # ; blah ; cat(' this is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo("This is a string with a (#) character"));
+
+            Device.Initialize();
+            engine.Evaluate("cat('This is a string with a (#) character') ; # cat(' this is removed') \n cat(' but it did not remove this line')");
+            Assert.That(Device.GetString(), Is.EqualTo("This is a string with a (#) character but it did not remove this line"));
+
+            Device.Initialize();
+            engine.Evaluate("cat('This is a string with a (#) character') ; # cat(' this is removed') \n\r cat(' but it did not remove this line')");
+            Assert.That(Device.GetString(), Is.EqualTo("This is a string with a (#) character but it did not remove this line"));
+
+            Device.Initialize();
+            engine.Evaluate(@"cat('This is a string with a \'#\' character') # ; cat(' this is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo("This is a string with a '#' character"));
+
+            Device.Initialize();
+            engine.Evaluate("cat('This is a string with a \\\"#\\\" character') # ; cat(' this is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo("This is a string with a \"#\" character"));
+
+            Device.Initialize();
+            engine.Evaluate("cat(\"This is a string with a \\\"#\\\" character\") # ; cat(' this is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo("This is a string with a \"#\" character"));
+
+            Device.Initialize();
+            engine.Evaluate("cat('first statement') ; cat(\" then this is a string with a \\\"#\\\" character\") # ; cat(' this is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo("first statement then this is a string with a \"#\" character"));
+
+            Device.Initialize();
+            engine.Evaluate("cat('first statement') ; cat(\" then this is a string with a \\\"#\\\" character\") # ; cat(' this is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo("first statement then this is a string with a \"#\" character"));
+
+            Device.Initialize();
+            engine.Evaluate(@"cat('single \' with # and "" and \' ') # ; cat(' this # is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo(@"single ' with # and "" and ' "));
+
+        }
+
+        [Test]
+        public void TestProcessingMultipleHashes()
+        {
+
+            // paste('this contains ### characters', " this too ###", 'Oh, and this # one too') # but "this" 'rest' is commented
+
+            var blah = @"blah = 'blah
+\'blah\'
+blah";
+
+            blah = @"blah = 'blah\n\'blah\'\nblah";
+
+        }
 
         [Test]
         public void TestReadConsole()

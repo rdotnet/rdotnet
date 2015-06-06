@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace RDotNet
 {
@@ -601,16 +602,7 @@ namespace RDotNet
 
         private static IEnumerable<string> Segment(string line)
         {
-            // Fix for
-            // https://rdotnet.codeplex.com/workitem/165
-            string[] commentsSegments = line.Split('#');
-            string uncommentedStatements;
-            if (commentsSegments.Length == 0)
-                uncommentedStatements = string.Empty;
-            else
-                uncommentedStatements = commentsSegments[0];
-
-            var segments = uncommentedStatements.Split(';');
+            var segments = processInputString(line);
             for (var index = 0; index < segments.Length; index++)
             {
                 if (index == segments.Length - 1)
@@ -625,6 +617,134 @@ namespace RDotNet
                     yield return segments[index] + ";";
                 }
             }
+        }
+
+        private static string[] processInputString(string input)
+        {
+            // Fixes for
+            // https://rdotnet.codeplex.com/workitem/165
+            // https://github.com/jmp75/rdotnet/issues/14
+            string[] lines = splitOnNewLines(input);
+            List<string> statements = new List<string>();
+            for (int i = 0; i < lines.Length; i++)
+			{
+			    statements.AddRange(processLine(lines[i]));
+			}
+            return statements.ToArray();
+        }
+
+        private static string[] splitOnNewLines(string input)
+        {
+            input = input.Replace("\n\r", "\n");
+            return input.Split('\n');
+        }
+
+        private static string[] processLine(string line)
+        {
+            var trimmedLine = line.Trim();
+            if (trimmedLine == string.Empty)
+                return new string[]{};
+            if (trimmedLine.StartsWith("#"))
+                return new string[]{line};
+
+            string theRest;
+            string statement = splitOnFirst(line, out theRest, ';');
+
+            var result = new List<string>();
+            if(!statement.Contains("#"))
+            {
+                result.Add(statement);
+                result.AddRange(processLine(theRest));
+            }
+            else
+            {
+                // paste('this contains ### characters', " this too ###", 'Oh, and this # one too') # but "this" 'rest' is commented
+                // Find the fist # character such that before that, there is an 
+                // even number of " and an even number of ' characters
+                
+                int[] whereHash = IndexOfAll(statement, "#");
+                int firstComment = EvenStringDelimitors(statement, whereHash);
+                if(firstComment < 0 ) 
+                    // incomplete statement??? such as:
+                    // paste('this is the # ', ' start of an incomplete # statement
+                {
+                    result.Add(statement);
+                    result.AddRange(processLine(theRest));
+                }
+                else
+                {
+                    result.Add(statement.Substring(0, firstComment));
+                    // firstComment is a valid comment marker - not need to process "the rest"
+                }
+                string restFirstStatement;
+                string beforeComment = splitOnFirst(statement, out restFirstStatement, '#');
+            }
+            return result.ToArray();
+        }
+
+        private static int EvenStringDelimitors(string statement, int[] whereHash)
+        {
+            for (int i = 0; i < whereHash.Length; i++)
+            {
+                var s = statement.Substring(0, whereHash[i]);
+                if (IsClosedString(s))
+                    return whereHash[i];
+            }
+            return -1;
+        }
+
+        private static bool IsClosedString(string s)
+        {
+            // paste("#hashtag")
+            // paste("#hashtag''''")
+            // paste('#hashtag""""')
+            // paste('#hashtag""#""')
+            // paste('#hashtag""#""', "#hash ''' ")
+            bool inSingleQuote = false, inDoubleQuotes=false;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == '\'')
+                {
+                    if(i > 0)
+                        if(s[i-1]=='\\')
+                            continue;
+                    if (inDoubleQuotes)
+                        continue;
+                    inSingleQuote = !inSingleQuote;
+                }
+                if (s[i] == '"')
+                {
+                    if (i > 0)
+                        if (s[i - 1] == '\\')
+                            continue;
+                    if (inSingleQuote)
+                        continue;
+                    inDoubleQuotes = !inDoubleQuotes;
+                }
+            }
+            return (!inSingleQuote) && (!inDoubleQuotes);
+        }
+
+        private static string splitOnFirst(string statement, out string rest, char sep)
+        {
+            var split = statement.Split(new[] { sep }, 2);
+            if (split.Length == 1)
+                rest = string.Empty;
+            else
+                rest = split[1];
+            return split[0];
+        }
+
+        public static int[] IndexOfAll(string sourceString, string matchString)
+        {
+            matchString = Regex.Escape(matchString);
+            var res = (from Match match in Regex.Matches(sourceString, matchString) select match.Index);
+            return res.ToArray();
+        }
+
+        private static string splitOnStatementSeparators(string line, out string theRest)
+        {
+            throw new NotImplementedException();
         }
 
         private SymbolicExpression Parse(string statement, StringBuilder incompleteStatement)
