@@ -48,7 +48,9 @@ namespace RDotNet
         [Test]
         public void TestGetPathInitSearchLog()
         {
-            throw new NotImplementedException();
+            REngine.GetInstance();
+            var log = NativeUtility.SetEnvironmentVariablesLog;
+            Assert.AreNotEqual(string.Empty, log);
         }
     }
 }
