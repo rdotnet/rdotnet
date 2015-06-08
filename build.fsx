@@ -17,11 +17,11 @@ open Fake.ReleaseNotesHelper
 let projectName = "R.NET"
 let projectSummary = "Interoperability library to access R from .NET languages"
 let projectDescription = """
-  A C# interoperability library to access the R statistical package from .NET languages.
-  The library is designed for fast data exchange of arrayw, in process."""
+  A .NET interoperability library to access the R statistical package from .NET languages.
+  The library is designed for fast data exchange of arrays, in process."""
 let authors = ["Kosei Abe"; "Jean-Michel Perraud"]
 let companyName = ""
-let tags = "C# R visualization statistics"
+let tags = ".NET R R.NET visualization statistics C# F#"
 
 let gitHome = "https://github.com/jmp75/rdotnet"
 let gitName = "rdotnet"
@@ -36,17 +36,17 @@ let binDir = __SOURCE_DIRECTORY__ @@ "bin"
 let release = IO.File.ReadLines "RELEASE_NOTES.md" |> parseReleaseNotes
 
 // Generate assembly info files with the right version & up-to-date information
-//Target "AssemblyInfo" (fun _ ->
-//  let fileName = "src/Common/AssemblyInfo.fs"
-//  CreateFSharpAssemblyInfoWithConfig fileName
-//      [ Attribute.Title projectName
-//        Attribute.Company companyName
-//        Attribute.Product projectName
-//        Attribute.Description projectSummary
-//        Attribute.Version release.AssemblyVersion
-//        Attribute.FileVersion release.AssemblyVersion ] 
-//      (AssemblyInfoFileConfig(false))
-//)
+Target "VersionInfo" (fun _ ->
+  let fileName = "R.NET/Properties/VersionInfo.cs"
+  CreateCSharpAssemblyInfoWithConfig fileName
+      [ Attribute.Version release.AssemblyVersion
+        Attribute.FileVersion release.AssemblyVersion ] 
+      (AssemblyInfoFileConfig(false))
+  CreateFSharpAssemblyInfoWithConfig "RDotNet.FSharp/VersionInfo.fs"
+      [ Attribute.Version release.AssemblyVersion
+        Attribute.FileVersion release.AssemblyVersion ] 
+      (AssemblyInfoFileConfig(false))
+)
 
 // --------------------------------------------------------------------------------------
 // Update the assembly version numbers in the script file.
@@ -65,27 +65,26 @@ open System.IO
 // --------------------------------------------------------------------------------------
 // Clean build results & restore NuGet packages
 
-Target "Clean" (fun _ ->
-    CleanDirs ["bin"; "temp" ]
-    CleanDirs ["tests/R.NET/bin"; "tests/R.NET/obj" ]
-)
+//Target "Clean" (fun _ ->
+//    CleanDirs ["bin"; "temp" ]
+//)
 
-Target "CleanDocs" (fun _ ->
-    CleanDirs ["docs/output"]
-)
+//Target "CleanDocs" (fun _ ->
+//    CleanDirs ["docs/output"]
+//)
 
 // --------------------------------------------------------------------------------------
 // Build library & test project
 
 Target "Build" (fun _ ->
-    !! ("RDotNet.sln")
-    |> MSBuildRelease "" "Rebuild"
-    |> Log "AppBuild-Output: "
-)
-
-Target "BuildTests" (fun _ ->
+//    !! ("R.NET.sln")
+//    |> MSBuildRelease "" "Build"
+//    |> Log "AppBuild-Output: "
+//)
+//
+//Target "BuildTests" (fun _ ->
     !! ("RDotNet.Tests.sln")
-    |> MSBuildRelease "" "Rebuild"
+    |> MSBuildRelease "" "Build"
     |> Log "AppBuild-Output: "
 )
 
@@ -93,18 +92,16 @@ Target "BuildTests" (fun _ ->
 // Run the unit tests using test runner & kill test runner when complete
 
 Target "RunTests" (fun _ ->
-    let nunitConsolePath = "packages/NUnit.Runners/tools/nunit-console.exe"
+    let nunitConsolePath = "packages/NUnit.Runners/tools"
 
     ActivateFinalTarget "CloseTestRunner"
 
-    !! "tests/Test.RProvider/bin/**/Test*.dll"
-    |> xUnit (fun p -> 
+    !! "RDotNet.Tests/bin/Release/RDotNet.Tests.dll"
+    |> NUnit (fun p ->
             {p with 
                 ToolPath = nunitConsolePath
-                ShadowCopy = false
-                HtmlOutput = true
-                XmlOutput = true
-                OutputDir = "." })
+                Domain = NUnitDomainModel.SingleDomainModel
+            })
 )
  
 FinalTarget "CloseTestRunner" (fun _ ->  
@@ -114,7 +111,7 @@ FinalTarget "CloseTestRunner" (fun _ ->
 // --------------------------------------------------------------------------------------
 // Build a NuGet package
 
-Target "NuGet" (fun _ ->
+let DoNuGet fileName =
     // Format the description to fit on a single line (remove \r\n and double-spaces)
     let projectDescription = projectDescription.Replace("\r", "").Replace("\n", "").Replace("  ", " ")
     NuGet (fun p -> 
@@ -129,80 +126,77 @@ Target "NuGet" (fun _ ->
             OutputPath = "bin"
             AccessKey = getBuildParamOrDefault "nugetkey" ""
             Publish = hasBuildParam "nugetkey" })
-        "nuget/blah.nuspec"
+        fileName
+
+Target "NuGetRDotNet" (fun _ ->
+    DoNuGet "nuget/RDotNet.nuspec"
+)
+
+Target "NuGetRDotNetFs" (fun _ ->
+    DoNuGet "nuget/RDotNet.FSharp.nuspec"
 )
 
 // --------------------------------------------------------------------------------------
 // Generate the documentation
 
-Target "GenerateDocs" (fun _ ->
-    executeFSIWithArgs "docs/tools" "generate.fsx" ["--define:RELEASE"] [] |> ignore
-)
+//Target "GenerateDocs" (fun _ ->
+//    executeFSIWithArgs "docs/tools" "generate.fsx" ["--define:RELEASE"] [] |> ignore
+//)
 
 // --------------------------------------------------------------------------------------
 // Release Scripts
 
-Target "ReleaseDocs" (fun _ ->
-    Repository.clone "" (gitHome + "/" + gitName + ".git") "temp/gh-pages"
-    Branches.checkoutBranch "temp/gh-pages" "gh-pages"
-    CopyRecursive "docs/output" "temp/gh-pages" true |> printfn "%A"
-    CommandHelper.runSimpleGitCommand "temp/gh-pages" "add ." |> printfn "%s"
-    let cmd = sprintf """commit -a -m "Update generated documentation for version %s""" release.NugetVersion
-    CommandHelper.runSimpleGitCommand "temp/gh-pages" cmd |> printfn "%s"
-    Branches.push "temp/gh-pages"
-)
+//Target "ReleaseDocs" (fun _ ->
+//    Repository.clone "" (gitHome + "/" + gitName + ".git") "temp/gh-pages"
+//    Branches.checkoutBranch "temp/gh-pages" "gh-pages"
+//    CopyRecursive "docs/output" "temp/gh-pages" true |> printfn "%A"
+//    CommandHelper.runSimpleGitCommand "temp/gh-pages" "add ." |> printfn "%s"
+//    let cmd = sprintf """commit -a -m "Update generated documentation for version %s""" release.NugetVersion
+//    CommandHelper.runSimpleGitCommand "temp/gh-pages" cmd |> printfn "%s"
+//    Branches.push "temp/gh-pages"
+//)
 
-Target "ReleaseBinaries" (fun _ ->
-    Repository.clone "" (gitHome + "/" + gitName + ".git") "temp/release" 
-    Branches.checkoutBranch "temp/release" "release"
-    CopyRecursive "bin" "temp/release" true |> printfn "%A"
-    let cmd = sprintf """commit -a -m "Update binaries for version %s""" release.NugetVersion
-    CommandHelper.runSimpleGitCommand "temp/release" cmd |> printfn "%s"
-    Branches.push "temp/release"
-)
+//Target "ReleaseBinaries" (fun _ ->
+//    Repository.clone "" (gitHome + "/" + gitName + ".git") "temp/release" 
+//    Branches.checkoutBranch "temp/release" "release"
+//    CopyRecursive "bin" "temp/release" true |> printfn "%A"
+//    let cmd = sprintf """commit -a -m "Update binaries for version %s""" release.NugetVersion
+//    CommandHelper.runSimpleGitCommand "temp/release" cmd |> printfn "%s"
+//    Branches.push "temp/release"
+//)
 
-Target "TagRelease" (fun _ ->
-    // Concatenate notes & create a tag in the local repository
-    let notes = (String.concat " " release.Notes).Replace("\n", ";").Replace("\r", "")
-    let tagName = "v" + release.NugetVersion
-    let cmd = sprintf """tag -a %s -m "%s" """ tagName notes
-    CommandHelper.runSimpleGitCommand "." cmd |> printfn "%s"
-
-    // Find the main remote (BlueMountain GitHub)
-    let _, remotes, _ = CommandHelper.runGitCommand "." "remote -v"
-    let main = remotes |> Seq.find (fun s -> s.Contains("(push)") && s.Contains("BlueMountainCapital/FSharpRProvider"))
-    let remoteName = main.Split('\t').[0]
-    Fake.Git.Branches.pushTag "." remoteName tagName
-)
-
-Target "Release" DoNothing
-
-// --------------------------------------------------------------------------------------
-// Run all targets by default. Invoke 'build <Target>' to override
+//Target "TagRelease" (fun _ ->
+//    // Concatenate notes & create a tag in the local repository
+//    let notes = (String.concat " " release.Notes).Replace("\n", ";").Replace("\r", "")
+//    let tagName = "v" + release.NugetVersion
+//    let cmd = sprintf """tag -a %s -m "%s" """ tagName notes
+//    CommandHelper.runSimpleGitCommand "." cmd |> printfn "%s"
+//
+//    // Find the main remote (BlueMountain GitHub)
+//    let _, remotes, _ = CommandHelper.runGitCommand "." "remote -v"
+//    let main = remotes |> Seq.find (fun s -> s.Contains("(push)") && s.Contains("BlueMountainCapital/FSharpRProvider"))
+//    let remoteName = main.Split('\t').[0]
+//    Fake.Git.Branches.pushTag "." remoteName tagName
+//)
 
 Target "All" DoNothing
-Target "AllCore" DoNothing
+Target "NuGet" DoNothing
+Target "Release" DoNothing
+Target "Test" DoNothing
 
-"Clean"
-  ==> "UpdateFsxVersions"
-  ==> "AssemblyInfo"
-  ==> "Build"
-  ==> "MergeRProviderServer"
-  ==> "BuildTests"
-  ==> "RunTests"
-  ==> "All"
+//"Clean"
+//  ==> "Build"
+//  ==> "BuildTests"
+//  ==> "RunTests"
+//  ==> "All"
 
-"MergeRProviderServer"
-  ==> "AllCore"
+"VersionInfo" ==> "All" 
+"Build" ==> "All" 
+"All" ==> "RunTests" ==> "Test"
 
-"All" 
-  ==> "CleanDocs" 
-  ==> "GenerateDocs" 
-  ==> "ReleaseDocs" 
-  ==> "ReleaseBinaries" 
-  ==> "Release"
+"NuGetRDotNet" ==> "NuGet"
+"NuGetRDotNetFs" ==> "NuGet"
   
 "All" ==> "NuGet" ==> "Release"
-"All" ==> "TagRelease" ==> "Release"
 
 RunTargetOrDefault "All"

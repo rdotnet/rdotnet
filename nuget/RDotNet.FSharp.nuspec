@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>R.NET.Community.FSharp</id>
+    <title>R.NET F# Utility</title>
+    <version>@build.number@</version>
+    <authors>@authors@</authors>
+    <owners>@authors@</owners>
+    <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
+    <projectUrl>http://rdotnet.codeplex.com/</projectUrl>
+    <!--<iconUrl>https://raw.github.com/BlueMountainCapital/FSharpRProvider/master/docs/files/misc/logo.png</iconUrl>-->
+    <summary>@summary@</summary>
+    <description>@description@</description>
+    <releaseNotes>@releaseNotes@</releaseNotes>
+    <tags>@tags@</tags>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <copyright>Copyright 2011-2014 RecycleBin, Copyright 2014-2015 CSIRO</copyright>
+    <references>
+      <reference file="RDotNet.FSharp.dll" />
+    </references>
+    <dependencies>
+      <dependency id="R.NET.Community" version="[1.6]" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\RDotNet.FSharp\bin\Release\RDotNet.FSharp.dll" target="lib\net40" />
+    <file src="..\RDotNet.FSharp\bin\Release\RDotNet.FSharp.XML" target="lib\net40" />
+    <file src="..\RDotNet.FSharp\RDotNet.FSharp.fsx" target="." />
+  </files>
+</package>
