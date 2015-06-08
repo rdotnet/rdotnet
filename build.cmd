@@ -8,7 +8,10 @@ if not errorlevel 0 goto pktbootfailed
 if not errorlevel 0 goto pktrestorefailed
 
 packages\FAKE\tools\FAKE.exe %* --fsiargs -d:MONO build.fsx 
+REM packages\FAKE\tools\FAKE.exe Test --fsiargs -d:MONO build.fsx 
 if not errorlevel 0 goto fakefailed
+
+REM ".\packages\NuGet.CommandLine\tools\NuGet.exe" push bin\R.NET.Community.1.6.2.nupkg
 
 set exit_code=0
 goto leave

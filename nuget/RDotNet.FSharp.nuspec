@@ -19,7 +19,7 @@
       <reference file="RDotNet.FSharp.dll" />
     </references>
     <dependencies>
-      <dependency id="R.NET.Community" version="[1.6]" />
+      <dependency id="R.NET.Community" version="@build.number@" />
     </dependencies>
   </metadata>
   <files>
