@@ -3,9 +3,11 @@
   <metadata>
     <id>R.NET.Community.FSharp</id>
     <title>R.NET F# Utility</title>
-    <version>0.1.14</version>
+    <version>0.2</version>
     <releaseNotes>
-      * Update to reference latest version of R.NET. Note that R.NET 1.6 includes a fix to issue 165 that should justify upgrading.
+      (1) Fix for https://github.com/jmp75/rdotnet/issues/14: statements such as "cat('string with #hashtags')" was not parsed anymore in version 1.6 - now fixed.
+      (2) Known limitation: statements with # characters inside R characters such as "cat ('This is \n a multiline statement with #hashtag \n in it')" is not executed properly.
+      (3) Note that AutoPrint is now true by default, to match the default R behavior. You may want to turn this to False to increase the calculation performances on large data sets.
     </releaseNotes>
     <authors>RecycleBin</authors>
     <owners>kos59125</owners>

@@ -9,8 +9,7 @@ if not exist %MSB% goto MSBuild_not_found
 
 :: ======= NuGet settings
 :: Get the nuget tools from nuget.org. There is also one coming with the NuGet plug-on from Visual Studio.
-set nuget_exe=f:\bin\NuGet.exe
-if not exist %nuget_exe% set nuget_exe=c:\bin\nuget.exe
+set nuget_exe=..\.nuget\NuGet.exe
 if not exist %nuget_exe% goto Nuget_not_found
 
 :: Section on NuGet.config for nuget update (NOT YET USED - CAME ACCROSS ISSUE WITH NUGET 2.8)
@@ -91,17 +90,17 @@ goto completed
 :MSBuild_not_found
 echo "ERROR: MSBuild.exe not found at the location given"
 pause
-exit 1
+exit /b 1
 
 :Nuget_not_found
 echo "ERROR: NuGet.exe not found at the location given"
 pause
-exit 1
+exit /b 1
 
 :Nuget_config_not_found
 echo "ERROR: NuGet.config not found at the location given"
 pause
-exit 1
+exit /b 1
 
 :completed
 echo "INFO: Batch build completed with no known error"

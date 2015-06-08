@@ -277,9 +277,33 @@ sep=''))
             Assert.That(Device.GetString(), Is.EqualTo("first statement then this is a string with a \"#\" character"));
 
             Device.Initialize();
-            engine.Evaluate(@"cat('single \' with # and "" and \' ') # ; cat(' this # is removed')");
-            Assert.That(Device.GetString(), Is.EqualTo(@"single ' with # and "" and ' "));
+            engine.Evaluate(@"cat('single quote delimiter (\') with # and "" and \' ') # ; cat(' this # is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo(@"single quote delimiter (') with # and "" and ' "));
 
+            Device.Initialize();
+            engine.Evaluate("cat(\"double quote delimiter (\\\") with # and \\\" and \' \") # ; cat(' this # is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo(@"double quote delimiter ("") with # and "" and ' "));
+
+            Device.Initialize();
+            engine.Evaluate("cat('### Some markdown with multiple hashtags') # ; cat(' this # is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo(@"### Some markdown with multiple hashtags"));
+
+            Device.Initialize();
+            engine.Evaluate(@"cat(""#\' Some Roxygen"") # ; cat(' this # is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo(@"#' Some Roxygen"));
+
+            Device.Initialize();
+            engine.Evaluate("cat('#\\\' Some Roxygen') # ; cat(' this # is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo(@"#' Some Roxygen"));
+
+            /* 
+             * TODO:
+            Device.Initialize();
+            engine.Evaluate(@"cat('Some
+multiline with # kept 
+string') # ; cat(' this # is removed')");
+            Assert.That(Device.GetString(), Is.EqualTo("Some\nmultiline with # kept \nstring"));
+            */
         }
 
         [Test]
