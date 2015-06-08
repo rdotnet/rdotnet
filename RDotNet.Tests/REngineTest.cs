@@ -51,7 +51,7 @@ namespace RDotNet
         }
 
         // Note: unfortunately the results of this test remain unpredictable from run to run, if run from NUnit.
-        [Test]
+        [Test, Ignore("This test still seems to not be repeatable in behavior nor suceeding in a unit test context. Baffled.")]
         public void TestRGarbageCollectNumericVectors()
         {
             /*
