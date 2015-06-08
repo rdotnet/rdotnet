@@ -4,3 +4,4 @@ nuget DynamicInterop
 nuget NUnit
 nuget FAKE
 nuget NUnit.Runners
+nuget NuGet.CommandLine

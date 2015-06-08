@@ -1,2 +1,2 @@
-* 1.6.2 - Fixed github #14. Use Paket for dependency management. Use FAKE.
+* 1.6.2 - Fixed github #14 (failing to parse things such as cat('this has # hash');). Known limitation: multi-line R character strings still not parsed correctly. Use Paket for dependency management. Use FAKE.
 * 1.6.0 - Fix issue where some code commented out was still executed.
