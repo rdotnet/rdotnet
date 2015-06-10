@@ -805,9 +805,15 @@ namespace RDotNet
         private bool GetVisible()
         {
             var symbol = DangerousGetHandle("R_Visible");
-            var value = Marshal.ReadInt32(symbol);
-            var result = Convert.ToBoolean(value);
-            return result;
+            // If the R_Visible symbol is not exported by the current R engine (happens on R-2.14.1), then just return 'true'
+            // https://github.com/BlueMountainCapital/FSharpRProvider/pull/152
+            if (symbol == (System.IntPtr)0) return true;
+            else
+            {
+              var value = Marshal.ReadInt32(symbol);
+              var result = Convert.ToBoolean(value);
+              return result;
+            }
         }
 
         /// <summary>
