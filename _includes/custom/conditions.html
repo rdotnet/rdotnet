@@ -1,0 +1,30 @@
+{% if site.project == "documentation-theme-R.NET-developer" %}
+{% assign audience = "developer" %}
+{% assign sidebar = site.data.sidebar.entries %}
+{% assign topnav = site.data.topnav.topnav %}
+{% assign topnav_dropdowns = site.data.topnav.topnav_dropdowns %}
+{% assign version = "all" %}
+{% assign product = "all" %}
+{% assign platform = "all" %}
+{% endif %}
+
+
+{% if site.project == "documentation-theme-R.NET-writer" %}
+{% assign audience = "writer" %}
+{% assign sidebar = site.data.sidebar.entries %}
+{% assign topnav = site.data.topnav.topnav %}
+{% assign topnav_dropdowns = site.data.topnav.topnav_dropdowns %}
+{% assign version = "all" %}
+{% assign product = "all" %}
+{% assign platform = "all" %}
+{% endif %}
+
+{% if site.project == "documentation-theme-R.NET-designer" %}
+{% assign audience = "designer" %}
+{% assign sidebar = site.data.sidebar.entries %}
+{% assign topnav = site.data.topnav.topnav %}
+{% assign topnav_dropdowns = site.data.topnav.topnav_dropdowns %}
+{% assign version = "all" %}
+{% assign product = "all" %}
+{% assign platform = "all" %}
+{% endif %}
