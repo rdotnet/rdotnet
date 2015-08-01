@@ -1,33 +1,33 @@
 {% include linkrefs.html %}
 
-This is a Jekyll theme intended for documentation projects. What makes this theme unique is the approach in using Jekyll for single sourcing, that is, producing multiple outputs from the same theme. For example, you might have 3 different help systems that you're generating from the same Jekyll files. More than anything, this Jekyll theme shows you how to use Jekyll for documentation projects from the perspective of a technical writer. 
+# Introduction
 
-Note that I'm using this theme for my own technical writing projects, so this is an evolving project.
+R.NET enables the .NET Framework to interoperate with the R statistical language _in the same process_. R.NET requires the .NET Framework 4 and the native R shared libraries installed with the R environment. You can use R.NET from any language targetting .NET (it has been used at least from C#, F#, Vb.NET, IronPython). A couple of related works must be mentioned before you dive into this documentation. For F#, you probably should consider F# R Provider. One motivation for releasing 1.5.13 is for the RProvider to more easily manage dependency on R.NET.
 
 ## Intended audience
 
-Although this theme could be used for any website, I'm assuming that my main audience involves technical writers. Very few technical writers are even aware of Jekyll as a platform, let alone how to use it for tech comm scenarios. The instructions for this theme, therefore, are extensive because they discuss a lot of Jekyll basics as well. I'm not going to assume that you're already familiar with Jekyll, or that you're a UX guru, or that you know how to do backflips in Liquid. I'll try to hold your hand as much as possible.
 
-## Supported features
-
-As far as I can tell, Jekyll supports most of the features a technical writer needs to author and publish content. Most importantly, using Jekyll allows you to take full advantage of a modern web development platform. 
-
-As a quick overview, this theme specifically provides the following:
-
-* Bootstrap framework with responsive design
-* Integrated search
-* Navigation sidebar and top navigation
-* Font Awesome
-* Options for creating multiple builds for different audiences
-
-See {{supported_features}} for an extensive list.
 
 ## Getting started
 
-To get started, see {{getting_started}}. It explains how to create a new project.
+To get started, see {{getting_started}}.
 
-## Questions
+## Related work
 
-Feel free to ask me a question if there's something I haven't addressed here. 
+For F#, you probably should consider <a href="https://github.com/BlueMountainCapital/FSharpRProvider">F# R Provider</a>. One motivation for releasing 1.5.13 is for the RProvider to more easily manage dependency on R.NET.
 
-Tom Johnson <br /><a href="mailto:">tomjohnson1492@gmail.com</a>
+## Questions and feedback
+
+As of 2015-07 the prefered way to ask technical questions is via <a href="http://stackoverflow.com/questions/tagged/rdotnet">R.NET on stackoverflow ('rdotnet' tag)</a>.
+
+If you wish to contribute to this documentation, you can fork <a href="https://github.com/jmp75/rdotnet">R.NET on github</a> and modify the branch _gh-pages_, then submit a pull request.
+
+## Acknowledgements
+
+Thanks to Tom Johnson for providing the <a href="http://idratherbewriting.com/documentation-theme-jekyll">Jekyll Documentation Theme </a> as a starting point for the R.NET documentation. 
+
+Contributors, directly or indirectly, to the code for this release are jperraud, kos59125, evolvedmicrobe, Daniel Collins, gchapman, sukru, nakagawa_hiroyuki, JoeJoe
+
+
+
+

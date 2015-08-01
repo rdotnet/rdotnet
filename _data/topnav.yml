@@ -6,21 +6,21 @@ topnav:
   subcategories:
     - title: About
       url: /about/
-      audience: writer, designer
+      audience: user, contributor
       platform: all
       product: all
       version: all
   
     - title: Github repo
-      external_url: https://github.com/tomjohnson1492/documentation-theme-jekyll
-      audience: writer, designer
+      external_url: https://github.com/jmp75/rdotnet
+      audience: user, contributor
       platform: all
       product: all
       version: all
   
     - title: My blog
-      external_url: http://idratherbewriting.com
-      audience: writer, designer
+      external_url: http://jmp75.github.io
+      audience: user, contributor
       platform: all
       product: all
       version: all
@@ -29,30 +29,23 @@ topnav:
 topnav_dropdowns:
 - title: Topnav dropdowns
   subcategories:
-    - title: Jekyll resources
-      audience: writer, designer
+    - title: R.NET resources
+      audience: user, contributor
       platform: all
       product: all
       version: all
     
       items:
-        - title: Jekyll documentation
-          external_url: http://jekyllrb.com/docs/home/
-          audience: writer, designer
+        - title: R.NET documentation
+          external_url: http://jmp75.github.io/rdotnet
+          audience: user, contributor
           platform: all
           product: all
           version: all
 
-        - title: Jekyll Talk
-          external_url: https://talk.jekyllrb.com/
-          audience: designer, writer
-          platform: all
-          product: all
-          version: all
-
-        - title: Jekyll on Stackoverflow
-          external_url: http://stackoverflow.com/questions/tagged/jekyll
-          audience: writer, designer
+        - title: R.NET on Stackoverflow
+          external_url: http://stackoverflow.com/questions/tagged/rdotnet
+          audience: user, contributor
           platform: all
           product: all
           version: all

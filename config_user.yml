@@ -1,0 +1,24 @@
+# mandatory definitions
+project: documentation-theme-R.NET-user
+
+audience: user
+
+product: all
+
+platform: all
+
+version: all
+
+topnav_title: R.NET for users
+
+topnav_version: 1.6
+
+tagline: R.NET for users
+
+baseurl: "/documentation-theme-R.NET/user" 
+
+port: 4008
+
+homepage_title: R.NET documentation -- user version
+
+site_title: R.NET -- user version
