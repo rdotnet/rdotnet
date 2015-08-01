@@ -1,0 +1,24 @@
+# mandatory definitions
+project: documentation-theme-R.NET-contributor
+
+audience: contributor
+
+product: all
+
+platform: all
+
+version: all
+
+topnav_title: R.NET for contributors
+
+topnav_version: 1.6
+
+tagline: R.NET for contributors
+
+baseurl: "/documentation-theme-R.NET/contributor" 
+
+port: 4008
+
+homepage_title: R.NET documentation -- contributor version
+
+site_title: R.NET -- contributor version
