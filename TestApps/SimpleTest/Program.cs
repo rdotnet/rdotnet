@@ -15,10 +15,15 @@ namespace SimpleTest
             if (args.Length > 1)
                 rHome = args[1];
 
+            Console.WriteLine(RDotNet.NativeLibrary.NativeUtility.FindRPaths(ref rPath, ref rHome));
+
+            rHome = null;
+            rPath = null;
+
             REngine.SetEnvironmentVariables(rPath: rPath, rHome: rHome);
             REngine e = REngine.GetInstance();
 
-            System.Console.WriteLine(RDotNet.NativeLibrary.NativeUtility.SetEnvironmentVariablesLog);
+            Console.WriteLine(RDotNet.NativeLibrary.NativeUtility.SetEnvironmentVariablesLog);
 
             counter = 0;
             for (int i = 0; i < 6; i++)
