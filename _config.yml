@@ -65,7 +65,7 @@ collections:
     output: true
 
 # mandatory definitions
-project: documentation-theme-R.NET-user
+project: rdotnet
 
 audience: user
 
@@ -81,7 +81,7 @@ topnav_version: 1.6
 
 tagline: R.NET for users
 
-baseurl: "/documentation-theme-R.NET/user" 
+baseurl: "/rdotnet" 
 
 # port: 4008
 
