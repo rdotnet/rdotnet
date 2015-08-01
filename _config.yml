@@ -65,7 +65,7 @@ collections:
     output: true
 
 # mandatory definitions
-project: rdotnet
+project: documentation-theme-R.NET-user
 
 audience: user
 
