@@ -407,8 +407,8 @@ namespace RDotNet.NativeLibrary
             CheckPlatformWin32();
             bool is64Bit = Environment.Is64BitProcess;
             RegistryKey rCoreKey = GetRCoreRegistryKeyWin32(logger);
-            var installPath = GetRInstallPathFromRCoreKegKey(null, logger);
-            var currentVersion = new Version((string)rCoreKey.GetValue("Current Version"));
+            var installPath = GetRInstallPathFromRCoreKegKey(rCoreKey, logger);
+            var currentVersion = GetRVersionFromRegistry();
             var bin = Path.Combine(installPath, "bin");
             // Up to 2.11.x, DLLs are installed in R_HOME\bin.
             // From 2.12.0, DLLs are installed in the one level deeper directory.
