@@ -16,8 +16,6 @@ There is a page gathering Software Prerequisites listing the platforms on which 
 
 As of version 1.5.10 or later, R.NET binaries are platform independent. You might need to set up a small add-on workaround on some Linux distributions (CentOS a known one), but otherwise you can just move and use the same R.NET binaries across platforms.
 
-There is a page gathering  <a href="Software Prerequisites"></a> listing the platforms on which R.NET is known to run.
-
 As of July 2015, NuGet is the strongly recommended way to manage dependencies on R.NET in its binary distribution form. You can find more general information about NuGet at the <a href="http://docs.nuget.org/">NuGet documentation page</a>
 
 

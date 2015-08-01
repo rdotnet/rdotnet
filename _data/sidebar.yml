@@ -95,7 +95,7 @@ entries:
 
       items:
         - title: ASP.NET
-          url: /ts_asp_net/
+          url: /ts_asp_dot_net/
           audience: user, contributor
           platform: all
           product: all
