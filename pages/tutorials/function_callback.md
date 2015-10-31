@@ -24,6 +24,7 @@ This tutorial was written following [this question at the R.NET site on codeplex
 ### Sample code
 
 You'll find a working sample code addressing this use case in [rdotnet-onboarding](https://github.com/jmp75/rdotnet-onboarding). This consists of two parts:
+
 * a C# program CallbackFunctions, available in visual studio by opening the solution under solutions/Onboard
 * a folder rcpp containing the source code for an R package `rdotnetsamples`
 
