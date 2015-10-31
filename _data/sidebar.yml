@@ -85,6 +85,14 @@ entries:
           product: all
           version: all
           print: true
+		  
+        - title: .NET function callbacks from R
+          url: /tut_R_function_callbacks_from_R/
+          audience: user, contributor
+          platform: all
+          product: all
+          version: all
+          print: true
 
     - title: Troubleshooting
       audience: user, contributor
