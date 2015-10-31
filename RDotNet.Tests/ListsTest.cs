@@ -27,6 +27,22 @@ namespace RDotNet
         }
 
         [Test]
+        public void TestListSetNames()
+        {
+            //  http://stackoverflow.com/questions/33326594/how-can-i-create-named-list-members-object-in-r-net
+            var engine = this.Engine;
+            var list = new GenericVector(engine, 2);
+            // odpar <- list(mean = c(-1.5, 0, 1.5), var = c(0.5, 0.6, 0.8)) 
+            list[0] = engine.CreateNumericVector(new[] { -1.5, 0, 1.5 });
+            list[1] = engine.CreateNumericVector(new[] { 0.5, 0.6, 0.8 });
+            list.SetNames("mean", "var");
+            engine.SetSymbol("TestListSetNames", list);
+            var listNames = engine.Evaluate("names(TestListSetNames)").AsCharacter().ToArray();
+            Assert.AreEqual("mean", listNames[0]);
+            Assert.AreEqual("var", listNames[1]);
+        }
+
+        [Test]
         public void TestCoercionAsList()
         {
             /*
