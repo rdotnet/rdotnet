@@ -244,6 +244,23 @@ namespace RDotNet
             return NativeUtility.GetRLibraryFileName();
         }
 
+        static private string EncodeNonAsciiCharacters(string value)
+        {
+          StringBuilder sb = new StringBuilder();
+          foreach (char c in value)
+          {
+            if (c > 127)
+            {
+              string encodedValue = "\\u" + ((int)c).ToString("x4");
+              sb.Append(encodedValue);
+            }
+            else {
+              sb.Append(c);
+            }
+          }
+          return sb.ToString();
+        }
+
         /// <summary>
         /// Perform the necessary setup for the PATH and R_HOME environment variables.
         /// </summary>
@@ -520,7 +537,7 @@ namespace RDotNet
         public SymbolicExpression Evaluate(string statement)
         {
             CheckEngineIsRunning();
-            return Defer(statement).LastOrDefault();
+            return Defer(EncodeNonAsciiCharacters(statement)).LastOrDefault();
         }
 
         /// <summary>
@@ -750,7 +767,7 @@ namespace RDotNet
         private SymbolicExpression Parse(string statement, StringBuilder incompleteStatement)
         {
             incompleteStatement.Append(statement);
-            var s = GetFunction<Rf_mkString>()(incompleteStatement.ToString());
+            var s = GetFunction<Rf_mkString>()(InternalString.NativeUtf8FromString(incompleteStatement.ToString()));
             string errorStatement;
             using (new ProtectedPointer(this, s))
             {
@@ -834,7 +851,7 @@ namespace RDotNet
                 if (geterrmessage == null)
                 {
                     var statement = "geterrmessage()\n";
-                    var s = GetFunction<Rf_mkString>()(statement);
+                    var s = GetFunction<Rf_mkString>()(InternalString.NativeUtf8FromString(statement));
                     ParseStatus status;
                     var vector = new ExpressionVector(this, GetFunction<R_ParseVector>()(s, -1, out status, NilValue.DangerousGetHandle()));
                     if (status != ParseStatus.OK)

@@ -215,7 +215,7 @@ namespace RDotNet
         {
             pointer = Marshal.ReadIntPtr(pointer, offset);
             pointer = IntPtr.Add(pointer, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
-            return Marshal.PtrToStringAnsi(pointer);
+            return InternalString.StringFromNativeUtf8(pointer);
         }
 
         private void WriteString(string value, IntPtr pointer, int offset)
