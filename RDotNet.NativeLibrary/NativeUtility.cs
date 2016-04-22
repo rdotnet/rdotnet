@@ -7,6 +7,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace RDotNet.NativeLibrary
 {
@@ -298,15 +299,51 @@ namespace RDotNet.NativeLibrary
         /// <returns>a System.Version object</returns>
         public static Version GetRVersionFromRegistry(StringBuilder logger = null)
         {
-            var rCoreKey = GetRCoreRegistryKey(logger);
-            string version = GetRCurrentVersionStringFromRegistry(rCoreKey);
-            if (string.IsNullOrEmpty(version))
-            {
-                var subKeyNames = rCoreKey.GetSubKeyNames();
-                if (subKeyNames.Length > 0)
-                    version = subKeyNames[0];
-            }
+          var rCoreKey = GetRCoreRegistryKey(logger);
+          var version = GetRCurrentVersionStringFromRegistry(rCoreKey);
+          if (string.IsNullOrEmpty(version))
+          {
+            var subKeyNames = rCoreKey.GetSubKeyNames();
+            if (subKeyNames.Length > 0)
+              version = subKeyNames[0];
+          }
+
+          if (string.IsNullOrEmpty(version))
+            return null;
+
+          // If version is of the form "3.2.3" (for Major.Minor.Build)
+          // we can directly instantiate a new Version object from the string
+
+          // However, in 2016 R version "3.2.4 Revised" was released, and that
+          // string cannot be directly used to instantiate a new Version object
+
+          // The following checks for this and removes any non-numeric characters
+          // (though it requires that the Major version be an integer)
+
+          var versionParts = version.Split('.');
+          var reconstructVersion = false;
+          if (version.Length <= 1)
+          {
             return new Version(version);
+          }
+
+          var nonNumericChars = new Regex("[^0-9]+", RegexOptions.Compiled);
+
+          for (var i = 1; i < versionParts.Length; i++)
+          {
+            if (nonNumericChars.IsMatch(versionParts[i]))
+            {
+              versionParts[i] = nonNumericChars.Replace(versionParts[i], string.Empty);
+              reconstructVersion = true;
+            }
+          }
+
+          if (reconstructVersion)
+          {
+            version = string.Join(".", versionParts);
+          }
+
+          return new Version(version);
         }
 
         private static string GetRCurrentVersionStringFromRegistry(RegistryKey rCoreKey)
