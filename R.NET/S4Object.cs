@@ -48,7 +48,7 @@ namespace RDotNet
             {
                 checkSlotName(name);
                 IntPtr slotValue;
-                using (var s = new ProtectedPointer(Engine, GetFunction<Rf_mkString>()(name)))
+                using (var s = new ProtectedPointer(Engine, GetFunction<Rf_mkString>()(InternalString.NativeUtf8FromString(name))))
                 {
                     slotValue = this.GetFunction<R_do_slot>()(this.DangerousGetHandle(), s);
                 }
@@ -57,7 +57,7 @@ namespace RDotNet
             set
             {
                 checkSlotName(name);
-                using (var s = new ProtectedPointer(Engine, GetFunction<Rf_mkString>()(name)))
+                using (var s = new ProtectedPointer(Engine, GetFunction<Rf_mkString>()(InternalString.NativeUtf8FromString(name))))
                 {
                     using (new ProtectedPointer(this))
                     {
@@ -80,7 +80,7 @@ namespace RDotNet
         /// <returns>whether a slot name is present in the object</returns>
         public bool HasSlot(string slotName)
         {
-            using (var s = new ProtectedPointer(Engine, GetFunction<Rf_mkString>()(slotName)))
+            using (var s = new ProtectedPointer(Engine, GetFunction<Rf_mkString>()(InternalString.NativeUtf8FromString(slotName))))
             {
                 return this.GetFunction<R_has_slot>()(this.DangerousGetHandle(), s);
             }

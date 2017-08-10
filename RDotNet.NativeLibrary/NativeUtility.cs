@@ -300,7 +300,7 @@ namespace RDotNet.NativeLibrary
         public static Version GetRVersionFromRegistry(StringBuilder logger = null)
         {
             var rCoreKey = GetRCoreRegistryKey(logger);
-            string version = GetRCurrentVersionStringFromRegistry(rCoreKey);
+          var version = GetRCurrentVersionStringFromRegistry(rCoreKey);
             if (string.IsNullOrEmpty(version))
             {
                 var subKeyNames = rCoreKey.GetSubKeyNames();
