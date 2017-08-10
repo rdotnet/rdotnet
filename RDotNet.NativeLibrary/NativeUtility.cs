@@ -7,6 +7,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace RDotNet.NativeLibrary
 {
@@ -306,7 +307,11 @@ namespace RDotNet.NativeLibrary
                 if (subKeyNames.Length > 0)
                     version = subKeyNames[0];
             }
-            return new Version(version);
+            // Version should normally be "3.2.4", but some releases had
+            // "3.2.4 Revised" in which case constructor for Version fails.
+            // The regex first extracts the numerical part of the string.
+            var reg = new Regex("([0-9]*\\.)*[0-9]*");
+            return new Version(reg.Match(version).Value);
         }
 
         private static string GetRCurrentVersionStringFromRegistry(RegistryKey rCoreKey)
