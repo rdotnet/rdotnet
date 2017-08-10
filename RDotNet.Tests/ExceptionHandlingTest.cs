@@ -5,24 +5,30 @@ namespace RDotNet
 {
     public class ExceptionHandlingTest : RDotNetTestFixture
     {
-        [Test, ExpectedException(typeof(NullReferenceException))]
+        [Test]
         public void TestCharacter()
         {
             // Check that https://rdotnet.codeplex.com/workitem/70 does not occur; in particular worth testing on CentOS according to issue reporter.
             string v = null;
-            var t = v.ToString();
+            Assert.Throws(typeof(NullReferenceException), () => { var t = v.ToString(); });            
         }
 
-        [Test, ExpectedExceptionAttribute(typeof(ParseException), ExpectedMessage = "Status Error for function(k) substitute(bar(x) = k)\n : unexpected '='")]
+        [Test]
         public void TestFailedExpressionParsing()
         {
             // https://rdotnet.codeplex.com/workitem/77
             var engine = this.Engine;
-            object expr = engine.Evaluate("function(k) substitute(bar(x) = k)");
+            object expr = null;
+            Assert.Throws<ParseException>(
+                () => {
+                    expr = engine.Evaluate("function(k) substitute(bar(x) = k)");
+                },
+                "Status Error for function(k) substitute(bar(x) = k)\n : unexpected '='"
+                );
             Assert.IsNull(expr);
         }
 
-        [Test, ExpectedExceptionAttribute(typeof(EvaluationException), ExpectedMessage = "Error in fail(\"bailing out\") : the message is bailing out\n")]
+        [Test]
         public void TestFailedExpressionEvaluation()
         {
             //> fail <- function(msg) {stop(paste( 'the message is', msg))}
@@ -33,27 +39,43 @@ namespace RDotNet
 
             var engine = this.Engine;
             engine.Evaluate("fail <- function(msg) {stop(paste( 'the message is', msg))}");
-            object expr = engine.Evaluate("fail('bailing out')");
+            object expr = null;
+            Assert.Throws<EvaluationException>(
+                () => {
+                    expr = engine.Evaluate("fail('bailing out')");
+                },
+                "Error in fail(\"bailing out\") : the message is bailing out\n"
+                );
             Assert.IsNull(expr);
         }
 
-        [Test, ExpectedExceptionAttribute(typeof(EvaluationException), ExpectedMessage = "Error: object 'x' not found")]
+        [Test]
         public void TestFailedExpressionUnboundSymbol()
         {
             var engine = this.Engine;
             ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
-            var x = engine.GetSymbol("x");
+            Assert.Throws<EvaluationException>(
+                () => {
+                    var x = engine.GetSymbol("x");
+                },
+                "Error: object 'x' not found"
+                );
         }
 
-        [Test, ExpectedExceptionAttribute(typeof(EvaluationException), ExpectedMessage = "Error: object 'x' not found\n")]
+        [Test]
         public void TestFailedExpressionUnboundSymbolEvaluation()
         {
             ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
             var engine = this.Engine;
-            var x = engine.Evaluate("x");
+            Assert.Throws<EvaluationException>(
+                () => {
+                    var x = engine.Evaluate("x");
+                },
+                "Error: object 'x' not found\n"
+                );
         }
 
-        [Test, ExpectedExceptionAttribute(typeof(EvaluationException), ExpectedMessage = "Error: object 'x' not found\n")]
+        [Test]
         public void TestFailedExpressionParsingMissingParenthesis()
         {
             ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
@@ -66,7 +88,12 @@ namespace RDotNet
             //>
             var engine = this.Engine;
             var expr = engine.Evaluate("x <- rep(c(TRUE,FALSE), 55");
-            var x = engine.Evaluate("x");
+            Assert.Throws<EvaluationException>(
+                () => {
+                    var x = engine.Evaluate("x");
+                },
+                "Error: object 'x' not found\n"
+                );
         }
     }
 }

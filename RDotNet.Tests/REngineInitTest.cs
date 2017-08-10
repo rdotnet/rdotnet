@@ -8,7 +8,7 @@ namespace RDotNet
 {
     public class REngineInitTest
     {
-        [Test, Ignore] // Cannot run this in a batch with the new singleton pattern.
+        [Test, Ignore("Cannot run this in a batch with the new singleton pattern")] // Cannot run this in a batch with the new singleton pattern.
         public void TestInitParams()
         {
             MockDevice device = new MockDevice();

@@ -10,24 +10,34 @@ namespace RDotNet
     public class LoadLibraryTest
     {
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void TestLoadUnmanagedDllNullRef()
         {
-            var lib = new MockLoadLib(null);
+            Assert.Throws<ArgumentNullException>(
+                () => {
+                    var lib = new MockLoadLib(null);
+                });
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void TestLoadUnmanagedDllEmptyString()
         {
-            var lib = new MockLoadLib("");
+            Assert.Throws<ArgumentException>(
+                () => {
+                    var lib = new MockLoadLib("");
+                },
+                  "The name of the library to load is an empty string"
+                );
         }
 
         [Test]
-        [ExpectedException(typeof(Exception))]
         public void TestLoadUnmanagedDllWrongShortName()
         {
-            var lib = new MockLoadLib("SomeVeryUnlikelyName.dll");
+            // Note: this does not pass as of 2017-08. 
+            // Kept as is until dynamic-interop changes the exception type to ArgumentException.
+            Assert.Throws<ArgumentException>(
+                () => {
+                    var lib = new MockLoadLib("SomeVeryUnlikelyName.dll");
+                });
         }
 
         [Test]

@@ -14,7 +14,7 @@
     <releaseNotes>@releaseNotes@</releaseNotes>
     <tags>@tags@</tags>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <copyright>Copyright 2011-2014 RecycleBin, Copyright 2014-2015 CSIRO</copyright>
+    <copyright>Copyright © Copyright 2011-2014 RecycleBin, Copyright © 2014-2017 CSIRO</copyright>
     <references>
       <reference file="RDotNet.FSharp.dll" />
     </references>

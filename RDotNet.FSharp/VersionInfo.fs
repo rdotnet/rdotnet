@@ -1,7 +1,7 @@
 ﻿namespace System
 open System.Reflection
 
-[<assembly: AssemblyVersionAttribute("1.6.5")>]
-[<assembly: AssemblyFileVersionAttribute("1.6.5")>]
+[<assembly: AssemblyVersionAttribute("1.7.0")>]
+[<assembly: AssemblyFileVersionAttribute("1.7.0")>]
 do ()
 

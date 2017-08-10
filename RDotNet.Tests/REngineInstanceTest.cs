@@ -16,10 +16,12 @@ namespace RDotNet
         }
 
         [Test]
-        [ExpectedException(typeof(Exception))]
         public void TestCreateInstanceWithWrongDllName()
         {
-            Assert.That(TestREngine.CreateTestEngine("R.NET", "NotExist.dll"), Throws.TypeOf<Exception>());
+            Assert.Throws<Exception>(
+                () => {
+                    TestREngine.CreateTestEngine("R.NET", "NotExist.dll");
+                });
         }
 
         /// <summary>
@@ -37,7 +39,7 @@ namespace RDotNet
                 : base(id, dll) { }
         }
 
-        [Test, Ignore] // cannot test this easily with new API. Rethink
+        [Test, Ignore("cannot test this easily with new API. Rethink")] // cannot test this easily with new API. Rethink
         public void TestIsRunning()
         {
             var engine = REngine.GetInstance();
@@ -124,7 +126,7 @@ namespace RDotNet
             AppDomain.Unload(ad);
         }
 
-        [Test, Ignore] // TODO
+        [Test, Ignore("Running in several application domains to load plug-ins not yet feasible?")] // TODO
         public void TestSeveralAppDomains()
         {
             var engine = REngine.GetInstance();

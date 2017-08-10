@@ -14,13 +14,13 @@
     <releaseNotes>@releaseNotes@</releaseNotes>
     <tags>@tags@</tags>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <copyright>Copyright 2011-2014 RecycleBin, Copyright 2014-2015 CSIRO</copyright>
+    <copyright>Copyright © Copyright 2011-2014 RecycleBin, Copyright © 2014-2017 CSIRO</copyright>
     <references>
       <reference file="RDotNet.dll" />
       <reference file="RDotNet.NativeLibrary.dll" />
     </references>
     <dependencies>
-      <dependency id="DynamicInterop" version="[0.7.4]" />
+      <dependency id="DynamicInterop" version="[0.8.1]" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Numerics" />
