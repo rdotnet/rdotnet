@@ -90,10 +90,7 @@ namespace RDotNet.Internals
     internal delegate IntPtr Rf_install(string s);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate IntPtr Rf_mkString(/*[MarshalAs(UnmanagedType.LPWStr)]*/string s);
-
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate IntPtr Rf_mkString_(IntPtr constCharP);
+    internal delegate IntPtr Rf_mkString(IntPtr s);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     internal delegate IntPtr Rf_mkChar(string s);

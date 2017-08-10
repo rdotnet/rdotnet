@@ -300,7 +300,7 @@ namespace RDotNet.NativeLibrary
         public static Version GetRVersionFromRegistry(StringBuilder logger = null)
         {
             var rCoreKey = GetRCoreRegistryKey(logger);
-            string version = GetRCurrentVersionStringFromRegistry(rCoreKey);
+          var version = GetRCurrentVersionStringFromRegistry(rCoreKey);
             if (string.IsNullOrEmpty(version))
             {
                 var subKeyNames = rCoreKey.GetSubKeyNames();
@@ -312,6 +312,25 @@ namespace RDotNet.NativeLibrary
             // The regex first extracts the numerical part of the string.
             var reg = new Regex("([0-9]*\\.)*[0-9]*");
             return new Version(reg.Match(version).Value);
+        }
+
+          var nonNumericChars = new Regex("[^0-9]+", RegexOptions.Compiled);
+
+          for (var i = 1; i < versionParts.Length; i++)
+          {
+            if (nonNumericChars.IsMatch(versionParts[i]))
+            {
+              versionParts[i] = nonNumericChars.Replace(versionParts[i], string.Empty);
+              reconstructVersion = true;
+            }
+          }
+
+          if (reconstructVersion)
+          {
+            version = string.Join(".", versionParts);
+          }
+
+          return new Version(version);
         }
 
         private static string GetRCurrentVersionStringFromRegistry(RegistryKey rCoreKey)
