@@ -94,7 +94,7 @@ namespace RDotNet
                 return null;
             }
             IntPtr pointer = IntPtr.Add(pointerItem, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
-            return Marshal.PtrToStringAnsi(pointer);
+            return InternalString.StringFromNativeUtf8(pointer);
         }
 
         private Rf_mkChar _mkChar = null;

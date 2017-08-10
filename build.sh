@@ -5,7 +5,7 @@ E_BADARGS=85
 function sample_usage ()
 {
   echo "Usage: `basename $0` [--help] target"
-  echo "installs SWIFT shared library dependencies into a library folder"
+  echo "installs R.NET shared library dependencies into a library folder"
   echo "  Example:"
   echo "`basename $0` Tests"
   echo "  Example:"

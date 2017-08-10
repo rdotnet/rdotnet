@@ -7,11 +7,11 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 
 [assembly: AssemblyTitle("R.NET")]
-[assembly: AssemblyDescription("Collaboration of .NET Framework with R statistical computing")]
+[assembly: AssemblyDescription(".NET bindings for the official R statistical computing language")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("RecycleBin")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("R.NET")]
-[assembly: AssemblyCopyright("Copyright © RecycleBin 2011")]
+[assembly: AssemblyCopyright("Copyright © Copyright 2011-2014 RecycleBin, Copyright © 2014-2017 CSIRO")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

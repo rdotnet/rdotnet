@@ -768,11 +768,6 @@ namespace RDotNet
         {
             incompleteStatement.Append(statement);
             var s = GetFunction<Rf_mkString>()(InternalString.NativeUtf8FromString(incompleteStatement.ToString()));
-            //IntPtr statementPtr = Marshal.StringToHGlobalUni(incompleteStatement.ToString());
-            //var f = GetFunction<Rf_mkString_>("Rf_mkString");
-            //var s = f(statementPtr);
-            //Marshal.FreeHGlobal(statementPtr);
-//            var s = GetFunction<Rf_mkString>()(incompleteStatement.ToString());
             string errorStatement;
             using (new ProtectedPointer(this, s))
             {

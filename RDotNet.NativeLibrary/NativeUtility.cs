@@ -314,25 +314,6 @@ namespace RDotNet.NativeLibrary
             return new Version(reg.Match(version).Value);
         }
 
-          var nonNumericChars = new Regex("[^0-9]+", RegexOptions.Compiled);
-
-          for (var i = 1; i < versionParts.Length; i++)
-          {
-            if (nonNumericChars.IsMatch(versionParts[i]))
-            {
-              versionParts[i] = nonNumericChars.Replace(versionParts[i], string.Empty);
-              reconstructVersion = true;
-            }
-          }
-
-          if (reconstructVersion)
-          {
-            version = string.Join(".", versionParts);
-          }
-
-          return new Version(version);
-        }
-
         private static string GetRCurrentVersionStringFromRegistry(RegistryKey rCoreKey)
         {
             return rCoreKey.GetValue("Current Version") as string;

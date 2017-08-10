@@ -28,7 +28,7 @@ namespace RDotNet
             var vector = engine.Evaluate("x <- c('красавица Наталья', 'Un apôtre')").AsCharacter();
             var encoding = engine.Evaluate("Encoding(x)").AsCharacter();
             Assert.That(encoding[0], Is.EqualTo("UTF-8"));
-            Assert.That(encoding[1], Is.EqualTo("latin1"));
+            Assert.That(encoding[1], Is.EqualTo("UTF-8"));
             
             Assert.That(vector.Length, Is.EqualTo(2));
             Assert.That(vector[0], Is.EqualTo("красавица Наталья"));
