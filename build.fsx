@@ -190,13 +190,16 @@ Target "Test" DoNothing
 //  ==> "RunTests"
 //  ==> "All"
 
+// Note to self: ==> should be read as "comes before"
 "VersionInfo" ==> "All" 
+"Clean" ==> "Rebuild" 
+"Build" ==> "Rebuild" 
 "Build" ==> "All" 
-"All" ==> "RunTests" ==> "Test"
 
 "NuGetRDotNet" ==> "NuGet"
 "NuGetRDotNetFs" ==> "NuGet"
   
+"All" ==> "RunTests" ==> "Test"
 "All" ==> "NuGet" ==> "Release"
 
 RunTargetOrDefault "All"
