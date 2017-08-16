@@ -274,7 +274,7 @@ namespace RDotNet
         public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
         {
             environmentIsSet = true;
-            NativeUtility.SetEnvironmentVariables(rPath: rPath, rHome: rHome);
+            NativeUtility.CreateNew().SetEnvironmentVariables(rPath: rPath, rHome: rHome);
         }
 
         /// <summary>

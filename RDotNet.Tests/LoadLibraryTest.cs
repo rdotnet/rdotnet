@@ -50,7 +50,7 @@ namespace RDotNet
             string rDllPath = "";
             try
             {
-                rDllPath = NativeUtility.FindRPathFromRegistry();
+                rDllPath = new NativeUtility().FindRPathFromRegistry();
             }
             catch (ApplicationException) // registry keys not found - bail out
             {

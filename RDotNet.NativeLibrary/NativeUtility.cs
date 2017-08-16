@@ -1,5 +1,4 @@
 ﻿using DynamicInterop;
-using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -11,11 +10,31 @@ using System.Text.RegularExpressions;
 
 namespace RDotNet.NativeLibrary
 {
+
     /// <summary>
     /// Collection of utility methods for operating systems.
     /// </summary>
-    public static class NativeUtility
+    public class NativeUtility
     {
+        /// <summary> Gets or sets the registry.</summary>
+        ///
+        /// <value> The registry.</value>
+        protected IRegistry Registry { get; set; }
+
+        /// <summary> Constructor.</summary>
+        ///
+        /// <param name="registry"> (Optional)
+        ///                         The registry.</param>
+        public NativeUtility(IRegistry registry = null)
+        {
+            Registry = (registry == null ? new WindowsRegistry() : registry);
+        }
+
+        public static NativeUtility CreateNew()
+        {
+            return new NativeUtility();
+        }
+
         /// <summary>
         /// Gets the platform on which the current process runs.
         /// </summary>
@@ -59,7 +78,7 @@ namespace RDotNet.NativeLibrary
         /// <remarks>
         /// This function has been designed to limit the tedium for users, while allowing custom settings for unusual installations.
         /// </remarks>
-        public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
+        public void SetEnvironmentVariables(string rPath = null, string rHome = null)
         {
             /*
              * Changing the behavior in Oct 2014, following the report of
@@ -111,14 +130,14 @@ namespace RDotNet.NativeLibrary
         /// <param name="rHome">The path for R_HOME. If null (default), the function checks the R_HOME environment variable. If none is set,
         /// the function uses platform specific sensible default behaviors.</param>
         /// <returns>A console friendly output of the paths discovery process</returns>
-        public static string FindRPaths(ref string rPath, ref string rHome)
+        public string FindRPaths(ref string rPath, ref string rHome)
         {
             StringBuilder logger = new StringBuilder();
             FindRPaths(ref rPath, ref rHome, logger);
             return logger.ToString();
         }
 
-        private static void FindRPaths(ref string rPath, ref string rHome, StringBuilder logSetEnvVar)
+        private void FindRPaths(ref string rPath, ref string rHome, StringBuilder logSetEnvVar)
         {
             doLogSetEnvVarInfo(string.Format("caller provided rPath={0}, rHome={1}",
                rPath == null ? "null" : rPath,
@@ -161,7 +180,7 @@ namespace RDotNet.NativeLibrary
                 doLogSetEnvVar("Error", "R_HOME was not provided and a suitable path could not be found by R.NET", logSetEnvVar);
         }
 
-        private static void doLogSetEnvVar(string level, string msg, StringBuilder logSetEnvVar)
+        private void doLogSetEnvVar(string level, string msg, StringBuilder logSetEnvVar)
         {
             if (logSetEnvVar != null)
             {
@@ -171,17 +190,17 @@ namespace RDotNet.NativeLibrary
             }
         }
 
-        private static void doLogSetEnvVarWarn(string msg, StringBuilder logger)
+        private void doLogSetEnvVarWarn(string msg, StringBuilder logger)
         {
             doLogSetEnvVar("Warn", msg, logger);
         }
 
-        private static void doLogSetEnvVarInfo(string msg, StringBuilder logger)
+        private void doLogSetEnvVarInfo(string msg, StringBuilder logger)
         {
             doLogSetEnvVar("Info", msg, logger);
         }
 
-        private static void doFoundWinRegKey(RegistryKey rCore, StringBuilder logger)
+        private void doFoundWinRegKey(IRegistryKey rCore, StringBuilder logger)
         {
             doLogSetEnvVarInfo(string.Format("Found Windows registry key {0}", rCore.ToString()), logger);
         }
@@ -216,7 +235,7 @@ namespace RDotNet.NativeLibrary
         /// <param name="rPath">Optional path to the directory containing the R shared library. This is ignored unless on a Unix platform (i.e. ignored on Windows and MacOS)</param>
         /// <param name="logger">Optional logger for diagnosis</param>
         /// <returns>The path that R.NET found suitable as a candidate for the R_HOME environment</returns>
-        public static string FindRHome(string rPath = null, StringBuilder logger = null)
+        public string FindRHome(string rPath = null, StringBuilder logger = null)
         {
             var platform = GetPlatform();
             string rHome;
@@ -254,9 +273,9 @@ namespace RDotNet.NativeLibrary
             return rHome;
         }
 
-        private static string GetRhomeWin32NT(StringBuilder logger)
+        private string GetRhomeWin32NT(StringBuilder logger)
         {
-            RegistryKey rCoreKey = GetRCoreRegistryKeyWin32(logger);
+            IRegistryKey rCoreKey = GetRCoreRegistryKeyWin32(logger);
             return GetRInstallPathFromRCoreKegKey(rCoreKey, logger);
         }
 
@@ -266,7 +285,7 @@ namespace RDotNet.NativeLibrary
                 throw new ArgumentException(string.Format("Specified directory not found: '{0}'", rPath));
         }
 
-        private static string ConstructRPath(string rHome)
+        private string ConstructRPath(string rHome)
         {
             var shlibFilename = GetRLibraryFileName();
             var platform = GetPlatform();
@@ -287,7 +306,7 @@ namespace RDotNet.NativeLibrary
             }
         }
 
-        private static RegistryKey GetRCoreRegistryKey(StringBuilder logger)
+        private IRegistryKey GetRCoreRegistryKey(StringBuilder logger)
         {
             if (Environment.OSVersion.Platform != PlatformID.Win32NT) return null;
             return GetRCoreRegistryKeyWin32(logger);
@@ -297,13 +316,13 @@ namespace RDotNet.NativeLibrary
         /// Gets the R version from the Windows R Registry (if available)
         /// </summary>
         /// <returns>a System.Version object</returns>
-        public static Version GetRVersionFromRegistry(StringBuilder logger = null)
+        public Version GetRVersionFromRegistry(StringBuilder logger = null)
         {
             var rCoreKey = GetRCoreRegistryKey(logger);
           var version = GetRCurrentVersionStringFromRegistry(rCoreKey);
             if (string.IsNullOrEmpty(version))
             {
-                var subKeyNames = rCoreKey.GetSubKeyNames();
+                string[] subKeyNames = rCoreKey.GetSubKeyNames();
                 if (subKeyNames.Length > 0)
                     version = subKeyNames[0];
             }
@@ -314,7 +333,7 @@ namespace RDotNet.NativeLibrary
             return new Version(reg.Match(version).Value);
         }
 
-        private static string GetRCurrentVersionStringFromRegistry(RegistryKey rCoreKey)
+        private static string GetRCurrentVersionStringFromRegistry(IRegistryKey rCoreKey)
         {
             return rCoreKey.GetValue("Current Version") as string;
         }
@@ -323,7 +342,7 @@ namespace RDotNet.NativeLibrary
         /// Attempt to find a suitable path to the R shared library. This is used by R.NET by default; users may want to use it to diagnose problematic behaviors.
         /// </summary>
         /// <returns>The path to the directory where the R shared library is expected to be</returns>
-        public static string FindRPath(string rHome = null)
+        public string FindRPath(string rHome = null)
         {
             var platform = GetPlatform();
             switch (platform)
@@ -342,7 +361,7 @@ namespace RDotNet.NativeLibrary
             }
         }
 
-        private static string FindRPathUnix(string rHome)
+        private string FindRPathUnix(string rHome)
         {
             // TODO: too many default strings here. R.NET should not try to overcome variance in Unix setups.
             var shlibFilename = GetRLibraryFileName();
@@ -360,13 +379,13 @@ namespace RDotNet.NativeLibrary
             return "/usr/lib";
         }
 
-        private static string FindRPathMacOS(string rHome)
+        private string FindRPathMacOS(string rHome)
         {
             // TODO: is there a way to detect installations on MacOS
             return "/Library/Frameworks/R.framework/Libraries";
         }
 
-        private static string FindRPathWindows(string rHome)
+        private string FindRPathWindows(string rHome)
         {
             if (!string.IsNullOrEmpty(rHome))
                 return ConstructRPath(rHome);
@@ -407,11 +426,11 @@ namespace RDotNet.NativeLibrary
         /// Windows-only function; finds in the Windows registry the path to the most recently installed R binaries.
         /// </summary>
         /// <returns>The path, such as</returns>
-        public static string FindRPathFromRegistry(StringBuilder logger = null)
+        public string FindRPathFromRegistry(StringBuilder logger = null)
         {
             CheckPlatformWin32();
             bool is64Bit = Environment.Is64BitProcess;
-            RegistryKey rCoreKey = GetRCoreRegistryKeyWin32(logger);
+            IRegistryKey rCoreKey = GetRCoreRegistryKeyWin32(logger);
             var installPath = GetRInstallPathFromRCoreKegKey(rCoreKey, logger);
             var currentVersion = GetRVersionFromRegistry();
             var bin = Path.Combine(installPath, "bin");
@@ -420,7 +439,7 @@ namespace RDotNet.NativeLibrary
             return currentVersion < new Version(2, 12) ? bin : Path.Combine(bin, is64Bit ? "x64" : "i386");
         }
 
-        private static string GetRInstallPathFromRCoreKegKey(RegistryKey rCoreKey, StringBuilder logger)
+        private string GetRInstallPathFromRCoreKegKey(IRegistryKey rCoreKey, StringBuilder logger)
         {
             string installPath = null;
             string[] subKeyNames = rCoreKey.GetSubKeyNames();
@@ -447,7 +466,7 @@ namespace RDotNet.NativeLibrary
                         string currentVersion = GetRCurrentVersionStringFromRegistry(rCoreKey);
                         if (subKeyNames.Contains(currentVersion))
                         {
-                            var rVersionCoreKey = rCoreKey.OpenSubKey(currentVersion);
+                            IRegistryKey rVersionCoreKey = rCoreKey.OpenSubKey(currentVersion);
                             return GetRInstallPathFromRCoreKegKey(rVersionCoreKey, logger);
                         }
                         else
@@ -467,7 +486,7 @@ namespace RDotNet.NativeLibrary
             return installPath;
         }
 
-        private static string RecurseFirstSubkey(RegistryKey rCoreKey, StringBuilder logger )
+        private string RecurseFirstSubkey(IRegistryKey rCoreKey, StringBuilder logger )
         {
             string[] subKeyNames = rCoreKey.GetSubKeyNames();
             if (subKeyNames.Length > 0)
@@ -490,10 +509,10 @@ namespace RDotNet.NativeLibrary
                 throw new NotSupportedException("This method is supported only on the Win32NT platform");
         }
 
-        private static RegistryKey GetRCoreRegistryKeyWin32(StringBuilder logger)
+        private IRegistryKey GetRCoreRegistryKeyWin32(StringBuilder logger)
         {
             CheckPlatformWin32();
-            var rCore = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
+            IRegistryKey rCore = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
             if (rCore == null)
             {
                 doLogSetEnvVarInfo(@"Local machine SOFTWARE\R-core not found - trying current user", logger);

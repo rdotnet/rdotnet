@@ -6,7 +6,7 @@ namespace RDotNet.Graphics
     {
         internal static void SetEnvironmentVariables()
         {
-            NativeUtility.SetEnvironmentVariables();
+            new NativeUtility().SetEnvironmentVariables();
             // TOCHECK: was the following deliberate?
             //switch (Environment.OSVersion.Platform)
             //{
@@ -18,7 +18,7 @@ namespace RDotNet.Graphics
 
         internal static string FindRPathFromRegistry()
         {
-            return NativeUtility.FindRPathFromRegistry();
+            return new NativeUtility().FindRPathFromRegistry();
         }
     }
 }

@@ -1,4 +1,5 @@
 using RDotNet;
+using RDotNet.NativeLibrary;
 using System;
 using System.Collections;
 
@@ -15,7 +16,8 @@ namespace SimpleTest
             if (args.Length > 1)
                 rHome = args[1];
 
-            Console.WriteLine(RDotNet.NativeLibrary.NativeUtility.FindRPaths(ref rPath, ref rHome));
+            NativeUtility util = new NativeUtility();
+            Console.WriteLine(util.FindRPaths(ref rPath, ref rHome));
 
             rHome = null;
             rPath = null;
@@ -23,7 +25,7 @@ namespace SimpleTest
             REngine.SetEnvironmentVariables(rPath: rPath, rHome: rHome);
             REngine e = REngine.GetInstance();
 
-            Console.WriteLine(RDotNet.NativeLibrary.NativeUtility.SetEnvironmentVariablesLog);
+            Console.WriteLine(NativeUtility.SetEnvironmentVariablesLog);
 
             counter = 0;
             for (int i = 0; i < 6; i++)
