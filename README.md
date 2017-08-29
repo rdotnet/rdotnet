@@ -12,7 +12,7 @@ On Linux and MacOS, Mono is required, as well as an access to the native R libra
 
 As of 2017-08
 
-* If you want the latest binary distribution of R.NET and you are already familiar with managing dependencies with NuGet, head to [R.NET on NuGet](https://www.nuget.org/packages?q=R.NET.Community)
+* If you want the latest binary distribution of R.NET and you are already familiar with managing dependencies with NuGet, head to [R.NET on NuGet](https://www.nuget.org/packages?q=R.NET)
 * If you need a bit more documentation to get started, the prefered entry point is at [http://jmp75.github.io/rdotnet](http://jmp75.github.io/rdotnet)
 
 # Building from source
@@ -27,3 +27,11 @@ To query NuGet and get the latest versions of packages used by R.NET:
 .paket\paket.exe update
 .paket\paket.exe restore
 ```
+
+Note that you may want to specify which msbuild engine to use (had woes with default detection)
+
+```bat
+set VisualStudioVersion=14.0
+.\build.cmd NuGet
+```
+

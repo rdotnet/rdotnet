@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>R.NET.Community</id>
+    <id>R.NET</id>
     <title>R.NET</title>
     <version>@build.number@</version>
     <authors>@authors@</authors>
     <owners>@authors@</owners>
     <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
-    <projectUrl>http://rdotnet.codeplex.com/</projectUrl>
+    <projectUrl>https://github.com/jmp75/rdotnet</projectUrl>
     <!--<iconUrl>https://raw.github.com/BlueMountainCapital/FSharpRProvider/master/docs/files/misc/logo.png</iconUrl>-->
     <summary>@summary@</summary>
     <description>@description@</description>

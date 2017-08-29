@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>R.NET.Community.Graphics</id>
+    <id>R.NET.Graphics</id>
     <version>0.2.2-alpha</version>
     <title>R.NET Graphics Engine</title>
     <releaseNotes>Update to reference latest version of R.NET as a dependency</releaseNotes>
     <authors>RecycleBin, skyguy94</authors>
     <owners>kos59125</owners>
     <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
-    <projectUrl>http://rdotnet.codeplex.com/</projectUrl>
+    <projectUrl>https://github.com/jmp75/rdotnet</projectUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>Provides interfaces to build up R's graphics engine.</description>
     <summary>Provides interfaces to build up R's graphics engine.</summary>
@@ -17,7 +17,7 @@
       <reference file="RDotNet.Graphics.dll" />
     </references>
     <dependencies>
-      <dependency id="R.NET.Community" version="1.6" />
+      <dependency id="R.NET" version="1.6" />
     </dependencies>
     <tags>R R.NET graphics</tags>
   </metadata>

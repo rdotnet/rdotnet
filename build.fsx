@@ -15,10 +15,10 @@ open Fake.ReleaseNotesHelper
 // --------------------------------------------------------------------------------------
 
 let projectName = "R.NET"
-let projectSummary = "Interoperability library to access R from .NET languages"
+let projectSummary = "Interoperability library to access the R statistical language runtime from .NET"
 let projectDescription = """
-  A .NET interoperability library to access the R statistical package from .NET languages.
-  The library is designed for fast data exchange of arrays, in process."""
+  A .NET interoperability library to access the R statistical language runtime from .NET languages.
+  The library is designed for fast data exchange, in process."""
 let authors = ["Kosei Abe"; "Jean-Michel Perraud"]
 let companyName = ""
 let tags = ".NET R R.NET visualization statistics C# F#"
@@ -85,6 +85,18 @@ Target "Build" (fun _ ->
 //Target "BuildTests" (fun _ ->
     !! ("RDotNet.Tests.sln")
     |> MSBuildRelease "" "Build"
+    |> Log "AppBuild-Output: "
+)
+
+Target "Rebuild" (fun _ ->
+//    !! ("R.NET.sln")
+//    |> MSBuildRelease "" "Build"
+//    |> Log "AppBuild-Output: "
+//)
+//
+//Target "BuildTests" (fun _ ->
+    !! ("RDotNet.Tests.sln")
+    |> MSBuildRelease "" "Rebuild"
     |> Log "AppBuild-Output: "
 )
 
@@ -183,6 +195,7 @@ Target "All" DoNothing
 Target "NuGet" DoNothing
 Target "Release" DoNothing
 Target "Test" DoNothing
+Target "Clean" DoNothing
 
 //"Clean"
 //  ==> "Build"

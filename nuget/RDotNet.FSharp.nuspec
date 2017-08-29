@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>R.NET.Community.FSharp</id>
+    <id>R.NET.FSharp</id>
     <title>R.NET F# Utility</title>
     <version>@build.number@</version>
     <authors>@authors@</authors>
     <owners>@authors@</owners>
     <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
-    <projectUrl>http://rdotnet.codeplex.com/</projectUrl>
+    <projectUrl>https://github.com/jmp75/rdotnet</projectUrl>
     <!--<iconUrl>https://raw.github.com/BlueMountainCapital/FSharpRProvider/master/docs/files/misc/logo.png</iconUrl>-->
     <summary>@summary@</summary>
     <description>@description@</description>
@@ -19,7 +19,7 @@
       <reference file="RDotNet.FSharp.dll" />
     </references>
     <dependencies>
-      <dependency id="R.NET.Community" version="@build.number@" />
+      <dependency id="R.NET" version="@build.number@" />
     </dependencies>
   </metadata>
   <files>
