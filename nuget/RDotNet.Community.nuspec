@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>R.NET.Community</id>
+    <title>Transitional R.NET.Community</title>
+    <version>1.7.0</version>
+    <authors>@authors@</authors>
+    <owners>@authors@</owners>
+    <licenseUrl>http://rdotnet.codeplex.com/license</licenseUrl>
+    <projectUrl>https://github.com/jmp75/rdotnet</projectUrl>
+    <!--<iconUrl>https://raw.github.com/BlueMountainCapital/FSharpRProvider/master/docs/files/misc/logo.png</iconUrl>-->
+    <summary>Transitional package, you can remove and directly use nuget package ID R.NET</summary>
+    <description>Transitional package, you can remove and directly use nuget package ID R.NET</description>
+    <releaseNotes>Transitional package, you can remove and directly use nuget package ID R.NET</releaseNotes>
+    <tags>@tags@</tags>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <copyright>Copyright © 2017 jmp</copyright>
+    <dependencies>
+      <dependency id="R.NET" version="1.7.0" />
+    </dependencies>
+    <language>en-US</language>
+  </metadata>
+  <files>
+  </files>
+</package>

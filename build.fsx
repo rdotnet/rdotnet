@@ -148,6 +148,12 @@ Target "NuGetRDotNetFs" (fun _ ->
     DoNuGet "nuget/RDotNet.FSharp.nuspec"
 )
 
+Target "NuGetBackward" (fun _ ->
+    DoNuGet "nuget/RDotNet.Community.nuspec"
+    DoNuGet "nuget/RDotNet.Community.FSharp.nuspec"
+    DoNuGet "nuget/RDotNet.Previous.FSharp.nuspec"
+)
+
 // --------------------------------------------------------------------------------------
 // Generate the documentation
 
