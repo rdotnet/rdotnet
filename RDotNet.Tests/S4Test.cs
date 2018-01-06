@@ -9,7 +9,7 @@ namespace RDotNet.Tests
    {
       private const string EngineName = "RDotNetTest";
 
-      [TestFixtureSetUp]
+      [SetUp]
       public void SetUpEngine()
       {
          Helper.SetEnvironmentVariables();
@@ -18,7 +18,7 @@ namespace RDotNet.Tests
          engine.Evaluate("setClass('testclass', representation(foo='character', bar='integer'))");
       }
 
-      [TestFixtureTearDown]
+      [TearDown]
       public void DisposeEngine()
       {
          var engine = REngine.GetInstanceFromID(EngineName);

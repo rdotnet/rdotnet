@@ -7,3 +7,4 @@ nuget NUnit.Runners
 nuget NuGet.CommandLine
 nuget Microsoft.Win32.Registry 
 nuget System.Security.Permissions
+nuget Microsoft.NET.Test.Sdk

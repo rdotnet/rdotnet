@@ -9,7 +9,7 @@ namespace RDotNet
     [TestFixture]
     internal class REngineInstanceTest
     {
-        [TestFixtureSetUp]
+        [SetUp]
         public void SetUp()
         {
             REngine.SetEnvironmentVariables();
