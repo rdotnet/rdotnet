@@ -57,7 +57,6 @@ namespace RDotNet
     {
         public Dictionary<string, string> keyValues = new Dictionary<string, string>();
         private List<MockRegistryKey> subKeys = new List<MockRegistryKey>();
-        private string v;
 
         private string ShortName;
         //public string /*LongName*/;

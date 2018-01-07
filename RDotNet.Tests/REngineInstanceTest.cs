@@ -105,43 +105,47 @@ namespace RDotNet
             }
         }
 
-        [Test]
-        public void TestMultipleAppDomains()
-        {
-            var e = REngine.GetInstance(); // need to trigger the R main loop setup once, and it may as well be in the default appdomain
-            TestAppDomain("test1");  // works
-            TestAppDomain("test2");  // hangs at the last line in Job.Execute()
-        }
+        // Disabling unit tests that were looking at multiple appdomains
+        //AppDomain is Not part of the .NET core 2.0 specs:
+        // //https://docs.microsoft.com/en-us/dotnet/api/?term=AppDomainSetup&view=netcore-2.0
 
-        private static void TestAppDomain(string jobName)
-        {
-            var domainSetup = new AppDomainSetup();
-            domainSetup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-            AppDomain ad = AppDomain.CreateDomain(jobName, AppDomain.CurrentDomain.Evidence, domainSetup);
+        //[Test]
+        //public void TestMultipleAppDomains()
+        //{
+        //    var e = REngine.GetInstance(); // need to trigger the R main loop setup once, and it may as well be in the default appdomain
+        //    TestAppDomain("test1");  // works
+        //    TestAppDomain("test2");  // hangs at the last line in Job.Execute()
+        //}
 
-            var type = typeof(Job);
-            var jd = (Job)ad.CreateInstanceAndUnwrap(type.Assembly.FullName, type.FullName, true, BindingFlags.CreateInstance, null,
-                                new object[] { }, null, null);
-            jd.Execute();
-            AppDomain.Unload(ad);
-        }
+        //public static void TestAppDomain(string jobName)
+        //{
+        //    var domainSetup = new AppDomainSetup();
+        //    domainSetup.ApplicationBase = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+        //    AppDomain ad = AppDomain.CreateDomain(jobName, AppDomain.CurrentDomain.Evidence, domainSetup);
 
-        [Test, Ignore("Running in several application domains to load plug-ins not yet feasible?")] // TODO
-        public void TestSeveralAppDomains()
-        {
-            var engine = REngine.GetInstance();
-            engine.Initialize();
+        //    var type = typeof(Job);
+        //    var jd = (Job)ad.CreateInstanceAndUnwrap(type.Assembly.FullName, type.FullName, true, BindingFlags.CreateInstance, null,
+        //                        new object[] { }, null, null);
+        //    jd.Execute();
+        //    AppDomain.Unload(ad);
+        //}
 
-            // create another AppDomain for loading the plug-ins
-            AppDomainSetup setup = new AppDomainSetup();
-            setup.ApplicationBase = Path.GetDirectoryName(typeof(REngine).Assembly.Location);
+        //[Test, Ignore("Running in several application domains to load plug-ins not yet feasible?")] // TODO
+        //public void TestSeveralAppDomains()
+        //{
+        //    var engine = REngine.GetInstance();
+        //    engine.Initialize();
 
-            setup.DisallowApplicationBaseProbing = false;
-            setup.DisallowBindingRedirects = false;
+        //    // create another AppDomain for loading the plug-ins
+        //    AppDomainSetup setup = new AppDomainSetup();
+        //    setup.ApplicationBase = Path.GetDirectoryName(typeof(REngine).Assembly.Location);
 
-            var domain = AppDomain.CreateDomain("Plugin AppDomain", null, setup);
+        //    setup.DisallowApplicationBaseProbing = false;
+        //    setup.DisallowBindingRedirects = false;
 
-            domain.Load(typeof(REngine).Assembly.EscapedCodeBase);
-        }
+        //    var domain = AppDomain.CreateDomain("Plugin AppDomain", null, setup);
+
+        //    domain.Load(typeof(REngine).Assembly.EscapedCodeBase);
+        //}
     }
 }

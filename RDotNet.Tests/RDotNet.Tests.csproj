@@ -19,13 +19,15 @@
     <PackageReleaseNotes>Migration to .NET Standard 2.0</PackageReleaseNotes> -->
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="S4Test.cs.attic" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\R.NET\RDotNet.csproj" />
     <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj" />
     <ProjectReference Include="..\RDotNet.TestBase\RDotNet.TestBase.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0">
-    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="NUnit" Version="3.9.0" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
