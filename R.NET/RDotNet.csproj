@@ -1,7 +1,48 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0923E1A0-2032-4997-AB73-49E42C4034A9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>1.7.1</Version>
+    <Copyright>(c) 2014-2018 Jean-Michel Perraud; (c) 2013 Kosei, evolvedmicrobe</Copyright>
+    <!-- <Description>Description</Description>
+    <Product>Product</Product>
+    <Company />
+    <Authors>Jean-Michel Perraud, Kosei, evolvedmicrobe</Authors>
+    <PackageId>DynamicInterop</PackageId> -->
+    <RepositoryUrl>https://github.com/jmp75/rdotnet</RepositoryUrl>
+    <!-- <PackageProjectUrl>https://github.com/jmp75/rdotnet</PackageProjectUrl>
+    <PackageReleaseNotes>Migration to .NET Standard 2.0</PackageReleaseNotes> -->
+  </PropertyGroup>
+  <!-- <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup> -->
+  <ItemGroup>
+    <Folder Include="Devices\" />
+    <Folder Include="Diagnostics\" />
+    <Folder Include="Dynamic\" />
+    <Folder Include="Internals\" />
+    <Folder Include="Utilities\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj">
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DynamicInterop" Version="0.8.1" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.4.0" />
+    <PackageReference Include="System.Security.Permissions" Version="4.4.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
+  </ItemGroup>
+  <Import Project="..\.paket\Paket.Restore.targets" />
+</Project>

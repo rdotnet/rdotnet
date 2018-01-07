@@ -309,14 +309,13 @@ string') # ; cat(' this # is removed')");
         [Test]
         public void TestProcessingMultipleHashes()
         {
-
+            // TODO?
             // paste('this contains ### characters', " this too ###", 'Oh, and this # one too') # but "this" 'rest' is commented
 
-            var blah = @"blah = 'blah
-\'blah\'
-blah";
-
-            blah = @"blah = 'blah\n\'blah\'\nblah";
+//            var blah = @"blah = 'blah
+//\'blah\'
+//blah";
+//            blah = @"blah = 'blah\n\'blah\'\nblah";
 
         }
 

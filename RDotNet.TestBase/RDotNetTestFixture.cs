@@ -27,7 +27,7 @@ namespace RDotNet
                 throw new NotSupportedException("This unit test is problematic to run from NUnit on Linux " + additionalMsg);
         }
 
-        [TestFixtureSetUp]
+        [SetUp]
         protected virtual void SetUpFixture()
         {
             if (initializeOnceOnly && engine != null)
@@ -36,7 +36,7 @@ namespace RDotNet
             engine = REngine.GetInstance(dll: null, initialize: true, parameter: null, device: Device);
         }
 
-        [TestFixtureTearDown]
+        [TearDown]
         protected virtual void TearDownFixture()
         {
             if (engine != null)
