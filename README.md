@@ -5,7 +5,7 @@ R.NET is an in-process bridge for the .NET Framework to access the R statistical
 
 # Software requirements
 
-On Windows, R.NET requires .NET Framework 4.5.2 and an access to the native R libraries installed with the R environment. R needs not necessarily be installed as a software on the executing machine, so long as DLL files are accessible.
+On Windows, R.NET requires .NET Framework > 4.6.1 or .NET Core 2.0, and an access to the native R libraries installed with the R environment. R needs not necessarily be installed as a software on the executing machine, so long as DLL files are accessible (you may need to tweak environment variables for the latter to work, though)
 On Linux and MacOS, Mono is required, as well as an access to the native R libraries.
 
 # Getting started
