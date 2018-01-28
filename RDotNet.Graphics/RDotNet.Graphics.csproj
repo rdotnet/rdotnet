@@ -6,7 +6,7 @@
     <ProjectGuid>{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}</ProjectGuid>
     <OutputType>Library</OutputType>
     <TargetFramework>net461</TargetFramework>
-    <Version>1.7.1</Version>
+    <Version>1.8.0-alpha</Version>
     <Copyright>(c) 2014-2018 Jean-Michel Perraud; (c) 2013 Kosei, evolvedmicrobe</Copyright>
     <RepositoryUrl>https://github.com/jmp75/rdotnet</RepositoryUrl>
   </PropertyGroup>
@@ -20,5 +20,5 @@
     <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj">
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\.paket\Paket.Restore.targets" />
+  <!-- <Import Project="..\..\.paket\Paket.Restore.targets" /> -->
 </Project>

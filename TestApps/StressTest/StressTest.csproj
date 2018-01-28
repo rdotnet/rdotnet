@@ -3,7 +3,7 @@
     <ProjectGuid>{4171B26C-EEAD-475B-A147-F752CC3FE14E}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.7.1</Version>
+    <Version>1.8.0-alpha</Version>
     <Copyright>(c) 2014-2018 Jean-Michel Perraud; (c) 2013 Kosei, evolvedmicrobe</Copyright>
     <!-- <Description>Description</Description>
     <Product>Product</Product>
@@ -19,5 +19,5 @@
     <ProjectReference Include="..\..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj" />
     <ProjectReference Include="..\..\RDotNet.TestBase\RDotNet.TestBase.csproj"/>
   </ItemGroup>
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
+  <!-- <Import Project="..\..\.paket\Paket.Restore.targets" /> -->
 </Project>

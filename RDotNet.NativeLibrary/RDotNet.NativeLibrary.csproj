@@ -6,7 +6,7 @@
     <ProjectGuid>{2A089A59-0F22-4484-B442-0FE8BDA10879}</ProjectGuid>
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.7.1</Version>
+    <Version>1.8.0-alpha</Version>
     <Copyright>(c) 2014-2018 Jean-Michel Perraud; (c) 2013 Kosei, evolvedmicrobe</Copyright>
     <!-- <Description>Description</Description>
     <Product>Product</Product>
@@ -21,5 +21,5 @@
     <PackageReference Include="DynamicInterop" Version="0.8.1" />
     <PackageReference Include="Microsoft.Win32.Registry"  Version="4.4.0"  />
   </ItemGroup>
-  <Import Project="..\.paket\Paket.Restore.targets" />
+  <!-- <Import Project="..\..\.paket\Paket.Restore.targets" /> -->
 </Project>

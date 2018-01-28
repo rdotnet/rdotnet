@@ -6,7 +6,7 @@
     <ProjectGuid>{A535A809-9FA8-4167-8551-5AC84C7C4E1D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net461</TargetFramework>
-    <Version>1.7.1</Version>
+    <Version>1.8.0-alpha</Version>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\RDotNet.Graphics\RDotNet.Graphics.csproj">
@@ -22,5 +22,5 @@
   </ItemGroup>  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
-  <Import Project="..\.paket\Paket.Restore.targets" />
+  <!-- <Import Project="..\..\.paket\Paket.Restore.targets" /> -->
 </Project>

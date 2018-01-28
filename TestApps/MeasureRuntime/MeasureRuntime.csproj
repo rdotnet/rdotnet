@@ -6,7 +6,7 @@
     <ProjectGuid>{ACB361F9-C04B-4265-9295-F9D57F2A6789}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.7.1</Version>
+    <Version>1.8.0-alpha</Version>
     <Copyright>(c) 2014-2018 Jean-Michel Perraud; (c) 2013 Kosei, evolvedmicrobe</Copyright>
     <!-- <Description>Description</Description>
     <Product>Product</Product>
@@ -25,5 +25,5 @@
     <ProjectReference Include="..\..\RDotNet.TestBase\RDotNet.TestBase.csproj">
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
+  
 </Project>
