@@ -36,17 +36,20 @@ let binDir = __SOURCE_DIRECTORY__ @@ "bin"
 let release = IO.File.ReadLines "RELEASE_NOTES.md" |> parseReleaseNotes
 
 // Generate assembly info files with the right version & up-to-date information
-Target "VersionInfo" (fun _ ->
-  let fileName = "R.NET/Properties/VersionInfo.cs"
-  CreateCSharpAssemblyInfoWithConfig fileName
-      [ Attribute.Version release.AssemblyVersion
-        Attribute.FileVersion release.AssemblyVersion ] 
-      (AssemblyInfoFileConfig(false))
-  CreateFSharpAssemblyInfoWithConfig "RDotNet.FSharp/VersionInfo.fs"
-      [ Attribute.Version release.AssemblyVersion
-        Attribute.FileVersion release.AssemblyVersion ] 
-      (AssemblyInfoFileConfig(false))
-)
+// 2018-01 moving to netstandard2.0 and VersionInfo may be outdated/superseded
+// Target "VersionInfo" (fun _ ->
+//   let fileName = "R.NET/Properties/VersionInfo.cs"
+//   CreateCSharpAssemblyInfoWithConfig fileName
+//       [ Attribute.Version release.AssemblyVersion
+//         Attribute.FileVersion release.AssemblyVersion ] 
+//       (AssemblyInfoFileConfig(false))
+//   CreateFSharpAssemblyInfoWithConfig "RDotNet.FSharp/VersionInfo.fs"
+//       [ Attribute.Version release.AssemblyVersion
+//         Attribute.FileVersion release.AssemblyVersion ] 
+//       (AssemblyInfoFileConfig(false))
+// )
+Target "VersionInfo" DoNothing
+
 
 // --------------------------------------------------------------------------------------
 // Update the assembly version numbers in the script file.
