@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using System;
 using System.Threading.Tasks;
 
@@ -6,7 +6,7 @@ namespace RDotNet
 {
     public class MultiThreadingTest : RDotNetTestFixture
     {
-        [Test]
+        [Fact]
         public void TestNonConcurrentMultiThreading()
         {
             // This tests checks that calling R

@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using System;
 using System.Numerics;
 
@@ -9,7 +9,7 @@ namespace RDotNet
     /// </summary>
     public class DataConversionTest : RDotNetTestFixture
     {
-        [Test]
+        [Fact]
         public void TestCreateNumericVectorValid()
         {
             var engine = this.Engine;
@@ -24,10 +24,10 @@ namespace RDotNet
             // Test a large data set: I just cannot believe how faster things are...
             engine.Evaluate("x <- 1:1e7 * 1.1");
             var a = engine.GetSymbol("x").AsNumeric().ToArray();
-            Assert.AreEqual(a[10000000 / 2 - 1], 1.1 * 1e7 / 2);
+            Assert.Equal(a[10000000 / 2 - 1], 1.1 * 1e7 / 2);
         }
 
-        [Test]
+        [Fact]
         public void TestCreateIntegerVectorValid()
         {
             var engine = this.Engine;
@@ -39,7 +39,7 @@ namespace RDotNet
             CheckBothArrayConversions(vec, new[] { 1, Int32.MinValue, 2 });
         }
 
-        [Test]
+        [Fact]
         public void TestCreateLogicalVectorValid()
         {
             var engine = this.Engine;
@@ -51,7 +51,7 @@ namespace RDotNet
             CheckBothArrayConversions(vec, new[] { true, true, false });
         }
 
-        [Test]
+        [Fact]
         public void TestCreateCharacterVectorValid()
         {
             var engine = this.Engine;
@@ -64,7 +64,7 @@ namespace RDotNet
             // NA members is already tested in another test class
         }
 
-        [Test]
+        [Fact]
         public void TestCreateComplexVectorValid()
         {
             var engine = this.Engine;
@@ -84,7 +84,7 @@ namespace RDotNet
             CheckArrayEqual(a, expected);
         }
 
-        [Test]
+        [Fact]
         public void TestCreateNumericMatrixValid()
         {
             var engine = this.Engine;
@@ -94,7 +94,7 @@ namespace RDotNet
             CheckArrayEqual(a, expected);
         }
 
-        [Test]
+        [Fact]
         public void TestCreateIntegerMatrixValid()
         {
             var engine = this.Engine;
@@ -104,7 +104,7 @@ namespace RDotNet
             CheckArrayEqual(a, expected);
         }
 
-        [Test]
+        [Fact]
         public void TestCreateLogicalMatrixValid()
         {
             var engine = this.Engine;
@@ -115,7 +115,7 @@ namespace RDotNet
             CheckArrayEqual(a, expected);
         }
 
-        [Test]
+        [Fact]
         public void TestCreateComplexMatrixValid()
         {
             var engine = this.Engine;

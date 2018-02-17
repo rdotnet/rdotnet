@@ -1,18 +1,18 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace RDotNet
 {
-    internal class InternalStringTest : RDotNetTestFixture
+    public class InternalStringTest : RDotNetTestFixture
     {
-        [Test]
+        [Fact]
         public void TestCharacter()
         {
             var engine = this.Engine;
             var vector = engine.Evaluate("c('foo', NA, 'bar')").AsCharacter();
-            Assert.That(vector.Length, Is.EqualTo(3));
-            Assert.That(vector[0], Is.EqualTo("foo"));
-            Assert.That(vector[1], Is.Null);
-            Assert.That(vector[2], Is.EqualTo("bar"));
+            Assert.Equal(vector.Length, (3));
+            Assert.Equal(vector[0], ("foo"));
+            Assert.Null(vector[1]);
+            Assert.Equal(vector[2], ("bar"));
         }
     }
 }

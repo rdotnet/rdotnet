@@ -1,29 +1,29 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using System.Linq;
 
 namespace RDotNet
 {
     public class REngineCleanupTest : RDotNetTestFixture
     {
-        [Test]
+        [Fact]
         public void TestDefaultClearGlobalEnv()
         {
             var engine = this.Engine;
             engine.ClearGlobalEnvironment();
             var s = engine.Evaluate("ls()").AsCharacter().ToArray();
-            Assert.IsTrue(s.Length == 0);
+            Assert.True(s.Length == 0);
         }
 
-        [Test]
+        [Fact]
         public void TestDetachPackagesDefault()
         {
             var engine = this.Engine;
 
             var s = engine.Evaluate("search()").AsCharacter().ToArray();
-            Assert.IsFalse(s.Contains("package:lattice"));
-            Assert.IsFalse(s.Contains("package:Matrix"));
-            Assert.IsFalse(s.Contains("package:MASS"));
-            Assert.IsFalse(s.Contains("biopsy"));
+            Assert.False(s.Contains("package:lattice"));
+            Assert.False(s.Contains("package:Matrix"));
+            Assert.False(s.Contains("package:MASS"));
+            Assert.False(s.Contains("biopsy"));
 
             engine.ClearGlobalEnvironment();
             engine.Evaluate("library(lattice)");
@@ -33,18 +33,18 @@ namespace RDotNet
             engine.Evaluate("attach(biopsy)");
             s = engine.Evaluate("search()").AsCharacter().ToArray();
 
-            Assert.IsTrue(s.Contains("package:lattice"));
-            Assert.IsTrue(s.Contains("package:Matrix"));
-            Assert.IsTrue(s.Contains("package:MASS"));
-            Assert.IsTrue(s.Contains("biopsy"));
+            Assert.True(s.Contains("package:lattice"));
+            Assert.True(s.Contains("package:Matrix"));
+            Assert.True(s.Contains("package:MASS"));
+            Assert.True(s.Contains("biopsy"));
 
             engine.ClearGlobalEnvironment(detachPackages: true);
 
             s = engine.Evaluate("search()").AsCharacter().ToArray();
-            Assert.IsFalse(s.Contains("package:lattice"));
-            Assert.IsFalse(s.Contains("package:Matrix"));
-            Assert.IsFalse(s.Contains("package:MASS"));
-            Assert.IsFalse(s.Contains("biopsy"));
+            Assert.False(s.Contains("package:lattice"));
+            Assert.False(s.Contains("package:Matrix"));
+            Assert.False(s.Contains("package:MASS"));
+            Assert.False(s.Contains("biopsy"));
         }
     }
 }

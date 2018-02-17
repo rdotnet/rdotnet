@@ -27,8 +27,10 @@
     <ProjectReference Include="..\RDotNet.TestBase\RDotNet.TestBase.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-    <PackageReference Include="NUnit" Version="3.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0"></PackageReference>
+    <PackageReference Include="xunit" Version="2.3.0-beta5-build3769" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0-beta5-build3769" />
+    <!-- Notice that xunit.assert, xunit.core, etc. are imported automatically.-->
   </ItemGroup>
   <!-- <Import Project="..\..\.paket\Paket.Restore.targets" /> -->
 </Project>

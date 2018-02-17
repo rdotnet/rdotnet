@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using RDotNet.Devices;
 using System;
 using System.IO;
@@ -6,16 +6,16 @@ using System.Reflection;
 
 namespace RDotNet
 {
-    [TestFixture]
-    internal class REngineInstanceTest
+    [Collection("R.NET unit tests")]
+    public class REngineInstanceTest
     {
-        [SetUp]
+        //[SetUp]
         public void SetUp()
         {
             REngine.SetEnvironmentVariables();
         }
 
-        [Test]
+        [Fact]
         public void TestCreateInstanceWithWrongDllName()
         {
             Assert.Throws<Exception>(
@@ -39,16 +39,16 @@ namespace RDotNet
                 : base(id, dll) { }
         }
 
-        [Test, Ignore("cannot test this easily with new API. Rethink")] // cannot test this easily with new API. Rethink
+        [Fact(Skip ="cannot test this easily with new API. Rethink")] // cannot test this easily with new API. Rethink
         public void TestIsRunning()
         {
             var engine = REngine.GetInstance();
-            Assert.That(engine, Is.Not.Null);
-            Assert.That(engine.IsRunning, Is.False);
+            Assert.NotNull(engine);
+            Assert.False(engine.IsRunning);
             engine.Initialize();
-            Assert.That(engine.IsRunning, Is.True);
+            Assert.True(engine.IsRunning);
             engine.Dispose();
-            Assert.That(engine.IsRunning, Is.False);
+            Assert.False(engine.IsRunning);
         }
 
         // Marking this test as ignore, as it is incompatible with trying to get all unit tests
@@ -83,7 +83,7 @@ namespace RDotNet
             {
                 engine.Dispose();
             }
-            Assert.That(engine.IsRunning, Is.False);
+            Assert.False(engine.IsRunning);
         }
 
         public class Job : MarshalByRefObject
@@ -109,7 +109,7 @@ namespace RDotNet
         //AppDomain is Not part of the .NET core 2.0 specs:
         // //https://docs.microsoft.com/en-us/dotnet/api/?term=AppDomainSetup&view=netcore-2.0
 
-        //[Test]
+        //[Fact]
         //public void TestMultipleAppDomains()
         //{
         //    var e = REngine.GetInstance(); // need to trigger the R main loop setup once, and it may as well be in the default appdomain

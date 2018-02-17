@@ -1,15 +1,15 @@
 ﻿using DynamicInterop;
-using NUnit.Framework;
+using Xunit;
 using RDotNet.NativeLibrary;
 using System;
 using System.IO;
 
 namespace RDotNet
 {
-    [TestFixture]
+    [Collection("R.NET unit tests")]
     public class LoadLibraryTest
     {
-        [Test]
+        [Fact]
         public void TestLoadUnmanagedDllNullRef()
         {
             Assert.Throws<ArgumentNullException>(
@@ -18,18 +18,19 @@ namespace RDotNet
                 });
         }
 
-        [Test]
+        [Fact]
         public void TestLoadUnmanagedDllEmptyString()
         {
             Assert.Throws<ArgumentException>(
                 () => {
                     var lib = new MockLoadLib("");
-                },
-                  "The name of the library to load is an empty string"
+                }
+                //,
+                //  "The name of the library to load is an empty string"
                 );
         }
 
-        [Test]
+        [Fact]
         public void TestLoadUnmanagedDllWrongShortName()
         {
             // Note: this does not pass as of 2017-08. 
@@ -40,7 +41,7 @@ namespace RDotNet
                 });
         }
 
-        [Test]
+        [Fact]
         public void TestLoadWindows()
         {
             // Test, if possible, loading 32 bits R.dll from a 64 bits process.
@@ -64,7 +65,7 @@ namespace RDotNet
                 var rDllFullFilePath = Path.Combine(rDllPath, NativeUtility.GetRLibraryFileName());
                 if (!File.Exists(rDllFullFilePath))
                     return;
-                Assert.Throws(typeof(Exception), () => { var lib = new MockLoadLib(rDllFullFilePath); });
+                Assert.Throws<Exception>(() => { var lib = new MockLoadLib(rDllFullFilePath); });
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using RDotNet.NativeLibrary;
 using System;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Numerics;
 
 namespace RDotNet
 {
-    [TestFixture]
+    [Collection("R.NET unit tests")]
     public class RDotNetTestFixture
     {
         private static readonly MockDevice device = new MockDevice();
@@ -27,7 +27,7 @@ namespace RDotNet
                 throw new NotSupportedException("This unit test is problematic to run from NUnit on Linux " + additionalMsg);
         }
 
-        [SetUp]
+        //[SetUp]
         protected virtual void SetUpFixture()
         {
             if (initializeOnceOnly && engine != null)
@@ -36,21 +36,21 @@ namespace RDotNet
             engine = REngine.GetInstance(dll: null, initialize: true, parameter: null, device: Device);
         }
 
-        [TearDown]
+        //[TearDown]
         protected virtual void TearDownFixture()
         {
             if (engine != null)
                 engine.ClearGlobalEnvironment();
         }
 
-        [SetUp]
+        //[SetUp]
         protected virtual void SetUpTest()
         {
             engine.Evaluate("rm(list=ls())");
             this.Device.Initialize();
         }
 
-        [TearDown]
+        //[TearDown]
         protected virtual void TearDownTest()
         {
         }
@@ -91,7 +91,7 @@ namespace RDotNet
 
         protected int[] GenArrayInteger(int from, int to)
         {
-            Assert.Greater(to, from);
+            Assert.True(to > from);
             var res = new int[to - from + 1];
             for (int i = 0; i < (to - from + 1); i++)
                 res[i] = i + from;
@@ -101,7 +101,7 @@ namespace RDotNet
         // I thought NUnit was dealing with array equivalence. Cannot see here, so emulate.
         protected static void CheckArrayEqual<T>(T[] a, T[] expected)
         {
-            Assert.AreEqual(expected.Length, a.Length);
+            Assert.Equal(expected.Length, a.Length);
             for (int i = 0; i < a.Length; i++)
                 AssertElementsAreEqual(expected[i], a[i]); //, 1e-9);
         }
@@ -114,7 +114,7 @@ namespace RDotNet
             if (double.IsNaN(expected.Imaginary))
                 Assert.True(double.IsNaN(actual.Imaginary));
             if (!double.IsNaN(expected.Real) && !double.IsNaN(expected.Imaginary))
-                Assert.AreEqual(expected, actual);
+                Assert.Equal(expected, actual);
         }
 
         protected static void AssertElementsAreEqual<T>(T actual, T expected)
@@ -123,19 +123,25 @@ namespace RDotNet
             // TestCreateComplexValid test otherwise fails on Mono, for NA values for R complex vectors. 
             if (typeof(T) == typeof(Complex))
                 AssertComplexAreEqual((Complex)(object)actual, (Complex)(object)expected);
-           else
-                Assert.AreEqual(expected, actual);
+            else
+                Assert.Equal(expected, actual);
         }
 
         // I thought NUnit was dealing with array equivalence. Cannot see here, so emulate.
         protected static void CheckArrayEqual<T>(T[,] a, T[,] expected)
         {
-            Assert.AreEqual(expected.Length, a.Length);
+            Assert.Equal(expected.Length, a.Length);
             for (int i = 0; i < 2; i++)
-                Assert.AreEqual(expected.GetLength(i), a.GetLength(i));
+                Assert.Equal(expected.GetLength(i), a.GetLength(i));
             for (int i = 0; i < a.GetLength(0); i++)
                 for (int j = 0; j < a.GetLength(1); j++)
-                    Assert.AreEqual(expected[i, j], a[i, j]); //, 1e-9);
+                    Assert.Equal(expected[i, j], a[i, j]); //, 1e-9);
+        }
+
+        public static void AssertThrows<T>(Action testCode, string expectedMsg) where T: System.Exception
+        {
+            T result = Assert.Throws<T>(testCode);
+            Assert.Equal(result.Message, expectedMsg);
         }
     }
 }

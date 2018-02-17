@@ -1,74 +1,74 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using System.Linq;
 
 namespace RDotNet
 {
-    internal class FactorTest : RDotNetTestFixture
+    public class FactorTest : RDotNetTestFixture
     {
-        [Test]
+        [Fact]
         public void TestLength()
         {
             var engine = this.Engine;
             var factor = engine.Evaluate("factor(c('A', 'B', 'A', 'C', 'B'))").AsFactor();
-            Assert.That(factor.Length, Is.EqualTo(5));
+            Assert.Equal(factor.Length, (5));
         }
 
-        [Test]
+        [Fact]
         public void TestIsOrderedTrue()
         {
             var engine = this.Engine;
             var factor = engine.Evaluate("factor(c('A', 'B', 'A', 'C', 'B'), ordered=TRUE)").AsFactor();
-            Assert.That(factor.IsOrdered, Is.True);
+            Assert.Equal(factor.IsOrdered, true);
         }
 
-        [Test]
+        [Fact]
         public void TestMissingValues()
         {
             var engine = this.Engine;
             var factor = engine.Evaluate("x <- factor(c('A', 'B', 'A', NA, 'C', 'B'), ordered=TRUE)").AsFactor();
-            Assert.That(factor.GetFactors(), Is.EquivalentTo(new[] { "A", "B", "A", null, "C", "B" }));
+            Assert.Equal(factor.GetFactors(), (new[] { "A", "B", "A", null, "C", "B" }));
             factor = engine.Evaluate(@"
 levels(x) <- c('1st', '2nd', '3rd')
 x
 ").AsFactor();
-            Assert.That(factor.GetFactors(), Is.EquivalentTo(new[] { "1st", "2nd", "1st", null, "3rd", "2nd" }));
+            Assert.Equal(factor.GetFactors(), (new[] { "1st", "2nd", "1st", null, "3rd", "2nd" }));
         }
 
-        [Test]
+        [Fact]
         public void TestIsOrderedFalse()
         {
             var engine = this.Engine;
             var factor = engine.Evaluate("factor(c('A', 'B', 'A', 'C', 'B'), ordered=FALSE)").AsFactor();
-            Assert.That(factor.IsOrdered, Is.False);
+            Assert.Equal(factor.IsOrdered, false);
         }
 
-        [Test]
+        [Fact]
         public void TestGetLevels()
         {
             var engine = this.Engine;
             var factor = engine.Evaluate("x <- factor(c('A', 'B', 'A', 'C', 'B'))").AsFactor();
-            Assert.That(factor.GetLevels(), Is.EquivalentTo(new[] { "A", "B", "C" }));
+            Assert.Equal(factor.GetLevels(), (new[] { "A", "B", "C" }));
             factor = engine.Evaluate(@"
 levels(x) <- c('1st', '2nd', '3rd')
 x
 ").AsFactor();
-            Assert.That(factor.GetLevels(), Is.EquivalentTo(new[] { "1st", "2nd", "3rd" }));
+            Assert.Equal(factor.GetLevels(), (new[] { "1st", "2nd", "3rd" }));
         }
 
-        [Test]
+        [Fact]
         public void TestGetFactors()
         {
             var engine = this.Engine;
             var factor = engine.Evaluate("x <- factor(c('A', 'B', 'A', 'C', 'B'))").AsFactor();
-            Assert.That(factor.GetFactors(), Is.EquivalentTo(new[] { "A", "B", "A", "C", "B" }));
+            Assert.Equal(factor.GetFactors(), (new[] { "A", "B", "A", "C", "B" }));
             factor = engine.Evaluate(@"
 levels(x) <- c('1st', '2nd', '3rd')
 x
 ").AsFactor();
-            Assert.That(factor.GetFactors(), Is.EquivalentTo(new[] { "1st", "2nd", "1st", "3rd", "2nd" }));
+            Assert.Equal(factor.GetFactors(), (new[] { "1st", "2nd", "1st", "3rd", "2nd" }));
         }
 
-        [Test]
+        [Fact]
         public void TestGetFactorsEnum()
         {
             var engine = this.Engine;
@@ -78,18 +78,18 @@ x
                                      .Concat(Enumerable.Repeat(Group.Control, 5))
                                      .Concat(Enumerable.Repeat(Group.Treatment, 4))
                                      .Concat(Enumerable.Repeat(Group.Control, 5));
-            Assert.That(factor.GetFactors<Group>(), Is.EquivalentTo(expected));
+            Assert.Equal(factor.GetFactors<Group>(), (expected));
         }
 
-        [Test]
+        [Fact]
         public void TestAsCharacterFactors()
         {
             var engine = this.Engine;
             var c = engine.Evaluate("as.factor(rep(letters[1:3], 5))").AsCharacter();
-            Assert.AreEqual("a", c[0]);
-            Assert.AreEqual("b", c[1]);
-            Assert.AreEqual("c", c[2]);
-            Assert.AreEqual("a", c[3]);
+            Assert.Equal("a", c[0]);
+            Assert.Equal("b", c[1]);
+            Assert.Equal("c", c[2]);
+            Assert.Equal("a", c[3]);
         }
     }
 

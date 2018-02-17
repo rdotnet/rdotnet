@@ -1,11 +1,11 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using System;
 
 namespace RDotNet
 {
     public class ExceptionHandlingTest : RDotNetTestFixture
     {
-        [Test]
+        [Fact]
         public void TestCharacter()
         {
             // Check that https://rdotnet.codeplex.com/workitem/70 does not occur; in particular worth testing on CentOS according to issue reporter.
@@ -13,22 +13,22 @@ namespace RDotNet
             Assert.Throws(typeof(NullReferenceException), () => { var t = v.ToString(); });            
         }
 
-        [Test]
+        [Fact]
         public void TestFailedExpressionParsing()
         {
             // https://rdotnet.codeplex.com/workitem/77
             var engine = this.Engine;
             object expr = null;
-            Assert.Throws<ParseException>(
+            AssertThrows<ParseException>(
                 () => {
                     expr = engine.Evaluate("function(k) substitute(bar(x) = k)");
                 },
                 "Status Error for function(k) substitute(bar(x) = k)\n : unexpected '='"
                 );
-            Assert.IsNull(expr);
+            Assert.Null(expr);
         }
 
-        [Test]
+        [Fact]
         public void TestFailedExpressionEvaluation()
         {
             //> fail <- function(msg) {stop(paste( 'the message is', msg))}
@@ -40,21 +40,21 @@ namespace RDotNet
             var engine = this.Engine;
             engine.Evaluate("fail <- function(msg) {stop(paste( 'the message is', msg))}");
             object expr = null;
-            Assert.Throws<EvaluationException>(
+            AssertThrows<EvaluationException>(
                 () => {
                     expr = engine.Evaluate("fail('bailing out')");
                 },
                 "Error in fail(\"bailing out\") : the message is bailing out\n"
                 );
-            Assert.IsNull(expr);
+            Assert.Null(expr);
         }
 
-        [Test]
+        [Fact]
         public void TestFailedExpressionUnboundSymbol()
         {
             var engine = this.Engine;
             ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
-            Assert.Throws<EvaluationException>(
+            AssertThrows<EvaluationException>(
                 () => {
                     var x = engine.GetSymbol("x");
                 },
@@ -62,12 +62,12 @@ namespace RDotNet
                 );
         }
 
-        [Test]
+        [Fact]
         public void TestFailedExpressionUnboundSymbolEvaluation()
         {
             ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
             var engine = this.Engine;
-            Assert.Throws<EvaluationException>(
+            AssertThrows<EvaluationException>(
                 () => {
                     var x = engine.Evaluate("x");
                 },
@@ -75,7 +75,7 @@ namespace RDotNet
                 );
         }
 
-        [Test]
+        [Fact]
         public void TestFailedExpressionParsingMissingParenthesis()
         {
             ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
@@ -88,7 +88,7 @@ namespace RDotNet
             //>
             var engine = this.Engine;
             var expr = engine.Evaluate("x <- rep(c(TRUE,FALSE), 55");
-            Assert.Throws<EvaluationException>(
+            AssertThrows<EvaluationException>(
                 () => {
                     var x = engine.Evaluate("x");
                 },
