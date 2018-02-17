@@ -48,5 +48,5 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="NUnit" Version="3.9.0" />
   </ItemGroup>
-  <!-- <!-- <Import Project="..\..\.paket\Paket.Restore.targets" /> --> -->
+  <!-- <Import Project="..\..\.paket\Paket.Restore.targets" /> -->
 </Project>

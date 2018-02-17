@@ -17,6 +17,17 @@ As of 2017-08
 
 # Building from source
 
+```sh
+dotnet restore RDotNet.Tests.sln
+dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
+```
+
+```sh
+dotnet test RDotNet.Tests/RDotNet.Tests.csproj
+```
+
+# DEPRECATED Building from source
+
 R.NET uses [Paket](https://fsprojects.github.io/Paket/) for dependency management and build, and [FAKE v4](https://fake.build/legacy-gettingstarted.html) (_Note to self: investigate FAKE v5_)
 
 ## Windows
