@@ -1,0 +1,13 @@
+language: csharp
+mono: none
+# mono: 
+#   - latest
+dotnet: 2.0.0
+dist: trusty
+
+script:
+- dotnet restore RDotNet.Tests.sln
+- dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
+# - dotnet test RDotNet.Tests/RDotNet.Tests.csproj
+
+
