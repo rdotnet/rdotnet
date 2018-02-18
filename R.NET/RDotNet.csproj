@@ -6,16 +6,22 @@
     <ProjectGuid>{0923E1A0-2032-4997-AB73-49E42C4034A9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.8.0-alpha</Version>
+    <!-- <Product>R.NET</Product> -->
+    <!-- See for pkg tags: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#nuget-metadata-properties -->
+    <Version>1.8.0</Version>
     <Copyright>(c) 2014-2018 Jean-Michel Perraud; (c) 2013 Kosei, evolvedmicrobe</Copyright>
-    <!-- <Description>Description</Description>
-    <Product>Product</Product>
-    <Company />
-    <Authors>Jean-Michel Perraud, Kosei, evolvedmicrobe</Authors>
-    <PackageId>DynamicInterop</PackageId> -->
+    <Description>A .NET interoperability library to access the R statistical language runtime from .NET languages. The library is designed for fast data exchange, in process.</Description>
+    <Authors>Jean-Michel Perraud, Daniel Collins, Kosei, evolvedmicrobe</Authors>
+    <PackageId>R.NET</PackageId>
+    <Title>R.NET: Access R from .NET in process</Title>
+    <PackageLicenseUrl>https://github.com/jmp75/rdotnet/blob/refactor/xunit/License.txt</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/jmp75/rdotnet</RepositoryUrl>
-    <!-- <PackageProjectUrl>https://github.com/jmp75/rdotnet</PackageProjectUrl>
-    <PackageReleaseNotes>Migration to .NET Standard 2.0</PackageReleaseNotes> -->
+    <PackageProjectUrl>https://github.com/jmp75/rdotnet</PackageProjectUrl>
+    <PackageReleaseNotes>Migration to .NET Standard 2.0</PackageReleaseNotes>
+    <PackageTags>interop R statistical language</PackageTags>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DocumentationFile>bin\$(Configuration)\netstandard2.0\RDotNet.xml</DocumentationFile>
   </PropertyGroup>
   <!-- <ItemGroup>
     <Reference Include="System" />
@@ -35,10 +41,7 @@
     <Folder Include="Utilities\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj">
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <PackageReference Include="DynamicInterop" Version="0.9.1" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.4.0" />
     <PackageReference Include="System.Security.Permissions" Version="4.4.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />

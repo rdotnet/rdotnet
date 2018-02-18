@@ -38,23 +38,13 @@ dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
 dotnet test RDotNet.Tests/RDotNet.Tests.csproj
 ```
 
-# DEPRECATED Building from source
+## Building the nuget package
 
-R.NET uses [Paket](https://fsprojects.github.io/Paket/) for dependency management and build, and [FAKE v4](https://fake.build/legacy-gettingstarted.html) (_Note to self: investigate FAKE v5_)
+*This section is primarily a reminder to the package author.*
 
-## Windows
-
-To query NuGet and get the latest versions of packages used by R.NET:
-
-```bat
-.paket\paket.exe update
-.paket\paket.exe restore
+```bash
+dotnet build --configuration Release --no-restore  RDotNet.Tests.sln
+dotnet pack R.NET/RDotNet.csproj --configuration Release --no-build --no-restore --output nupkgs
+# Or for initial testing/debugging
+dotnet pack DynamicInterop/DynamicInterop.csproj --configuration Debug --no-build --no-restore --output nupkgs
 ```
-
-Note that you may want to specify which msbuild engine to use (had woes with default detection)
-
-```bat
-set VisualStudioVersion=14.0
-.\build.cmd NuGet
-```
-

@@ -40,8 +40,6 @@
     <PackageReference Include="FSharp.Core" Version="4.2.3" />
     <ProjectReference Include="..\R.NET\RDotNet.csproj">
     </ProjectReference>
-    <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj">
-    </ProjectReference>
   </ItemGroup>
   <!-- <Import Project="..\..\.paket\Paket.Restore.targets" /> -->
 </Project>

@@ -23,7 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\R.NET\RDotNet.csproj" />
-    <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj" />
     <ProjectReference Include="..\RDotNet.TestBase\RDotNet.TestBase.csproj" />
   </ItemGroup>
   <ItemGroup>

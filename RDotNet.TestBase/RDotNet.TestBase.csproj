@@ -19,7 +19,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\R.NET\RDotNet.csproj" />
-    <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0"></PackageReference>

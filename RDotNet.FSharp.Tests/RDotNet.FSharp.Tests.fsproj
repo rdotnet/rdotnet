@@ -42,8 +42,6 @@
     </ProjectReference>
     <ProjectReference Include="..\RDotNet.FSharp\RDotNet.FSharp.fsproj">
     </ProjectReference>
-    <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj">
-    </ProjectReference>
     <ProjectReference Include="..\RDotNet.TestBase\RDotNet.TestBase.csproj">
     </ProjectReference>
   </ItemGroup>
