@@ -9,6 +9,7 @@ namespace RDotNet
         [Fact]
         public void TestCStackCheckDisabled()
         {
+            SetUpTest();
             var engine = this.Engine;
             var cStackLimit = engine.GetInt32("R_CStackLimit");
             Assert.Equal(-1, cStackLimit);
@@ -17,6 +18,7 @@ namespace RDotNet
         [Fact]
         public void TestSetCommandLineArguments()
         {
+            SetUpTest();
             var engine = this.Engine;
             engine.SetCommandLineArguments(new[] { "Hello", "World" });
             Assert.Equal(engine.Evaluate("commandArgs()").AsCharacter(), (new[] { REngine.EngineName, "Hello", "World" }));
@@ -25,6 +27,7 @@ namespace RDotNet
         [Fact]
         public void TestDefaultCommandLineArgs()
         {
+            SetUpTest();
             var engine = this.Engine;
             var cmdArgs = engine.Evaluate("commandArgs()").AsCharacter();
         }
@@ -32,6 +35,7 @@ namespace RDotNet
         [Fact]
         public void TestGlobalEnvironment()
         {
+            SetUpTest();
             var engine = this.Engine;
             Assert.Equal(engine.GlobalEnvironment.DangerousGetHandle(), (engine.Evaluate(".GlobalEnv").DangerousGetHandle()));
         }
@@ -39,6 +43,7 @@ namespace RDotNet
         [Fact]
         public void TestBaseNamespace()
         {
+            SetUpTest();
             var engine = this.Engine;
             Assert.Equal(engine.BaseNamespace.DangerousGetHandle(), (engine.Evaluate(".BaseNamespaceEnv").DangerousGetHandle()));
         }
@@ -46,6 +51,7 @@ namespace RDotNet
         [Fact]
         public void TestNilValue()
         {
+            SetUpTest();
             var engine = this.Engine;
             Assert.Equal(engine.NilValue.DangerousGetHandle(), (engine.Evaluate("NULL").DangerousGetHandle()));
         }
@@ -169,6 +175,7 @@ namespace RDotNet
         [Fact]
         public void TestParseCodeLine()
         {
+            SetUpTest();
             var engine = this.Engine;
             engine.Evaluate("cat('hello')");
             Assert.Equal(Device.GetString(), ("hello"));
@@ -177,6 +184,7 @@ namespace RDotNet
         [Fact]
         public void TestParseCodeBlock()
         {
+            SetUpTest();
             var engine = this.Engine;
             engine.Evaluate("for(i in 1:3){\ncat(i)\ncat(i)\n}");
             Assert.Equal(Device.GetString(), ("112233"));
@@ -185,6 +193,7 @@ namespace RDotNet
         [Fact]
         public void TestParseCodeBlockMultiLine()
         {
+            SetUpTest();
             // Tests suggested by the following issue, but not dealing with it per se.
             // https://rdotnet.codeplex.com/workitem/165
             var engine = this.Engine;
@@ -204,6 +213,7 @@ cat(i); cat(i)
         [Fact]
         public void TestParseComments()
         {
+            SetUpTest();
             // See
             // https://rdotnet.codeplex.com/workitem/165
             var engine = this.Engine;
@@ -241,6 +251,7 @@ sep=''))
         [Fact]
         public void TestParseLineWithStringWithHash()
         {
+            SetUpTest();
             //https://github.com/jmp75/rdotnet/issues/14
             var engine = this.Engine;
 
@@ -309,19 +320,21 @@ string') # ; cat(' this # is removed')");
         [Fact]
         public void TestProcessingMultipleHashes()
         {
+            SetUpTest();
             // TODO?
             // paste('this contains ### characters', " this too ###", 'Oh, and this # one too') # but "this" 'rest' is commented
 
-//            var blah = @"blah = 'blah
-//\'blah\'
-//blah";
-//            blah = @"blah = 'blah\n\'blah\'\nblah";
+            //            var blah = @"blah = 'blah
+            //\'blah\'
+            //blah";
+            //            blah = @"blah = 'blah\n\'blah\'\nblah";
 
         }
 
         [Fact]
         public void TestReadConsole()
         {
+            SetUpTest();
             var engine = this.Engine;
             string additionalMsg = "https://rdotnet.codeplex.com/workitem/146";
             ReportFailOnLinux(additionalMsg);
@@ -332,6 +345,7 @@ string') # ; cat(' this # is removed')");
         [Fact]
         public void TestWriteConsole()
         {
+            SetUpTest();
             var engine = this.Engine;
             engine.Evaluate("print(NULL)");
             Assert.Equal(Device.GetString(), ("NULL\n"));
@@ -340,6 +354,7 @@ string') # ; cat(' this # is removed')");
         [Fact]
         public void TestCallingTwice()
         {
+            SetUpTest();
             var engine = this.Engine;
             engine.Evaluate("a <- 1");
             engine.Evaluate("a <- a+1");

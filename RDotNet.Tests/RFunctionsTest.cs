@@ -10,6 +10,7 @@ namespace RDotNet
         [Fact]
         public void TestBuiltinFunctions()
         {
+            SetUpTest();
             var engine = this.Engine;
 
             // function (x)  .Primitive("abs")
@@ -27,6 +28,7 @@ namespace RDotNet
         [Fact]
         public void TestStatsFunctions()
         {
+            SetUpTest();
             var engine = this.Engine;
 
             //> a <- dpois(0:7, lambda = 0.9)
@@ -70,6 +72,7 @@ printPairList <- function(...) {
         [Fact]
         public void TestSpecialFunctions()
         {
+            SetUpTest();
             var e = Engine;
             var plus = e.Evaluate("`if`").AsFunction();
             // tisoneCall <- call("if", quote(a==1), "this is one", "this is not one")
@@ -83,6 +86,7 @@ printPairList <- function(...) {
         [Fact]
         public void TestGenericFunction()
         {
+            SetUpTest();
             var engine = this.Engine;
 
             var funcDef = @"
@@ -139,6 +143,7 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
         [Fact]
         public void TestDataFrameReturned()
         {
+            SetUpTest();
             // Investigates http://stackoverflow.com/questions/26803752/r-net-invoke-function-does-not-work/26950937#26950937
             // Consider removing or morphing into another test on data coercion; there did not appear to be any issue as reported.
 
@@ -175,6 +180,7 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
         [Fact]
         public void TestArgumentMatching()
         {
+            SetUpTest();
             var engine = this.Engine;
 
             var funcDef = @"function(a, b, cc=NULL, d='d', e=length(d), f=FALSE, g=123.4) {
@@ -221,6 +227,7 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
         [Fact]
         public void TestDotPairArguments()
         {
+            SetUpTest();
             var e = Engine;
             // What if one of several 'formals' is a dotted pairlist
             var funcDef = @"

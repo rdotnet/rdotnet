@@ -8,6 +8,7 @@ namespace RDotNet
         [Fact]
         public void TestCharacter()
         {
+            SetUpTest();
             // Check that https://rdotnet.codeplex.com/workitem/70 does not occur; in particular worth testing on CentOS according to issue reporter.
             string v = null;
             Assert.Throws(typeof(NullReferenceException), () => { var t = v.ToString(); });            
@@ -16,6 +17,7 @@ namespace RDotNet
         [Fact]
         public void TestFailedExpressionParsing()
         {
+            SetUpTest();
             // https://rdotnet.codeplex.com/workitem/77
             var engine = this.Engine;
             object expr = null;
@@ -31,6 +33,7 @@ namespace RDotNet
         [Fact]
         public void TestFailedExpressionEvaluation()
         {
+            SetUpTest();
             //> fail <- function(msg) {stop(paste( 'the message is', msg))}
             //> fail('bailing out')
             //Error in fail("bailing out") : the message is bailing out
@@ -52,6 +55,7 @@ namespace RDotNet
         [Fact]
         public void TestFailedExpressionUnboundSymbol()
         {
+            SetUpTest();
             var engine = this.Engine;
             ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
             AssertThrows<EvaluationException>(
@@ -65,6 +69,7 @@ namespace RDotNet
         [Fact]
         public void TestFailedExpressionUnboundSymbolEvaluation()
         {
+            SetUpTest();
             ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
             var engine = this.Engine;
             AssertThrows<EvaluationException>(
@@ -78,6 +83,7 @@ namespace RDotNet
         [Fact]
         public void TestFailedExpressionParsingMissingParenthesis()
         {
+            SetUpTest();
             ReportFailOnLinux("https://rdotnet.codeplex.com/workitem/146");
             //> x <- rep(c(TRUE,FALSE), 55
             //+

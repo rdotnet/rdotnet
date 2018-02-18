@@ -7,6 +7,7 @@ namespace RDotNet
         [Fact]
         public void TestSlots()
         {
+            SetUpTest();
             var engine = this.Engine;
 
             engine.Evaluate("track <- setClass('track', slots = c(x='numeric', y='numeric'))");
@@ -28,6 +29,7 @@ namespace RDotNet
         [Fact]
         public void TestGetSlotTypes()
         {
+            SetUpTest();
             var engine = this.Engine;
             engine.Evaluate("setClass('testclass', representation(foo='character', bar='integer'))");
             var obj = engine.Evaluate("new('testclass', foo='s4', bar=1:4)").AsS4();

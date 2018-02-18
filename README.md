@@ -17,6 +17,18 @@ As of 2017-08
 
 # Building from source
 
+## Foreword/rant
+
+As of February 2018 I am underwhelmed by the state of nuget package dependency. The process of migrating R.NET to `netstandard2.0` has been replete with frustration with the lack of clarity, multiple issues, inconsistencies or bugs in the behaviors of `dotnet`, `nuget` and visual studio.
+
+## Building from source
+
+If using dotnet version prior to 2.1.3, [installing/restoring prerelease dependency packages is problematic](https://github.com/dotnet/cli/issues/8485). You may need to use
+
+```sh
+nuget install -Prerelease DynamicInterop -OutputDirectory packages
+```
+
 ```sh
 dotnet restore RDotNet.Tests.sln
 dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln

@@ -39,7 +39,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DynamicInterop" Version="0.8.1" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.4.0" />
     <PackageReference Include="System.Security.Permissions" Version="4.4.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />

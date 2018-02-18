@@ -8,6 +8,7 @@ namespace RDotNet
         [Fact]
         public void TestDefaultClearGlobalEnv()
         {
+            SetUpTest();
             var engine = this.Engine;
             engine.ClearGlobalEnvironment();
             var s = engine.Evaluate("ls()").AsCharacter().ToArray();
@@ -17,6 +18,7 @@ namespace RDotNet
         [Fact]
         public void TestDetachPackagesDefault()
         {
+            SetUpTest();
             var engine = this.Engine;
 
             var s = engine.Evaluate("search()").AsCharacter().ToArray();

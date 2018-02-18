@@ -18,8 +18,8 @@
     <PackageReleaseNotes>Migration to .NET Standard 2.0</PackageReleaseNotes> -->
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DynamicInterop" Version="0.8.1" />
-    <PackageReference Include="Microsoft.Win32.Registry"  Version="4.4.0"  />
+    <PackageReference Include="DynamicInterop" Version="0.9.0-beta" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.4.0" />
   </ItemGroup>
   <!-- <Import Project="..\..\.paket\Paket.Restore.targets" /> -->
 </Project>

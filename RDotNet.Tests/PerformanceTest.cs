@@ -7,6 +7,7 @@ namespace RDotNet
         [Fact]
         public void TestCreateNumericVector()
         {
+            SetUpTest();
             var engine = this.Engine;
             RuntimeDiagnostics r = new RuntimeDiagnostics(engine);
             int n = (int)1e6;

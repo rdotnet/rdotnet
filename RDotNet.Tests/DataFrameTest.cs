@@ -8,6 +8,7 @@ namespace RDotNet
         [Fact]
         public void TestIsDataFrameTrue()
         {
+            SetUpTest();
             var engine = this.Engine;
             var iris = engine.Evaluate("data.frame()");
             Assert.Equal(iris.IsDataFrame(), true);
@@ -16,6 +17,7 @@ namespace RDotNet
         [Fact]
         public void TestIsDataFrameFalse()
         {
+            SetUpTest();
             var engine = this.Engine;
             var iris = engine.Evaluate("list()");
             Assert.Equal(iris.IsDataFrame(), false);
@@ -24,6 +26,7 @@ namespace RDotNet
         [Fact]
         public void TestDataFrameFactorColumns()
         {
+            SetUpTest();
             var engine = this.Engine;
             var biopsy = getBiopsyDataFrame(engine);
             //$ class: Factor w/ 2 levels "benign","malignant": 1 1 1 1 1 2 1 1 1 1 ...
@@ -66,6 +69,7 @@ namespace RDotNet
         public void TestDataFrameInMemoryCreationTwice()
         {
             // https://rdotnet.codeplex.com/workitem/146
+            SetUpTest();
             TestDataFrameInMemoryCreation();
             TestDataFrameInMemoryCreation();
         }
@@ -73,6 +77,7 @@ namespace RDotNet
         [Fact]
         public void TestDataFrameInMemoryCreation()
         {
+            SetUpTest();
             var engine = this.Engine;
             IEnumerable[] columns;
             string[] columnNames;
@@ -122,6 +127,7 @@ namespace RDotNet
         [Fact]
         public void TestDataElementTwoDimIndex()
         {
+            SetUpTest();
             var engine = this.Engine;
             var biopsy = getBiopsyDataFrame(engine);
 

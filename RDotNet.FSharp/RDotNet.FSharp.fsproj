@@ -33,11 +33,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FSharp.Core" Version="4.3.0" />
-    <Reference Include="mscorlib" />
+    <!-- <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics" /> -->
+    <PackageReference Include="FSharp.Core" Version="4.2.3" />
     <ProjectReference Include="..\R.NET\RDotNet.csproj">
     </ProjectReference>
     <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj">

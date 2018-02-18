@@ -7,6 +7,7 @@ namespace RDotNet
         [Fact]
         public void TestCharacter()
         {
+            SetUpTest();
             var engine = this.Engine;
             var vector = engine.Evaluate("c('foo', NA, 'bar')").AsCharacter();
             Assert.Equal(vector.Length, (3));

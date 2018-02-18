@@ -7,6 +7,7 @@ namespace RDotNet
         [Fact]
         public void TestIsList()
         {
+            SetUpTest();
             //https://rdotnet.codeplex.com/workitem/81
             var engine = this.Engine;
             var pairList = engine.Evaluate("pairlist(a=5)");
@@ -19,6 +20,7 @@ namespace RDotNet
         [Fact]
         public void TestListSubsetting()
         {
+            SetUpTest();
             //https://rdotnet.codeplex.com/workitem/81
             var engine = this.Engine;
             var numlist = engine.Evaluate("c(1.5, 2.5)").AsList();
@@ -29,6 +31,7 @@ namespace RDotNet
         [Fact]
         public void TestListSetNames()
         {
+            SetUpTest();
             //  http://stackoverflow.com/questions/33326594/how-can-i-create-named-list-members-object-in-r-net
             var engine = this.Engine;
             var list = new GenericVector(engine, 2);
@@ -45,6 +48,7 @@ namespace RDotNet
         [Fact]
         public void TestCoercionAsList()
         {
+            SetUpTest();
             /*
              * as.list.function
    > str(as.list(as.list))

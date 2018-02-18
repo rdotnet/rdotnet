@@ -7,6 +7,7 @@ namespace RDotNet
         [Fact]
         public void TestCharacter()
         {
+            SetUpTest();
             var engine = this.Engine;
             var vector = engine.Evaluate("x <- c('foo', NA, 'bar')").AsCharacter();
             Assert.Equal(vector.Length, (3));
@@ -24,6 +25,7 @@ namespace RDotNet
         [Fact]
         public void TestUnicodeCharacter()
         {
+            SetUpTest();
             var engine = this.Engine;
             var vector = engine.Evaluate("x <- c('красавица Наталья', 'Un apôtre')").AsCharacter();
             var encoding = engine.Evaluate("Encoding(x)").AsCharacter();
@@ -38,6 +40,7 @@ namespace RDotNet
         [Fact]
         public void TestDotnetToR()
         {
+            SetUpTest();
             var engine = this.Engine;
             var vector = engine.Evaluate("x <- character(100)").AsCharacter();
             Assert.Equal(vector.Length, (100));

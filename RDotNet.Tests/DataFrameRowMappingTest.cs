@@ -8,6 +8,7 @@ namespace RDotNet
         [Fact]
         public void TestGetRow()
         {
+            SetUpTest();
             var engine = this.Engine;
             var iris = engine.Evaluate("iris").AsDataFrame();
             var row = iris.GetRow<IrisData>(0);
@@ -21,6 +22,7 @@ namespace RDotNet
         [Fact]
         public void TestGetRows()
         {
+            SetUpTest();
             var engine = this.Engine;
             var iris = engine.Evaluate("iris").AsDataFrame();
             var counts = iris.GetRows<IrisData>().GroupBy(data => data.Species).Select(group => group.Count());
@@ -30,6 +32,7 @@ namespace RDotNet
         [Fact]
         public void TestDataFrameSubsetting()
         {
+            SetUpTest();
             var engine = this.Engine;
             dynamic iris = engine.Evaluate("iris").AsDataFrame();
             dynamic iris50 = engine.Evaluate("iris[1:50,]").AsDataFrame();

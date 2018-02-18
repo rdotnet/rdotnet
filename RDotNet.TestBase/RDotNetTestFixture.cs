@@ -27,13 +27,21 @@ namespace RDotNet
                 throw new NotSupportedException("This unit test is problematic to run from NUnit on Linux " + additionalMsg);
         }
 
+        protected RDotNetTestFixture()
+        {
+            SetUpFixture();
+        }
+
         //[SetUp]
         protected virtual void SetUpFixture()
         {
-            if (initializeOnceOnly && engine != null)
-                return;
-            REngine.SetEnvironmentVariables();
-            engine = REngine.GetInstance(dll: null, initialize: true, parameter: null, device: Device);
+            lock (this)
+            {
+                if (initializeOnceOnly && engine != null)
+                    return;
+                REngine.SetEnvironmentVariables();
+                engine = REngine.GetInstance(dll: null, initialize: true, parameter: null, device: Device);
+            }
         }
 
         //[TearDown]
@@ -48,11 +56,6 @@ namespace RDotNet
         {
             engine.Evaluate("rm(list=ls())");
             this.Device.Initialize();
-        }
-
-        //[TearDown]
-        protected virtual void TearDownTest()
-        {
         }
 
         protected static double GetRMemorySize(REngine engine)
@@ -142,6 +145,11 @@ namespace RDotNet
         {
             T result = Assert.Throws<T>(testCode);
             Assert.Equal(result.Message, expectedMsg);
+        }
+
+        public void AssertFail(string message)
+        {
+            Assert.True(false, message);
         }
     }
 }

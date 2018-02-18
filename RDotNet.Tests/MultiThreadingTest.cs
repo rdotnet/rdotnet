@@ -9,6 +9,7 @@ namespace RDotNet
         [Fact]
         public void TestNonConcurrentMultiThreading()
         {
+            SetUpTest();
             // This tests checks that calling R
             // The key was to set R_CStackLimit to -1 in the engine initialization, but to do so towards the end, otherwise
             // at least on Windows, it is overriden by the rest of the initialization procedure.
