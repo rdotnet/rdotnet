@@ -18,7 +18,7 @@ namespace RDotNet
         [Fact]
         public void TestCreateInstanceWithWrongDllName()
         {
-            Assert.Throws<Exception>(
+            Assert.Throws<ArgumentException>(
                 () => {
                     TestREngine.CreateTestEngine("R.NET", "NotExist.dll");
                 });
