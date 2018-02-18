@@ -38,6 +38,7 @@
     <Folder Include="Diagnostics\" />
     <Folder Include="Dynamic\" />
     <Folder Include="Internals\" />
+    <Folder Include="NativeLibrary\" />
     <Folder Include="Utilities\" />
   </ItemGroup>
   <ItemGroup>

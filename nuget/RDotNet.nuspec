@@ -1,13 +1,14 @@
 <!-- As of 2018-02 this SHOULD BE obsolete (moved to use .csproj tags and .net core) 
-but it IS NOT due to https://github.com/NuGet/Home/issues/3891 
+but it MAY NOT BE due to https://github.com/NuGet/Home/issues/3891 
 I don't have time to decypher the various workarounds; I'll stick to what used to work.
 -->
 
-<?xml version="1.0"?>
+<!-- See for pkg tags: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#nuget-metadata-properties -->
+
+<!-- <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <Product>R.NET</Product>
-    <!-- See for pkg tags: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#nuget-metadata-properties -->
     <Version>1.8.0</Version>
     <Copyright>© 2014-2018 Jean-Michel Perraud; © 2013 Kosei, evolvedmicrobe</Copyright>
     <Description>A .NET interoperability library to access the R statistical language runtime from .NET languages. The library is designed for fast data exchange, in process.</Description>
@@ -37,4 +38,4 @@ I don't have time to decypher the various workarounds; I'll stick to what used t
     <file src="..\RDotNet.NativeLibrary\bin\Release\netstandard2.0\RDotNet.NativeLibrary.dll" target="lib\netstandard2.0" />
     <file src="..\RDotNet.NativeLibrary\bin\Release\netstandard2.0\RDotNet.NativeLibrary.xml" target="lib\netstandard2.0" />
   </files>
-</package>
+</package> -->

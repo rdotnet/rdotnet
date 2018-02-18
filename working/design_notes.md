@@ -39,5 +39,21 @@ nuget install -Prerelease DynamicInterop
 ```
 Note that I did not locate any CLI options for `dotnet add package` that would let me add the alpha package. [Has been reported by another](https://github.com/dotnet/cli/issues/8485)
 
-I still have no idea why the VS UI stuck to the released package. 
+I still have no idea why the VS UI stuck to the released package. Foudn out dotnet CLI cannot handle prerelease pkgs... 
 
+
+Moving on to Linux after managing to get things about OK on Windows:
+
+```
+/usr/share/dotnet/sdk/2.1.3/Sdks/Microsoft.NET.Sdk/build/Microsoft.NET.Sdk.targets(114,5): error : Cannot find project info for '/home/per202/src/github_jm/rdotnet/RDotNet.NativeLibrary/RDotNet.NativeLibrary.csproj'. This can indicate a missing project reference. [/home/per202/src/github_jm/rdotnet/R.NET/RDotNet.csproj]
+```
+I nuked RDotNet.NativeLibrary.csproj; why is it still there.
+
+```
+dotnet clean RDotNet.Tests.sln
+Microsoft (R) Build Engine version 15.5.179.9764 for .NET Core
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+/home/per202/src/github_jm/rdotnet/RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj.metaproj : error MSB4025: The project file could not beloaded. Could not find file '/home/per202/src/github_jm/rdotnet/RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj.metaproj'.
+/home/per202/src/github_jm/rdotnet/RDotNet.FSharp/RDotNet.FSharp.fsproj.metaproj : error MSB4025: The project file could not be loaded. Could not find file '/home/per202/src/github_jm/rdotnet/RDotNet.FSharp/RDotNet.FSharp.fsproj.metaproj'.
+```

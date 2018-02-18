@@ -13,7 +13,6 @@
     </ProjectReference>
     <!-- <ProjectReference Include="..\R.NET\RDotNet.csproj">
     </ProjectReference>
-    <ProjectReference Include="..\RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj">
     </ProjectReference> -->
   </ItemGroup>
   <ItemGroup>
