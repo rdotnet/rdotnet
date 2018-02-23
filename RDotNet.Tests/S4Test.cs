@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace RDotNet.Tests
 {
+#if !NETCOREAPP2_0
    [TestFixture]
    class S4Test
    {
@@ -81,4 +82,5 @@ namespace RDotNet.Tests
          Assert.That(foo, Is.EqualTo("new value"));
       }
    }
+#endif
 }
