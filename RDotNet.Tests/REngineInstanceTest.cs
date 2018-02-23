@@ -6,6 +6,7 @@ using System.Reflection;
 
 namespace RDotNet
 {
+#if ! NETCOREAPP2_0
     [TestFixture]
     internal class REngineInstanceTest
     {
@@ -144,4 +145,5 @@ namespace RDotNet
             domain.Load(typeof(REngine).Assembly.EscapedCodeBase);
         }
     }
+#endif
 }

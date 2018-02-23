@@ -26,8 +26,11 @@ namespace RDotNet
             if (NativeUtility.IsUnix)
                 throw new NotSupportedException("This unit test is problematic to run from NUnit on Linux " + additionalMsg);
         }
-
+#if NETCOREAPP2_0
+        [OneTimeSetUp]
+#else
         [TestFixtureSetUp]
+#endif
         protected virtual void SetUpFixture()
         {
             if (initializeOnceOnly && engine != null)
@@ -35,8 +38,11 @@ namespace RDotNet
             REngine.SetEnvironmentVariables();
             engine = REngine.GetInstance(dll: null, initialize: true, parameter: null, device: Device);
         }
-
+#if NETCOREAPP2_0
+        [OneTimeTearDown]
+#else
         [TestFixtureTearDown]
+#endif
         protected virtual void TearDownFixture()
         {
             if (engine != null)
