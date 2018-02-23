@@ -6,8 +6,9 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.9.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\R.NET\RDotNet.x.csproj" />
+    <ProjectReference Include="..\RDotNet.TestBase\RDotNet.TestBase.Core.csproj" />
   </ItemGroup>
 </Project>

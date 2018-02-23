@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.x", "R.NET\RDotNet.x.csproj", "{A3E43714-78B6-4F35-BE44-6BEF51793DC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.x", "R.NET\RDotNet.Core.csproj", "{A3E43714-78B6-4F35-BE44-6BEF51793DC6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.NativeLibrary.x", "RDotNet.NativeLibrary\RDotNet.NativeLibrary.x.csproj", "{371FA58A-FB83-416A-880A-B2B8B68B19E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.NativeLibrary.Core", "RDotNet.NativeLibrary\RDotNet.NativeLibrary.Core.csproj", "{371FA58A-FB83-416A-880A-B2B8B68B19E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.Graphics.x", "RDotNet.Graphics\RDotNet.Graphics.x.csproj", "{5544E106-360A-4E5E-A36E-56B45D559FB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.Graphics.Core", "RDotNet.Graphics\RDotNet.Graphics.Core.csproj", "{5544E106-360A-4E5E-A36E-56B45D559FB5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.Tests.x", "RDotNet.Tests\RDotNet.Tests.x.csproj", "{2EDBBAD3-86AE-4BF2-B7FB-2FB40455EBDC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.Tests.Core", "RDotNet.Tests\RDotNet.Tests.Core.csproj", "{2EDBBAD3-86AE-4BF2-B7FB-2FB40455EBDC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.TestBase.x", "RDotNet.TestBase\RDotNet.TestBase.x.csproj", "{0AB570CF-A2A4-4B76-BC71-B5D0231163B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.TestBase.Core", "RDotNet.TestBase\RDotNet.TestBase.Core.csproj", "{0AB570CF-A2A4-4B76-BC71-B5D0231163B7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{023739E6-6B3E-4CE3-9386-DD8C898739A7}"
 EndProject
