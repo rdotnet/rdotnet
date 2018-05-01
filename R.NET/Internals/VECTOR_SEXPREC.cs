@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace RDotNet.Internals
 {
+    // In R 3.5, the length & true length values went from 32 to 64 bits in length.  These are defined in R as R_xlen_t
+    // (previously R_len_t) - https://github.com/wch/r-source/blob/trunk/src/include/Rinternals.h
+
     [StructLayout(LayoutKind.Sequential)]
     internal struct VECTOR_SEXPREC
     {
@@ -41,7 +44,7 @@ namespace RDotNet.Internals
             }
         }
 
-        public int Length
+        public long Length
         {
             get
             {
@@ -49,7 +52,7 @@ namespace RDotNet.Internals
             }
         }
 
-        public int TrueLength
+        public long TrueLength
         {
             get
             {
