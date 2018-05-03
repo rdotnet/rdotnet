@@ -226,4 +226,7 @@ namespace RDotNet.Internals
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     internal delegate void R_gc();
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate IntPtr STRING_ELT(IntPtr sexp, ulong index);
 }
