@@ -1,0 +1,27 @@
+version: '{build}'
+image:
+- Visual Studio 2017
+# - Visual Studio 2015
+platform: x64
+environment:
+  matrix:
+  - PLATFORM: x64
+  # - PLATFORM: x86
+branches:
+  only:
+  - feature/dotnetcore
+build_script:
+- cmd: >-
+    dotnet restore
+
+    msbuild DynamicInterop.sln /p:Platform="Any CPU" /p:Configuration=Debug /consoleloggerparameters:ErrorsOnly
+
+# Could not use dotnet build on appveyor: native test lib compilation leads to error MSB4019: The imported project "C:\Microsoft.Cpp.Default.props" was not found 
+#    dotnet build --configuration Debug --no-restore
+
+# Running tests will be such that current directory is [...]\dynamic-interop-dll\DynamicInterop.Tests\bin\x64\Debug\netcoreapp2.0, so adapt DynamicInteropTestLibPath
+test_script:
+- cmd: >-
+    set DynamicInteropTestLibPath=..\..\..\..\..\x64\Debug
+
+    dotnet test DynamicInterop.Tests/DynamicInterop.Tests.csproj

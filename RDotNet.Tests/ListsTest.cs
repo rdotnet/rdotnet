@@ -1,24 +1,26 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace RDotNet
 {
     public class ListsTest : RDotNetTestFixture
     {
-        [Test]
+        [Fact]
         public void TestIsList()
         {
+            SetUpTest();
             //https://rdotnet.codeplex.com/workitem/81
             var engine = this.Engine;
             var pairList = engine.Evaluate("pairlist(a=5)");
             var aList = engine.Evaluate("list(a=5)");
             bool b = aList.AsList().IsList();
-            Assert.AreEqual(true, pairList.IsList());
-            Assert.AreEqual(true, aList.IsList());
+            Assert.Equal(true, pairList.IsList());
+            Assert.Equal(true, aList.IsList());
         }
 
-        [Test]
+        [Fact]
         public void TestListSubsetting()
         {
+            SetUpTest();
             //https://rdotnet.codeplex.com/workitem/81
             var engine = this.Engine;
             var numlist = engine.Evaluate("c(1.5, 2.5)").AsList();
@@ -26,9 +28,10 @@ namespace RDotNet
             var element = numlist[1];
         }
 
-        [Test]
+        [Fact]
         public void TestListSetNames()
         {
+            SetUpTest();
             //  http://stackoverflow.com/questions/33326594/how-can-i-create-named-list-members-object-in-r-net
             var engine = this.Engine;
             var list = new GenericVector(engine, 2);
@@ -38,13 +41,14 @@ namespace RDotNet
             list.SetNames("mean", "var");
             engine.SetSymbol("TestListSetNames", list);
             var listNames = engine.Evaluate("names(TestListSetNames)").AsCharacter().ToArray();
-            Assert.AreEqual("mean", listNames[0]);
-            Assert.AreEqual("var", listNames[1]);
+            Assert.Equal("mean", listNames[0]);
+            Assert.Equal("var", listNames[1]);
         }
 
-        [Test]
+        [Fact]
         public void TestCoercionAsList()
         {
+            SetUpTest();
             /*
              * as.list.function
    > str(as.list(as.list))
@@ -57,10 +61,10 @@ namespace RDotNet
 
             var engine = this.Engine;
             var functionAsList = engine.Evaluate("as.list").AsList();
-            Assert.AreEqual(3, functionAsList.Length);
-            Assert.IsTrue(functionAsList[0].IsSymbol());
-            Assert.IsTrue(functionAsList[1].IsSymbol());
-            Assert.IsTrue(functionAsList[2].IsLanguage());
+            Assert.Equal(3, functionAsList.Length);
+            Assert.True(functionAsList[0].IsSymbol());
+            Assert.True(functionAsList[1].IsSymbol());
+            Assert.True(functionAsList[2].IsLanguage());
 
             var dataFrame = engine.Evaluate("data.frame(a = rep(LETTERS[1:3], 2), b = rep(1:3, 2))");
             /*
@@ -71,9 +75,9 @@ namespace RDotNet
    >
    */
             var dataFrameAsList = dataFrame.AsList();
-            Assert.AreEqual(2, dataFrameAsList.Length);
-            Assert.IsTrue(dataFrameAsList[0].IsFactor());
-            Assert.AreEqual(6, dataFrameAsList[1].AsInteger().Length);
+            Assert.Equal(2, dataFrameAsList.Length);
+            Assert.True(dataFrameAsList[0].IsFactor());
+            Assert.Equal(6, dataFrameAsList[1].AsInteger().Length);
         }
     }
 }

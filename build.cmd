@@ -1,8 +1,9 @@
 @echo off
 
-if not exist .paket\paket.bootstrapper.exe goto pktbootnotfound
-.paket\paket.bootstrapper.exe
-if not errorlevel 0 goto pktbootfailed
+REM .paket\paket.bootstrapper.exe is not used with .NET core. paket needs to be used in transparent mode.
+REM if not exist .paket\paket.bootstrapper.exe goto pktbootnotfound
+REM .paket\paket.bootstrapper.exe
+REM if not errorlevel 0 goto pktbootfailed
 
 .paket\paket.exe restore
 if not errorlevel 0 goto pktrestorefailed

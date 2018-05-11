@@ -1,56 +1,59 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace RDotNet
 {
-    internal class CharacterVectorTest : RDotNetTestFixture
+    public class CharacterVectorTest : RDotNetTestFixture
     {
-        [Test]
+        [Fact]
         public void TestCharacter()
         {
+            SetUpTest();
             var engine = this.Engine;
             var vector = engine.Evaluate("x <- c('foo', NA, 'bar')").AsCharacter();
-            Assert.That(vector.Length, Is.EqualTo(3));
-            Assert.That(vector[0], Is.EqualTo("foo"));
-            Assert.That(vector[1], Is.Null);
-            Assert.That(vector[2], Is.EqualTo("bar"));
+            Assert.Equal(vector.Length, (3));
+            Assert.Equal(vector[0], ("foo"));
+            Assert.Null(vector[1]);
+            Assert.Equal(vector[2], ("bar"));
             vector[0] = null;
-            Assert.That(vector[0], Is.Null);
+            Assert.Null(vector[0]);
             var logical = engine.Evaluate("is.na(x)").AsLogical();
-            Assert.That(logical[0], Is.True);
-            Assert.That(logical[1], Is.True);
-            Assert.That(logical[2], Is.False);
+            Assert.Equal(logical[0], true);
+            Assert.Equal(logical[1], true);
+            Assert.Equal(logical[2], false);
         }
 
-        [Test]
+        [Fact]
         public void TestUnicodeCharacter()
         {
+            SetUpTest();
             var engine = this.Engine;
             var vector = engine.Evaluate("x <- c('красавица Наталья', 'Un apôtre')").AsCharacter();
             var encoding = engine.Evaluate("Encoding(x)").AsCharacter();
-            Assert.That(encoding[0], Is.EqualTo("UTF-8"));
-            Assert.That(encoding[1], Is.EqualTo("UTF-8"));
+            Assert.Equal(encoding[0], ("UTF-8"));
+            Assert.Equal(encoding[1], ("UTF-8"));
             
-            Assert.That(vector.Length, Is.EqualTo(2));
-            Assert.That(vector[0], Is.EqualTo("красавица Наталья"));
-            Assert.That(vector[1], Is.EqualTo("Un apôtre"));
+            Assert.Equal(vector.Length, (2));
+            Assert.Equal(vector[0], ("красавица Наталья"));
+            Assert.Equal(vector[1], ("Un apôtre"));
         }
 
-        [Test]
+        [Fact]
         public void TestDotnetToR()
         {
+            SetUpTest();
             var engine = this.Engine;
             var vector = engine.Evaluate("x <- character(100)").AsCharacter();
-            Assert.That(vector.Length, Is.EqualTo(100));
-            Assert.That(vector[0], Is.EqualTo(""));
+            Assert.Equal(vector.Length, (100));
+            Assert.Equal(vector[0], (""));
             vector[1] = "foo";
             vector[2] = "bar";
             var second = engine.Evaluate("x[2]").AsCharacter().ToArray();
-            Assert.AreEqual(1, second.Length);
-            Assert.AreEqual("foo", second[0]);
+            Assert.Single(second);
+            Assert.Equal("foo", second[0]);
 
             var third = engine.Evaluate("x[3]").AsCharacter().ToArray();
-            Assert.AreEqual(1, third.Length);
-            Assert.AreEqual("bar", third[0]);
+            Assert.Single(third);
+            Assert.Equal("bar", third[0]);
         }
     }
 }
