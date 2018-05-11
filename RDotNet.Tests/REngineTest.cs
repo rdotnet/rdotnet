@@ -178,7 +178,7 @@ namespace RDotNet
             SetUpTest();
             var engine = this.Engine;
             engine.Evaluate("cat('hello')");
-            Assert.Equal(Device.GetString(), ("hello"));
+            Assert.Equal("hello", Device.GetString());
         }
 
         [Fact]
@@ -187,7 +187,7 @@ namespace RDotNet
             SetUpTest();
             var engine = this.Engine;
             engine.Evaluate("for(i in 1:3){\ncat(i)\ncat(i)\n}");
-            Assert.Equal(Device.GetString(), ("112233"));
+            Assert.Equal("112233", Device.GetString());
         }
 
         [Fact]
@@ -201,13 +201,13 @@ namespace RDotNet
 cat(i)
 cat(i)
 }");
-            Assert.Equal(Device.GetString(), ("112233"));
+            Assert.Equal("112233", Device.GetString());
 
             Device.Initialize();
             engine.Evaluate(@"for(i in 1:3){
 cat(i); cat(i)
 }");
-            Assert.Equal(Device.GetString(), ("112233"));
+            Assert.Equal("112233", Device.GetString());
         }
 
         [Fact]
@@ -348,7 +348,7 @@ string') # ; cat(' this # is removed')");
             SetUpTest();
             var engine = this.Engine;
             engine.Evaluate("print(NULL)");
-            Assert.Equal(Device.GetString(), ("NULL\n"));
+            Assert.Equal("NULL\n", Device.GetString());
         }
 
         [Fact]

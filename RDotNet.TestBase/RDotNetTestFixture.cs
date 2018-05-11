@@ -106,7 +106,7 @@ namespace RDotNet
         {
             Assert.Equal(expected.Length, a.Length);
             for (int i = 0; i < a.Length; i++)
-                AssertElementsAreEqual(expected[i], a[i]); //, 1e-9);
+                AssertElementsAreEqual(a[i], expected[i]); //, 1e-9);
         }
 
         public static void AssertComplexAreEqual(Complex actual, Complex expected)

@@ -21,7 +21,7 @@
     <ProjectReference Include="..\R.NET\RDotNet.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0"></PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0"></PackageReference>
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <!-- Notice that xunit.assert, xunit.core, etc. are imported automatically.-->
