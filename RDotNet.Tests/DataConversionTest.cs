@@ -29,14 +29,32 @@ namespace RDotNet
         }
 
         [Fact]
-        public void TestCreateIntegerVectorValid()
+        public void TestCreateIntegerVectorValid_Sequential()
         {
             SetUpTest();
             var engine = this.Engine;
+
+            // Test a short and a long sequence - these will be represented using ALTREP
             engine.Evaluate("x <- 1:100");
             var expected = GenArrayInteger(1, 100);
             var vec = engine.GetSymbol("x").AsInteger();
             CheckBothArrayConversions(vec, expected);
+
+            engine.Evaluate("x <- 10000:1000000");
+            expected = GenArrayInteger(10000, 1000000);
+            vec = engine.GetSymbol("x").AsInteger();
+            CheckBothArrayConversions(vec, expected);
+        }
+
+        [Fact]
+        public void TestCreateIntegerVectorValid_Indexed()
+        {
+            var engine = this.Engine;
+            // Test vectors with non-sequential values.  This should not go through ALTREP.
+            engine.Evaluate("y <- c(10, 5, 73, 8)");
+            var vec = engine.GetSymbol("y").AsInteger();
+            CheckBothArrayConversions(vec, new[] { 10, 5, 73, 8 });
+
             vec = engine.Evaluate("as.integer(c(1,NA,2))").AsInteger();
             CheckBothArrayConversions(vec, new[] { 1, Int32.MinValue, 2 });
         }

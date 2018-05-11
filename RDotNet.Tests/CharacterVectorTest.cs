@@ -50,10 +50,12 @@ namespace RDotNet
             var second = engine.Evaluate("x[2]").AsCharacter().ToArray();
             Assert.Single(second);
             Assert.Equal("foo", second[0]);
+            Assert.Equal("foo", vector[1]);
 
             var third = engine.Evaluate("x[3]").AsCharacter().ToArray();
             Assert.Single(third);
             Assert.Equal("bar", third[0]);
+            Assert.Equal("foo", vector[1]);
         }
     }
 }

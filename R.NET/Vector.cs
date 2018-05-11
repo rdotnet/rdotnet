@@ -171,7 +171,7 @@ namespace RDotNet
         /// </summary>
         protected IntPtr DataPointer
         {
-            get { return IntPtr.Add(handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC))); }
+            get {  return GetFunction<DATAPTR_OR_NULL>()(this.DangerousGetHandle()); }
         }
 
         /// <summary>

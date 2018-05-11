@@ -229,4 +229,16 @@ namespace RDotNet.Internals
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     internal delegate IntPtr STRING_ELT(IntPtr sexp, ulong index);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate IntPtr VECTOR_ELT(IntPtr sexp, ulong index);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate int INTEGER_ELT(IntPtr sexp, ulong index);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate void SET_INTEGER_ELT(IntPtr sexp, ulong index, int value);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate IntPtr DATAPTR_OR_NULL(IntPtr sexp);
 }
