@@ -93,8 +93,13 @@ namespace RDotNet
             {
                 return null;
             }
-            IntPtr pointer = IntPtr.Add(pointerItem, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
-            return InternalString.StringFromNativeUtf8(pointer);
+
+            // To work with ALTREP (introduced in R 3.5.0) and non-ALTREP objects, we will get strings
+            // via STRING_ELT, instead of offseting the DataPointer.  This lets R manage the details of
+            // ALTREP conversion for us.
+            IntPtr objPointer = GetFunction<STRING_ELT>()(this.DangerousGetHandle(), (ulong)index);
+            IntPtr stringData = IntPtr.Add(objPointer, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+            return InternalString.StringFromNativeUtf8(stringData);
         }
 
         private Rf_mkChar _mkChar = null;
