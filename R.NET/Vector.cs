@@ -86,8 +86,29 @@ namespace RDotNet
         {
             using (new ProtectedPointer(this))
             {
-                return GetArrayFast();
+                /* 
+                 * as of R 3.5 DataPointer may return null if the vector 
+                 * is an alternate representation
+                 * See section General Vectors in  
+                 * https://svn.r-project.org/R/branches/ALTREP/ALTREP.html
+                 */
+                if (DataPointer != IntPtr.Zero)
+                    return GetArrayFast();
+                else
+                {
+                    return GetAltRepArray();
+                }
             }
+        }
+
+        /// <summary> Gets alternate rep array.</summary>
+        ///
+        /// <exception cref="NotSupportedException"> Thrown when the requested operation is not supported.</exception>
+        ///
+        /// <returns> An array of t.</returns>
+        public virtual T[] GetAltRepArray()
+        {
+            throw new NotSupportedException("ALTVEC handling not yet supported");
         }
 
         /// <summary>
