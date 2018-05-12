@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using RDotNet.Internals;
 using System;
 using System.Linq;
@@ -7,26 +7,28 @@ namespace RDotNet
 {
     public class RFunctionsTest : RDotNetTestFixture
     {
-        [Test]
+        [Fact]
         public void TestBuiltinFunctions()
         {
+            SetUpTest();
             var engine = this.Engine;
 
             // function (x)  .Primitive("abs")
             var abs = engine.GetSymbol("abs").AsFunction();
-            Assert.AreEqual(SymbolicExpressionType.BuiltinFunction, abs.Type);
+            Assert.Equal(SymbolicExpressionType.BuiltinFunction, abs.Type);
 
             var values = GenArrayDouble(-2, 2);
 
             var absValues = abs.Invoke(engine.CreateNumericVector(values)).AsNumeric().ToArray();
 
-            Assert.AreEqual(values.Length, absValues.Length);
+            Assert.Equal(values.Length, absValues.Length);
             CheckArrayEqual(new double[] { 2, 1, 0, 1, 2 }, absValues);
         }
 
-        [Test]
+        [Fact]
         public void TestStatsFunctions()
         {
+            SetUpTest();
             var engine = this.Engine;
 
             //> a <- dpois(0:7, lambda = 0.9)
@@ -67,22 +69,24 @@ printPairList <- function(...) {
 
 ";
 
-        [Test]
+        [Fact]
         public void TestSpecialFunctions()
         {
+            SetUpTest();
             var e = Engine;
             var plus = e.Evaluate("`if`").AsFunction();
             // tisoneCall <- call("if", quote(a==1), "this is one", "this is not one")
             e.Evaluate("a <- 1");
-            Assert.AreEqual("this is one", plus.InvokeStrArgs("quote(a==1)", "'this is one'", "'this is not one'").AsCharacter().ToArray()[0]);
+            Assert.Equal("this is one", plus.InvokeStrArgs("quote(a==1)", "'this is one'", "'this is not one'").AsCharacter().ToArray()[0]);
             e.Evaluate("a <- 2");
-            Assert.AreEqual("this is not one", plus.InvokeStrArgs("quote(a==1)", "'this is one'", "'this is not one'").AsCharacter().ToArray()[0]);
+            Assert.Equal("this is not one", plus.InvokeStrArgs("quote(a==1)", "'this is one'", "'this is not one'").AsCharacter().ToArray()[0]);
         }
 
         // https://rdotnet.codeplex.com/workitem/76
-        [Test]
+        [Fact]
         public void TestGenericFunction()
         {
+            SetUpTest();
             var engine = this.Engine;
 
             var funcDef = @"
@@ -122,23 +126,24 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
 
             GenericVector testResult = engine.Evaluate("t.test(group1, group2)").AsList();
             double p = testResult["p.value"].AsNumeric().First();
-            Assert.AreEqual(0.09077332, Math.Round(p, 8));
+            Assert.Equal(0.09077332, Math.Round(p, 8));
 
             var studentTest = engine.Evaluate("t.test").AsFunction();
             GenericVector testResult2 = studentTest.Invoke(new[] { group1, group2 }).AsList();
             double p2 = testResult2["p.value"].AsNumeric().First();
             double p3 = testResult2[2].AsNumeric().First();
-            Assert.AreEqual(0.09077332, Math.Round(p2, 8));
+            Assert.Equal(0.09077332, Math.Round(p2, 8));
 
             var sexp = studentTest.Invoke(engine.Evaluate("1:10"), engine.Evaluate("7:20"));
             // > format((t.test(1:10, y = c(7:20)) )$p.value, digits=12)
             // [1] "1.85528183251e-05"
-            Assert.AreEqual(1.85528183251e-05, sexp.AsList()["p.value"].AsNumeric()[0], 1e-12);
+            Assert.True(Math.Abs( 1.85528183251e-05 - sexp.AsList()["p.value"].AsNumeric()[0]) < 1e-12);
         }
 
-        [Test]
+        [Fact]
         public void TestDataFrameReturned()
         {
+            SetUpTest();
             // Investigates http://stackoverflow.com/questions/26803752/r-net-invoke-function-does-not-work/26950937#26950937
             // Consider removing or morphing into another test on data coercion; there did not appear to be any issue as reported.
 
@@ -172,9 +177,10 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
             Assert.NotNull(nm);
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentMatching()
         {
+            SetUpTest();
             var engine = this.Engine;
 
             var funcDef = @"function(a, b, cc=NULL, d='d', e=length(d), f=FALSE, g=123.4) {
@@ -218,9 +224,10 @@ setMethod( 'f', 'numeric', function(x, ...) { paste( 'f.numeric called:', printP
             checkInvoke(f.InvokeNamed(tc("g", 456), tc("", "a"), tc("f", true), tc(null, "b"), tc("", "cc"), tc("e", 11)), "a=a;b=b;cc=cc;d=d;e=11;f=TRUE;g=456");
         }
 
-        [Test]
+        [Fact]
         public void TestDotPairArguments()
         {
+            SetUpTest();
             var e = Engine;
             // What if one of several 'formals' is a dotted pairlist
             var funcDef = @"
@@ -287,7 +294,7 @@ g <- function(x, ..., y) {
 
         private void checkInvoke(SymbolicExpression result, string expected)
         {
-            Assert.AreEqual(expected, result.AsCharacter().ToArray()[0]);
+            Assert.Equal(expected, result.AsCharacter().ToArray()[0]);
         }
     }
 }

@@ -2,59 +2,80 @@
 
 namespace RDotNet.Internals
 {
+    // Definition of the struct available at: https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Rest-of-header
+    // Formally defined in Rinternals.h: https://github.com/wch/r-source/blob/trunk/src/include/Rinternals.h
+    // Note that this structure was greatly changed in the R 3.5 release, going from 32 bits to 64 bits, with fields added
+    //   and the order changed.
     [StructLayout(LayoutKind.Sequential)]
     internal struct sxpinfo
     {
-        private uint bits;
+        private ulong bits;
 
-        public SymbolicExpressionType type
+        private const int NAMED_BITS = 16;
+
+        public SymbolicExpressionType type  // 5 bits
         {
             get { return (SymbolicExpressionType)(this.bits & 31u); }
         }
 
-        public uint obj
+        public ulong scalar    // 1 bit
         {
             get { return ((this.bits & 32u) / 32); }
         }
 
-        public uint named
+        public ulong obj   // 1 bit
         {
-            get { return ((this.bits & 192u) / 64); }
+            get { return ((this.bits & 64u) / 64); }
         }
 
-        public uint gp
+        public ulong alt   // 1 bit
+        {
+            get { return ((this.bits & 128u) / 128); }
+        }
+
+        public ulong gp    // 16 bits
         {
             get { return ((this.bits & 16776960u) / 256); }
         }
 
-        public uint mark
+        public ulong mark  // 1 bit
         {
             get { return ((this.bits & 16777216u) / 16777216); }
         }
 
-        public uint debug
+        public ulong debug // 1 bit
         {
             get { return ((this.bits & 33554432u) / 33554432); }
         }
 
-        public uint trace
+        public ulong trace // 1 bit
         {
             get { return ((this.bits & 67108864u) / 67108864); }
         }
 
-        public uint spare
+        public ulong spare // 1 bit
         {
             get { return ((this.bits & 134217728u) / 134217728); }
         }
 
-        public uint gcgen
+        public ulong gcgen // 1 bit
         {
             get { return ((this.bits & 268435456u) / 268435456); }
         }
 
-        public uint gccls
+        public ulong gccls // 3 bits
         {
             get { return ((this.bits & 3758096384u) / 536870912); }
+        }
+
+        public ulong named // NAMED_BITS
+        {
+            get { return ((this.bits & 281470681743360u) / 4294967296); }
+        }
+
+        public ulong extra // 32 - NAMED_BITS
+        {
+            get { return ((this.bits & 18446462598732800000u) / 281474976710656); }
         }
     }
 }

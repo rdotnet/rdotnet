@@ -102,6 +102,20 @@ namespace RDotNet
             return res;
         }
 
+        /// <summary> Gets alternate rep array.</summary>
+        ///
+        /// <exception cref="NotSupportedException"> Thrown when the requested operation is not supported.</exception>
+        ///
+        /// <returns> An array of t.</returns>
+        public override double[] GetAltRepArray()
+        {
+            // by inference from `static SEXP compact_intseq_Duplicate(SEXP x, Rboolean deep)`  in altrep.c
+            var res = new double[this.Length];
+            GetFunction<REAL_GET_REGION>()(this.DangerousGetHandle(), (ulong)0, (ulong)this.Length, res);
+            return res;
+        }
+
+
         /// <summary>
         /// Efficient initialisation of R vector values from an array representation in the CLR
         /// </summary>

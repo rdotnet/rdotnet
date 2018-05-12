@@ -226,4 +226,26 @@ namespace RDotNet.Internals
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     internal delegate void R_gc();
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate IntPtr STRING_ELT(IntPtr sexp, ulong index);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate IntPtr VECTOR_ELT(IntPtr sexp, ulong index);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate int INTEGER_ELT(IntPtr sexp, ulong index);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate void SET_INTEGER_ELT(IntPtr sexp, ulong index, int value);
+
+    //R_xlen_t INTEGER_GET_REGION(SEXP sx, R_xlen_t i, R_xlen_t n, int* buf);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate ulong INTEGER_GET_REGION(IntPtr sx, ulong i, ulong n, int[] buf);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate ulong REAL_GET_REGION(IntPtr sx, ulong i, ulong n, double[] buf);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate IntPtr DATAPTR_OR_NULL(IntPtr sexp);
 }

@@ -6,9 +6,9 @@ namespace RDotNet.Utilities
     /// <summary>
     /// An internal helper class to convert types of arrays, primarily for data operations necessary for .NET types to/from R concepts.
     /// </summary>
-    internal static class RTypesUtil
+    public static class RTypesUtil
     {
-        internal static double[] SerializeComplexToDouble(Complex[] values)
+        public static double[] SerializeComplexToDouble(Complex[] values)
         {
             var data = new double[2 * values.Length];
             for (int i = 0; i < values.Length; i++)
@@ -19,7 +19,7 @@ namespace RDotNet.Utilities
             return data;
         }
 
-        internal static Complex[] DeserializeComplexFromDouble(double[] data)
+        public static Complex[] DeserializeComplexFromDouble(double[] data)
         {
             int dblLen = data.Length;
             if (dblLen % 2 != 0) throw new ArgumentException("Serialized definition of complexes must be of even length");

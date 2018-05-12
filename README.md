@@ -5,7 +5,7 @@ R.NET is an in-process bridge for the .NET Framework to access the R statistical
 
 # Software requirements
 
-On Windows, R.NET requires .NET Framework 4.5.2 and an access to the native R libraries installed with the R environment. R needs not necessarily be installed as a software on the executing machine, so long as DLL files are accessible.
+On Windows, R.NET requires .NET Framework > 4.6.1 or .NET Core 2.0, and an access to the native R libraries installed with the R environment. R needs not necessarily be installed as a software on the executing machine, so long as DLL files are accessible (you may need to tweak environment variables for the latter to work, though)
 On Linux and MacOS, Mono is required, as well as an access to the native R libraries.
 
 # Getting started
@@ -17,21 +17,34 @@ As of 2017-08
 
 # Building from source
 
-R.NET uses [Paket](https://fsprojects.github.io/Paket/) for dependency management and build, and [FAKE v4](https://fake.build/legacy-gettingstarted.html) (_Note to self: investigate FAKE v5_)
+## Foreword/rant
 
-## Windows
+As of February 2018 I am underwhelmed by the state of nuget package dependency. The process of migrating R.NET to `netstandard2.0` has been replete with frustration with the lack of clarity, multiple issues, inconsistencies or bugs in the behaviors of `dotnet`, `nuget` and visual studio.
 
-To query NuGet and get the latest versions of packages used by R.NET:
+## Building from source
 
-```bat
-.paket\paket.exe update
-.paket\paket.exe restore
+If using dotnet version prior to 2.1.3, [installing/restoring prerelease dependency packages is problematic](https://github.com/dotnet/cli/issues/8485). You may need to use
+
+```sh
+nuget install -Prerelease DynamicInterop -OutputDirectory packages
 ```
 
-Note that you may want to specify which msbuild engine to use (had woes with default detection)
-
-```bat
-set VisualStudioVersion=14.0
-.\build.cmd NuGet
+```sh
+dotnet restore RDotNet.Tests.sln
+dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
 ```
 
+```sh
+dotnet test RDotNet.Tests/RDotNet.Tests.csproj
+```
+
+## Building the nuget package
+
+*This section is primarily a reminder to the package author.*
+
+```bash
+dotnet build --configuration Release --no-restore  RDotNet.Tests.sln
+dotnet pack R.NET/RDotNet.csproj --configuration Release --no-build --no-restore --output nupkgs
+# Or for initial testing/debugging
+dotnet pack DynamicInterop/DynamicInterop.csproj --configuration Debug --no-build --no-restore --output nupkgs
+```

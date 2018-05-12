@@ -2,38 +2,36 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet", "R.NET/RDotNet.csproj", "{0923E1A0-2032-4997-AB73-49E42C4034A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet", "R.NET\RDotNet.csproj", "{0923E1A0-2032-4997-AB73-49E42C4034A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.Tests", "RDotNet.Tests/RDotNet.Tests.csproj", "{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.Tests", "RDotNet.Tests\RDotNet.Tests.csproj", "{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.Graphics", "RDotNet.Graphics/RDotNet.Graphics.csproj", "{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "RDotNet.FSharp", "RDotNet.FSharp\RDotNet.FSharp.fsproj", "{FE745BFD-793D-4B05-B0EE-BEA4D5E3C0A6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.Graphics.Tests", "RDotNet.Graphics.Tests/RDotNet.Graphics.Tests.csproj", "{A535A809-9FA8-4167-8551-5AC84C7C4E1D}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "RDotNet.FSharp.Tests", "RDotNet.FSharp.Tests\RDotNet.FSharp.Tests.fsproj", "{541E564C-9414-4711-813E-697C1E9BD494}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "RDotNet.FSharp", "RDotNet.FSharp/RDotNet.FSharp.fsproj", "{FE745BFD-793D-4B05-B0EE-BEA4D5E3C0A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.TestBase", "RDotNet.TestBase\RDotNet.TestBase.csproj", "{B9E15660-096F-45FB-82E3-3C21BBE986DF}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "RDotNet.FSharp.Tests", "RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj", "{541E564C-9414-4711-813E-697C1E9BD494}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasureRuntime", "TestApps\MeasureRuntime\MeasureRuntime.csproj", "{ACB361F9-C04B-4265-9295-F9D57F2A6789}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.TestBase", "RDotNet.TestBase/RDotNet.TestBase.csproj", "{B9E15660-096F-45FB-82E3-3C21BBE986DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.SetEnv.Tests", "TestApps\RDotNet.SetEnv.Tests\RDotNet.SetEnv.Tests.csproj", "{1B9BBCE5-2BEC-4E83-82C7-3C8205380787}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeasureRuntime", "TestApps/MeasureRuntime/MeasureRuntime.csproj", "{ACB361F9-C04B-4265-9295-F9D57F2A6789}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.SetEnv.Tests.32", "TestApps\RDotNet.SetEnv.Tests.32\RDotNet.SetEnv.Tests.32.csproj", "{B14812D7-19F8-496D-9DFA-63DBD22A4EB6}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.SetEnv.Tests", "TestApps/RDotNet.SetEnv.Tests/RDotNet.SetEnv.Tests.csproj", "{1B9BBCE5-2BEC-4E83-82C7-3C8205380787}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.SetEnv.Tests.64", "TestApps\RDotNet.SetEnv.Tests.64\RDotNet.SetEnv.Tests.64.csproj", "{1AB9D11C-4538-4D59-BC0E-AADC2F7FEAFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.SetEnv.Tests.32", "TestApps/RDotNet.SetEnv.Tests.32/RDotNet.SetEnv.Tests.32.csproj", "{B14812D7-19F8-496D-9DFA-63DBD22A4EB6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleTest", "TestApps\SimpleTest\SimpleTest.csproj", "{72A25F52-04C2-4C7D-9096-EC86B74D55FE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.SetEnv.Tests.64", "TestApps/RDotNet.SetEnv.Tests.64/RDotNet.SetEnv.Tests.64.csproj", "{1AB9D11C-4538-4D59-BC0E-AADC2F7FEAFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EngineDisposeTest", "TestApps\EngineDisposeTest\EngineDisposeTest.csproj", "{24C4E968-73D4-44AE-9788-415A40DDA4F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleTest", "TestApps/SimpleTest/SimpleTest.csproj", "{72A25F52-04C2-4C7D-9096-EC86B74D55FE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EngineDisposeTest", "TestApps/EngineDisposeTest/EngineDisposeTest.csproj", "{24C4E968-73D4-44AE-9788-415A40DDA4F0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StressTest", "TestApps/StressTest/StressTest.csproj", "{4171B26C-EEAD-475B-A147-F752CC3FE14E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StressTest", "TestApps\StressTest\StressTest.csproj", "{4171B26C-EEAD-475B-A147-F752CC3FE14E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{82CF7F7C-CCA2-41AF-9F2F-334FB1AC249A}"
 	ProjectSection(SolutionItems) = preProject
-		.paket/paket.targets = .paket/paket.targets
+		.paket\paket.targets = .paket\paket.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{BE82D45D-A1B3-4E02-8987-E1EBAFCE825C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,14 +47,6 @@ Global
 		{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A535A809-9FA8-4167-8551-5AC84C7C4E1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A535A809-9FA8-4167-8551-5AC84C7C4E1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A535A809-9FA8-4167-8551-5AC84C7C4E1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A535A809-9FA8-4167-8551-5AC84C7C4E1D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FE745BFD-793D-4B05-B0EE-BEA4D5E3C0A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FE745BFD-793D-4B05-B0EE-BEA4D5E3C0A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE745BFD-793D-4B05-B0EE-BEA4D5E3C0A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -97,6 +87,10 @@ Global
 		{4171B26C-EEAD-475B-A147-F752CC3FE14E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4171B26C-EEAD-475B-A147-F752CC3FE14E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4171B26C-EEAD-475B-A147-F752CC3FE14E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE82D45D-A1B3-4E02-8987-E1EBAFCE825C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE82D45D-A1B3-4E02-8987-E1EBAFCE825C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE82D45D-A1B3-4E02-8987-E1EBAFCE825C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE82D45D-A1B3-4E02-8987-E1EBAFCE825C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
