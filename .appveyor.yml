@@ -5,17 +5,18 @@ image:
 configuration: Debug
 platform: Any CPU
 environment:
-  matrix:
-  - PLATFORM: x64
-  # - PLATFORM: x86
+  PLATFORM: Any CPU
+  BuildPLATFORM: Any CPU
+  BuildConfiguration: Debug
+  configuration: Debug
 branches:
   only:
   - devel
 build_script:
 - cmd: >-
-    dotnet build --configuration Debug --no-restore  RDotNet.ns2.sln
+    dotnet restore RDotNet.ns2.sln
 
-    # dotnet restore RDotNet.ns2.sln
+    dotnet build --configuration Debug --no-restore  RDotNet.ns2.sln
 
     #msbuild RDotNet.ns2.sln /p:Platform="Any CPU" /p:Configuration=Debug /consoleloggerparameters:ErrorsOnly
 
