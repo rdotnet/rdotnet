@@ -18,8 +18,6 @@ build_script:
 
     dotnet build --configuration Debug --no-restore  RDotNet.ns2.sln
 
-    #msbuild RDotNet.ns2.sln /p:Platform="Any CPU" /p:Configuration=Debug /consoleloggerparameters:ErrorsOnly
-
 test_script:
 - cmd: >-
     dotnet test RDotNet.Tests/RDotNet.Tests.csproj
