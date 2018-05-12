@@ -18,6 +18,9 @@
     <PackageReleaseNotes>Migration to .NET Standard 2.0</PackageReleaseNotes> -->
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="DynamicInterop" Version="0.9.1" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\R.NET\RDotNet.csproj" />
   </ItemGroup>
   

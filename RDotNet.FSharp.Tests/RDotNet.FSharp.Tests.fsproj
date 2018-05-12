@@ -31,6 +31,7 @@
     <Compile Include="MatrixTest.fs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DynamicInterop" Version="0.9.1" />
     <PackageReference Include="FSharp.Core" Version="4.3.4" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />

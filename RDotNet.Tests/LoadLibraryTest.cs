@@ -65,7 +65,7 @@ namespace RDotNet
                 var rDllFullFilePath = Path.Combine(rDllPath, NativeUtility.GetRLibraryFileName());
                 if (!File.Exists(rDllFullFilePath))
                     return;
-                Assert.Throws<Exception>(() => { var lib = new MockLoadLib(rDllFullFilePath); });
+                Assert.Throws<ArgumentException>(() => { var lib = new MockLoadLib(rDllFullFilePath); });
             }
         }
 
