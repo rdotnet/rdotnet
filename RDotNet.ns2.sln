@@ -31,8 +31,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{82CF7F
 		.paket\paket.targets = .paket\paket.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{BE82D45D-A1B3-4E02-8987-E1EBAFCE825C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,10 +85,6 @@ Global
 		{4171B26C-EEAD-475B-A147-F752CC3FE14E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4171B26C-EEAD-475B-A147-F752CC3FE14E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4171B26C-EEAD-475B-A147-F752CC3FE14E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BE82D45D-A1B3-4E02-8987-E1EBAFCE825C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE82D45D-A1B3-4E02-8987-E1EBAFCE825C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE82D45D-A1B3-4E02-8987-E1EBAFCE825C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE82D45D-A1B3-4E02-8987-E1EBAFCE825C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
