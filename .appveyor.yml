@@ -13,7 +13,7 @@ branches:
   - devel
 build_script:
 - cmd: >-
-    dotnet restore RDotNet.ns2.sln
+    # dotnet restore RDotNet.ns2.sln
 
     dotnet build --configuration Debug --no-restore  RDotNet.ns2.sln
 
