@@ -2,7 +2,8 @@ version: '{build}'
 image:
 - Visual Studio 2017
 # - Visual Studio 2015
-platform: x64
+configuration: Debug
+platform: Any CPU
 environment:
   matrix:
   - PLATFORM: x64
