@@ -68,8 +68,7 @@ namespace RDotNet
                 }
                 using (new ProtectedPointer(this))
                 {
-                    int offset = GetOffset(index);
-                    return Marshal.ReadByte(DataPointer, offset);
+                    return GetFunction<RAW_ELT>()(this.DangerousGetHandle(), (ulong)index);
                 }
             }
             set
@@ -80,8 +79,7 @@ namespace RDotNet
                 }
                 using (new ProtectedPointer(this))
                 {
-                    int offset = GetOffset(index);
-                    Marshal.WriteByte(DataPointer, offset, value);
+                    GetFunction<SET_RAW_ELT>()(this.DangerousGetHandle(), (ulong)index, value);
                 }
             }
         }

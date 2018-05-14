@@ -98,6 +98,15 @@ namespace RDotNet
             return res;
         }
 
+        protected string[] GenArrayCharacter(int from, int to)
+        {
+            Assert.Greater(to, from);
+            var res = new string[to - from + 1];
+            for (int i = 0; i < (to - from + 1); i++)
+                res[i] = (i + from).ToString();
+            return res;
+        }
+
         // I thought NUnit was dealing with array equivalence. Cannot see here, so emulate.
         protected static void CheckArrayEqual<T>(T[] a, T[] expected)
         {

@@ -56,8 +56,7 @@ namespace RDotNet
                 }
                 using (new ProtectedPointer(this))
                 {
-                    int offset = GetOffset(index);
-                    int data = Marshal.ReadInt32(DataPointer, offset);
+                    var data = GetFunction<LOGICAL_ELT>()(this.DangerousGetHandle(), (ulong)index);
                     return Convert.ToBoolean(data);
                 }
             }
@@ -69,9 +68,10 @@ namespace RDotNet
                 }
                 using (new ProtectedPointer(this))
                 {
-                    int offset = GetOffset(index);
+                    //int offset = GetOffset(index);
                     int data = Convert.ToInt32(value);
-                    Marshal.WriteInt32(DataPointer, offset, data);
+                    //Marshal.WriteInt32(DataPointer, offset, data);
+                    GetFunction<SET_LOGICAL_ELT>()(this.DangerousGetHandle(), (ulong)index, data);
                 }
             }
         }

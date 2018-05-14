@@ -58,11 +58,8 @@ namespace RDotNet
                 }
                 using (new ProtectedPointer(this))
                 {
-                    var data = new double[2];
-                    int offset = GetOffset(index);
-                    IntPtr pointer = IntPtr.Add(DataPointer, offset);
-                    Marshal.Copy(pointer, data, 0, data.Length);
-                    return new Complex(data[0], data[1]);
+                    var data = GetFunction<COMPLEX_ELT>()(this.DangerousGetHandle(), (ulong) index);
+                    return new Complex(data.r, data.i);
                 }
             }
             set
@@ -73,10 +70,8 @@ namespace RDotNet
                 }
                 using (new ProtectedPointer(this))
                 {
-                    var data = new[] { value.Real, value.Imaginary };
-                    int offset = GetOffset(index);
-                    IntPtr pointer = IntPtr.Add(DataPointer, offset);
-                    Marshal.Copy(data, 0, pointer, data.Length);
+                    GetFunction<SET_COMPLEX_ELT>()(this.DangerousGetHandle(), (ulong) index,
+                        RTypesUtil.SerializeComplexToRComplex(value));
                 }
             }
         }

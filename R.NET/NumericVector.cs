@@ -68,11 +68,7 @@ namespace RDotNet
                 }
                 using (new ProtectedPointer(this))
                 {
-                    var data = new double[1];
-                    int offset = GetOffset(index);
-                    IntPtr pointer = IntPtr.Add(DataPointer, offset);
-                    Marshal.Copy(pointer, data, 0, data.Length);
-                    return data[0];
+                    return GetFunction<REAL_ELT>()(this.DangerousGetHandle(), (ulong)index);
                 }
             }
             set
@@ -83,10 +79,7 @@ namespace RDotNet
                 }
                 using (new ProtectedPointer(this))
                 {
-                    var data = new[] { value };
-                    int offset = GetOffset(index);
-                    IntPtr pointer = IntPtr.Add(DataPointer, offset);
-                    Marshal.Copy(data, 0, pointer, data.Length);
+                    GetFunction<SET_REAL_ELT>()(this.DangerousGetHandle(), (ulong)index, value);
                 }
             }
         }
