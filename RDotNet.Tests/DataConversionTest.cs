@@ -129,7 +129,27 @@ namespace RDotNet
             CheckArrayEqual(a, expected);
         }
 
+<<<<<<< HEAD
         [Fact]
+=======
+        [Test]
+        public void TestCoerceIntegerMatrixAsCharacterValid()
+        {
+            var engine = this.Engine;
+            engine.Evaluate("x <- matrix(as.integer(1:110), nrow=10, ncol=11)");
+            var a = engine.GetSymbol("x").AsCharacterMatrix();
+            var expected = ToMatrix(GenArrayCharacter(1, 110), 10, 11);
+            for (int row = 0; row < 10; row++)
+            {
+                for (int col = 0; col < 11; col++)
+                {
+                    Assert.AreEqual(expected[row,col], a[row, col]);
+                }
+            }
+        }
+
+        [Test]
+>>>>>>> F_StatTag/r_3_5_0
         public void TestCreateLogicalMatrixValid()
         {
             SetUpTest();

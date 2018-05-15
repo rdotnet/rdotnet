@@ -3,6 +3,13 @@ using System.Numerics;
 
 namespace RDotNet.Utilities
 {
+    // Based on R_ext/Complex.h definition
+    internal struct Rcomplex
+    {
+        public double r;
+        public double i;
+    }
+
     /// <summary>
     /// An internal helper class to convert types of arrays, primarily for data operations necessary for .NET types to/from R concepts.
     /// </summary>
@@ -16,6 +23,12 @@ namespace RDotNet.Utilities
                 data[2 * i] = values[i].Real;
                 data[2 * i + 1] = values[i].Imaginary;
             }
+            return data;
+        }
+
+        internal static Rcomplex SerializeComplexToRComplex(Complex value)
+        {
+            var data = new Rcomplex() {r = value.Real, i = value.Imaginary};
             return data;
         }
 

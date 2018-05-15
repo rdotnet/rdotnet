@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Numerics;
 using System.Runtime.InteropServices;
+using RDotNet.Utilities;
 using UnixRStart = RDotNet.Internals.Unix.RStart;
 using WindowsRStart = RDotNet.Internals.Windows.RStart;
 
@@ -248,4 +250,28 @@ namespace RDotNet.Internals
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     internal delegate IntPtr DATAPTR_OR_NULL(IntPtr sexp);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate int LOGICAL_ELT(IntPtr sexp, ulong index);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate void SET_LOGICAL_ELT(IntPtr sexp, ulong index, int value);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate double REAL_ELT(IntPtr sexp, ulong index);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate void SET_REAL_ELT(IntPtr sexp, ulong index, double value);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate Rcomplex COMPLEX_ELT(IntPtr sexp, ulong index);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate void SET_COMPLEX_ELT(IntPtr sexp, ulong index, Rcomplex value);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate byte RAW_ELT(IntPtr sexp, ulong index);
+
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    internal delegate void SET_RAW_ELT(IntPtr sexp, ulong index, int value);
 }
