@@ -21,6 +21,9 @@
     <None Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DynamicInterop" Version="0.9.1" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\R.NET\RDotNet.csproj">
     </ProjectReference>
   </ItemGroup>

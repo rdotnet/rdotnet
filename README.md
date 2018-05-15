@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay?svg=true)](https://ci.appveyor.com/project/jmp75/rdotnet)
+
 R.NET
 =======
 

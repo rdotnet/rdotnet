@@ -1,9 +1,18 @@
 language: csharp
 mono: none
-# mono: 
-#   - latest
 dotnet: 2.0.0
 dist: trusty
+
+script:
+- dotnet restore
+- dotnet build --configuration Release --no-restore
+
+- cd DynamicInterop.Tests
+- cd test_native_library
+- cmake -H. -Bbuild
+- cmake --build build -- -j3
+- cd ..
+- cd ..
 
 script:
 - dotnet restore RDotNet.Tests.sln

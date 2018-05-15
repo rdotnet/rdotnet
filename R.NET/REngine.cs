@@ -246,19 +246,20 @@ namespace RDotNet
 
         static private string EncodeNonAsciiCharacters(string value)
         {
-          StringBuilder sb = new StringBuilder();
-          foreach (char c in value)
-          {
-            if (c > 127)
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in value)
             {
-              string encodedValue = "\\u" + ((int)c).ToString("x4");
-              sb.Append(encodedValue);
+                if (c > 127)
+                {
+                    string encodedValue = "\\u" + ((int)c).ToString("x4");
+                    sb.Append(encodedValue);
+                }
+                else
+                {
+                    sb.Append(c);
+                }
             }
-            else {
-              sb.Append(c);
-            }
-          }
-          return sb.ToString();
+            return sb.ToString();
         }
 
         /// <summary>
@@ -274,7 +275,7 @@ namespace RDotNet
         public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
         {
             environmentIsSet = true;
-            NativeUtility.CreateNew().SetEnvironmentVariables(rPath: rPath, rHome: rHome);
+            new NativeUtility().SetEnvironmentVariables(rPath: rPath, rHome: rHome);
         }
 
         /// <summary>
@@ -533,30 +534,33 @@ namespace RDotNet
         /// Evaluates a statement in the given string.
         /// </summary>
         /// <param name="statement">The statement.</param>
+        /// <param name="environment">The environment in which to evaluate the statement. Advanced feature.</param>
         /// <returns>Last evaluation.</returns>
-        public SymbolicExpression Evaluate(string statement)
+        public SymbolicExpression Evaluate(string statement, REnvironment environment = null)
         {
             CheckEngineIsRunning();
-            return Defer(EncodeNonAsciiCharacters(statement)).LastOrDefault();
+            return Defer(EncodeNonAsciiCharacters(statement), environment).LastOrDefault();
         }
 
         /// <summary>
         /// Evaluates a statement in the given stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
+        /// <param name="environment">The environment in which to evaluate the statement. Advanced feature.</param>
         /// <returns>Last evaluation.</returns>
-        public SymbolicExpression Evaluate(Stream stream)
+        public SymbolicExpression Evaluate(Stream stream, REnvironment environment = null)
         {
             CheckEngineIsRunning();
-            return Defer(stream).LastOrDefault();
+            return Defer(stream, environment).LastOrDefault();
         }
 
         /// <summary>
         /// Evaluates a statement in the given string.
         /// </summary>
         /// <param name="statement">The statement.</param>
+        /// <param name="environment">The environment in which to evaluate the statement. Advanced feature.</param>
         /// <returns>Each evaluation.</returns>
-        private IEnumerable<SymbolicExpression> Defer(string statement)
+        private IEnumerable<SymbolicExpression> Defer(string statement, REnvironment environment = null)
         {
             CheckEngineIsRunning();
             if (statement == null)
@@ -572,7 +576,7 @@ namespace RDotNet
                 {
                     foreach (var segment in Segment(line))
                     {
-                        var result = Parse(segment, incompleteStatement);
+                        var result = Parse(segment, incompleteStatement, environment);
                         if (result != null)
                         {
                             yield return result;
@@ -586,8 +590,9 @@ namespace RDotNet
         /// Evaluates a statement in the given stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
+        /// <param name="environment">The environment in which to evaluate the statement. Advanced feature.</param>
         /// <returns>Each evaluation.</returns>
-        public IEnumerable<SymbolicExpression> Defer(Stream stream)
+        public IEnumerable<SymbolicExpression> Defer(Stream stream, REnvironment environment = null)
         {
             CheckEngineIsRunning();
             if (stream == null)
@@ -607,7 +612,7 @@ namespace RDotNet
                 {
                     foreach (var segment in Segment(line))
                     {
-                        var result = Parse(segment, incompleteStatement);
+                        var result = Parse(segment, incompleteStatement, environment);
                         if (result != null)
                         {
                             yield return result;
@@ -644,9 +649,9 @@ namespace RDotNet
             string[] lines = splitOnNewLines(input);
             List<string> statements = new List<string>();
             for (int i = 0; i < lines.Length; i++)
-			{
-			    statements.AddRange(processLine(lines[i]));
-			}
+            {
+                statements.AddRange(processLine(lines[i]));
+            }
             return statements.ToArray();
         }
 
@@ -660,15 +665,15 @@ namespace RDotNet
         {
             var trimmedLine = line.Trim();
             if (trimmedLine == string.Empty)
-                return new string[]{};
+                return new string[] { };
             if (trimmedLine.StartsWith("#"))
-                return new string[]{line};
+                return new string[] { line };
 
             string theRest;
             string statement = splitOnFirst(line, out theRest, ';');
 
             var result = new List<string>();
-            if(!statement.Contains("#"))
+            if (!statement.Contains("#"))
             {
                 result.Add(statement);
                 result.AddRange(processLine(theRest));
@@ -678,12 +683,12 @@ namespace RDotNet
                 // paste('this contains ### characters', " this too ###", 'Oh, and this # one too') # but "this" 'rest' is commented
                 // Find the fist # character such that before that, there is an 
                 // even number of " and an even number of ' characters
-                
+
                 int[] whereHash = IndexOfAll(statement, "#");
                 int firstComment = EvenStringDelimitors(statement, whereHash);
-                if(firstComment < 0 ) 
-                    // incomplete statement??? such as:
-                    // paste('this is the # ', ' start of an incomplete # statement
+                if (firstComment < 0)
+                // incomplete statement??? such as:
+                // paste('this is the # ', ' start of an incomplete # statement
                 {
                     result.Add(statement);
                     result.AddRange(processLine(theRest));
@@ -717,13 +722,13 @@ namespace RDotNet
             // paste('#hashtag""""')
             // paste('#hashtag""#""')
             // paste('#hashtag""#""', "#hash ''' ")
-            bool inSingleQuote = false, inDoubleQuotes=false;
+            bool inSingleQuote = false, inDoubleQuotes = false;
             for (int i = 0; i < s.Length; i++)
             {
                 if (s[i] == '\'')
                 {
-                    if(i > 0)
-                        if(s[i-1]=='\\')
+                    if (i > 0)
+                        if (s[i - 1] == '\\')
                             continue;
                     if (inDoubleQuotes)
                         continue;
@@ -752,7 +757,13 @@ namespace RDotNet
             return split[0];
         }
 
-        public static int[] IndexOfAll(string sourceString, string matchString)
+        /// <summary> Searches for the first all.</summary>
+        ///
+        /// <param name="sourceString"> Source string.</param>
+        /// <param name="matchString">  The match string.</param>
+        ///
+        /// <returns> The zero-based index of the found all, or -1 if no match was found.</returns>
+        private static int[] IndexOfAll(string sourceString, string matchString)
         {
             matchString = Regex.Escape(matchString);
             var res = (from Match match in Regex.Matches(sourceString, matchString) select match.Index);
@@ -764,7 +775,7 @@ namespace RDotNet
             throw new NotImplementedException();
         }
 
-        private SymbolicExpression Parse(string statement, StringBuilder incompleteStatement)
+        private SymbolicExpression Parse(string statement, StringBuilder incompleteStatement, REnvironment environment = null)
         {
             incompleteStatement.Append(statement);
             var s = GetFunction<Rf_mkString>()(InternalString.NativeUtf8FromString(incompleteStatement.ToString()));
@@ -785,7 +796,7 @@ namespace RDotNet
                         using (new ProtectedPointer(vector))
                         {
                             SymbolicExpression result;
-                            if (!vector.First().TryEvaluate(GlobalEnvironment, out result))
+                            if (!vector.First().TryEvaluate((environment == null) ? GlobalEnvironment : environment, out result))
                             {
                                 throw new EvaluationException(LastErrorMessage);
                             }
@@ -827,9 +838,9 @@ namespace RDotNet
             if (symbol == (System.IntPtr)0) return true;
             else
             {
-              var value = Marshal.ReadInt32(symbol);
-              var result = Convert.ToBoolean(value);
-              return result;
+                var value = Marshal.ReadInt32(symbol);
+                var result = Convert.ToBoolean(value);
+                return result;
             }
         }
 

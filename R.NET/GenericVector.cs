@@ -133,12 +133,20 @@ namespace RDotNet
             return new ListDynamicMeta(parameter, this);
         }
 
+        /// <summary> Sets the names of the vector. </summary>
+        ///
+        /// <param name="names"> A variable-length parameters list containing names.</param>
         public void SetNames(params string[] names)
         {
             CharacterVector cv = new CharacterVector(this.Engine, names);
             SetNames(cv);
         }
 
+        /// <summary> Sets the names of the vector.</summary>
+        ///
+        /// <exception cref="ArgumentException"> Incorrect length, not equal to vector length</exception>
+        ///
+        /// <param name="names"> A variable-length parameters list containing names.</param>
         public void SetNames(CharacterVector names)
         {
             if (names.Length != this.Length)

@@ -2,26 +2,43 @@ version: '{build}'
 image:
 - Visual Studio 2017
 # - Visual Studio 2015
-platform: x64
+
+
+configuration: Debug
+platform: Any CPU
 environment:
-  matrix:
-  - PLATFORM: x64
-  # - PLATFORM: x86
+  PLATFORM: Any CPU
+  BuildPLATFORM: Any CPU
+  BuildConfiguration: Debug
+  configuration: Debug
+
 branches:
   only:
-  - feature/dotnetcore
+  - devel
+
+# Install R for windows. 
+# Borrowed from http://raw.github.com/krlmlr/r-appveyor
+init:
+  ps: |
+        $ErrorActionPreference = "Stop"
+        Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
+        Import-Module '..\appveyor-tool.ps1'
+
+install:
+  ps: InstallR 
+
+cache:
+  - C:\RLibrary
+#############
+
 build_script:
 - cmd: >-
-    dotnet restore
+    dotnet restore RDotNet.ns2.sln
 
-    msbuild DynamicInterop.sln /p:Platform="Any CPU" /p:Configuration=Debug /consoleloggerparameters:ErrorsOnly
+    dotnet build --configuration Debug --no-restore  RDotNet.ns2.sln
 
-# Could not use dotnet build on appveyor: native test lib compilation leads to error MSB4019: The imported project "C:\Microsoft.Cpp.Default.props" was not found 
-#    dotnet build --configuration Debug --no-restore
-
-# Running tests will be such that current directory is [...]\dynamic-interop-dll\DynamicInterop.Tests\bin\x64\Debug\netcoreapp2.0, so adapt DynamicInteropTestLibPath
 test_script:
 - cmd: >-
-    set DynamicInteropTestLibPath=..\..\..\..\..\x64\Debug
+    dotnet test RDotNet.Tests/RDotNet.Tests.csproj
 
-    dotnet test DynamicInterop.Tests/DynamicInterop.Tests.csproj
+    dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj

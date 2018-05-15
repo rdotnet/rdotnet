@@ -38,7 +38,7 @@ namespace RDotNet
         }
 
         /// <summary>
-        /// A cache of the REngine - WARNING this assumes there can be only one per process, initialized once only.
+        /// A cache of the REngine - WARNING this assumes there can be only one per process, initialised once only.
         /// </summary>
         private static REngine engine = null;
 
