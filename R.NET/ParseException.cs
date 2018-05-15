@@ -48,7 +48,7 @@ namespace RDotNet
         /// <summary>
         /// Creates a new ParseException
         /// </summary>
-        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialised object data about the exception being thrown.</param>
         /// <param name="context"></param>
         protected ParseException(SerializationInfo info, StreamingContext context)
             : base(info, context)
@@ -76,7 +76,7 @@ namespace RDotNet
         /// <summary>
         /// Sets the serialization info about the exception thrown
         /// </summary>
-        /// <param name="info">Serialized object data.</param>
+        /// <param name="info">Serialised object data.</param>
         /// <param name="context">Contextual information about the source or destination</param>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

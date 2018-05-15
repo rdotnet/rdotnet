@@ -30,9 +30,9 @@ namespace RDotNet.NativeLibrary
             Registry = (registry == null ? new WindowsRegistry() : registry);
         }
 
-        public static NativeUtility CreateNew()
+        /// <summary> Default constructor.</summary>
+        public NativeUtility()
         {
-            return new NativeUtility();
         }
 
         /// <summary>

@@ -275,7 +275,7 @@ namespace RDotNet
         public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
         {
             environmentIsSet = true;
-            NativeUtility.CreateNew().SetEnvironmentVariables(rPath: rPath, rHome: rHome);
+            new NativeUtility().SetEnvironmentVariables(rPath: rPath, rHome: rHome);
         }
 
         /// <summary>
@@ -534,6 +534,7 @@ namespace RDotNet
         /// Evaluates a statement in the given string.
         /// </summary>
         /// <param name="statement">The statement.</param>
+        /// <param name="environment">The environment in which to evaluate the statement. Advanced feature.</param>
         /// <returns>Last evaluation.</returns>
         public SymbolicExpression Evaluate(string statement, REnvironment environment = null)
         {
@@ -545,6 +546,7 @@ namespace RDotNet
         /// Evaluates a statement in the given stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
+        /// <param name="environment">The environment in which to evaluate the statement. Advanced feature.</param>
         /// <returns>Last evaluation.</returns>
         public SymbolicExpression Evaluate(Stream stream, REnvironment environment = null)
         {
@@ -556,6 +558,7 @@ namespace RDotNet
         /// Evaluates a statement in the given string.
         /// </summary>
         /// <param name="statement">The statement.</param>
+        /// <param name="environment">The environment in which to evaluate the statement. Advanced feature.</param>
         /// <returns>Each evaluation.</returns>
         private IEnumerable<SymbolicExpression> Defer(string statement, REnvironment environment = null)
         {
@@ -587,6 +590,7 @@ namespace RDotNet
         /// Evaluates a statement in the given stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
+        /// <param name="environment">The environment in which to evaluate the statement. Advanced feature.</param>
         /// <returns>Each evaluation.</returns>
         public IEnumerable<SymbolicExpression> Defer(Stream stream, REnvironment environment = null)
         {
@@ -753,7 +757,13 @@ namespace RDotNet
             return split[0];
         }
 
-        public static int[] IndexOfAll(string sourceString, string matchString)
+        /// <summary> Searches for the first all.</summary>
+        ///
+        /// <param name="sourceString"> Source string.</param>
+        /// <param name="matchString">  The match string.</param>
+        ///
+        /// <returns> The zero-based index of the found all, or -1 if no match was found.</returns>
+        private static int[] IndexOfAll(string sourceString, string matchString)
         {
             matchString = Regex.Escape(matchString);
             var res = (from Match match in Regex.Matches(sourceString, matchString) select match.Index);
