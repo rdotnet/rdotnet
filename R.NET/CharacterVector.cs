@@ -87,19 +87,27 @@ namespace RDotNet
 
         private string GetValue(int index)
         {
-            int offset = GetOffset(index);
-            IntPtr pointerItem = Marshal.ReadIntPtr(DataPointer, offset);
-            if (pointerItem == Engine.NaStringPointer)
-            {
-                return null;
-            }
-
             // To work with ALTREP (introduced in R 3.5.0) and non-ALTREP objects, we will get strings
             // via STRING_ELT, instead of offseting the DataPointer.  This lets R manage the details of
             // ALTREP conversion for us.
             IntPtr objPointer = GetFunction<STRING_ELT>()(this.DangerousGetHandle(), (ulong)index);
+            if (objPointer == Engine.NaStringPointer)
+            {
+                return null;
+            }
+
             IntPtr stringData = IntPtr.Add(objPointer, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
             return InternalString.StringFromNativeUtf8(stringData);
+        }
+
+        /// <summary> Gets alternate rep array.</summary>
+        ///
+        /// <exception cref="NotSupportedException"> Thrown when the requested operation is not supported.</exception>
+        ///
+        /// <returns> An array of t.</returns>
+        public override string[] GetAltRepArray()
+        {
+            return GetArrayFast();
         }
 
         private Rf_mkChar _mkChar = null;

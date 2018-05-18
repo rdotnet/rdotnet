@@ -60,6 +60,38 @@ namespace RDotNet
         }
 
         [Fact]
+        public void TestCoerceIntegerVectorAsCharacter()
+        {
+            var engine = this.Engine;
+            engine.Evaluate("y <- as.integer(c(10, 5, 73, NA, 8))");
+            var vec = engine.GetSymbol("y").AsCharacter();
+            CheckBothArrayConversions(vec, new[] {"10", "5", "73", null, "8" });
+
+            engine.Evaluate("x <- 10000:1000000");
+            var expected = GenArrayCharacter(10000, 1000000);
+            vec = engine.GetSymbol("x").AsCharacter();
+            CheckBothArrayConversions(vec, expected);
+        }
+
+        [Fact]
+        public void TestCoerceLogicalVectorAsCharacter()
+        {
+            var engine = this.Engine;
+            engine.Evaluate("y <- as.logical(c(FALSE, NA, TRUE, NA, FALSE))");
+            var vec = engine.GetSymbol("y").AsCharacter();
+            CheckBothArrayConversions(vec, new[] { "FALSE", null, "TRUE", null, "FALSE" });
+        }
+
+        [Fact]
+        public void TestCoerceNumericVectorAsCharacter()
+        {
+            var engine = this.Engine;
+            engine.Evaluate("y <- as.numeric(c(NA, 1.1, 2.2, 3.333, 4.4))");
+            var vec = engine.GetSymbol("y").AsCharacter();
+            CheckBothArrayConversions(vec, new[] { null, "1.1", "2.2", "3.333", "4.4" });
+        }
+
+        [Fact]
         public void TestCreateLogicalVectorValid()
         {
             SetUpTest();
@@ -129,10 +161,7 @@ namespace RDotNet
             CheckArrayEqual(a, expected);
         }
 
-<<<<<<< HEAD
         [Fact]
-=======
-        [Test]
         public void TestCoerceIntegerMatrixAsCharacterValid()
         {
             var engine = this.Engine;
@@ -143,13 +172,12 @@ namespace RDotNet
             {
                 for (int col = 0; col < 11; col++)
                 {
-                    Assert.AreEqual(expected[row,col], a[row, col]);
+                    Assert.Equal(expected[row,col], a[row, col]);
                 }
             }
         }
 
-        [Test]
->>>>>>> F_StatTag/r_3_5_0
+        [Fact]
         public void TestCreateLogicalMatrixValid()
         {
             SetUpTest();

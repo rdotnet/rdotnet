@@ -103,7 +103,7 @@ namespace RDotNet
 
         protected string[] GenArrayCharacter(int from, int to)
         {
-            Assert.Greater(to, from);
+            Assert.True(to > from);
             var res = new string[to - from + 1];
             for (int i = 0; i < (to - from + 1); i++)
                 res[i] = (i + from).ToString();
@@ -150,7 +150,7 @@ namespace RDotNet
                     Assert.Equal(expected[i, j], a[i, j]); //, 1e-9);
         }
 
-        public static void AssertThrows<T>(Action testCode, string expectedMsg) where T: System.Exception
+        public static void AssertThrows<T>(Action testCode, string expectedMsg) where T : System.Exception
         {
             T result = Assert.Throws<T>(testCode);
             Assert.Equal(result.Message, expectedMsg);
