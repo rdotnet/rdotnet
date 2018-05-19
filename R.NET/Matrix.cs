@@ -220,7 +220,18 @@ namespace RDotNet
         /// </summary>
         protected IntPtr DataPointer
         {
-            get { return GetFunction<DATAPTR_OR_NULL>()(this.DangerousGetHandle()); }
+            get
+            {
+                switch (Engine.Compatibility)
+                {
+                    case REngine.CompatibilityMode.ALTREP:
+                        return GetFunction<DATAPTR_OR_NULL>()(this.DangerousGetHandle()); 
+                    case REngine.CompatibilityMode.PreALTREP:
+                        return IntPtr.Add(handle, Marshal.SizeOf(typeof(Internals.PreALTREP.VECTOR_SEXPREC)));
+                    default:
+                        throw new MemberAccessException("Unable to translate the DataPointer for this R compatibility mode");
+                }
+            }
         }
 
         /// <summary>

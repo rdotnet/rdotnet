@@ -57,34 +57,49 @@ namespace RDotNet
         { }
 
         /// <summary>
-        /// Gets or sets the element at the specified index.
+        /// Gets the element at the specified index.
         /// </summary>
-        /// <param name="index">The zero-based index of the element to get or set.</param>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
         /// <returns>The element at the specified index.</returns>
-        public override int this[int index]
+        protected override int GetValue(int index)
         {
-            get
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    return GetFunction<INTEGER_ELT>()(this.DangerousGetHandle(), (ulong)index);
-                }
-            }
-            set
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    GetFunction<SET_INTEGER_ELT>()(this.DangerousGetHandle(), (ulong) index, value);
-                }
-            }
+            int offset = GetOffset(index);
+            return Marshal.ReadInt32(DataPointer, offset);
+        }
+
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected override int GetValueAltRep(int index)
+        {
+            return GetFunction<INTEGER_ELT>()(this.DangerousGetHandle(), (ulong)index);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValue(int index, int value)
+        {
+            int offset = GetOffset(index);
+            Marshal.WriteInt32(DataPointer, offset, value);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValueAltRep(int index, int value)
+        {
+            GetFunction<SET_INTEGER_ELT>()(this.DangerousGetHandle(), (ulong)index, value);
         }
 
         /// <summary>

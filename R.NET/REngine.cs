@@ -33,6 +33,20 @@ namespace RDotNet
     [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
     public class REngine : DynamicInterop.UnmanagedDll
     {
+        public enum CompatibilityMode
+        {
+            /// <summary>
+            /// Pre ALTREP includes all versions before R 3.5.  This uses a 32-bit sxpinfo structure.
+            /// </summary>
+            PreALTREP = 0,
+
+            /// <summary>
+            /// ALTREP includes all versions R 3.5 and above.  Core header structures were introduced in R 3.5 with
+            /// the ALTREP feature which required introducing the compability mode.  It uses a 64-bit sxpinfo structure.
+            /// </summary>
+            ALTREP = 1
+        }
+
         private static readonly ICharacterDevice DefaultDevice = new ConsoleDevice();
 
         private readonly string id;
@@ -41,6 +55,13 @@ namespace RDotNet
         private StartupParameter parameter;
         private static bool environmentIsSet = false;
         private static REngine engine = null;
+        
+        // Type cache to allow faster dynamic casting
+        private static Type sexprecType = null;
+        private static Type symsxpType = null;
+        private static Type vectorSexprecType = null;
+
+        private static readonly char[] RDllVersionDelimiter = new[] {'.'};
 
         /// <summary>
         /// Create a new REngine instance
@@ -98,6 +119,12 @@ namespace RDotNet
         {
             get { return this.id; }
         }
+
+        /// <summary>
+        /// Gets the R compatibility mode, based on the version of R used.
+        /// </summary>
+        public CompatibilityMode Compatibility { get; private set; }
+
 
         /// <summary>
         /// Gets the global environment.
@@ -230,7 +257,106 @@ namespace RDotNet
             }
             dll = ProcessRDllFileName(dll);
             var engine = new REngine(id, dll);
+            DetermineCompatibility(engine);
             return engine;
+        }
+
+        private static void DetermineCompatibility(REngine engine)
+        {
+            if (engine == null)
+            {
+                return;
+            }
+
+            // If there is no DLL version information, we are going to start with an arbitrary default
+            // compatibility version to support R 3.5+
+            engine.Compatibility = CompatibilityMode.ALTREP;
+
+            if (string.IsNullOrWhiteSpace(engine.DllVersion))
+            {
+                return;
+            }
+
+            var versionParts = engine.DllVersion.Split(RDllVersionDelimiter);
+            if (versionParts.Length < 2)
+            {
+                return;
+            }
+
+            int major = 0;
+            int minor = 0;
+            if (int.TryParse(versionParts[0], out major) && int.TryParse(versionParts[1], out minor))
+            {
+                // Pre-ALTREP is <= 3.4
+                if (major <= 3 && minor <= 4)
+                {
+                    engine.Compatibility = CompatibilityMode.PreALTREP;
+                }
+                else
+                {
+                    engine.Compatibility = CompatibilityMode.ALTREP;
+                }
+            }
+        }
+
+        public Type GetSEXPRECType()
+        {
+            if (sexprecType == null)
+            {
+                switch (Compatibility)
+                {
+                    case CompatibilityMode.ALTREP:
+                        sexprecType = typeof (RDotNet.Internals.ALTREP.SEXPREC);
+                        break;
+                    case CompatibilityMode.PreALTREP:
+                        sexprecType = typeof (RDotNet.Internals.PreALTREP.SEXPREC);
+                        break;
+                    default:
+                        throw new InvalidCastException("No SEXPREC type is available for this compatibility level");
+                }
+            }
+
+            return sexprecType;
+        }
+
+        public Type GetSymSxpType()
+        {
+            if (symsxpType == null)
+            {
+                switch (Compatibility)
+                {
+                    case CompatibilityMode.ALTREP:
+                        symsxpType = typeof(RDotNet.Internals.ALTREP.symsxp);
+                        break;
+                    case CompatibilityMode.PreALTREP:
+                        symsxpType = typeof(RDotNet.Internals.PreALTREP.symsxp);
+                        break;
+                    default:
+                        throw new InvalidCastException("No symsxp type is available for this compatibility level");
+                }
+            }
+
+            return symsxpType;
+        }
+
+        public Type GetVectorSexprecType()
+        {
+            if (vectorSexprecType == null)
+            {
+                switch (Compatibility)
+                {
+                    case CompatibilityMode.ALTREP:
+                        vectorSexprecType = typeof(RDotNet.Internals.ALTREP.VECTOR_SEXPREC);
+                        break;
+                    case CompatibilityMode.PreALTREP:
+                        vectorSexprecType = typeof(RDotNet.Internals.PreALTREP.VECTOR_SEXPREC);
+                        break;
+                    default:
+                        throw new InvalidCastException("No symsxp type is available for this compatibility level");
+                }
+            }
+
+            return vectorSexprecType;
         }
 
         /// <summary>

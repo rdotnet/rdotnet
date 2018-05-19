@@ -54,34 +54,54 @@ namespace RDotNet
         { }
 
         /// <summary>
-        /// Gets or sets the element at the specified index.
+        /// Gets the element at the specified index.
         /// </summary>
-        /// <param name="index">The zero-based index of the element to get or set.</param>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
         /// <returns>The element at the specified index.</returns>
-        public override double this[int index]
+        protected override double GetValue(int index)
         {
-            get
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    return GetFunction<REAL_ELT>()(this.DangerousGetHandle(), (ulong)index);
-                }
-            }
-            set
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    GetFunction<SET_REAL_ELT>()(this.DangerousGetHandle(), (ulong)index, value);
-                }
-            }
+            var data = new double[1];
+            int offset = GetOffset(index);
+            IntPtr pointer = IntPtr.Add(DataPointer, offset);
+            Marshal.Copy(pointer, data, 0, data.Length);
+            return data[0];
+        }
+
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected override double GetValueAltRep(int index)
+        {
+            return GetFunction<REAL_ELT>()(this.DangerousGetHandle(), (ulong)index);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValue(int index, double value)
+        {
+            var data = new[] { value };
+            int offset = GetOffset(index);
+            IntPtr pointer = IntPtr.Add(DataPointer, offset);
+            Marshal.Copy(data, 0, pointer, data.Length);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValueAltRep(int index, double value)
+        {
+            GetFunction<SET_REAL_ELT>()(this.DangerousGetHandle(), (ulong)index, value);
         }
 
         /// <summary>

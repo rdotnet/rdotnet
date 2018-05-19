@@ -35,7 +35,7 @@ namespace RDotNet
         {
             get
             {
-                SEXPREC sexp = GetInternalStructure();
+                dynamic sexp = GetInternalStructure();
                 IntPtr parent = sexp.envsxp.enclos;
                 return Engine.EqualsRNilValue(parent) ? null : new REnvironment(Engine, parent);
             }
@@ -64,7 +64,8 @@ namespace RDotNet
                 throw new EvaluationException(string.Format("Error: object '{0}' not found", name));
             }
 
-            var sexp = (SEXPREC)Marshal.PtrToStructure(value, typeof(SEXPREC));
+            var sexprecType = Engine.GetSEXPRECType();
+            dynamic sexp = Convert.ChangeType(Marshal.PtrToStructure(value, sexprecType), sexprecType);
             if (sexp.sxpinfo.type == SymbolicExpressionType.Promise)
             {
                 value = this.GetFunction<Rf_eval>()(value, handle);
