@@ -24,6 +24,23 @@ namespace RDotNet.Devices
         private readonly ICharacterDevice device;
         private REngine engine;
 
+        private ptr_R_Suicide suicideDelegate;
+        private ptr_R_ShowMessage showMessageDelegate;
+        private ptr_R_ReadConsole readConsoleDelegate;
+        private ptr_R_WriteConsole writeConsoleDelegate;
+        private ptr_R_WriteConsoleEx writeConsoleExDelegate;
+        private ptr_R_ResetConsole resetConsoleDelegate;
+        private ptr_R_FlushConsole flushConsoleDelegate;
+        private ptr_R_ClearerrConsole clearerrConsoleDelegate;
+        private ptr_R_Busy busyDelegate;
+        private ptr_R_CleanUp cleanUpDelegate;
+        private ptr_R_ShowFiles showFilesDelegate;
+        private ptr_R_ChooseFile chooseFileDelegate;
+        private ptr_R_EditFile editFileDelegate;
+        private ptr_R_loadhistory loadHistoryDelegate;
+        private ptr_R_savehistory saveHistoryDelegate;
+        private ptr_R_addhistory addHistoryDelegate;
+
         /// <summary>
         /// Creates an instance.
         /// </summary>
@@ -113,52 +130,68 @@ namespace RDotNet.Devices
         private void SetupUnixDevice()
         {
             IntPtr suicidePointer = this.engine.DangerousGetHandle("ptr_R_Suicide");
-            IntPtr newSuicide = Marshal.GetFunctionPointerForDelegate((ptr_R_Suicide)Suicide);
+            suicideDelegate = (ptr_R_Suicide)Suicide;
+            IntPtr newSuicide = Marshal.GetFunctionPointerForDelegate(suicideDelegate);
             Marshal.WriteIntPtr(suicidePointer, newSuicide);
             IntPtr showMessagePointer = this.engine.DangerousGetHandle("ptr_R_ShowMessage");
-            IntPtr newShowMessage = Marshal.GetFunctionPointerForDelegate((ptr_R_ShowMessage)ShowMessage);
+            showMessageDelegate = (ptr_R_ShowMessage)ShowMessage;
+            IntPtr newShowMessage = Marshal.GetFunctionPointerForDelegate(showMessageDelegate);
             Marshal.WriteIntPtr(showMessagePointer, newShowMessage);
             IntPtr readConsolePointer = this.engine.DangerousGetHandle("ptr_R_ReadConsole");
-            IntPtr newReadConsole = Marshal.GetFunctionPointerForDelegate((ptr_R_ReadConsole)ReadConsole);
+            readConsoleDelegate = (ptr_R_ReadConsole)ReadConsole;
+            IntPtr newReadConsole = Marshal.GetFunctionPointerForDelegate(readConsoleDelegate);
             Marshal.WriteIntPtr(readConsolePointer, newReadConsole);
             IntPtr writeConsolePointer = this.engine.DangerousGetHandle("ptr_R_WriteConsole");
-            IntPtr newWriteConsole = Marshal.GetFunctionPointerForDelegate((ptr_R_WriteConsole)WriteConsole);
+            writeConsoleDelegate = (ptr_R_WriteConsole)WriteConsole;
+            IntPtr newWriteConsole = Marshal.GetFunctionPointerForDelegate(writeConsoleDelegate);
             Marshal.WriteIntPtr(writeConsolePointer, newWriteConsole);
             IntPtr writeConsoleExPointer = this.engine.DangerousGetHandle("ptr_R_WriteConsoleEx");
-            IntPtr newWriteConsoleEx = Marshal.GetFunctionPointerForDelegate((ptr_R_WriteConsoleEx)WriteConsoleEx);
+            writeConsoleExDelegate = (ptr_R_WriteConsoleEx)WriteConsoleEx;
+            IntPtr newWriteConsoleEx = Marshal.GetFunctionPointerForDelegate(writeConsoleExDelegate);
             Marshal.WriteIntPtr(writeConsoleExPointer, newWriteConsoleEx);
             IntPtr resetConsolePointer = this.engine.DangerousGetHandle("ptr_R_ResetConsole");
-            IntPtr newResetConsole = Marshal.GetFunctionPointerForDelegate((ptr_R_ResetConsole)ResetConsole);
+            resetConsoleDelegate = (ptr_R_ResetConsole)ResetConsole;
+            IntPtr newResetConsole = Marshal.GetFunctionPointerForDelegate(resetConsoleDelegate);
             Marshal.WriteIntPtr(resetConsolePointer, newResetConsole);
             IntPtr flushConsolePointer = this.engine.DangerousGetHandle("ptr_R_FlushConsole");
-            IntPtr newFlushConsole = Marshal.GetFunctionPointerForDelegate((ptr_R_FlushConsole)FlushConsole);
+            flushConsoleDelegate = (ptr_R_FlushConsole)FlushConsole;
+            IntPtr newFlushConsole = Marshal.GetFunctionPointerForDelegate(flushConsoleDelegate);
             Marshal.WriteIntPtr(flushConsolePointer, newFlushConsole);
             IntPtr clearerrConsolePointer = this.engine.DangerousGetHandle("ptr_R_ClearerrConsole");
-            IntPtr newClearerrConsole = Marshal.GetFunctionPointerForDelegate((ptr_R_ClearerrConsole)ClearErrorConsole);
+            clearerrConsoleDelegate = (ptr_R_ClearerrConsole)ClearErrorConsole;
+            IntPtr newClearerrConsole = Marshal.GetFunctionPointerForDelegate(clearerrConsoleDelegate);
             Marshal.WriteIntPtr(clearerrConsolePointer, newClearerrConsole);
             IntPtr busyPointer = this.engine.DangerousGetHandle("ptr_R_Busy");
-            IntPtr newBusy = Marshal.GetFunctionPointerForDelegate((ptr_R_Busy)Busy);
+            busyDelegate = (ptr_R_Busy)Busy;
+            IntPtr newBusy = Marshal.GetFunctionPointerForDelegate(busyDelegate);
             Marshal.WriteIntPtr(busyPointer, newBusy);
             IntPtr cleanUpPointer = this.engine.DangerousGetHandle("ptr_R_CleanUp");
-            IntPtr newCleanUp = Marshal.GetFunctionPointerForDelegate((ptr_R_CleanUp)CleanUp);
+            cleanUpDelegate = (ptr_R_CleanUp)CleanUp;
+            IntPtr newCleanUp = Marshal.GetFunctionPointerForDelegate(cleanUpDelegate);
             Marshal.WriteIntPtr(cleanUpPointer, newCleanUp);
             IntPtr showFilesPointer = this.engine.DangerousGetHandle("ptr_R_ShowFiles");
-            IntPtr newShowFiles = Marshal.GetFunctionPointerForDelegate((ptr_R_ShowFiles)ShowFiles);
+            showFilesDelegate = (ptr_R_ShowFiles)ShowFiles;
+            IntPtr newShowFiles = Marshal.GetFunctionPointerForDelegate(showFilesDelegate);
             Marshal.WriteIntPtr(showFilesPointer, newShowFiles);
             IntPtr chooseFilePointer = this.engine.DangerousGetHandle("ptr_R_ChooseFile");
-            IntPtr newChooseFile = Marshal.GetFunctionPointerForDelegate((ptr_R_ChooseFile)ChooseFile);
+            chooseFileDelegate = (ptr_R_ChooseFile)ChooseFile;
+            IntPtr newChooseFile = Marshal.GetFunctionPointerForDelegate(chooseFileDelegate);
             Marshal.WriteIntPtr(chooseFilePointer, newChooseFile);
             IntPtr editFilePointer = this.engine.DangerousGetHandle("ptr_R_EditFile");
-            IntPtr newEditFile = Marshal.GetFunctionPointerForDelegate((ptr_R_EditFile)EditFile);
+            editFileDelegate = (ptr_R_EditFile)EditFile;
+            IntPtr newEditFile = Marshal.GetFunctionPointerForDelegate(editFileDelegate);
             Marshal.WriteIntPtr(editFilePointer, newEditFile);
             IntPtr loadHistoryPointer = this.engine.DangerousGetHandle("ptr_R_loadhistory");
-            IntPtr newLoadHistory = Marshal.GetFunctionPointerForDelegate((ptr_R_loadhistory)LoadHistory);
+            loadHistoryDelegate = (ptr_R_loadhistory)LoadHistory;
+            IntPtr newLoadHistory = Marshal.GetFunctionPointerForDelegate(loadHistoryDelegate);
             Marshal.WriteIntPtr(loadHistoryPointer, newLoadHistory);
             IntPtr saveHistoryPointer = this.engine.DangerousGetHandle("ptr_R_savehistory");
-            IntPtr newSaveHistory = Marshal.GetFunctionPointerForDelegate((ptr_R_savehistory)SaveHistory);
+            saveHistoryDelegate = (ptr_R_savehistory)SaveHistory;
+            IntPtr newSaveHistory = Marshal.GetFunctionPointerForDelegate(saveHistoryDelegate);
             Marshal.WriteIntPtr(saveHistoryPointer, newSaveHistory);
             IntPtr addHistoryPointer = this.engine.DangerousGetHandle("ptr_R_addhistory");
-            IntPtr newAddHistory = Marshal.GetFunctionPointerForDelegate((ptr_R_addhistory)AddHistory);
+            addHistoryDelegate = (ptr_R_addhistory)AddHistory;
+            IntPtr newAddHistory = Marshal.GetFunctionPointerForDelegate(addHistoryDelegate);
             Marshal.WriteIntPtr(addHistoryPointer, newAddHistory);
         }
 
