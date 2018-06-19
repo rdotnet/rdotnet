@@ -20,59 +20,65 @@ namespace RDotNet
         { }
 
         /// <summary>
-        /// Gets/sets the expression for an index
-        /// </summary>
-        /// <param name="index">index value</param>
-        /// <returns>The Expression at a given index.</returns>
-        public override Expression this[int index]
-        {
-            get
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    return GetValue(index);
-                }
-            }
-            set
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    SetValue(index, value);
-                }
-            }
-        }
-
-        /// <summary>
         /// Gets an array representation of a vector of SEXP in R. Note that the implementation cannot be particularly "fast" in spite of the name.
         /// </summary>
         /// <returns></returns>
         protected override Expression[] GetArrayFast()
         {
             var res = new Expression[this.Length];
+            bool useAltRep = (Engine.Compatibility == REngine.CompatibilityMode.ALTREP);
             for (int i = 0; i < res.Length; i++)
-                res[i] = GetValue(i);
+            {
+                res[i] = (useAltRep ? GetValueAltRep(i) : GetValue(i));
+            }
             return res;
         }
 
-        private Expression GetValue(int index)
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected override Expression GetValue(int index)
         {
             int offset = GetOffset(index);
             IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
             return new Expression(Engine, pointer);
         }
 
-        private void SetValue(int index, Expression value)
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected override Expression GetValueAltRep(int index)
+        {
+            return GetValue(index);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValue(int index, Expression value)
         {
             int offset = GetOffset(index);
             Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValueAltRep(int index, Expression value)
+        {
+            SetValue(index, value);
         }
 
         /// <summary>
@@ -80,8 +86,17 @@ namespace RDotNet
         /// </summary>
         protected override void SetVectorDirect(Expression[] values)
         {
+            bool useAltRep = (Engine.Compatibility == REngine.CompatibilityMode.ALTREP);
             for (int i = 0; i < values.Length; i++)
-                SetValue(i, values[i]);
+            {
+                if (useAltRep)
+                {
+                    SetValueAltRep(i, values[i]);
+                }
+                {
+                    SetValue(i, values[i]);
+                }
+            }
         }
 
         /// <summary>

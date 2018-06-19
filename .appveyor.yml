@@ -1,0 +1,44 @@
+version: '{build}'
+image:
+- Visual Studio 2017
+# - Visual Studio 2015
+
+
+configuration: Debug
+platform: Any CPU
+environment:
+  PLATFORM: Any CPU
+  BuildPLATFORM: Any CPU
+  BuildConfiguration: Debug
+  configuration: Debug
+
+branches:
+  only:
+  - devel
+
+# Install R for windows. 
+# Borrowed from http://raw.github.com/krlmlr/r-appveyor
+init:
+  ps: |
+        $ErrorActionPreference = "Stop"
+        Invoke-WebRequest http://raw.github.com/krlmlr/r-appveyor/master/scripts/appveyor-tool.ps1 -OutFile "..\appveyor-tool.ps1"
+        Import-Module '..\appveyor-tool.ps1'
+
+install:
+  ps: InstallR 
+
+cache:
+  - C:\RLibrary
+#############
+
+build_script:
+- cmd: >-
+    dotnet restore RDotNet.ns2.sln
+
+    dotnet build --configuration Debug --no-restore  RDotNet.ns2.sln
+
+test_script:
+- cmd: >-
+    dotnet test RDotNet.Tests/RDotNet.Tests.csproj
+
+    dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj

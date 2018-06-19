@@ -42,43 +42,58 @@ namespace RDotNet
         protected internal ComplexVector(REngine engine, IntPtr coerced)
             : base(engine, coerced)
         { }
+        
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected override Complex GetValue(int index)
+        {
+            var data = new double[2];
+            int offset = GetOffset(index);
+            IntPtr pointer = IntPtr.Add(DataPointer, offset);
+            Marshal.Copy(pointer, data, 0, data.Length);
+            return new Complex(data[0], data[1]);
+        }
 
         /// <summary>
-        /// Gets or sets the element at the specified index.
+        /// Gets the element at the specified index.
         /// </summary>
-        /// <param name="index">The zero-based index of the element to get or set.</param>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
         /// <returns>The element at the specified index.</returns>
-        public override Complex this[int index]
+        protected override Complex GetValueAltRep(int index)
         {
-            get
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    var data = new double[2];
-                    int offset = GetOffset(index);
-                    IntPtr pointer = IntPtr.Add(DataPointer, offset);
-                    Marshal.Copy(pointer, data, 0, data.Length);
-                    return new Complex(data[0], data[1]);
-                }
-            }
-            set
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    var data = new[] { value.Real, value.Imaginary };
-                    int offset = GetOffset(index);
-                    IntPtr pointer = IntPtr.Add(DataPointer, offset);
-                    Marshal.Copy(data, 0, pointer, data.Length);
-                }
-            }
+            var data = GetFunction<COMPLEX_ELT>()(this.DangerousGetHandle(), (ulong)index);
+            return new Complex(data.r, data.i);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValue(int index, Complex value)
+        {
+            var data = new[] { value.Real, value.Imaginary };
+            int offset = GetOffset(index);
+            IntPtr pointer = IntPtr.Add(DataPointer, offset);
+            Marshal.Copy(data, 0, pointer, data.Length);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValueAltRep(int index, Complex value)
+        {
+            GetFunction<SET_COMPLEX_ELT>()(this.DangerousGetHandle(), (ulong)index,
+                        RTypesUtil.SerializeComplexToRComplex(value));
         }
 
         /// <summary>

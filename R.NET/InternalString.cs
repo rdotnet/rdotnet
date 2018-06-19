@@ -79,7 +79,8 @@ namespace RDotNet
         /// <seealso cref="GetInternalValue()"/>
         public override string ToString()
         {
-            IntPtr pointer = IntPtr.Add(handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+            var vectorSexprecType = Engine.GetVectorSexprecType();
+            IntPtr pointer = IntPtr.Add(handle, Marshal.SizeOf(Engine.GetVectorSexprecType()));
             return StringFromNativeUtf8(pointer);
         }
 
@@ -94,7 +95,7 @@ namespace RDotNet
             {
                 return null;
             }
-            IntPtr pointer = IntPtr.Add(handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+            IntPtr pointer = IntPtr.Add(handle, Marshal.SizeOf(Engine.GetVectorSexprecType()));
             return StringFromNativeUtf8(pointer);
         }
     }

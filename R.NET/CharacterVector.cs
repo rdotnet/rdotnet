@@ -41,36 +41,6 @@ namespace RDotNet
             : base(engine, coerced)
         { }
 
-        /// <summary>
-        /// Gets or sets the element at the specified index.
-        /// </summary>
-        /// <param name="index">The zero-based index of the element to get or set.</param>
-        /// <returns>The element at the specified index.</returns>
-        public override string this[int index]
-        {
-            get
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    return GetValue(index);
-                }
-            }
-            set
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    SetValue(index, value);
-                }
-            }
-        }
 
         /// <summary>
         /// Gets an array representation of this R vector. Note that the implementation is not as fast as for numeric vectors.
@@ -80,12 +50,42 @@ namespace RDotNet
         {
             int n = this.Length;
             string[] res = new string[n];
+            bool useAltRep = (Engine.Compatibility == REngine.CompatibilityMode.ALTREP);
             for (int i = 0; i < n; i++)
-                res[i] = GetValue(i);
+            {
+                res[i] = (useAltRep ? GetValueAltRep(i) : GetValue(i));
+            }
             return res;
         }
 
-        private string GetValue(int index)
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected override string GetValueAltRep(int index)
+        {
+            // To work with ALTREP (introduced in R 3.5.0) and non-ALTREP objects, we will get strings
+            // via STRING_ELT, instead of offseting the DataPointer.  This lets R manage the details of
+            // ALTREP conversion for us.
+            IntPtr objPointer = GetFunction<STRING_ELT>()(this.DangerousGetHandle(), (ulong)index);
+            if (objPointer == Engine.NaStringPointer)
+            {
+                return null;
+            }
+
+            IntPtr stringData = IntPtr.Add(objPointer, Marshal.SizeOf(typeof(Internals.ALTREP.VECTOR_SEXPREC)));
+            return InternalString.StringFromNativeUtf8(stringData);
+        }
+
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected override string GetValue(int index)
         {
             int offset = GetOffset(index);
             IntPtr pointerItem = Marshal.ReadIntPtr(DataPointer, offset);
@@ -93,8 +93,18 @@ namespace RDotNet
             {
                 return null;
             }
-            IntPtr pointer = IntPtr.Add(pointerItem, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+            IntPtr pointer = IntPtr.Add(pointerItem, Marshal.SizeOf(typeof(Internals.PreALTREP.VECTOR_SEXPREC)));
             return InternalString.StringFromNativeUtf8(pointer);
+        }
+
+        /// <summary> Gets alternate rep array.</summary>
+        ///
+        /// <exception cref="NotSupportedException"> Thrown when the requested operation is not supported.</exception>
+        ///
+        /// <returns> An array of t.</returns>
+        public override string[] GetAltRepArray()
+        {
+            return GetArrayFast();
         }
 
         private Rf_mkChar _mkChar = null;
@@ -106,7 +116,24 @@ namespace RDotNet
             return _mkChar(value);
         }
 
-        private void SetValue(int index, string value)
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValueAltRep(int index, string value)
+        {
+            SetValue(index, value);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValue(int index, string value)
         {
             int offset = GetOffset(index);
             IntPtr stringPointer = value == null ? Engine.NaStringPointer : mkChar(value);
@@ -120,8 +147,17 @@ namespace RDotNet
         {
             // Possibly not the fastest implementation, but faster may require C code.
             // TODO check the behavior of P/Invoke on array of strings (VT_ARRAY|VT_LPSTR?)
+            bool useAltRep = (Engine.Compatibility == REngine.CompatibilityMode.ALTREP);
             for (int i = 0; i < values.Length; i++)
-                SetValue(i, values[i]);
+            {
+                if (useAltRep)
+                {
+                    SetValueAltRep(i, values[i]);
+                }
+                {
+                    SetValue(i, values[i]);
+                }
+            }
         }
 
         /// <summary>

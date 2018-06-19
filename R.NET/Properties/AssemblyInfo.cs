@@ -1,4 +1,4 @@
-ï»¿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("R.NET")]
-[assembly: AssemblyCopyright("Copyright Â© Copyright 2011-2014 RecycleBin, Copyright Â© 2014-2017 CSIRO")]
+[assembly: AssemblyCopyright("Copyright © Copyright 2011-2014 RecycleBin, Copyright © 2014-2017 CSIRO")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

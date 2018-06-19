@@ -26,7 +26,7 @@ namespace RDotNet
         {
             get
             {
-                SEXPREC sexp = GetInternalStructure();
+                dynamic sexp = GetInternalStructure();
                 return new InternalString(Engine, sexp.symsxp.pname).ToString();
             }
             set
@@ -44,8 +44,8 @@ namespace RDotNet
         {
             get
             {
-                SEXPREC sexp = GetInternalStructure();
-                if (Engine.EqualsRNilValue(sexp.symsxp.value))
+                dynamic sexp = GetInternalStructure();
+                if (Engine.EqualsRNilValue((IntPtr)sexp.symsxp.value))
                 {
                     return null;
                 }
@@ -60,8 +60,8 @@ namespace RDotNet
         {
             get
             {
-                SEXPREC sexp = GetInternalStructure();
-                if (Engine.EqualsRNilValue(sexp.symsxp.value))
+                dynamic sexp = GetInternalStructure();
+                if (Engine.EqualsRNilValue((IntPtr)sexp.symsxp.value))
                 {
                     return null;
                 }
@@ -69,9 +69,9 @@ namespace RDotNet
             }
         }
 
-        private static int GetOffsetOf(string fieldName)
+        private int GetOffsetOf(string fieldName)
         {
-            return Marshal.OffsetOf(typeof(SEXPREC), "u").ToInt32() + Marshal.OffsetOf(typeof(symsxp), fieldName).ToInt32();
+            return Marshal.OffsetOf(this.Engine.GetSEXPRECType(), "u").ToInt32() + Marshal.OffsetOf(this.Engine.GetSymSxpType(), fieldName).ToInt32();
         }
     }
 }

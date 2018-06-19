@@ -17,7 +17,7 @@ namespace RDotNet
     public class SymbolicExpression : SafeHandle, IEquatable<SymbolicExpression>, IDynamicMetaObjectProvider
     {
         private readonly REngine engine;
-        private readonly SEXPREC sexp;
+        private readonly dynamic sexp;
 
         /// <summary>
         /// An object to use to get a lock on if EnableLock is true;
@@ -38,7 +38,8 @@ namespace RDotNet
             : base(IntPtr.Zero, true)
         {
             this.engine = engine;
-            this.sexp = (SEXPREC)Marshal.PtrToStructure(pointer, typeof(SEXPREC));
+            var sexprecType = engine.GetSEXPRECType();
+            this.sexp = Convert.ChangeType(Marshal.PtrToStructure(pointer,  sexprecType), sexprecType);
             SetHandle(pointer);
             Preserve();
         }
@@ -113,9 +114,10 @@ namespace RDotNet
 
         #endregion IEquatable<SymbolicExpression> Members
 
-        internal SEXPREC GetInternalStructure()
+        internal object GetInternalStructure()
         {
-            return (SEXPREC)Marshal.PtrToStructure(handle, typeof(SEXPREC));
+            var sexprecType = engine.GetSEXPRECType();
+            return Convert.ChangeType(Marshal.PtrToStructure(handle, sexprecType), sexprecType);
         }
 
         /// <summary>
@@ -127,10 +129,11 @@ namespace RDotNet
             int length = this.GetFunction<Rf_length>()(this.sexp.attrib);
             var names = new string[length];
             IntPtr pointer = this.sexp.attrib;
+            var sexprecType = engine.GetSEXPRECType();
             for (int index = 0; index < length; index++)
             {
-                var node = (SEXPREC)Marshal.PtrToStructure(pointer, typeof(SEXPREC));
-                var attribute = (SEXPREC)Marshal.PtrToStructure(node.listsxp.tagval, typeof(SEXPREC));
+                dynamic node = Convert.ChangeType(Marshal.PtrToStructure(pointer, sexprecType), sexprecType);
+                var attribute = Convert.ChangeType(Marshal.PtrToStructure(node.listsxp.tagval, sexprecType), sexprecType);
                 IntPtr name = attribute.symsxp.pname;
                 names[index] = new InternalString(Engine, name);
                 pointer = node.listsxp.cdrval;

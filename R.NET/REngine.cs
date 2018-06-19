@@ -33,6 +33,20 @@ namespace RDotNet
     [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
     public class REngine : DynamicInterop.UnmanagedDll
     {
+        public enum CompatibilityMode
+        {
+            /// <summary>
+            /// Pre ALTREP includes all versions before R 3.5.  This uses a 32-bit sxpinfo structure.
+            /// </summary>
+            PreALTREP = 0,
+
+            /// <summary>
+            /// ALTREP includes all versions R 3.5 and above.  Core header structures were introduced in R 3.5 with
+            /// the ALTREP feature which required introducing the compability mode.  It uses a 64-bit sxpinfo structure.
+            /// </summary>
+            ALTREP = 1
+        }
+
         private static readonly ICharacterDevice DefaultDevice = new ConsoleDevice();
 
         private readonly string id;
@@ -41,6 +55,13 @@ namespace RDotNet
         private StartupParameter parameter;
         private static bool environmentIsSet = false;
         private static REngine engine = null;
+        
+        // Type cache to allow faster dynamic casting
+        private static Type sexprecType = null;
+        private static Type symsxpType = null;
+        private static Type vectorSexprecType = null;
+
+        private static readonly char[] RDllVersionDelimiter = new[] {'.'};
 
         /// <summary>
         /// Create a new REngine instance
@@ -98,6 +119,12 @@ namespace RDotNet
         {
             get { return this.id; }
         }
+
+        /// <summary>
+        /// Gets the R compatibility mode, based on the version of R used.
+        /// </summary>
+        public CompatibilityMode Compatibility { get; private set; }
+
 
         /// <summary>
         /// Gets the global environment.
@@ -230,7 +257,106 @@ namespace RDotNet
             }
             dll = ProcessRDllFileName(dll);
             var engine = new REngine(id, dll);
+            DetermineCompatibility(engine);
             return engine;
+        }
+
+        private static void DetermineCompatibility(REngine engine)
+        {
+            if (engine == null)
+            {
+                return;
+            }
+
+            // If there is no DLL version information, we are going to start with an arbitrary default
+            // compatibility version to support R 3.5+
+            engine.Compatibility = CompatibilityMode.ALTREP;
+
+            if (string.IsNullOrWhiteSpace(engine.DllVersion))
+            {
+                return;
+            }
+
+            var versionParts = engine.DllVersion.Split(RDllVersionDelimiter);
+            if (versionParts.Length < 2)
+            {
+                return;
+            }
+
+            int major = 0;
+            int minor = 0;
+            if (int.TryParse(versionParts[0], out major) && int.TryParse(versionParts[1], out minor))
+            {
+                // Pre-ALTREP is <= 3.4
+                if (major <= 3 && minor <= 4)
+                {
+                    engine.Compatibility = CompatibilityMode.PreALTREP;
+                }
+                else
+                {
+                    engine.Compatibility = CompatibilityMode.ALTREP;
+                }
+            }
+        }
+
+        public Type GetSEXPRECType()
+        {
+            if (sexprecType == null)
+            {
+                switch (Compatibility)
+                {
+                    case CompatibilityMode.ALTREP:
+                        sexprecType = typeof (RDotNet.Internals.ALTREP.SEXPREC);
+                        break;
+                    case CompatibilityMode.PreALTREP:
+                        sexprecType = typeof (RDotNet.Internals.PreALTREP.SEXPREC);
+                        break;
+                    default:
+                        throw new InvalidCastException("No SEXPREC type is available for this compatibility level");
+                }
+            }
+
+            return sexprecType;
+        }
+
+        public Type GetSymSxpType()
+        {
+            if (symsxpType == null)
+            {
+                switch (Compatibility)
+                {
+                    case CompatibilityMode.ALTREP:
+                        symsxpType = typeof(RDotNet.Internals.ALTREP.symsxp);
+                        break;
+                    case CompatibilityMode.PreALTREP:
+                        symsxpType = typeof(RDotNet.Internals.PreALTREP.symsxp);
+                        break;
+                    default:
+                        throw new InvalidCastException("No symsxp type is available for this compatibility level");
+                }
+            }
+
+            return symsxpType;
+        }
+
+        public Type GetVectorSexprecType()
+        {
+            if (vectorSexprecType == null)
+            {
+                switch (Compatibility)
+                {
+                    case CompatibilityMode.ALTREP:
+                        vectorSexprecType = typeof(RDotNet.Internals.ALTREP.VECTOR_SEXPREC);
+                        break;
+                    case CompatibilityMode.PreALTREP:
+                        vectorSexprecType = typeof(RDotNet.Internals.PreALTREP.VECTOR_SEXPREC);
+                        break;
+                    default:
+                        throw new InvalidCastException("No symsxp type is available for this compatibility level");
+                }
+            }
+
+            return vectorSexprecType;
         }
 
         /// <summary>
@@ -246,19 +372,20 @@ namespace RDotNet
 
         static private string EncodeNonAsciiCharacters(string value)
         {
-          StringBuilder sb = new StringBuilder();
-          foreach (char c in value)
-          {
-            if (c > 127)
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in value)
             {
-              string encodedValue = "\\u" + ((int)c).ToString("x4");
-              sb.Append(encodedValue);
+                if (c > 127)
+                {
+                    string encodedValue = "\\u" + ((int)c).ToString("x4");
+                    sb.Append(encodedValue);
+                }
+                else
+                {
+                    sb.Append(c);
+                }
             }
-            else {
-              sb.Append(c);
-            }
-          }
-          return sb.ToString();
+            return sb.ToString();
         }
 
         /// <summary>
@@ -274,7 +401,7 @@ namespace RDotNet
         public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
         {
             environmentIsSet = true;
-            NativeUtility.CreateNew().SetEnvironmentVariables(rPath: rPath, rHome: rHome);
+            new NativeUtility().SetEnvironmentVariables(rPath: rPath, rHome: rHome);
         }
 
         /// <summary>
@@ -533,30 +660,33 @@ namespace RDotNet
         /// Evaluates a statement in the given string.
         /// </summary>
         /// <param name="statement">The statement.</param>
+        /// <param name="environment">The environment in which to evaluate the statement. Advanced feature.</param>
         /// <returns>Last evaluation.</returns>
-        public SymbolicExpression Evaluate(string statement)
+        public SymbolicExpression Evaluate(string statement, REnvironment environment = null)
         {
             CheckEngineIsRunning();
-            return Defer(EncodeNonAsciiCharacters(statement)).LastOrDefault();
+            return Defer(EncodeNonAsciiCharacters(statement), environment).LastOrDefault();
         }
 
         /// <summary>
         /// Evaluates a statement in the given stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
+        /// <param name="environment">The environment in which to evaluate the statement. Advanced feature.</param>
         /// <returns>Last evaluation.</returns>
-        public SymbolicExpression Evaluate(Stream stream)
+        public SymbolicExpression Evaluate(Stream stream, REnvironment environment = null)
         {
             CheckEngineIsRunning();
-            return Defer(stream).LastOrDefault();
+            return Defer(stream, environment).LastOrDefault();
         }
 
         /// <summary>
         /// Evaluates a statement in the given string.
         /// </summary>
         /// <param name="statement">The statement.</param>
+        /// <param name="environment">The environment in which to evaluate the statement. Advanced feature.</param>
         /// <returns>Each evaluation.</returns>
-        private IEnumerable<SymbolicExpression> Defer(string statement)
+        private IEnumerable<SymbolicExpression> Defer(string statement, REnvironment environment = null)
         {
             CheckEngineIsRunning();
             if (statement == null)
@@ -572,7 +702,7 @@ namespace RDotNet
                 {
                     foreach (var segment in Segment(line))
                     {
-                        var result = Parse(segment, incompleteStatement);
+                        var result = Parse(segment, incompleteStatement, environment);
                         if (result != null)
                         {
                             yield return result;
@@ -586,8 +716,9 @@ namespace RDotNet
         /// Evaluates a statement in the given stream.
         /// </summary>
         /// <param name="stream">The stream.</param>
+        /// <param name="environment">The environment in which to evaluate the statement. Advanced feature.</param>
         /// <returns>Each evaluation.</returns>
-        public IEnumerable<SymbolicExpression> Defer(Stream stream)
+        public IEnumerable<SymbolicExpression> Defer(Stream stream, REnvironment environment = null)
         {
             CheckEngineIsRunning();
             if (stream == null)
@@ -607,7 +738,7 @@ namespace RDotNet
                 {
                     foreach (var segment in Segment(line))
                     {
-                        var result = Parse(segment, incompleteStatement);
+                        var result = Parse(segment, incompleteStatement, environment);
                         if (result != null)
                         {
                             yield return result;
@@ -644,9 +775,9 @@ namespace RDotNet
             string[] lines = splitOnNewLines(input);
             List<string> statements = new List<string>();
             for (int i = 0; i < lines.Length; i++)
-			{
-			    statements.AddRange(processLine(lines[i]));
-			}
+            {
+                statements.AddRange(processLine(lines[i]));
+            }
             return statements.ToArray();
         }
 
@@ -660,15 +791,15 @@ namespace RDotNet
         {
             var trimmedLine = line.Trim();
             if (trimmedLine == string.Empty)
-                return new string[]{};
+                return new string[] { };
             if (trimmedLine.StartsWith("#"))
-                return new string[]{line};
+                return new string[] { line };
 
             string theRest;
             string statement = splitOnFirst(line, out theRest, ';');
 
             var result = new List<string>();
-            if(!statement.Contains("#"))
+            if (!statement.Contains("#"))
             {
                 result.Add(statement);
                 result.AddRange(processLine(theRest));
@@ -678,12 +809,12 @@ namespace RDotNet
                 // paste('this contains ### characters', " this too ###", 'Oh, and this # one too') # but "this" 'rest' is commented
                 // Find the fist # character such that before that, there is an 
                 // even number of " and an even number of ' characters
-                
+
                 int[] whereHash = IndexOfAll(statement, "#");
                 int firstComment = EvenStringDelimitors(statement, whereHash);
-                if(firstComment < 0 ) 
-                    // incomplete statement??? such as:
-                    // paste('this is the # ', ' start of an incomplete # statement
+                if (firstComment < 0)
+                // incomplete statement??? such as:
+                // paste('this is the # ', ' start of an incomplete # statement
                 {
                     result.Add(statement);
                     result.AddRange(processLine(theRest));
@@ -717,13 +848,13 @@ namespace RDotNet
             // paste('#hashtag""""')
             // paste('#hashtag""#""')
             // paste('#hashtag""#""', "#hash ''' ")
-            bool inSingleQuote = false, inDoubleQuotes=false;
+            bool inSingleQuote = false, inDoubleQuotes = false;
             for (int i = 0; i < s.Length; i++)
             {
                 if (s[i] == '\'')
                 {
-                    if(i > 0)
-                        if(s[i-1]=='\\')
+                    if (i > 0)
+                        if (s[i - 1] == '\\')
                             continue;
                     if (inDoubleQuotes)
                         continue;
@@ -752,7 +883,13 @@ namespace RDotNet
             return split[0];
         }
 
-        public static int[] IndexOfAll(string sourceString, string matchString)
+        /// <summary> Searches for the first all.</summary>
+        ///
+        /// <param name="sourceString"> Source string.</param>
+        /// <param name="matchString">  The match string.</param>
+        ///
+        /// <returns> The zero-based index of the found all, or -1 if no match was found.</returns>
+        private static int[] IndexOfAll(string sourceString, string matchString)
         {
             matchString = Regex.Escape(matchString);
             var res = (from Match match in Regex.Matches(sourceString, matchString) select match.Index);
@@ -764,7 +901,7 @@ namespace RDotNet
             throw new NotImplementedException();
         }
 
-        private SymbolicExpression Parse(string statement, StringBuilder incompleteStatement)
+        private SymbolicExpression Parse(string statement, StringBuilder incompleteStatement, REnvironment environment = null)
         {
             incompleteStatement.Append(statement);
             var s = GetFunction<Rf_mkString>()(InternalString.NativeUtf8FromString(incompleteStatement.ToString()));
@@ -785,7 +922,7 @@ namespace RDotNet
                         using (new ProtectedPointer(vector))
                         {
                             SymbolicExpression result;
-                            if (!vector.First().TryEvaluate(GlobalEnvironment, out result))
+                            if (!vector.First().TryEvaluate((environment == null) ? GlobalEnvironment : environment, out result))
                             {
                                 throw new EvaluationException(LastErrorMessage);
                             }
@@ -827,9 +964,9 @@ namespace RDotNet
             if (symbol == (System.IntPtr)0) return true;
             else
             {
-              var value = Marshal.ReadInt32(symbol);
-              var result = Convert.ToBoolean(value);
-              return result;
+                var value = Marshal.ReadInt32(symbol);
+                var result = Convert.ToBoolean(value);
+                return result;
             }
         }
 
