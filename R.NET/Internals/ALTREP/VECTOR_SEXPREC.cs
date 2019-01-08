@@ -3,8 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace RDotNet.Internals.ALTREP
 {
-    // In R 3.5, the length & true length values went from 32 to 64 bits in length.  These are defined in R as R_xlen_t
-    // (previously R_len_t) - https://github.com/wch/r-source/blob/trunk/src/include/Rinternals.h
+    // In R 3.5, the length & true length values went from pure 32-bit int to platform-dependent pointer length (32 or 64 bits in length).
+    // These are defined in R as R_xlen_t (previously R_len_t) - https://github.com/wch/r-source/blob/trunk/src/include/Rinternals.h
+    // Here we use the .NET equivalent - IntPtr.
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct VECTOR_SEXPREC
@@ -44,7 +45,7 @@ namespace RDotNet.Internals.ALTREP
             }
         }
 
-        public long Length
+        public IntPtr Length
         {
             get
             {
@@ -52,7 +53,7 @@ namespace RDotNet.Internals.ALTREP
             }
         }
 
-        public long TrueLength
+        public IntPtr TrueLength
         {
             get
             {

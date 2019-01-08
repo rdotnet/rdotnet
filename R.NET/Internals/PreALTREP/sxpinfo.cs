@@ -4,8 +4,8 @@ namespace RDotNet.Internals.PreALTREP
 {
     // Definition of the struct available at: https://cran.r-project.org/doc/manuals/r-release/R-ints.html#Rest-of-header
     // Formally defined in Rinternals.h: https://github.com/wch/r-source/blob/trunk/src/include/Rinternals.h
-    // Note that this structure was greatly changed in the R 3.5 release, going from 32 bits to 64 bits, with fields added
-    //   and the order changed.
+    // Note that this structure was greatly changed in the R 3.5 release, using the platform-dependent pointer size (represented
+    //   here as IntPtr), with fields added and the order changed.
     [StructLayout(LayoutKind.Sequential)]
     internal struct sxpinfo
     {
