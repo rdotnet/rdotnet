@@ -76,7 +76,7 @@ namespace RDotNet
         /// <returns>The element at the specified index.</returns>
         protected override double GetValueAltRep(int index)
         {
-            return GetFunction<REAL_ELT>()(this.DangerousGetHandle(), (ulong)index);
+            return GetFunction<REAL_ELT>()(this.DangerousGetHandle(), (IntPtr)index);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace RDotNet
         /// <param name="value">The value to set</param>
         protected override void SetValueAltRep(int index, double value)
         {
-            GetFunction<SET_REAL_ELT>()(this.DangerousGetHandle(), (ulong)index, value);
+            GetFunction<SET_REAL_ELT>()(this.DangerousGetHandle(), (IntPtr)index, value);
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace RDotNet
         {
             // by inference from `static SEXP compact_intseq_Duplicate(SEXP x, Rboolean deep)`  in altrep.c
             var res = new double[this.Length];
-            GetFunction<REAL_GET_REGION>()(this.DangerousGetHandle(), (ulong)0, (ulong)this.Length, res);
+            GetFunction<REAL_GET_REGION>()(this.DangerousGetHandle(), (IntPtr)0, (IntPtr)this.Length, res);
             return res;
         }
 

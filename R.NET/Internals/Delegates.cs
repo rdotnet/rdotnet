@@ -230,48 +230,48 @@ namespace RDotNet.Internals
     internal delegate void R_gc();
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate IntPtr STRING_ELT(IntPtr sexp, ulong index);
+    internal delegate IntPtr STRING_ELT(IntPtr sexp, IntPtr index);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate IntPtr VECTOR_ELT(IntPtr sexp, ulong index);
+    internal delegate IntPtr VECTOR_ELT(IntPtr sexp, IntPtr index);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate int INTEGER_ELT(IntPtr sexp, ulong index);
+    internal delegate int INTEGER_ELT(IntPtr sexp, IntPtr index);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate void SET_INTEGER_ELT(IntPtr sexp, ulong index, int value);
+    internal delegate void SET_INTEGER_ELT(IntPtr sexp, IntPtr index, int value);
 
     //R_xlen_t INTEGER_GET_REGION(SEXP sx, R_xlen_t i, R_xlen_t n, int* buf);
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate ulong INTEGER_GET_REGION(IntPtr sx, ulong i, ulong n, int[] buf);
+    internal delegate IntPtr INTEGER_GET_REGION(IntPtr sx, IntPtr i, IntPtr n, int[] buf);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate ulong REAL_GET_REGION(IntPtr sx, ulong i, ulong n, double[] buf);
+    internal delegate IntPtr REAL_GET_REGION(IntPtr sx, IntPtr i, IntPtr n, double[] buf);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     internal delegate IntPtr DATAPTR_OR_NULL(IntPtr sexp);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate int LOGICAL_ELT(IntPtr sexp, ulong index);
+    internal delegate int LOGICAL_ELT(IntPtr sexp, IntPtr index);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate void SET_LOGICAL_ELT(IntPtr sexp, ulong index, int value);
+    internal delegate void SET_LOGICAL_ELT(IntPtr sexp, IntPtr index, int value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate double REAL_ELT(IntPtr sexp, ulong index);
+    internal delegate double REAL_ELT(IntPtr sexp, IntPtr index);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate void SET_REAL_ELT(IntPtr sexp, ulong index, double value);
+    internal delegate void SET_REAL_ELT(IntPtr sexp, IntPtr index, double value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate Rcomplex COMPLEX_ELT(IntPtr sexp, ulong index);
+    internal delegate Rcomplex COMPLEX_ELT(IntPtr sexp, IntPtr index);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate void SET_COMPLEX_ELT(IntPtr sexp, ulong index, Rcomplex value);
+    internal delegate void SET_COMPLEX_ELT(IntPtr sexp, IntPtr index, Rcomplex value);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate byte RAW_ELT(IntPtr sexp, ulong index);
+    internal delegate byte RAW_ELT(IntPtr sexp, IntPtr index);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    internal delegate void SET_RAW_ELT(IntPtr sexp, ulong index, int value);
+    internal delegate void SET_RAW_ELT(IntPtr sexp, IntPtr index, int value);
 }

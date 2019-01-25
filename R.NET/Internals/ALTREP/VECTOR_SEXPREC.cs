@@ -7,7 +7,7 @@ namespace RDotNet.Internals.ALTREP
     // These are defined in R as R_xlen_t (previously R_len_t) - https://github.com/wch/r-source/blob/trunk/src/include/Rinternals.h
     // Here we use the .NET equivalent - IntPtr.
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct VECTOR_SEXPREC
     {
         private SEXPREC_HEADER header;

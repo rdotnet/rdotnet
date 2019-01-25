@@ -39,11 +39,19 @@ namespace RDotNet
             engine.Evaluate("x <- 1:100");
             var expected = GenArrayInteger(1, 100);
             var vec = engine.GetSymbol("x").AsInteger();
+            if (vec.ToArray()[0] == 0)
+            {
+                Console.WriteLine("FAIL");
+            }
             CheckBothArrayConversions(vec, expected);
 
             engine.Evaluate("x <- 10000:1000000");
             expected = GenArrayInteger(10000, 1000000);
             vec = engine.GetSymbol("x").AsInteger();
+            if (vec.ToArray()[0] == 0)
+            {
+                Console.WriteLine("FAIL");
+            }
             CheckBothArrayConversions(vec, expected);
         }
 
