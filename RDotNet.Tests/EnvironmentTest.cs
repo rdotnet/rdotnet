@@ -13,6 +13,7 @@ namespace RDotNet
             var engine = this.Engine;
             var newEnv = engine.CreateEnvironment(engine.BaseNamespace);
             Assert.Equal(newEnv.Type, (SymbolicExpressionType.Environment));
+            Assert.NotNull(newEnv.Parent);
             Assert.Equal(newEnv.Parent.DangerousGetHandle(), (engine.BaseNamespace.DangerousGetHandle()));
         }
 

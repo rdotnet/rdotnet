@@ -69,13 +69,13 @@ namespace RDotNet
             // To work with ALTREP (introduced in R 3.5.0) and non-ALTREP objects, we will get strings
             // via STRING_ELT, instead of offseting the DataPointer.  This lets R manage the details of
             // ALTREP conversion for us.
-            IntPtr objPointer = GetFunction<STRING_ELT>()(this.DangerousGetHandle(), (ulong)index);
+            IntPtr objPointer = GetFunction<STRING_ELT>()(this.DangerousGetHandle(), (IntPtr)index);
             if (objPointer == Engine.NaStringPointer)
             {
                 return null;
             }
 
-            IntPtr stringData = IntPtr.Add(objPointer, Marshal.SizeOf(typeof(Internals.ALTREP.VECTOR_SEXPREC)));
+            IntPtr stringData = GetFunction<DATAPTR_OR_NULL>()(objPointer);
             return InternalString.StringFromNativeUtf8(stringData);
         }
 

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace RDotNet.Internals.ALTREP
 {
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct SEXPREC
     {
         private SEXPREC_HEADER header;
@@ -60,7 +60,7 @@ namespace RDotNet.Internals.ALTREP
         }
     }
 
-    [StructLayout(LayoutKind.Explicit)]
+    [StructLayout(LayoutKind.Explicit, Pack = 1)]
     internal struct u
     {
         [FieldOffset(0)]
@@ -85,20 +85,20 @@ namespace RDotNet.Internals.ALTREP
     // In R 3.5, the length & true length values went from pure 32-bit int to platform-dependent pointer length (32 or 64 bits in length).
     // These are defined in R as R_xlen_t (previously R_len_t) - https://github.com/wch/r-source/blob/trunk/src/include/Rinternals.h
     // Here we use the .NET equivalent - IntPtr.
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct vecsxp
     {
         public IntPtr length;
         public IntPtr truelength;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct primsxp
     {
         public int offset;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct symsxp
     {
         public IntPtr pname;
@@ -106,7 +106,7 @@ namespace RDotNet.Internals.ALTREP
         public IntPtr @internal;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct listsxp
     {
         public IntPtr carval;
@@ -114,7 +114,7 @@ namespace RDotNet.Internals.ALTREP
         public IntPtr tagval;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct envsxp
     {
         public IntPtr frame;
@@ -122,7 +122,7 @@ namespace RDotNet.Internals.ALTREP
         public IntPtr hashtab;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct closxp
     {
         public IntPtr formals;
@@ -130,7 +130,7 @@ namespace RDotNet.Internals.ALTREP
         public IntPtr env;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct promsxp
     {
         public IntPtr value;

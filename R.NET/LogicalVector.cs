@@ -62,7 +62,7 @@ namespace RDotNet
         /// <returns>The element at the specified index.</returns>
         protected override bool GetValueAltRep(int index)
         {
-            var data = GetFunction<LOGICAL_ELT>()(this.DangerousGetHandle(), (ulong)index);
+            var data = GetFunction<LOGICAL_ELT>()(this.DangerousGetHandle(), (IntPtr)index);
             return Convert.ToBoolean(data);
         }
 
@@ -88,7 +88,7 @@ namespace RDotNet
         protected override void SetValueAltRep(int index, bool value)
         {
             int data = Convert.ToInt32(value);
-            GetFunction<SET_LOGICAL_ELT>()(this.DangerousGetHandle(), (ulong)index, data);
+            GetFunction<SET_LOGICAL_ELT>()(this.DangerousGetHandle(), (IntPtr)index, data);
         }
 
         /// <summary>
