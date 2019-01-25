@@ -75,7 +75,7 @@ namespace RDotNet
                 return null;
             }
 
-            IntPtr stringData = IntPtr.Add(objPointer, Marshal.SizeOf(typeof(Internals.ALTREP.VECTOR_SEXPREC)));
+            IntPtr stringData = GetFunction<DATAPTR_OR_NULL>()(objPointer);
             return InternalString.StringFromNativeUtf8(stringData);
         }
 
