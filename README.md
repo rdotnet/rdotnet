@@ -1,5 +1,12 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay?svg=true)](https://ci.appveyor.com/project/jmp75/rdotnet)
 
+# DISCLAIMER
+This is a fork of the original repo. I am using R.NET for different calculations of psychometric data. The production website is at https://app.getteaminsight.com. The personal report is free - everyone can fill the survey. We measure agile behavior for teams and individuals.
+
+The webapp runs on .NETCore, so I was using the .NETStandard fork of R.NET. However, after R version 3.5.0 some of the basic structures has changed in R and the available NuGet packages were not up to date. For different technical reasons we could not manage to incorporate the older R version in our CI/CD pipeline - and we did not have the time to investigate deeper. The only solution was to port the existing R.NET fork that has already implemented the changes for the newer R versions.
+
+So this repo is a port of StatTag/altrep branch to .NETCore and I also added a few changes to automatically support CentOS that I am using.
+
 R.NET
 =======
 
