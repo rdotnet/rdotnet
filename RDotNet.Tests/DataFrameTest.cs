@@ -1,41 +1,44 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using System.Collections;
 
 namespace RDotNet
 {
-    internal class DataFrameTest : RDotNetTestFixture
+    public class DataFrameTest : RDotNetTestFixture
     {
-        [Test]
+        [Fact]
         public void TestIsDataFrameTrue()
         {
+            SetUpTest();
             var engine = this.Engine;
             var iris = engine.Evaluate("data.frame()");
-            Assert.That(iris.IsDataFrame(), Is.True);
+            Assert.Equal(iris.IsDataFrame(), true);
         }
 
-        [Test]
+        [Fact]
         public void TestIsDataFrameFalse()
         {
+            SetUpTest();
             var engine = this.Engine;
             var iris = engine.Evaluate("list()");
-            Assert.That(iris.IsDataFrame(), Is.False);
+            Assert.Equal(iris.IsDataFrame(), false);
         }
 
-        [Test]
+        [Fact]
         public void TestDataFrameFactorColumns()
         {
+            SetUpTest();
             var engine = this.Engine;
             var biopsy = getBiopsyDataFrame(engine);
             //$ class: Factor w/ 2 levels "benign","malignant": 1 1 1 1 1 2 1 1 1 1 ...
             var factor = biopsy[10].AsFactor();
             var classFact = factor.GetFactors();
-            Assert.AreEqual(699, classFact.Length);
-            Assert.AreEqual("benign", classFact[0]);
-            Assert.AreEqual("malignant", classFact[5]);
+            Assert.Equal(699, classFact.Length);
+            Assert.Equal("benign", classFact[0]);
+            Assert.Equal("malignant", classFact[5]);
             var levels = factor.GetLevels();
-            Assert.AreEqual(2, levels.Length);
-            Assert.AreEqual("benign", levels[0]);
-            Assert.AreEqual("malignant", levels[1]);
+            Assert.Equal(2, levels.Length);
+            Assert.Equal("benign", levels[0]);
+            Assert.Equal("malignant", levels[1]);
 
             // Check that we get the following:
 //> head(as.character(biopsy$class))
@@ -49,10 +52,10 @@ namespace RDotNet
 
         private static void checkClassString(string[] values)
         {
-            Assert.AreEqual(699, values.Length);
+            Assert.Equal(699, values.Length);
             for (int i = 0; i < 5; i++)
-                Assert.AreEqual("benign", values[i]);
-            Assert.AreEqual("malignant", values[5]);
+                Assert.Equal("benign", values[i]);
+            Assert.Equal("malignant", values[5]);
         }
 
         private static DataFrame getBiopsyDataFrame(REngine engine)
@@ -62,24 +65,26 @@ namespace RDotNet
             return biopsy;
         }
 
-        //[Test]
+        //[Fact]
         public void TestDataFrameInMemoryCreationTwice()
         {
             // https://rdotnet.codeplex.com/workitem/146
+            SetUpTest();
             TestDataFrameInMemoryCreation();
             TestDataFrameInMemoryCreation();
         }
 
-        [Test]
+        [Fact]
         public void TestDataFrameInMemoryCreation()
         {
+            SetUpTest();
             var engine = this.Engine;
             IEnumerable[] columns;
             string[] columnNames;
             DataFrame df;
             createTestDataFrame(engine, out columns, out columnNames, out df);
             checkDataFrameContent(df);
-            Assert.AreEqual(columnNames, df.ColumnNames);
+            Assert.Equal(columnNames, df.ColumnNames);
             df = engine.CreateDataFrame(columns, columnNames: null);
             checkDataFrameContent(df);
 
@@ -119,9 +124,10 @@ namespace RDotNet
             return columns;
         }
 
-        [Test]
+        [Fact]
         public void TestDataElementTwoDimIndex()
         {
+            SetUpTest();
             var engine = this.Engine;
             var biopsy = getBiopsyDataFrame(engine);
 
@@ -153,47 +159,47 @@ namespace RDotNet
             */
 
             var obj = biopsy[0, 10];
-            Assert.AreEqual(typeof(string), obj.GetType());
+            Assert.Equal(typeof(string), obj.GetType());
             var s = (string)obj;
-            Assert.AreEqual("benign", s);
-            Assert.AreEqual("benign", biopsy[0, "class"]);
+            Assert.Equal("benign", s);
+            Assert.Equal("benign", biopsy[0, "class"]);
             // While R does 'something' where there is no names defined, the behavior seems inconsistent between rownames in data frames
             // and named vectors. Better not support this for the time being.
-            //         Assert.AreEqual("audi", mpg["1", "manufacturer"]);
-            Assert.AreEqual("malignant", biopsy[5, 10]);
-            Assert.AreEqual("malignant", biopsy[5, "class"]);
-            Assert.AreEqual(4, biopsy[1, 3]);
-            Assert.AreEqual(4, biopsy[1, "V3"]);
+            //         Assert.Equal("audi", mpg["1", "manufacturer"]);
+            Assert.Equal("malignant", biopsy[5, 10]);
+            Assert.Equal("malignant", biopsy[5, "class"]);
+            Assert.Equal(4, biopsy[1, 3]);
+            Assert.Equal(4, biopsy[1, "V3"]);
 
             IEnumerable[] columns;
             string[] columnNames;
             DataFrame df;
             createTestDataFrame(engine, out columns, out columnNames, out df);
 
-            Assert.AreEqual("a", df[0, 0]);
+            Assert.Equal("a", df[0, 0]);
             df[0, 0] = "b";
-            Assert.AreEqual("b", df[0, 0]);
+            Assert.Equal("b", df[0, 0]);
             df[0, 0] = "c";
-            Assert.AreEqual(null, df[0, 0]);
-            Assert.AreEqual("b", df[5, 0]);
+            Assert.Equal(null, df[0, 0]);
+            Assert.Equal("b", df[5, 0]);
             df[5, 0] = null;
-            Assert.AreEqual(null, df[5, 0]);
+            Assert.Equal(null, df[5, 0]);
         }
 
         private static void checkDataFrameContent(DataFrame df)
         {
             var cat = df[0].AsFactor().GetFactors();
-            Assert.AreEqual("a", cat[0]);
-            Assert.AreEqual("a", cat[4]);
-            Assert.AreEqual("b", cat[5]);
+            Assert.Equal("a", cat[0]);
+            Assert.Equal("a", cat[4]);
+            Assert.Equal("b", cat[5]);
 
             var numbers = df[1].AsInteger();
             for (int i = 0; i < 10; i++)
-                Assert.AreEqual(i + 1, numbers[i]);
+                Assert.Equal(i + 1, numbers[i]);
 
             var measures = df[2].AsNumeric();
             for (int i = 0; i < 10; i++)
-                Assert.AreEqual(i + 1.1, measures[i]);
+                Assert.Equal(i + 1.1, measures[i]);
         }
     }
 }

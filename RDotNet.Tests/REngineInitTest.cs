@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 using RDotNet.NativeLibrary;
 using System;
 using System.Collections.Generic;
@@ -57,7 +57,6 @@ namespace RDotNet
     {
         public Dictionary<string, string> keyValues = new Dictionary<string, string>();
         private List<MockRegistryKey> subKeys = new List<MockRegistryKey>();
-        private string v;
 
         private string ShortName;
         //public string /*LongName*/;
@@ -238,7 +237,7 @@ namespace RDotNet
 
     public class REngineInitTest
     {
-        [Test, Ignore("Cannot run this in a batch with the new singleton pattern")] // Cannot run this in a batch with the new singleton pattern.
+        [Fact(Skip = "Cannot run this in a batch with the new singleton pattern")] // Cannot run this in a batch with the new singleton pattern.
         public void TestInitParams()
         {
             MockDevice device = new MockDevice();
@@ -250,7 +249,7 @@ namespace RDotNet
                     MaxMemorySize = maxMemSize,
                 };
                 engine.Initialize(parameter: parameter, device: device);
-                Assert.AreEqual(engine.Evaluate("memory.limit()").AsNumeric()[0], 128.0);
+                Assert.Equal(engine.Evaluate("memory.limit()").AsNumeric()[0], 128.0);
             }
         }
 
@@ -299,16 +298,16 @@ namespace RDotNet
         }
 
         // TODO: probably needs adjustments for MacOS and Linux
-        [Test]
+        [Fact]
         public void TestFindRBinPath()
         {
             string rLibPath = createTestRegistryUtil().FindRPath();
             var files = Directory.GetFiles(rLibPath);
             var fnmatch = files.Where(fn => fn.ToLower() == Path.Combine(rLibPath.ToLower(), NativeUtility.GetRLibraryFileName().ToLower()));
-            Assert.AreEqual(1, fnmatch.Count());
+            Assert.Equal(1, fnmatch.Count());
         }
 
-        [Test]
+        [Fact]
         public void TestMockWindowsRegistry()
         {
 
@@ -327,15 +326,15 @@ namespace RDotNet
             //var sk = lm.GetSubKeyNames();
             rCore = lm.OpenSubKey(@"SOFTWARE\R-core");
             var valNames = rCore.GetValueNames();
-            Assert.AreEqual(valNames.Length, 0);
+            Assert.Equal(valNames.Length, 0);
 
-            Assert.AreEqual(rCore.GetSubKeyNames().Length, 1);
-            Assert.AreEqual(rCore.GetSubKeyNames()[0], "R");
+            Assert.Equal(rCore.GetSubKeyNames().Length, 1);
+            Assert.Equal(rCore.GetSubKeyNames()[0], "R");
             var R = rCore.OpenSubKey(@"R");
-            Assert.AreEqual(R.GetSubKeyNames().Length, 0);
-            Assert.AreEqual(R.GetValueNames().Length, 2);
-            Assert.AreEqual(R.GetValue("InstallPath"), "C:\\Program Files\\R\\R-3.3.3");
-            Assert.AreEqual(R.GetValue("Current Version"), "3.3.3");
+            Assert.Equal(R.GetSubKeyNames().Length, 0);
+            Assert.Equal(R.GetValueNames().Length, 2);
+            Assert.Equal(R.GetValue("InstallPath"), "C:\\Program Files\\R\\R-3.3.3");
+            Assert.Equal(R.GetValue("Current Version"), "3.3.3");
 
             localMachineTestReg = @"
 [HKEY_LOCAL_MACHINE\SOFTWARE\R-core\R\R64]
@@ -349,24 +348,24 @@ namespace RDotNet
             reg = new MockRegistry(localMachineTestReg);
             lm = reg.LocalMachine;
             rCore = lm.OpenSubKey(@"SOFTWARE\R-core");
-            Assert.AreEqual(rCore.GetValueNames().Length, 0);
+            Assert.Equal(rCore.GetValueNames().Length, 0);
 
-            Assert.AreEqual(rCore.GetSubKeyNames().Length, 1);
-            Assert.AreEqual(rCore.GetSubKeyNames()[0], "R");
+            Assert.Equal(rCore.GetSubKeyNames().Length, 1);
+            Assert.Equal(rCore.GetSubKeyNames()[0], "R");
             R = rCore.OpenSubKey(@"R");
-            Assert.AreEqual(R.GetSubKeyNames().Length, 1);
+            Assert.Equal(R.GetSubKeyNames().Length, 1);
 
             var R64 = lm.OpenSubKey(@"SOFTWARE\R-core\R\R64");
 
-            Assert.AreEqual(R64.GetSubKeyNames().Length, 1);
-            Assert.AreEqual(R64.GetValueNames().Length, 2);
+            Assert.Equal(R64.GetSubKeyNames().Length, 1);
+            Assert.Equal(R64.GetValueNames().Length, 2);
 
-            Assert.AreEqual(R64.GetValue("InstallPath"), @"C:\Program Files\Microsoft\R Client\R_SERVER\");
-            Assert.AreEqual(R64.GetValue("Current Version"), "3.2.2.803");
+            Assert.Equal(R64.GetValue("InstallPath"), @"C:\Program Files\Microsoft\R Client\R_SERVER\");
+            Assert.Equal(R64.GetValue("Current Version"), "3.2.2.803");
 
         }
 
-        [Test]
+        [Fact]
         public void TestFindRegKey()
         {
             //"HKEY_LOCAL_MACHINE\SOFTWARE\R-core\R\3.2.2.803 Microsoft R Client";
@@ -375,26 +374,26 @@ namespace RDotNet
             //string rLibPath = createTestRegistryUtil().FindRPaths();
             //var files = Directory.GetFiles(rLibPath);
             //var fnmatch = files.Where(fn => fn.ToLower() == Path.Combine(rLibPath.ToLower(), NativeUtility.GetRLibraryFileName().ToLower()));
-            //Assert.AreEqual(1, fnmatch.Count());
+            //Assert.Equal(1, fnmatch.Count());
         }
 
-        [Test]
+        [Fact]
         public void TestFindRHomePath()
         {
             string rHomePath = createTestRegistryUtil().FindRHome();
             var files = Directory.GetDirectories(rHomePath);
             var fnmatch = files.Where(fn => Path.GetFileName(fn) == "library");
-            Assert.AreEqual(1, fnmatch.Count());
+            Assert.Equal(1, fnmatch.Count());
             fnmatch = Directory.GetDirectories(fnmatch.First()).Where(fn => Path.GetFileName(fn) == "base");
-            Assert.AreEqual(1, fnmatch.Count());
+            Assert.Equal(1, fnmatch.Count());
         }
 
-        [Test]
+        [Fact]
         public void TestGetPathInitSearchLog()
         {
             REngine.GetInstance();
             var log = NativeUtility.SetEnvironmentVariablesLog;
-            Assert.AreNotEqual(string.Empty, log);
+            Assert.NotEqual(string.Empty, log);
         }
     }
 }

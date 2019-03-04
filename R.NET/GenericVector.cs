@@ -42,47 +42,50 @@ namespace RDotNet
         { }
 
         /// <summary>
-        /// Gets or sets the element at the specified index.
+        /// Gets the element at the specified index.
         /// </summary>
-        /// <param name="index">The zero-based index of the element to get or set.</param>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
         /// <returns>The element at the specified index.</returns>
-        public override SymbolicExpression this[int index]
-        {
-            get
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    return GetValue(index);
-                }
-            }
-            set
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    SetValue(index, value);
-                }
-            }
-        }
-
-        private SymbolicExpression GetValue(int index)
+        protected override SymbolicExpression GetValue(int index)
         {
             int offset = GetOffset(index);
             IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
             return new SymbolicExpression(Engine, pointer);
         }
 
-        private void SetValue(int index, SymbolicExpression value)
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected override SymbolicExpression GetValueAltRep(int index)
+        {
+            return GetValue(index);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValue(int index, SymbolicExpression value)
         {
             int offset = GetOffset(index);
             Marshal.WriteIntPtr(DataPointer, offset, (value ?? Engine.NilValue).DangerousGetHandle());
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValueAltRep(int index, SymbolicExpression value)
+        {
+            SetValue(index, value);
         }
 
         /// <summary>
@@ -92,8 +95,11 @@ namespace RDotNet
         protected override SymbolicExpression[] GetArrayFast()
         {
             var res = new SymbolicExpression[this.Length];
+            bool useAltRep = (Engine.Compatibility == REngine.CompatibilityMode.ALTREP);
             for (int i = 0; i < res.Length; i++)
-                res[i] = GetValue(i);
+            {
+                res[i] = (useAltRep ? GetValueAltRep(i) : GetValue(i));
+            }
             return res;
         }
 
@@ -102,8 +108,17 @@ namespace RDotNet
         /// </summary>
         protected override void SetVectorDirect(SymbolicExpression[] values)
         {
+            bool useAltRep = (Engine.Compatibility == REngine.CompatibilityMode.ALTREP);
             for (int i = 0; i < values.Length; i++)
-                SetValue(i, values[i]);
+            {
+                if (useAltRep)
+                {
+                    SetValueAltRep(i, values[i]);
+                }
+                {
+                    SetValue(i, values[i]);
+                }
+            }
         }
 
         /// <summary>
@@ -133,12 +148,20 @@ namespace RDotNet
             return new ListDynamicMeta(parameter, this);
         }
 
+        /// <summary> Sets the names of the vector. </summary>
+        ///
+        /// <param name="names"> A variable-length parameters list containing names.</param>
         public void SetNames(params string[] names)
         {
             CharacterVector cv = new CharacterVector(this.Engine, names);
             SetNames(cv);
         }
 
+        /// <summary> Sets the names of the vector.</summary>
+        ///
+        /// <exception cref="ArgumentException"> Incorrect length, not equal to vector length</exception>
+        ///
+        /// <param name="names"> A variable-length parameters list containing names.</param>
         public void SetNames(CharacterVector names)
         {
             if (names.Length != this.Length)

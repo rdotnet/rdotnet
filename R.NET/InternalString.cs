@@ -79,8 +79,7 @@ namespace RDotNet
         /// <seealso cref="GetInternalValue()"/>
         public override string ToString()
         {
-            IntPtr pointer = IntPtr.Add(handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
-            return StringFromNativeUtf8(pointer);
+            return StringFromNativeUtf8(this.DataPointer);
         }
 
         /// <summary>
@@ -94,8 +93,26 @@ namespace RDotNet
             {
                 return null;
             }
-            IntPtr pointer = IntPtr.Add(handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
-            return StringFromNativeUtf8(pointer);
+            return StringFromNativeUtf8(this.DataPointer);
+        }
+
+        /// <summary>
+        /// Gets the pointer for the first element.
+        /// </summary>
+        protected IntPtr DataPointer
+        {
+            get
+            {
+                switch (Engine.Compatibility)
+                {
+                    case REngine.CompatibilityMode.ALTREP:
+                        return GetFunction<DATAPTR_OR_NULL>()(this.DangerousGetHandle());
+                    case REngine.CompatibilityMode.PreALTREP:
+                        return IntPtr.Add(handle, Marshal.SizeOf(typeof(Internals.PreALTREP.VECTOR_SEXPREC)));
+                    default:
+                        throw new MemberAccessException("Unable to translate the DataPointer for this R compatibility mode");
+                }
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ namespace RDotNet
         {
             get
             {
-                SEXPREC sexp = GetInternalStructure();
+                dynamic sexp = GetInternalStructure();
                 return new Pairlist(Engine, sexp.closxp.formals);
             }
         }
@@ -38,7 +38,7 @@ namespace RDotNet
         {
             get
             {
-                SEXPREC sexp = GetInternalStructure();
+                dynamic sexp = GetInternalStructure();
                 return new Language(Engine, sexp.closxp.body);
             }
         }
@@ -50,7 +50,7 @@ namespace RDotNet
         {
             get
             {
-                SEXPREC sexp = GetInternalStructure();
+                dynamic sexp = GetInternalStructure();
                 return new REnvironment(Engine, sexp.closxp.env);
             }
         }

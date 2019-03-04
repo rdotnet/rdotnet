@@ -30,7 +30,7 @@ namespace RDotNet
                 {
                     return null;
                 }
-                SEXPREC sexp = GetInternalStructure();
+                dynamic sexp = GetInternalStructure();
                 return new Pairlist(Engine, sexp.listsxp.cdrval);
             }
         }

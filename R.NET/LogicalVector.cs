@@ -42,38 +42,53 @@ namespace RDotNet
         { }
 
         /// <summary>
-        /// Gets or sets the element at the specified index.
+        /// Gets the element at the specified index.
         /// </summary>
-        /// <param name="index">The zero-based index of the element to get or set.</param>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
         /// <returns>The element at the specified index.</returns>
-        public override bool this[int index]
+        protected override bool GetValue(int index)
         {
-            get
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    int offset = GetOffset(index);
-                    int data = Marshal.ReadInt32(DataPointer, offset);
-                    return Convert.ToBoolean(data);
-                }
-            }
-            set
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    int offset = GetOffset(index);
-                    int data = Convert.ToInt32(value);
-                    Marshal.WriteInt32(DataPointer, offset, data);
-                }
-            }
+            int offset = GetOffset(index);
+            int data = Marshal.ReadInt32(DataPointer, offset);
+            return Convert.ToBoolean(data);
+        }
+
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected override bool GetValueAltRep(int index)
+        {
+            var data = GetFunction<LOGICAL_ELT>()(this.DangerousGetHandle(), (IntPtr)index);
+            return Convert.ToBoolean(data);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValue(int index, bool value)
+        {
+            int offset = GetOffset(index);
+            int data = Convert.ToInt32(value);
+            Marshal.WriteInt32(DataPointer, offset, data);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValueAltRep(int index, bool value)
+        {
+            int data = Convert.ToInt32(value);
+            GetFunction<SET_LOGICAL_ELT>()(this.DangerousGetHandle(), (IntPtr)index, data);
         }
 
         /// <summary>

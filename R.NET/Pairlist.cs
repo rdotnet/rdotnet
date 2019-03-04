@@ -38,7 +38,8 @@ namespace RDotNet
         {
             if (Count != 0)
             {
-                for (SEXPREC sexp = GetInternalStructure(); sexp.sxpinfo.type != SymbolicExpressionType.Null; sexp = (SEXPREC)Marshal.PtrToStructure(sexp.listsxp.cdrval, typeof(SEXPREC)))
+                var sexprecType = Engine.GetSEXPRECType();
+                for (dynamic sexp = GetInternalStructure(); sexp.sxpinfo.type != SymbolicExpressionType.Null; sexp = Convert.ChangeType(Marshal.PtrToStructure(sexp.listsxp.cdrval, sexprecType), sexprecType))
                 {
                     yield return new Symbol(Engine, sexp.listsxp.tagval);
                 }

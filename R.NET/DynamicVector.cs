@@ -22,41 +22,7 @@ namespace RDotNet
         protected internal DynamicVector(REngine engine, IntPtr coerced)
             : base(engine, coerced)
         { }
-
-        /// <summary>
-        /// Gets or sets the element at the specified index.
-        /// </summary>
-        /// <remarks>
-        /// The value is converted into specific type.
-        /// </remarks>
-        /// <param name="index">The zero-based index of the element to get or set.</param>
-        /// <returns>The element at the specified index.</returns>
-        public override object this[int index]
-        {
-            get
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    return GetValue(index);
-                }
-            }
-            set
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    SetValue(index, value);
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Gets an array representation of a vector in R. Note that the implementation cannot be particularly "fast" in spite of the name.
         /// </summary>
@@ -64,12 +30,32 @@ namespace RDotNet
         protected override object[] GetArrayFast()
         {
             var res = new object[this.Length];
+            bool useAltRep = (Engine.Compatibility == REngine.CompatibilityMode.ALTREP);
             for (int i = 0; i < res.Length; i++)
-                res[i] = GetValue(i);
+            {
+                res[i] = (useAltRep ? GetValueAltRep(i) : GetValue(i));
+            }
             return res;
         }
 
-        private object GetValue(int index)
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected override object GetValueAltRep(int index)
+        {
+            return GetValue(index);
+        }
+
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected override object GetValue(int index)
         {
             IntPtr pointer = DataPointer;
             int offset = GetOffset(index);
@@ -106,11 +92,37 @@ namespace RDotNet
         /// </summary>
         protected override void SetVectorDirect(object[] values)
         {
+            bool useAltRep = (Engine.Compatibility == REngine.CompatibilityMode.ALTREP);
             for (int i = 0; i < values.Length; i++)
-                SetValue(i, values[i]);
+            {
+                if (useAltRep)
+                {
+                    SetValueAltRep(i, values[i]);
+                }
+                {
+                    SetValue(i, values[i]);
+                }
+            }
         }
 
-        private void SetValue(int index, object value)
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValueAltRep(int index, object value)
+        {
+            SetValue(index, value);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValue(int index, object value)
         {
             IntPtr pointer = DataPointer;
             int offset = GetOffset(index);
@@ -214,7 +226,7 @@ namespace RDotNet
         private string ReadString(IntPtr pointer, int offset)
         {
             pointer = Marshal.ReadIntPtr(pointer, offset);
-            pointer = IntPtr.Add(pointer, Marshal.SizeOf(typeof(VECTOR_SEXPREC)));
+            pointer = IntPtr.Add(pointer, Marshal.SizeOf(Engine.GetVectorSexprecType()));
             return InternalString.StringFromNativeUtf8(pointer);
         }
 

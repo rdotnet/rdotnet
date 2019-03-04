@@ -1,4 +1,5 @@
-﻿using RDotNet.Diagnostics;
+﻿using System.Data;
+using RDotNet.Diagnostics;
 using RDotNet.Internals;
 using System;
 using System.Collections;
@@ -62,7 +63,94 @@ namespace RDotNet
         /// </summary>
         /// <param name="index">The zero-based index of the element to get or set.</param>
         /// <returns>The element at the specified index.</returns>
-        public abstract T this[int index] { get; set; }
+        public virtual T this[int index]
+        {
+            get
+            {
+                if (index < 0 || Length <= index)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                using (new ProtectedPointer(this))
+                {
+                    switch (Engine.Compatibility)
+                    {
+                        case REngine.CompatibilityMode.ALTREP:
+                            return GetValueAltRep(index);
+                        case REngine.CompatibilityMode.PreALTREP:
+                            return GetValue(index);
+                        default:
+                            throw new Exception("Unable to access the vector element for this unknown R compatibility mode");
+                    }
+                }
+            }
+            set
+            {
+                if (index < 0 || Length <= index)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                using (new ProtectedPointer(this))
+                {
+                    switch (Engine.Compatibility)
+                    {
+                        case REngine.CompatibilityMode.ALTREP:
+                            SetValueAltRep(index, value);
+                            break;
+                        case REngine.CompatibilityMode.PreALTREP:
+                            SetValue(index, value);
+                            break;
+                        default:
+                            throw new Exception("Unable to set the vector element for this unknown R compatibility mode");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected virtual T GetValue(int index)
+        {
+            throw new NotSupportedException("GetValue handling not yet supported");
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected virtual void SetValue(int index, T value)
+        {
+            throw new NotSupportedException("SetValue handling not yet supported");
+        }
+
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected virtual T GetValueAltRep(int index)
+        {
+            throw new NotSupportedException("GetValueAltRep handling not yet supported");
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected virtual void SetValueAltRep(int index, T value)
+        {
+            throw new NotSupportedException("SetValueAltRep handling not yet supported");
+        }
+
 
         /// <summary>
         /// Initializes the content of a vector with runtime speed in mind. This method protects the R vector, then call SetVectorDirect.
@@ -86,8 +174,35 @@ namespace RDotNet
         {
             using (new ProtectedPointer(this))
             {
-                return GetArrayFast();
+                /* 
+                 * as of R 3.5 DataPointer may return null if the vector 
+                 * is an alternate representation
+                 * See section General Vectors in  
+                 * https://svn.r-project.org/R/branches/ALTREP/ALTREP.html
+                 * 
+                 * If we are in compatibility mode for pre-ALTREP, we will always
+                 * use the fast method.
+                 */
+                if (Engine.Compatibility == REngine.CompatibilityMode.PreALTREP
+                    || DataPointer != IntPtr.Zero)
+                {
+                    return GetArrayFast();
+                }
+                else
+                {
+                    return GetAltRepArray();
+                }
             }
+        }
+
+        /// <summary> Gets alternate rep array.</summary>
+        ///
+        /// <exception cref="NotSupportedException"> Thrown when the requested operation is not supported.</exception>
+        ///
+        /// <returns> An array of t.</returns>
+        public virtual T[] GetAltRepArray()
+        {
+            throw new NotSupportedException("ALTVEC handling not yet supported");
         }
 
         /// <summary>
@@ -171,7 +286,18 @@ namespace RDotNet
         /// </summary>
         protected IntPtr DataPointer
         {
-            get { return IntPtr.Add(handle, Marshal.SizeOf(typeof(VECTOR_SEXPREC))); }
+            get
+            {
+                switch (Engine.Compatibility)
+                {
+                    case REngine.CompatibilityMode.ALTREP:
+                        return GetFunction<DATAPTR_OR_NULL>()(this.DangerousGetHandle());
+                    case REngine.CompatibilityMode.PreALTREP:
+                        return IntPtr.Add(handle, Marshal.SizeOf(typeof(Internals.PreALTREP.VECTOR_SEXPREC)));
+                    default:
+                        throw new MemberAccessException("Unable to translate the DataPointer for this R compatibility mode");
+                }
+            }
         }
 
         /// <summary>

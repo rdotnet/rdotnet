@@ -57,36 +57,49 @@ namespace RDotNet
         { }
 
         /// <summary>
-        /// Gets or sets the element at the specified index.
+        /// Gets the element at the specified index.
         /// </summary>
-        /// <param name="index">The zero-based index of the element to get or set.</param>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
         /// <returns>The element at the specified index.</returns>
-        public override int this[int index]
+        protected override int GetValue(int index)
         {
-            get
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    int offset = GetOffset(index);
-                    return Marshal.ReadInt32(DataPointer, offset);
-                }
-            }
-            set
-            {
-                if (index < 0 || Length <= index)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                using (new ProtectedPointer(this))
-                {
-                    int offset = GetOffset(index);
-                    Marshal.WriteInt32(DataPointer, offset, value);
-                }
-            }
+            int offset = GetOffset(index);
+            return Marshal.ReadInt32(DataPointer, offset);
+        }
+
+        /// <summary>
+        /// Gets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to get.</param>
+        /// <returns>The element at the specified index.</returns>
+        protected override int GetValueAltRep(int index)
+        {
+            return GetFunction<INTEGER_ELT>()(this.DangerousGetHandle(), (IntPtr)index);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for pre-R 3.5 </remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValue(int index, int value)
+        {
+            int offset = GetOffset(index);
+            Marshal.WriteInt32(DataPointer, offset, value);
+        }
+
+        /// <summary>
+        /// Sets the element at the specified index.
+        /// </summary>
+        /// <remarks>Used for R 3.5 and higher, to account for ALTREP objects</remarks>
+        /// <param name="index">The zero-based index of the element to set.</param>
+        /// <param name="value">The value to set</param>
+        protected override void SetValueAltRep(int index, int value)
+        {
+            GetFunction<SET_INTEGER_ELT>()(this.DangerousGetHandle(), (IntPtr)index, value);
         }
 
         /// <summary>
@@ -99,6 +112,20 @@ namespace RDotNet
             Marshal.Copy(DataPointer, res, 0, res.Length);
             return res;
         }
+
+        /// <summary> Gets alternate rep array.</summary>
+        ///
+        /// <exception cref="NotSupportedException"> Thrown when the requested operation is not supported.</exception>
+        ///
+        /// <returns> An array of t.</returns>
+        public override int[] GetAltRepArray()
+        {
+            // by inference from `static SEXP compact_intseq_Duplicate(SEXP x, Rboolean deep)`  in altrep.c
+            var res = new int[this.Length];
+            GetFunction<INTEGER_GET_REGION>()(this.DangerousGetHandle(), (IntPtr)0, (IntPtr)this.Length, res);
+            return res;
+        }
+
 
         /// <summary>
         /// Efficient initialisation of R vector values from an array representation in the CLR
