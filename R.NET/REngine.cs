@@ -105,7 +105,15 @@ namespace RDotNet
                 // But, on Win32 platform, we can get the version string via getDLLVersion function.
                 if (Environment.OSVersion.Platform != PlatformID.Win32NT)
                 {
-                    throw new NotImplementedException();
+                    // so we use the default or given parameters for initialization
+                    if (parameter != null)
+                    {
+                        return parameter.SpecificRVersion;
+                    }
+                    else
+                    {
+                        throw new InvalidProgramException("The default R version should be set upon initialization");
+                    }
                 }
                 var getVersion = GetFunction<_getDLLVersion>("getDLLVersion");
                 return Marshal.PtrToStringAnsi(getVersion());

@@ -1,0 +1,109 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\R.NET\BuiltinFunction.cs" Link="BuiltinFunction.cs" />
+    <Compile Include="..\R.NET\CharacterMatrix.cs" Link="CharacterMatrix.cs" />
+    <Compile Include="..\R.NET\CharacterVector.cs" Link="CharacterVector.cs" />
+    <Compile Include="..\R.NET\Closure.cs" Link="Closure.cs" />
+    <Compile Include="..\R.NET\ComplexMatrix.cs" Link="ComplexMatrix.cs" />
+    <Compile Include="..\R.NET\ComplexVector.cs" Link="ComplexVector.cs" />
+    <Compile Include="..\R.NET\DataFrame.cs" Link="DataFrame.cs" />
+    <Compile Include="..\R.NET\DataFrameColumnAttribute.cs" Link="DataFrameColumnAttribute.cs" />
+    <Compile Include="..\R.NET\DataFrameRow.cs" Link="DataFrameRow.cs" />
+    <Compile Include="..\R.NET\DataFrameRowAttribute.cs" Link="DataFrameRowAttribute.cs" />
+    <Compile Include="..\R.NET\Devices\CharacterDeviceAdapter.cs" Link="Devices\CharacterDeviceAdapter.cs" />
+    <Compile Include="..\R.NET\Devices\ConsoleDevice.cs" Link="Devices\ConsoleDevice.cs" />
+    <Compile Include="..\R.NET\Devices\ICharacterDevice.cs" Link="Devices\ICharacterDevice.cs" />
+    <Compile Include="..\R.NET\Devices\NullCharacterDevice.cs" Link="Devices\NullCharacterDevice.cs" />
+    <Compile Include="..\R.NET\Diagnostics\DataFrameColumnDisplay.cs" Link="Diagnostics\DataFrameColumnDisplay.cs" />
+    <Compile Include="..\R.NET\Diagnostics\DataFrameDebugView.cs" Link="Diagnostics\DataFrameDebugView.cs" />
+    <Compile Include="..\R.NET\Diagnostics\FactorDebugView.cs" Link="Diagnostics\FactorDebugView.cs" />
+    <Compile Include="..\R.NET\Diagnostics\MatrixDebugView.cs" Link="Diagnostics\MatrixDebugView.cs" />
+    <Compile Include="..\R.NET\Diagnostics\S4ObjectDebugView.cs" Link="Diagnostics\S4ObjectDebugView.cs" />
+    <Compile Include="..\R.NET\Diagnostics\S4ObjectSlotDisplay.cs" Link="Diagnostics\S4ObjectSlotDisplay.cs" />
+    <Compile Include="..\R.NET\Diagnostics\VectorDebugView.cs" Link="Diagnostics\VectorDebugView.cs" />
+    <Compile Include="..\R.NET\DynamicVector.cs" Link="DynamicVector.cs" />
+    <Compile Include="..\R.NET\Dynamic\DataFrameDynamicMeta.cs" Link="Dynamic\DataFrameDynamicMeta.cs" />
+    <Compile Include="..\R.NET\Dynamic\ListDynamicMeta.cs" Link="Dynamic\ListDynamicMeta.cs" />
+    <Compile Include="..\R.NET\Dynamic\SymbolicExpressionDynamicMeta.cs" Link="Dynamic\SymbolicExpressionDynamicMeta.cs" />
+    <Compile Include="..\R.NET\Environment.cs" Link="Environment.cs" />
+    <Compile Include="..\R.NET\EvaluationException.cs" Link="EvaluationException.cs" />
+    <Compile Include="..\R.NET\Expression.cs" Link="Expression.cs" />
+    <Compile Include="..\R.NET\ExpressionVector.cs" Link="ExpressionVector.cs" />
+    <Compile Include="..\R.NET\Factor.cs" Link="Factor.cs" />
+    <Compile Include="..\R.NET\Function.cs" Link="Function.cs" />
+    <Compile Include="..\R.NET\GenericVector.cs" Link="GenericVector.cs" />
+    <Compile Include="..\R.NET\IntegerMatrix.cs" Link="IntegerMatrix.cs" />
+    <Compile Include="..\R.NET\IntegerVector.cs" Link="IntegerVector.cs" />
+    <Compile Include="..\R.NET\InternalString.cs" Link="InternalString.cs" />
+    <Compile Include="..\R.NET\Internals\ALTREP\SEXPREC.cs" Link="Internals\ALTREP\SEXPREC.cs" />
+    <Compile Include="..\R.NET\Internals\ALTREP\SEXPREC_HEADER.cs" Link="Internals\ALTREP\SEXPREC_HEADER.cs" />
+    <Compile Include="..\R.NET\Internals\ALTREP\sxpinfo.cs" Link="Internals\ALTREP\sxpinfo.cs" />
+    <Compile Include="..\R.NET\Internals\ALTREP\VECTOR_SEXPREC.cs" Link="Internals\ALTREP\VECTOR_SEXPREC.cs" />
+    <Compile Include="..\R.NET\Internals\BusyType.cs" Link="Internals\BusyType.cs" />
+    <Compile Include="..\R.NET\Internals\ConsoleOutputType.cs" Link="Internals\ConsoleOutputType.cs" />
+    <Compile Include="..\R.NET\Internals\Delegates.cs" Link="Internals\Delegates.cs" />
+    <Compile Include="..\R.NET\Internals\OutputMode.cs" Link="Internals\OutputMode.cs" />
+    <Compile Include="..\R.NET\Internals\ParseStatus.cs" Link="Internals\ParseStatus.cs" />
+    <Compile Include="..\R.NET\Internals\PreALTREP\SEXPREC.cs" Link="Internals\PreALTREP\SEXPREC.cs" />
+    <Compile Include="..\R.NET\Internals\PreALTREP\SEXPREC_HEADER.cs" Link="Internals\PreALTREP\SEXPREC_HEADER.cs" />
+    <Compile Include="..\R.NET\Internals\PreALTREP\sxpinfo.cs" Link="Internals\PreALTREP\sxpinfo.cs" />
+    <Compile Include="..\R.NET\Internals\PreALTREP\VECTOR_SEXPREC.cs" Link="Internals\PreALTREP\VECTOR_SEXPREC.cs" />
+    <Compile Include="..\R.NET\Internals\SaveActions.cs" Link="Internals\SaveActions.cs" />
+    <Compile Include="..\R.NET\Internals\SymbolicExpressionType.cs" Link="Internals\SymbolicExpressionType.cs" />
+    <Compile Include="..\R.NET\Internals\Unix\Delegates.cs" Link="Internals\Unix\Delegates.cs" />
+    <Compile Include="..\R.NET\Internals\Unix\RStart.cs" Link="Internals\Unix\RStart.cs" />
+    <Compile Include="..\R.NET\Internals\Windows\Delegates.cs" Link="Internals\Windows\Delegates.cs" />
+    <Compile Include="..\R.NET\Internals\Windows\RStart.cs" Link="Internals\Windows\RStart.cs" />
+    <Compile Include="..\R.NET\Internals\Windows\UiMode.cs" Link="Internals\Windows\UiMode.cs" />
+    <Compile Include="..\R.NET\Internals\YesNoCancel.cs" Link="Internals\YesNoCancel.cs" />
+    <Compile Include="..\R.NET\Language.cs" Link="Language.cs" />
+    <Compile Include="..\R.NET\LogicalMatrix.cs" Link="LogicalMatrix.cs" />
+    <Compile Include="..\R.NET\LogicalVector.cs" Link="LogicalVector.cs" />
+    <Compile Include="..\R.NET\Matrix.cs" Link="Matrix.cs" />
+    <Compile Include="..\R.NET\NativeLibrary\NativeUtility.cs" Link="NativeLibrary\NativeUtility.cs" />
+    <Compile Include="..\R.NET\NativeLibrary\Registries.cs" Link="NativeLibrary\Registries.cs" />
+    <Compile Include="..\R.NET\NumericMatrix.cs" Link="NumericMatrix.cs" />
+    <Compile Include="..\R.NET\NumericVector.cs" Link="NumericVector.cs" />
+    <Compile Include="..\R.NET\Pairlist.cs" Link="Pairlist.cs" />
+    <Compile Include="..\R.NET\ParseException.cs" Link="ParseException.cs" />
+    <Compile Include="..\R.NET\ProtectedPointer.cs" Link="ProtectedPointer.cs" />
+    <Compile Include="..\R.NET\RawMatrix.cs" Link="RawMatrix.cs" />
+    <Compile Include="..\R.NET\RawVector.cs" Link="RawVector.cs" />
+    <Compile Include="..\R.NET\REngine.cs" Link="REngine.cs" />
+    <Compile Include="..\R.NET\REngineExtension.cs" Link="REngineExtension.cs" />
+    <Compile Include="..\R.NET\S4Object.cs" Link="S4Object.cs" />
+    <Compile Include="..\R.NET\SpecialFunction.cs" Link="SpecialFunction.cs" />
+    <Compile Include="..\R.NET\StartupParameter.cs" Link="StartupParameter.cs" />
+    <Compile Include="..\R.NET\Symbol.cs" Link="Symbol.cs" />
+    <Compile Include="..\R.NET\SymbolicExpression.cs" Link="SymbolicExpression.cs" />
+    <Compile Include="..\R.NET\SymbolicExpressionExtension.cs" Link="SymbolicExpressionExtension.cs" />
+    <Compile Include="..\R.NET\Utilities\ArrayConverter.cs" Link="Utilities\ArrayConverter.cs" />
+    <Compile Include="..\R.NET\Utilities\REngineExtensionsAdvanced.cs" Link="Utilities\REngineExtensionsAdvanced.cs" />
+    <Compile Include="..\R.NET\Utilities\RTypesUtil.cs" Link="Utilities\RTypesUtil.cs" />
+    <Compile Include="..\R.NET\Vector.cs" Link="Vector.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DynamicInterop" Version="0.9.1" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.5.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Devices\" />
+    <Folder Include="Diagnostics\" />
+    <Folder Include="Dynamic\" />
+    <Folder Include="Internals\ALTREP\" />
+    <Folder Include="Internals\Windows\" />
+    <Folder Include="Internals\Unix\" />
+    <Folder Include="Internals\PreALTREP\" />
+    <Folder Include="NativeLibrary\" />
+    <Folder Include="Utilities\" />
+  </ItemGroup>
+
+</Project>

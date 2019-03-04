@@ -14,6 +14,7 @@ namespace RDotNet
     public class StartupParameter
     {
         private static readonly ulong EnvironmentDependentMaxSize = Environment.Is64BitProcess ? ulong.MaxValue : uint.MaxValue;
+        private const string DefaultRVersion = "3.5.2";
 
         // Windows style RStart includes Unix-style RStart.
         internal RStart start;
@@ -26,6 +27,25 @@ namespace RDotNet
             this.start = new RStart();
             SetDefaultParameter();
         }
+
+        /// <summary>
+        /// Gets or set the R version as a string
+        /// </summary>
+        /// <remarks>
+        /// On OS's different than Windows the R version cannot be queried using API
+        /// In the original implementation that part throws an exception
+        /// However if we allow the user to specify the R version using a parameter it can be feasible
+        /// Since that parameter is only used to decide whether the R API is before or after 3.5.0
+        /// So when someone start using R they are not going to change the version every week
+        /// And if the version is above 3.5.0 it should use the ALTREP structures anyway
+        /// </remarks>
+        /// <value>
+        /// This property defaults to "3.5.2" since this is the current version at the time of development
+        /// </value>
+        /// <example>
+        /// SpecificRVersion = "3.5.2"
+        /// </example>
+        public string SpecificRVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the value indicating that R runs as quiet mode.
@@ -277,6 +297,7 @@ namespace RDotNet
 
         private void SetDefaultParameter()
         {
+            SpecificRVersion = DefaultRVersion;
             Quiet = true;
             //Slave = false;
             Interactive = true;
