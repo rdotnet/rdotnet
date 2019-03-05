@@ -239,8 +239,15 @@ namespace RDotNet
             if (engine == null)
             {
                 engine = CreateInstance(EngineName, dll);
+
                 if (initialize)
-                    engine.Initialize(parameter, device);
+                {
+                    engine.Initialize(parameter, device);                   
+                }
+                else
+                {
+                    DetermineCompatibility(engine);
+                }
             }
             if (engine.Disposed)
                 throw new InvalidOperationException("The single REngine instance has already been disposed of (i.e. shut down). Multiple engine restart is not possible.");
@@ -265,7 +272,7 @@ namespace RDotNet
             }
             dll = ProcessRDllFileName(dll);
             var engine = new REngine(id, dll);
-            DetermineCompatibility(engine);
+
             return engine;
         }
 
@@ -425,6 +432,8 @@ namespace RDotNet
                 return;
             //         Console.WriteLine("REngine.Initialize, after isRunning checked as false");
             this.parameter = parameter ?? new StartupParameter();
+            // determine the compatiblity upon initialization
+            DetermineCompatibility(engine);
             this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
             // Disabling the stack checking here, to try to avoid the issue on Linux.
             // The disabling used to be here around end Nov 2013. Was moved later in this

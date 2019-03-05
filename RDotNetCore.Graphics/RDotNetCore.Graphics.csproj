@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\RDotNet.Graphics\Color.cs" Link="Color.cs" />
+    <Compile Include="..\RDotNet.Graphics\Colors.cs" Link="Colors.cs" />
+    <Compile Include="..\RDotNet.Graphics\DeviceDescription.cs" Link="DeviceDescription.cs" />
+    <Compile Include="..\RDotNet.Graphics\Enum.cs" Link="Enum.cs" />
+    <Compile Include="..\RDotNet.Graphics\GraphicsContext.cs" Link="GraphicsContext.cs" />
+    <Compile Include="..\RDotNet.Graphics\GraphicsDeviceAdapter.cs" Link="GraphicsDeviceAdapter.cs" />
+    <Compile Include="..\RDotNet.Graphics\GraphicsDeviceEventArgs.cs" Link="GraphicsDeviceEventArgs.cs" />
+    <Compile Include="..\RDotNet.Graphics\IGraphicsDevice.cs" Link="IGraphicsDevice.cs" />
+    <Compile Include="..\RDotNet.Graphics\Internals\Delegates.cs" Link="Internals\Delegates.cs" />
+    <Compile Include="..\RDotNet.Graphics\Internals\DevDesc.cs" Link="Internals\DevDesc.cs" />
+    <Compile Include="..\RDotNet.Graphics\Internals\GEcontext.cs" Link="Internals\GEcontext.cs" />
+    <Compile Include="..\RDotNet.Graphics\Internals\GEDevDesc.cs" Link="Internals\GEDevDesc.cs" />
+    <Compile Include="..\RDotNet.Graphics\MetricsInfo.cs" Link="MetricsInfo.cs" />
+    <Compile Include="..\RDotNet.Graphics\Point.cs" Link="Point.cs" />
+    <Compile Include="..\RDotNet.Graphics\Raster.cs" Link="Raster.cs" />
+    <Compile Include="..\RDotNet.Graphics\RasterExtension.cs" Link="RasterExtension.cs" />
+    <Compile Include="..\RDotNet.Graphics\Rectangle.cs" Link="Rectangle.cs" />
+    <Compile Include="..\RDotNet.Graphics\REngineExtension.cs" Link="REngineExtension.cs" />
+    <Compile Include="..\RDotNet.Graphics\Size.cs" Link="Size.cs" />
+    <Compile Include="..\RDotNet.Graphics\Utility.cs" Link="Utility.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\R.NETCore\R.NETCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Internals\" />
+  </ItemGroup>
+
+</Project>

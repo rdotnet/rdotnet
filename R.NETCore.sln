@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R.NETCore", "R.NETCore\R.NETCore.csproj", "{8DB10391-21A7-4EF2-9095-1717C121CA19}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNetCore.Graphics", "RDotNetCore.Graphics\RDotNetCore.Graphics.csproj", "{39713BBC-153D-450C-AD05-2A613FC206A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8DB10391-21A7-4EF2-9095-1717C121CA19}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DB10391-21A7-4EF2-9095-1717C121CA19}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DB10391-21A7-4EF2-9095-1717C121CA19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39713BBC-153D-450C-AD05-2A613FC206A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39713BBC-153D-450C-AD05-2A613FC206A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39713BBC-153D-450C-AD05-2A613FC206A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39713BBC-153D-450C-AD05-2A613FC206A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,6 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>R.NETCore-Unofficial</PackageId>
+    <PackageProjectUrl>https://github.com/danielleiszen/rdotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/danielleiszen/rdotnet</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <Version>1.8.1</Version>
+    <Authors>Jean-Michel Perraud, Daniel Collins, Kosei, evolvedmicrobe</Authors>
+    <Company></Company>
+    <Description>.NETCore fork of R.NET with support of R version 3.5.0 and later (tested with 3.5.2)
+
+A .NET interoperability library to access the R statistical language runtime from .NET languages. The library is designed for fast data exchange, in process.</Description>
+    <Copyright>© 2014-2018 Jean-Michel Perraud; © 2013 Kosei, evolvedmicrobe</Copyright>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseUrl>https://github.com/jmp75/rdotnet/blob/refactor/xunit/License.txt</PackageLicenseUrl>
+    <PackageTags>interop R statistical language dotnetcore</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
