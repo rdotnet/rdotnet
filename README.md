@@ -31,6 +31,13 @@ If using dotnet version prior to 2.1.3, [installing/restoring prerelease depende
 nuget install -Prerelease DynamicInterop -OutputDirectory packages
 ```
 
+As of ~2019-03 if using the .NET framework 4.7.2
+
+```sh
+nuget restore RDotNet.Tests.sln
+msbuild RDotNet.Tests.sln /p:Platform="Any CPU" /p:Configuration=Debug /consoleloggerparameters:ErrorsOnly
+```
+
 ```sh
 dotnet restore RDotNet.Tests.sln
 dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
@@ -48,5 +55,5 @@ dotnet test RDotNet.Tests/RDotNet.Tests.csproj
 dotnet build --configuration Release --no-restore  RDotNet.Tests.sln
 dotnet pack R.NET/RDotNet.csproj --configuration Release --no-build --no-restore --output nupkgs
 # Or for initial testing/debugging
-dotnet pack DynamicInterop/DynamicInterop.csproj --configuration Debug --no-build --no-restore --output nupkgs
+dotnet pack R.NET/RDotNet.csproj --configuration Debug --no-build --no-restore --output nupkgs
 ```

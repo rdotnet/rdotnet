@@ -38,7 +38,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" /> -->
     <PackageReference Include="DynamicInterop" Version="0.9.1" />
-    <PackageReference Include="FSharp.Core" Version="4.3.4" />
+    <PackageReference Include="FSharp.Core" Version="4.6.2" />
     <ProjectReference Include="..\R.NET\RDotNet.csproj">
     </ProjectReference>
   </ItemGroup>
