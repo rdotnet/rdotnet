@@ -1,29 +1,28 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay?svg=true)](https://ci.appveyor.com/project/jmp75/rdotnet)
+# R.NET
 
-R.NET
-=======
+master: [![Build status master](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay/branch/master?svg=true)](https://ci.appveyor.com/project/jmp75/rdotnet/branch/master) testing: [![Build status testing](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay/branch/testing?svg=true)](https://ci.appveyor.com/project/jmp75/rdotnet/branch/testing)
 
 R.NET is an in-process bridge for the .NET Framework to access the R statistical language. R.NET works on Windows, Linux and MacOS. 
 
-# Software requirements
+## Software requirements
 
 On Windows, R.NET requires .NET Framework > 4.6.1 or .NET Core 2.0, and an access to the native R libraries installed with the R environment. R needs not necessarily be installed as a software on the executing machine, so long as DLL files are accessible (you may need to tweak environment variables for the latter to work, though)
 On Linux and MacOS, Mono is required, as well as an access to the native R libraries.
 
-# Getting started
+## Getting started
 
 As of 2017-08
 
 * If you want the latest binary distribution of R.NET and you are already familiar with managing dependencies with NuGet, head to [R.NET on NuGet](https://www.nuget.org/packages?q=R.NET)
 * If you need a bit more documentation to get started, the prefered entry point is at [http://jmp75.github.io/rdotnet](http://jmp75.github.io/rdotnet)
 
-# Building from source
+## Building from source
 
-## Foreword/rant
+### Foreword/rant
 
 As of February 2018 I am underwhelmed by the state of nuget package dependency. The process of migrating R.NET to `netstandard2.0` has been replete with frustration with the lack of clarity, multiple issues, inconsistencies or bugs in the behaviors of `dotnet`, `nuget` and visual studio.
 
-## Building from source
+### Building from source
 
 If using dotnet version prior to 2.1.3, [installing/restoring prerelease dependency packages is problematic](https://github.com/dotnet/cli/issues/8485). You may need to use
 
@@ -49,7 +48,7 @@ dotnet build --configuration Debug --no-restore RDotNet.ns2.sln
 dotnet test RDotNet.Tests/RDotNet.Tests.csproj
 ```
 
-## Building the nuget package
+### Building the nuget package
 
 *This section is primarily a reminder to the package author.*
 
