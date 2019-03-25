@@ -39,8 +39,10 @@ msbuild RDotNet.Tests.sln /p:Platform="Any CPU" /p:Configuration=Debug /consolel
 ```
 
 ```sh
-dotnet restore RDotNet.Tests.sln
-dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
+#dotnet restore RDotNet.Tests.sln
+dotnet restore RDotNet.ns2.sln
+#dotnet build --configuration Debug --no-restore RDotNet.Tests.sln
+dotnet build --configuration Debug --no-restore RDotNet.ns2.sln
 ```
 
 ```sh
