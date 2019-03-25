@@ -53,7 +53,7 @@ dotnet test RDotNet.Tests/RDotNet.Tests.csproj
 *This section is primarily a reminder to the package author.*
 
 ```bash
-dotnet build --configuration Release --no-restore  RDotNet.Tests.sln
+dotnet build --configuration Release --no-restore  RDotNet.ns2.sln
 dotnet pack R.NET/RDotNet.csproj --configuration Release --no-build --no-restore --output nupkgs
 # Or for initial testing/debugging
 dotnet pack R.NET/RDotNet.csproj --configuration Debug --no-build --no-restore --output nupkgs

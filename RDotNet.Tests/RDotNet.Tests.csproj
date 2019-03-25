@@ -6,7 +6,7 @@
     <ProjectGuid>{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}</ProjectGuid>
     <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <Version>1.8.0-alpha</Version>
+    <Version>1.8.0-alpha1</Version>
     <Copyright>(c) 2014-2018 Jean-Michel Perraud; (c) 2013 Kosei, evolvedmicrobe</Copyright>
     <Description>A .NET interoperability library to access the R statistical language runtime from .NET languages. The library is designed for fast data exchange, in process.</Description>
     <!-- <Product>R.NET</Product> -->
