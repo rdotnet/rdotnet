@@ -30,11 +30,6 @@ namespace RDotNet.NativeLibrary
             Registry = (registry == null ? new WindowsRegistry() : registry);
         }
 
-        /// <summary> Default constructor.</summary>
-        public NativeUtility()
-        {
-        }
-
         /// <summary>
         /// Gets the platform on which the current process runs.
         /// </summary>

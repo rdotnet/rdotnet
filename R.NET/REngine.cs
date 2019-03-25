@@ -33,6 +33,9 @@ namespace RDotNet
     [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
     public class REngine : DynamicInterop.UnmanagedDll
     {
+        /// <summary>
+        /// Flag for working on pre or post R 3.5 and its ALTREP mode.  
+        /// </summary>
         public enum CompatibilityMode
         {
             /// <summary>
@@ -298,7 +301,10 @@ namespace RDotNet
                 }
             }
         }
-
+        /// <summary>
+        /// Gets the type of SEXPREC pre or post ALTREP
+        /// </summary>
+        /// <returns></returns>
         public Type GetSEXPRECType()
         {
             if (sexprecType == null)
@@ -319,6 +325,10 @@ namespace RDotNet
             return sexprecType;
         }
 
+        /// <summary>
+        /// Gets the type of symsxp pre or post ALTREP
+        /// </summary>
+        /// <returns></returns>
         public Type GetSymSxpType()
         {
             if (symsxpType == null)
@@ -339,6 +349,10 @@ namespace RDotNet
             return symsxpType;
         }
 
+        /// <summary>
+        /// Gets the type of VECTOR_SEXPREC pre or post ALTREP
+        /// </summary>
+        /// <returns></returns>
         public Type GetVectorSexprecType()
         {
             if (vectorSexprecType == null)
