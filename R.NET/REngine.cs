@@ -275,6 +275,11 @@ namespace RDotNet
             // compatibility version to support R 3.5+
             engine.Compatibility = CompatibilityMode.ALTREP;
 
+            if (NativeLibrary.NativeUtility.IsUnix)
+                // engine.DllVersion is not implemented because the R native library has no entry point to getDllVersion which is Windows only. 
+                // Not sure yet if there is a way to programatically query the R version on Linux, without bumping in a chicken and egg problem.
+                return;
+
             if (string.IsNullOrWhiteSpace(engine.DllVersion))
             {
                 return;
