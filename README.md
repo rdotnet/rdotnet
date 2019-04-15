@@ -23,6 +23,11 @@ R.NET uses [Paket](https://fsprojects.github.io/Paket/) for dependency managemen
 
 To query NuGet and get the latest versions of packages used by R.NET:
 
+
+```bat
+.paket\paket.bootstrapper.exe
+```
+
 ```bat
 .paket\paket.exe update
 .paket\paket.exe restore
