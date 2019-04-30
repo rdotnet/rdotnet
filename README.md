@@ -51,6 +51,8 @@ dotnet test RDotNet.Tests/RDotNet.Tests.csproj
 ```bash
 dotnet build --configuration Release --no-restore  RDotNet.ns2.sln
 dotnet pack R.NET/RDotNet.csproj --configuration Release --no-build --no-restore --output nupkgs
+dotnet pack RDotNet.FSharp/RDotNet.FSharp.fsproj --configuration Release --no-build --no-restore --output nupkgs
+
 # Or for initial testing/debugging
 dotnet pack R.NET/RDotNet.csproj --configuration Debug --no-build --no-restore --output nupkgs
 ```
