@@ -1,6 +1,6 @@
 language: csharp
 mono: none
-dotnet: 2.0.0
+dotnet: 2.1.602
 dist: trusty
 
 branches:
@@ -12,8 +12,11 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y r-base-dev  
 
-script:
+install:
   - dotnet restore RDotNet.Tests.sln
   - dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
+
+script:
+  - export R_HOME=/usr/lib/R
   - dotnet test RDotNet.Tests/RDotNet.Tests.csproj
   - dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
