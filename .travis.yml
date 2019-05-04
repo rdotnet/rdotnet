@@ -8,8 +8,12 @@ branches:
   - master
   - testing
 
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y r-base-dev  
+
 script:
-- dotnet restore RDotNet.Tests.sln
-- dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
-- dotnet test RDotNet.Tests/RDotNet.Tests.csproj
-- dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
+  - dotnet restore RDotNet.Tests.sln
+  - dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
+  - dotnet test RDotNet.Tests/RDotNet.Tests.csproj
+  - dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj

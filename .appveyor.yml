@@ -16,7 +16,6 @@ branches:
   only:
   - master
   - testing
-  - devel
 
 # Install R for windows. 
 # Borrowed from http://raw.github.com/krlmlr/r-appveyor
@@ -39,8 +38,12 @@ build_script:
 
     dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
 
-test_script:
-- cmd: >-
-    dotnet test RDotNet.Tests/RDotNet.Tests.csproj
+# Cannot run test scripts; somehow:
+# The active test run was aborted. Reason: 
+# Test Run Aborted.
 
-    dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
+# test_script:
+# - cmd: >-
+#     dotnet test RDotNet.Tests/RDotNet.Tests.csproj
+
+#     dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
