@@ -78,7 +78,7 @@ namespace RDotNet
             this.isRunning = false;
             this.Disposed = false;
             this.EnableLock = true; // See https://rdotnet.codeplex.com/workitem/113; it seems wise to enable it by default.
-            this.AutoPrint = true;
+            this.AutoPrint = false;  // 2019-05 changing to false by default, as this impacts the default performance drastically. There was an argument for a true default, but now I things this is superseded.
         }
 
         /// <summary>

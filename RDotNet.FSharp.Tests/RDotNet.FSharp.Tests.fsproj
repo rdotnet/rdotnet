@@ -7,18 +7,13 @@
     <ProjectGuid>541e564c-9414-4711-813e-697c1e9bd494</ProjectGuid>
     <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <Version>1.8.0-alpha</Version>
-    <Copyright>(c) 2014-2018 Jean-Michel Perraud; (c) 2013 Kosei, evolvedmicrobe</Copyright>
-    <!-- <Description>Description</Description>
-    <Product>Product</Product>
-    <Company />
-    <Authors>Jean-Michel Perraud, Kosei, evolvedmicrobe</Authors>
-    <PackageId>DynamicInterop</PackageId> -->
+    <Version>1.8.0-alpha2</Version>
+    <Copyright>(c) 2014-2019 Jean-Michel Perraud and others see https://github.com/jmp75/rdotnet/blob/master/License.txt</Copyright>
     <RepositoryUrl>https://github.com/jmp75/rdotnet</RepositoryUrl>
-    <ApplicationIcon />
-    <!-- <PackageProjectUrl>https://github.com/jmp75/rdotnet</PackageProjectUrl>
-    <PackageReleaseNotes>Migration to .NET Standard 2.0</PackageReleaseNotes> -->
-    <!-- <TargetFSharpCoreVersion>4.3.0.0</TargetFSharpCoreVersion> -->
+    <PackageProjectUrl>https://github.com/jmp75/rdotnet</PackageProjectUrl>
+    <PackageReleaseNotes>Alpha release to test usage on Linux. Migration to .NET Standard 2.0 and supporting R 3.5.x</PackageReleaseNotes>
+    <PackageTags>interop R statistical language</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
     <None Include="app.config" />
