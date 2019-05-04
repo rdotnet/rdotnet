@@ -28,7 +28,7 @@ Due to the move to targetting `netstandard2.0`, you might encounter compiling is
 
 As an example:
 
-* `where msbuild` returns `C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe`
+* `where msbuild` returns `C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe` should be the first line. `C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe` is probably not a good option.
 * `msbuild -version` returns `16.0.461.62831`
 * `where dotnet`: `C:\Program Files\dotnet\dotnet.exe`
 * `dotnet --version`:  `2.1.602`. Note that this version of the .net core SDK would prevent compilation from VS2017: VS2019 required.
@@ -41,6 +41,8 @@ If using dotnet version prior to 2.1.3, [installing/restoring prerelease depende
 ```sh
 nuget install -Prerelease DynamicInterop -OutputDirectory packages
 ```
+
+otherwise:
 
 ```sh
 nuget restore RDotNet.Tests.sln
@@ -63,7 +65,7 @@ Test Run Successful.
 Test execution time: 5.2537 Seconds
 ```
 
-However from time to time tests may fail to start, for reasons as yet unknown:
+However note that from time to time tests may fail to start, for reasons as yet unknown:
 
 ```text
 Starting test execution, please wait...
