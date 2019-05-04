@@ -1,6 +1,7 @@
 language: csharp
 mono: none
-dotnet: 2.1.602
+# dotnet: 2.1.602
+dotnet: 2.2.203
 dist: trusty
 
 branches:
@@ -18,5 +19,6 @@ install:
 
 script:
   - export R_HOME=/usr/lib/R
+  - ls $R_HOME
   - dotnet test RDotNet.Tests/RDotNet.Tests.csproj
   - dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj

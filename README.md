@@ -1,8 +1,8 @@
 # R.NET
 
-master: [![Build status master](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay/branch/master?svg=true)](https://ci.appveyor.com/project/jmp75/rdotnet/branch/master) testing: [![Build status testing](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay/branch/testing?svg=true)](https://ci.appveyor.com/project/jmp75/rdotnet/branch/testing)
+windows master: [![Build status master](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay/branch/master?svg=true)](https://ci.appveyor.com/project/jmp75/rdotnet/branch/master) windows testing: [![Build status testing](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay/branch/testing?svg=true)](https://ci.appveyor.com/project/jmp75/rdotnet/branch/testing) Linux master: [![Linux master Build Status](https://travis-ci.org/jmp75/rdotnet.svg?branch=master "Linux master Build Status")](https://travis-ci.org/jmp75/rdotnet/builds)
 
-R.NET is an in-process bridge for the .NET Framework to access the R statistical language. R.NET works on Windows, Linux and MacOS. 
+R.NET is an in-process bridge for the .NET Framework to access the R statistical language. R.NET works on Windows, Linux and MacOS.
 
 ## License
 
