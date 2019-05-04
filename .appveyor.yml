@@ -35,9 +35,9 @@ cache:
 
 build_script:
 - cmd: >-
-    dotnet restore RDotNet.ns2.sln
+    dotnet restore RDotNet.Tests.sln
 
-    dotnet build --configuration Debug --no-restore  RDotNet.ns2.sln
+    dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
 
 test_script:
 - cmd: >-

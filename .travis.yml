@@ -3,20 +3,13 @@ mono: none
 dotnet: 2.0.0
 dist: trusty
 
-script:
-- dotnet restore
-- dotnet build --configuration Release --no-restore
-
-- cd DynamicInterop.Tests
-- cd test_native_library
-- cmake -H. -Bbuild
-- cmake --build build -- -j3
-- cd ..
-- cd ..
+branches:
+  only:
+  - master
+  - testing
 
 script:
 - dotnet restore RDotNet.Tests.sln
 - dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
-# - dotnet test RDotNet.Tests/RDotNet.Tests.csproj
-
-
+- dotnet test RDotNet.Tests/RDotNet.Tests.csproj
+- dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
