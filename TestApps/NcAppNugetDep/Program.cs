@@ -9,7 +9,7 @@ namespace NcAppNugetDep
             REngine.SetEnvironmentVariables();
             using (var engine = REngine.GetInstance())
             {
-                engine.AutoPrint = false;
+                engine.AutoPrint = true;
                 var vector = engine.Evaluate("x <- character(100)").AsCharacter();
                 vector[1] = "foo";
                 vector[2] = "bar";
