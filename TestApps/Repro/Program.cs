@@ -7,10 +7,13 @@ namespace SimpleTest
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        static void Main(string[] args)
         {
-            github_issue_90();
-
+            REngine.SetEnvironmentVariables();
+            using (REngine e = REngine.GetInstance())
+            {
+                ReproGH97(e);
+            }
             //string rHome = null;
             //string rPath = null;
             //if (args.Length > 0)
@@ -37,6 +40,37 @@ namespace SimpleTest
             //    TestCallStop(e);
 
             //e.Dispose();
+        }
+
+        private static void ReproGH97(REngine engine)
+        {
+            // https://github.com/jmp75/rdotnet/issues/97
+            SymbolicExpression expression;
+
+            REngine.SetEnvironmentVariables();
+            var log = NativeUtility.SetEnvironmentVariablesLog;
+            engine = REngine.GetInstance();
+            engine.Initialize();
+            engine.Evaluate("x <- data.frame(c1 = c('a', 'b'), stringsAsFactors = FALSE)");
+            expression = engine.GetSymbol("x");
+            Console.WriteLine("Values as characters:");
+            Console.WriteLine(expression.AsDataFrame()[0][0]);
+            Console.WriteLine(expression.AsDataFrame()[0][1]);
+            Console.WriteLine("*********************");
+            engine.Evaluate("y <- data.frame(x = c('a', 'b'), stringsAsFactors = TRUE)");
+            expression = engine.GetSymbol("y");
+            Console.WriteLine("Values as factor:");
+            Console.WriteLine(expression.AsDataFrame()[0][0]);
+            Console.WriteLine(expression.AsDataFrame()[0][1]);
+            Console.WriteLine("*********************");
+            engine.Evaluate("c1 <- x$c1");
+            expression = engine.GetSymbol("c1");
+            Console.WriteLine("Values direct from column:");
+            Console.WriteLine(expression.AsCharacter()[0]);
+            Console.WriteLine(expression.AsCharacter()[1]);
+            Console.WriteLine("*********************");
+
+            Console.WriteLine(log);
         }
 
         private static void github_issue_90()
