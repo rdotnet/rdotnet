@@ -51,6 +51,8 @@ dotnet build --configuration Debug --no-restore RDotNet.Tests.sln
 # msbuild RDotNet.Tests.sln /p:Platform="Any CPU" /p:Configuration=Debug /consoleloggerparameters:ErrorsOnly
 ```
 
+#### Unit tests
+
 Unit tests can be run using:
 
 ```sh
@@ -65,12 +67,18 @@ Test Run Successful.
 Test execution time: 5.2537 Seconds
 ```
 
-However note that from time to time tests may fail to start, for reasons as yet unknown:
+However note that from time to time (or at the first `dotnet test` execution) tests may fail to start, for reasons as yet unknown:
 
 ```text
 Starting test execution, please wait...
 The active test run was aborted. Reason:
 Test Run Aborted.
+```
+
+It may be that all subsequent calls then work as expected.
+
+```sh
+dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
 ```
 
 ### Building the nuget package
