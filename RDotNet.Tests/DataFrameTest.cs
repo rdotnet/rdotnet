@@ -75,6 +75,28 @@ namespace RDotNet
         }
 
         [Fact]
+        public void TestDataFrameConversionCharacterWithFactors()
+        {
+            SetUpTest();
+            var engine = this.Engine;
+
+            engine.Evaluate("x <- data.frame(c1 = c('a', 'b'), stringsAsFactors = FALSE)");
+            var expression = engine.GetSymbol("x");
+            Assert.Equal("a", expression.AsDataFrame()[0][0]);
+            Assert.Equal("b", expression.AsDataFrame()[0][1]);
+
+            engine.Evaluate("y <- data.frame(x = c('a', 'b'), stringsAsFactors = TRUE)");
+            expression = engine.GetSymbol("y");
+            Assert.Equal("a", expression.AsDataFrame()[0][0]);
+            Assert.Equal("b", expression.AsDataFrame()[0][1]);
+
+            engine.Evaluate("c1 <- x$c1");
+            expression = engine.GetSymbol("c1");
+            Assert.Equal("a", expression.AsCharacter()[0]);
+            Assert.Equal("b", expression.AsCharacter()[1]);
+        }
+
+        [Fact]
         public void TestDataFrameInMemoryCreation()
         {
             SetUpTest();
