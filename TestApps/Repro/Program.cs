@@ -9,7 +9,20 @@ namespace SimpleTest
     {
         static void Main(string[] args)
         {
-            REngine.SetEnvironmentVariables();
+            string rHome = @"C:\Progra~1\R\R-36~1.0";
+            string rPath = rHome + @"\bin\x64";
+            if (args.Length > 0)
+                rHome = args[0];
+            else
+            {
+                rHome = @"C:\Progra~1\R\R-36~1.0";
+                rPath = rHome + @"\bin\x64";
+            }
+            if (args.Length > 1)
+            {
+                rPath = rHome + @"\bin\" + args[1];
+            }
+            REngine.SetEnvironmentVariables(rPath, rHome);
             using (REngine e = REngine.GetInstance())
             {
                 ReproGH97(e);
@@ -47,23 +60,42 @@ namespace SimpleTest
             // https://github.com/jmp75/rdotnet/issues/97
             SymbolicExpression expression;
 
-            REngine.SetEnvironmentVariables();
             var log = NativeUtility.SetEnvironmentVariablesLog;
-            engine = REngine.GetInstance();
             engine.Initialize();
             engine.Evaluate("x <- data.frame(c1 = c('a', 'b'), stringsAsFactors = FALSE)");
+            engine.Evaluate("y <- data.frame(x = c('a', 'b'), stringsAsFactors = TRUE)");
+            engine.Evaluate("c1 <- x$c1");
+
             expression = engine.GetSymbol("x");
             Console.WriteLine("Values as characters:");
             Console.WriteLine(expression.AsDataFrame()[0][0]);
             Console.WriteLine(expression.AsDataFrame()[0][1]);
             Console.WriteLine("*********************");
-            engine.Evaluate("y <- data.frame(x = c('a', 'b'), stringsAsFactors = TRUE)");
             expression = engine.GetSymbol("y");
             Console.WriteLine("Values as factor:");
             Console.WriteLine(expression.AsDataFrame()[0][0]);
             Console.WriteLine(expression.AsDataFrame()[0][1]);
             Console.WriteLine("*********************");
-            engine.Evaluate("c1 <- x$c1");
+            expression = engine.GetSymbol("c1");
+            Console.WriteLine("Values direct from column:");
+            Console.WriteLine(expression.AsCharacter()[0]);
+            Console.WriteLine(expression.AsCharacter()[1]);
+            Console.WriteLine("*********************");
+
+            Console.WriteLine("");
+            Console.WriteLine("*********************");
+            Console.WriteLine("Now going for a second round");
+            Console.WriteLine("*********************");
+            expression = engine.GetSymbol("x");
+            Console.WriteLine("Values as characters:");
+            Console.WriteLine(expression.AsDataFrame()[0][0]);
+            Console.WriteLine(expression.AsDataFrame()[0][1]);
+            Console.WriteLine("*********************");
+            expression = engine.GetSymbol("y");
+            Console.WriteLine("Values as factor:");
+            Console.WriteLine(expression.AsDataFrame()[0][0]);
+            Console.WriteLine(expression.AsDataFrame()[0][1]);
+            Console.WriteLine("*********************");
             expression = engine.GetSymbol("c1");
             Console.WriteLine("Values direct from column:");
             Console.WriteLine(expression.AsCharacter()[0]);
