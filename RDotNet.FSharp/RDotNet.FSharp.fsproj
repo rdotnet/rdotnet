@@ -6,7 +6,7 @@
     <ProjectGuid>fe745bfd-793d-4b05-b0ee-bea4d5e3c0a6</ProjectGuid>
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.8.1</Version>
+    <Version>1.8.2</Version>
     <Copyright>(c) 2014-2019 Jean-Michel Perraud and others see https://github.com/jmp75/rdotnet/blob/master/License.txt</Copyright>
    <Description>A .NET interoperability library to access the R statistical language runtime from .NET languages. The library is designed for fast data exchange, in process.</Description>
     <Product>R.NET</Product>
@@ -16,7 +16,7 @@
     <Title>R.NET.FSharp: Access R from F# in process</Title>
     <RepositoryUrl>https://github.com/jmp75/rdotnet</RepositoryUrl>
     <PackageProjectUrl>https://github.com/jmp75/rdotnet</PackageProjectUrl>
-    <PackageReleaseNotes>Migration to .NET Standard 2.0, support for R 3.5.x, and moving to an MIT license</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix an issue with character columns in data frames, that occured for 3.5+ versions of R</PackageReleaseNotes>
     <PackageTags>interop R statistical language</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
    </PropertyGroup>
