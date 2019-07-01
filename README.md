@@ -18,13 +18,13 @@ On Linux and MacOS, Mono is required, as well as an access to the native R libra
 As of 2017-08
 
 * If you want the latest binary distribution of R.NET and you are already familiar with managing dependencies with NuGet, head to [R.NET on NuGet](https://www.nuget.org/packages?q=R.NET)
-* If you need a bit more documentation to get started, the prefered entry point is at [http://jmp75.github.io/rdotnet](http://jmp75.github.io/rdotnet)
+* If you need a bit more documentation to get started, the prefered entry point is at [http://rdotnet.github.io/rdotnet](http://rdotnet.github.io/rdotnet)
 
 ## Building from source
 
 ### Compiler toolchain foreword
 
-Due to the move to targetting `netstandard2.0`, you might encounter compiling issue if using an older toolchain. This is machine dependent (mostly, which visual studio versions and .NET targetting packs you have). You may want to [adapt the instructions from the rClr packge](https://github.com/jmp75/rClr/blob/master/README.md#windows) to avoid some pitfalls.
+Due to the move to targetting `netstandard2.0`, you might encounter compiling issue if using an older toolchain. This is machine dependent (mostly, which visual studio versions and .NET targetting packs you have). You may want to [adapt the instructions from the rClr packge](https://github.com/rdotnet/rClr/blob/master/README.md#windows) to avoid some pitfalls.
 
 As an example:
 
