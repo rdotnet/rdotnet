@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NframeworkAppNugetDep", "Nf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NcAppNugetDep", "NcAppNugetDep\NcAppNugetDep.csproj", "{87235ED0-C154-4B43-AB0A-9F9CB08F8D71}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NfTransitionalPackage", "NfTransitionalPackage\NfTransitionalPackage.csproj", "{23CDCFD2-2FF3-4B0D-86D9-089A7C26CC5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{87235ED0-C154-4B43-AB0A-9F9CB08F8D71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87235ED0-C154-4B43-AB0A-9F9CB08F8D71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87235ED0-C154-4B43-AB0A-9F9CB08F8D71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23CDCFD2-2FF3-4B0D-86D9-089A7C26CC5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23CDCFD2-2FF3-4B0D-86D9-089A7C26CC5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23CDCFD2-2FF3-4B0D-86D9-089A7C26CC5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23CDCFD2-2FF3-4B0D-86D9-089A7C26CC5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

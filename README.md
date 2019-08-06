@@ -18,17 +18,17 @@ On Linux and MacOS, Mono is required, as well as an access to the native R libra
 As of 2017-08
 
 * If you want the latest binary distribution of R.NET and you are already familiar with managing dependencies with NuGet, head to [R.NET on NuGet](https://www.nuget.org/packages?q=R.NET)
-* If you need a bit more documentation to get started, the prefered entry point is at [http://jmp75.github.io/rdotnet](http://jmp75.github.io/rdotnet)
+* If you need a bit more documentation to get started, the prefered entry point is at [http://rdotnet.github.io/rdotnet](http://rdotnet.github.io/rdotnet)
 
 ## Building from source
 
 ### Compiler toolchain foreword
 
-Due to the move to targetting `netstandard2.0`, you might encounter compiling issue if using an older toolchain. This is machine dependent (mostly, which visual studio versions and .NET targetting packs you have). You may want to [adapt the instructions from the rClr packge](https://github.com/jmp75/rClr/blob/master/README.md#windows) to avoid some pitfalls.
+Due to the move to targetting `netstandard2.0`, you might encounter compiling issue if using an older toolchain. This is machine dependent (mostly, which visual studio versions and .NET targetting packs you have). You may want to [adapt the instructions from the rClr packge](https://github.com/rdotnet/rClr/blob/master/README.md#windows) to avoid some pitfalls.
 
 As an example:
 
-* `where msbuild` returns `C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe`
+* `where msbuild` returns `C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe` should be the first line. `C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe` is probably not a good option.
 * `msbuild -version` returns `16.0.461.62831`
 * `where dotnet`: `C:\Program Files\dotnet\dotnet.exe`
 * `dotnet --version`:  `2.1.602`. Note that this version of the .net core SDK would prevent compilation from VS2017: VS2019 required.
@@ -42,12 +42,16 @@ If using dotnet version prior to 2.1.3, [installing/restoring prerelease depende
 nuget install -Prerelease DynamicInterop -OutputDirectory packages
 ```
 
+otherwise:
+
 ```sh
 nuget restore RDotNet.Tests.sln
 dotnet build --configuration Debug --no-restore RDotNet.Tests.sln
 # or if any issue possibly try:
 # msbuild RDotNet.Tests.sln /p:Platform="Any CPU" /p:Configuration=Debug /consoleloggerparameters:ErrorsOnly
 ```
+
+#### Unit tests
 
 Unit tests can be run using:
 
@@ -63,12 +67,18 @@ Test Run Successful.
 Test execution time: 5.2537 Seconds
 ```
 
-However from time to time tests may fail to start, for reasons as yet unknown:
+However note that from time to time (or at the first `dotnet test` execution) tests may fail to start, for reasons as yet unknown:
 
 ```text
 Starting test execution, please wait...
 The active test run was aborted. Reason:
 Test Run Aborted.
+```
+
+It may be that all subsequent calls then work as expected.
+
+```sh
+dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
 ```
 
 ### Building the nuget package

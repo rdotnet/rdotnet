@@ -226,7 +226,15 @@ namespace RDotNet
         private string ReadString(IntPtr pointer, int offset)
         {
             pointer = Marshal.ReadIntPtr(pointer, offset);
-            pointer = IntPtr.Add(pointer, Marshal.SizeOf(Engine.GetVectorSexprecType()));
+            if (Engine.Compatibility == REngine.CompatibilityMode.ALTREP)
+            {
+                pointer = GetFunction<DATAPTR_OR_NULL>()(pointer);
+            }
+            else
+            {
+                pointer = IntPtr.Add(pointer, Marshal.SizeOf(Engine.GetVectorSexprecType()));
+            }
+
             return InternalString.StringFromNativeUtf8(pointer);
         }
 

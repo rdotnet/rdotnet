@@ -1,6 +1,6 @@
 ﻿using RDotNet;
 
-namespace NcAppNugetDep
+namespace NfTransitionalPackage
 {
     class Program
     {

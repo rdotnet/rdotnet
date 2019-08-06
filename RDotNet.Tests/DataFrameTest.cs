@@ -11,7 +11,7 @@ namespace RDotNet
             SetUpTest();
             var engine = this.Engine;
             var iris = engine.Evaluate("data.frame()");
-            Assert.Equal(iris.IsDataFrame(), true);
+            Assert.True(iris.IsDataFrame());
         }
 
         [Fact]
@@ -20,7 +20,33 @@ namespace RDotNet
             SetUpTest();
             var engine = this.Engine;
             var iris = engine.Evaluate("list()");
-            Assert.Equal(iris.IsDataFrame(), false);
+            Assert.False(iris.IsDataFrame());
+        }
+
+        [Fact]
+        public void TestCharacterColumnRetrieval()
+        {
+            SetUpTest();
+            var engine = this.Engine;
+            SymbolicExpression expression;
+
+            engine.Evaluate("x <- data.frame(c1 = c('a', 'b'), stringsAsFactors = FALSE)");
+            expression = engine.GetSymbol("x");
+            var column = expression.AsDataFrame()[0];
+            Assert.Equal("a", expression.AsDataFrame()[0][0]);
+            Assert.Equal("b", expression.AsDataFrame()[0][1]);
+
+            engine.Evaluate("y <- data.frame(x = c('a', 'b'), stringsAsFactors = TRUE)");
+            expression = engine.GetSymbol("y");
+            column = expression.AsDataFrame()[0];
+            Assert.Equal("a", expression.AsDataFrame()[0][0]);
+            Assert.Equal("b", expression.AsDataFrame()[0][1]);
+
+            engine.Evaluate("c1 <- x$c1");
+            expression = engine.GetSymbol("c1");
+            //column = expression.AsDataFrame()[0];
+            Assert.Equal("a", expression.AsCharacter()[0]);
+            Assert.Equal("b", expression.AsCharacter()[1]);
         }
 
         [Fact]
@@ -72,6 +98,28 @@ namespace RDotNet
             SetUpTest();
             TestDataFrameInMemoryCreation();
             TestDataFrameInMemoryCreation();
+        }
+
+        [Fact]
+        public void TestDataFrameConversionCharacterWithFactors()
+        {
+            SetUpTest();
+            var engine = this.Engine;
+
+            engine.Evaluate("x <- data.frame(c1 = c('a', 'b'), stringsAsFactors = FALSE)");
+            var expression = engine.GetSymbol("x");
+            Assert.Equal("a", expression.AsDataFrame()[0][0]);
+            Assert.Equal("b", expression.AsDataFrame()[0][1]);
+
+            engine.Evaluate("y <- data.frame(x = c('a', 'b'), stringsAsFactors = TRUE)");
+            expression = engine.GetSymbol("y");
+            Assert.Equal("a", expression.AsDataFrame()[0][0]);
+            Assert.Equal("b", expression.AsDataFrame()[0][1]);
+
+            engine.Evaluate("c1 <- x$c1");
+            expression = engine.GetSymbol("c1");
+            Assert.Equal("a", expression.AsCharacter()[0]);
+            Assert.Equal("b", expression.AsCharacter()[1]);
         }
 
         [Fact]
