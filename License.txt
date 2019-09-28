@@ -1,7 +1,13 @@
 The MIT License (MIT)
 
-Copyright (c) 2014-2018 Jean-Michel Perraud
-Copyright (c) 2013 Kosei, evolvedmicrobe
+Copyright (c) 2014-2019 Jean-Michel Perraud
+Copyright (c) 2019 Luke Rasmussen
+Copyright (c) 2018 David Pendray
+Copyright (c) 2017 Guillaume Jamet
+Copyright (c) 2016 Tomas Petricek, Wei Lu
+Copyright (c) 2015 Nigel Delaney, Yuanhe Huang
+Copyright (c) 2014 skuyguy94, David Charbonneau
+Copyright (c) 2013 Kosei ABE, evolvedmicrobe
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

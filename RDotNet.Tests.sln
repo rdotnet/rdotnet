@@ -1,19 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet", "R.NET\RDotNet.csproj", "{0923E1A0-2032-4997-AB73-49E42C4034A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet", "R.NET\RDotNet.csproj", "{0923E1A0-2032-4997-AB73-49E42C4034A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.NativeLibrary", "RDotNet.NativeLibrary\RDotNet.NativeLibrary.csproj", "{2A089A59-0F22-4484-B442-0FE8BDA10879}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.TestBase", "RDotNet.TestBase\RDotNet.TestBase.csproj", "{B9E15660-096F-45FB-82E3-3C21BBE986DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.Graphics", "RDotNet.Graphics\RDotNet.Graphics.csproj", "{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDotNet.Tests", "RDotNet.Tests\RDotNet.Tests.csproj", "{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicInterop", "..\dynamic-interop-dll\DynamicInterop\DynamicInterop.csproj", "{37E8DF32-0D37-418E-B976-10F4B36A0073}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "RDotNet.FSharp.Tests", "RDotNet.FSharp.Tests\RDotNet.FSharp.Tests.fsproj", "{541E564C-9414-4711-813E-697C1E9BD494}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.TestBase", "RDotNet.TestBase\RDotNet.TestBase.csproj", "{B9E15660-096F-45FB-82E3-3C21BBE986DF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDotNet.Tests", "RDotNet.Tests\RDotNet.Tests.csproj", "{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "RDotNet.FSharp", "RDotNet.FSharp\RDotNet.FSharp.fsproj", "{FE745BFD-793D-4B05-B0EE-BEA4D5E3C0A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,18 +23,6 @@ Global
 		{0923E1A0-2032-4997-AB73-49E42C4034A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0923E1A0-2032-4997-AB73-49E42C4034A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0923E1A0-2032-4997-AB73-49E42C4034A9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A089A59-0F22-4484-B442-0FE8BDA10879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A089A59-0F22-4484-B442-0FE8BDA10879}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A089A59-0F22-4484-B442-0FE8BDA10879}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A089A59-0F22-4484-B442-0FE8BDA10879}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BCADF6CF-2D63-4BD7-BC28-F0AC4F98AE78}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37E8DF32-0D37-418E-B976-10F4B36A0073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37E8DF32-0D37-418E-B976-10F4B36A0073}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37E8DF32-0D37-418E-B976-10F4B36A0073}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37E8DF32-0D37-418E-B976-10F4B36A0073}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B9E15660-096F-45FB-82E3-3C21BBE986DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9E15660-096F-45FB-82E3-3C21BBE986DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9E15660-096F-45FB-82E3-3C21BBE986DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +31,14 @@ Global
 		{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{541E564C-9414-4711-813E-697C1E9BD494}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{541E564C-9414-4711-813E-697C1E9BD494}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{541E564C-9414-4711-813E-697C1E9BD494}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{541E564C-9414-4711-813E-697C1E9BD494}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE745BFD-793D-4B05-B0EE-BEA4D5E3C0A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE745BFD-793D-4B05-B0EE-BEA4D5E3C0A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE745BFD-793D-4B05-B0EE-BEA4D5E3C0A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE745BFD-793D-4B05-B0EE-BEA4D5E3C0A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

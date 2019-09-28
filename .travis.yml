@@ -1,22 +1,25 @@
 language: csharp
 mono: none
-dotnet: 2.0.0
-dist: trusty
+# dotnet: 2.1.602
+dotnet: 2.2.203
+# dist: trusty
+dist: xenial
+
+branches:
+  only:
+  - master
+  - testing
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y r-base-dev  
+
+install:
+  - dotnet restore RDotNet.Tests.sln
+  - dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
 
 script:
-- dotnet restore
-- dotnet build --configuration Release --no-restore
-
-- cd DynamicInterop.Tests
-- cd test_native_library
-- cmake -H. -Bbuild
-- cmake --build build -- -j3
-- cd ..
-- cd ..
-
-script:
-- dotnet restore RDotNet.Tests.sln
-- dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
-# - dotnet test RDotNet.Tests/RDotNet.Tests.csproj
-
-
+  - export R_HOME=/usr/lib/R
+  - ls $R_HOME
+  - dotnet test RDotNet.Tests/RDotNet.Tests.csproj
+  - dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj

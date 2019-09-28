@@ -1,9 +1,8 @@
-R.NET design notes
-===================
+# R.NET design notes
 
 Starting a document to capture questions, mullings and decisions about R.NET after 2018-01. Four years after doing less with .NET, the landscape has changed.
 
-# Topics
+## Topics
 
 * .NET Core and .NET Standard
     * Got over most logistical things to have new proj file format
@@ -41,19 +40,36 @@ Note that I did not locate any CLI options for `dotnet add package` that would l
 
 I still have no idea why the VS UI stuck to the released package. Foudn out dotnet CLI cannot handle prerelease pkgs... 
 
-
 Moving on to Linux after managing to get things about OK on Windows:
 
-```
+```text
 /usr/share/dotnet/sdk/2.1.3/Sdks/Microsoft.NET.Sdk/build/Microsoft.NET.Sdk.targets(114,5): error : Cannot find project info for '/home/per202/src/github_jm/rdotnet/RDotNet.NativeLibrary/RDotNet.NativeLibrary.csproj'. This can indicate a missing project reference. [/home/per202/src/github_jm/rdotnet/R.NET/RDotNet.csproj]
 ```
+
 I nuked RDotNet.NativeLibrary.csproj; why is it still there.
 
-```
+```text
 dotnet clean RDotNet.Tests.sln
 Microsoft (R) Build Engine version 15.5.179.9764 for .NET Core
 Copyright (C) Microsoft Corporation. All rights reserved.
 
 /home/per202/src/github_jm/rdotnet/RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj.metaproj : error MSB4025: The project file could not beloaded. Could not find file '/home/per202/src/github_jm/rdotnet/RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj.metaproj'.
 /home/per202/src/github_jm/rdotnet/RDotNet.FSharp/RDotNet.FSharp.fsproj.metaproj : error MSB4025: The project file could not be loaded. Could not find file '/home/per202/src/github_jm/rdotnet/RDotNet.FSharp/RDotNet.FSharp.fsproj.metaproj'.
+```
+
+## 2019-03
+
+Installing [dotnet on Debian 9](https://dotnet.microsoft.com/download/linux-package-manager/debian9/sdk-current)
+
+```bash
+wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
+sudo mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
+wget -q https://packages.microsoft.com/config/debian/9/prod.list
+sudo mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
+sudo chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
+sudo chown root:root /etc/apt/sources.list.d/microsoft-prod.list
+
+sudo apt-get install apt-transport-https
+sudo apt-get update
+sudo apt-get install dotnet-sdk-2.2
 ```

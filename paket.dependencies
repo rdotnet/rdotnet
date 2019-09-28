@@ -1,9 +1,9 @@
 source https://www.nuget.org/api/v2
 
-nuget DynamicInterop
-nuget NUnit
-nuget FAKE
-nuget NUnit.Runners
+nuget DynamicInterop == 0.8.1
+nuget FAKE == 4.64.17
+nuget NUnit == 2.7.0 
+nuget NUnit.Runners == 2.7.0
 nuget NuGet.CommandLine
 nuget Microsoft.Win32.Registry 
 nuget System.Security.Permissions

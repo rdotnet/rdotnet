@@ -33,6 +33,9 @@ namespace RDotNet
     [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
     public class REngine : DynamicInterop.UnmanagedDll
     {
+        /// <summary>
+        /// Flag for working on pre or post R 3.5 and its ALTREP mode.  
+        /// </summary>
         public enum CompatibilityMode
         {
             /// <summary>
@@ -75,7 +78,7 @@ namespace RDotNet
             this.isRunning = false;
             this.Disposed = false;
             this.EnableLock = true; // See https://rdotnet.codeplex.com/workitem/113; it seems wise to enable it by default.
-            this.AutoPrint = true;
+            this.AutoPrint = false;  // 2019-05 changing to false by default, as this impacts the default performance drastically. There was an argument for a true default, but now I things this is superseded.
         }
 
         /// <summary>
@@ -287,6 +290,11 @@ namespace RDotNet
             // compatibility version to support R 3.5+
             engine.Compatibility = CompatibilityMode.ALTREP;
 
+            if (NativeLibrary.NativeUtility.IsUnix)
+                // engine.DllVersion is not implemented because the R native library has no entry point to getDllVersion which is Windows only. 
+                // Not sure yet if there is a way to programatically query the R version on Linux, without bumping in a chicken and egg problem.
+                return;
+
             if (string.IsNullOrWhiteSpace(engine.DllVersion))
             {
                 return;
@@ -313,7 +321,10 @@ namespace RDotNet
                 }
             }
         }
-
+        /// <summary>
+        /// Gets the type of SEXPREC pre or post ALTREP
+        /// </summary>
+        /// <returns></returns>
         public Type GetSEXPRECType()
         {
             if (sexprecType == null)
@@ -334,6 +345,10 @@ namespace RDotNet
             return sexprecType;
         }
 
+        /// <summary>
+        /// Gets the type of symsxp pre or post ALTREP
+        /// </summary>
+        /// <returns></returns>
         public Type GetSymSxpType()
         {
             if (symsxpType == null)
@@ -354,6 +369,10 @@ namespace RDotNet
             return symsxpType;
         }
 
+        /// <summary>
+        /// Gets the type of VECTOR_SEXPREC pre or post ALTREP
+        /// </summary>
+        /// <returns></returns>
         public Type GetVectorSexprecType()
         {
             if (vectorSexprecType == null)

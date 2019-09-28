@@ -6,8 +6,8 @@
     <ProjectGuid>{1B9BBCE5-2BEC-4E83-82C7-3C8205380787}</ProjectGuid>
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>1.8.0-alpha</Version>
-    <Copyright>(c) 2014-2018 Jean-Michel Perraud; (c) 2013 Kosei, evolvedmicrobe</Copyright>
+    <Version>1.8.2</Version>
+    <Copyright>(c) 2014-2019 Jean-Michel Perraud and others see https://github.com/jmp75/rdotnet/blob/master/License.txt</Copyright>
     <!-- <Description>Description</Description>
     <Product>Product</Product>
     <Company />

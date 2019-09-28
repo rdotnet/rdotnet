@@ -3,8 +3,8 @@
     <ProjectGuid>{4171B26C-EEAD-475B-A147-F752CC3FE14E}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <Version>1.8.0-alpha</Version>
-    <Copyright>(c) 2014-2018 Jean-Michel Perraud; (c) 2013 Kosei, evolvedmicrobe</Copyright>
+    <Version>1.8.2</Version>
+    <Copyright>(c) 2014-2019 Jean-Michel Perraud and others see https://github.com/jmp75/rdotnet/blob/master/License.txt</Copyright>
     <!-- <Description>Description</Description>
     <Product>Product</Product>
     <Company />

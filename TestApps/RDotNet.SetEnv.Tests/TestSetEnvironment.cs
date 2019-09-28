@@ -14,7 +14,7 @@ namespace RDotNet.SetEnv.Tests
 
         public static void TestFindRPath(string expectContains)
         {
-            var rPath = NativeUtility.CreateNew().FindRPath();
+            var rPath = new NativeUtility().FindRPath();
 
             var match = rPath.Contains(expectContains);
             Console.WriteLine("Detected RPath is {0}", rPath);

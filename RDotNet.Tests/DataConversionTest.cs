@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Linq;
+using Xunit;
 using System;
 using System.Numerics;
 
@@ -207,6 +208,22 @@ namespace RDotNet
             var expected = ToMatrix(exp_one, 10, 11);
             var a = engine.GetSymbol("x").AsComplexMatrix().ToArray();
             CheckArrayEqual(a, expected);
+        }
+
+        [Fact]
+        public void TestPasteCreationAsCharacter()
+        {
+            // Created to explicitly test symbolic expression conversion, in response to:
+            // https://github.com/jmp75/rdotnet/issues/79#issuecomment-399541873
+            SetUpTest();
+            var engine = this.Engine;
+            const string prefix = "VarTemp_";
+            engine.Evaluate(string.Format("VarTemp<-paste(sep='', '{0}',sample(1:10000000, 1, replace=F))", prefix));
+            var result = engine.Evaluate("VarTemp").AsCharacter().First();
+
+            // We're testing with a randomly generated string - we don't really care what comes out, it just
+            // has to be something longer than the prefix.
+            Assert.True(result.StartsWith(prefix) && result.Length > prefix.Length);   
         }
     }
 }
