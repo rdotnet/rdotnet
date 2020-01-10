@@ -115,6 +115,7 @@ namespace RDotNet
                 {
                     SetValueAltRep(i, values[i]);
                 }
+                else
                 {
                     SetValue(i, values[i]);
                 }
