@@ -63,6 +63,10 @@ namespace RDotNet
                 {
                     int offset = GetOffset(rowIndex, columnIndex);
                     IntPtr pointer = Marshal.ReadIntPtr(DataPointer, offset);
+                    if (pointer == Engine.NaStringPointer)
+                    {
+                        return null;
+                    }
                     return new InternalString(Engine, pointer);
                 }
             }
@@ -83,14 +87,20 @@ namespace RDotNet
             }
         }
 
+        private Rf_mkChar _mkChar = null;
+
+        private IntPtr mkChar(string value)
+        {
+            if (_mkChar == null)
+                _mkChar = this.GetFunction<Rf_mkChar>();
+            return _mkChar(value);
+        }
+
         private void SetValue(int rowIndex, int columnIndex, string value)
         {
             int offset = GetOffset(rowIndex, columnIndex);
-            SymbolicExpression s = value == null ? Engine.NilValue : new InternalString(Engine, value);
-            using (new ProtectedPointer(s))
-            {
-                Marshal.WriteIntPtr(DataPointer, offset, s.DangerousGetHandle());
-            }
+            IntPtr stringPointer = value == null ? Engine.NaStringPointer : mkChar(value);
+            Marshal.WriteIntPtr(DataPointer, offset, stringPointer);
         }
 
         /// <summary>
