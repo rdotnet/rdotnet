@@ -70,11 +70,23 @@ namespace RDotNet
             /*
              > str(as.list(x))
    List of 2
-    $ a: Factor w/ 3 levels "A","B","C": 1 2 3 1 2 3
+    $ a: chr [1:6] "A" "B" "C" "A" ...
     $ b: int [1:6] 1 2 3 1 2 3
    >
    */
             var dataFrameAsList = dataFrame.AsList();
+            Assert.Equal(2, dataFrameAsList.Length);
+            Assert.False(dataFrameAsList[0].IsFactor());
+            Assert.Equal(6, dataFrameAsList[1].AsInteger().Length);
+
+            dataFrame = engine.Evaluate("data.frame(a = rep(LETTERS[1:3], 2), b = rep(1:3, 2), stringsAsFactors = TRUE)");
+            /*
+             > str(as.list(x))
+             List of 2
+              $ a: Factor w/ 3 levels "A","B","C": 1 2 3 1 2 3
+              $ b: int [1:6] 1 2 3 1 2 3
+            */
+            dataFrameAsList = dataFrame.AsList();
             Assert.Equal(2, dataFrameAsList.Length);
             Assert.True(dataFrameAsList[0].IsFactor());
             Assert.Equal(6, dataFrameAsList[1].AsInteger().Length);
