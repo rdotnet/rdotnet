@@ -29,9 +29,9 @@ Due to the move to targetting `netstandard2.0`, you might encounter compiling is
 As an example:
 
 * `where msbuild` returns `C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Current\Bin\MSBuild.exe` should be the first line. `C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe` is probably not a good option.
-* `msbuild -version` returns `16.0.461.62831`
+* `msbuild -version` returns `16.0.461.62831` or more recent
 * `where dotnet`: `C:\Program Files\dotnet\dotnet.exe`
-* `dotnet --version`:  `2.1.602`. Note that this version of the .net core SDK would prevent compilation from VS2017: VS2019 required.
+* `dotnet --version`:  `2.1.602` or more. Note that this version of the .net core SDK would prevent compilation from VS2017: VS2019 required.
 * `nuget help`: `4.9.4.5839`
 
 ### Compiling
