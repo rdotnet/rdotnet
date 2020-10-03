@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>541e564c-9414-4711-813e-697c1e9bd494</ProjectGuid>
     <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Version>1.8.2</Version>
     <Copyright>(c) 2014-2019 Jean-Michel Perraud and others see https://github.com/jmp75/rdotnet/blob/master/License.txt</Copyright>
     <RepositoryUrl>https://github.com/jmp75/rdotnet</RepositoryUrl>
@@ -26,8 +26,9 @@
     <Compile Include="MatrixTest.fs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DynamicInterop" Version="0.9.1" />
+    <PackageReference Include="DynamicInterop" Version="1.0.0-alpha1" />
     <PackageReference Include="FSharp.Core" Version="4.6.2" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -42,9 +43,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1"></PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.0-release-20200918-09"></PackageReference>
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <!-- Notice that xunit.assert, xunit.core, etc. are imported automatically.-->
   </ItemGroup>
   <ItemGroup>

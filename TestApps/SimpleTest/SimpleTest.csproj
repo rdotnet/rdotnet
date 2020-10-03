@@ -4,7 +4,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{72A25F52-04C2-4C7D-9096-EC86B74D55FE}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Version>1.8.2</Version>
     <Copyright>(c) 2014-2019 Jean-Michel Perraud and others see https://github.com/jmp75/rdotnet/blob/master/License.txt</Copyright>
     <!-- <Description>Description</Description>

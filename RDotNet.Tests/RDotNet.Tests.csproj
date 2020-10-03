@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6C456A2E-FBB5-44DA-B0D2-FE76C49FCD06}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Version>1.8.2</Version>
     <Copyright>(c) 2014-2019 Jean-Michel Perraud and others see https://github.com/jmp75/rdotnet/blob/master/License.txt</Copyright>
     <Description>A .NET interoperability library to access the R statistical language runtime from .NET languages. The library is designed for fast data exchange, in process.</Description>
@@ -21,9 +21,13 @@
     <PackageTags>interop R statistical language</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.0-preview-20200812-03" />
+    <PackageReference Include="Microsoft.NETCore.App" Version="2.2.8" />
     <PackageReference Include="xunit" Version="2.4.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
