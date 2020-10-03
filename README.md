@@ -1,6 +1,6 @@
 # R.NET
 
-windows master: [![Build status master](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay/branch/master?svg=true)](https://ci.appveyor.com/project/jmp75/rdotnet/branch/master) windows testing: [![Build status testing](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay/branch/testing?svg=true)](https://ci.appveyor.com/project/jmp75/rdotnet/branch/testing) Linux master: [![Linux master Build Status](https://travis-ci.org/jmp75/rdotnet.svg?branch=master "Linux master Build Status")](https://travis-ci.org/jmp75/rdotnet/builds) [![Nuget Version](https://buildstats.info/nuget/R.NET)](https://www.nuget.org/packages/R.NET/)
+windows master: [![Build status master](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay/branch/master?svg=true)](https://ci.appveyor.com/project/rdotnet/rdotnet/branch/master) windows testing: [![Build status testing](https://ci.appveyor.com/api/projects/status/bok963px1o9k7jay/branch/testing?svg=true)](https://ci.appveyor.com/project/jmp75/rdotnet/branch/testing) Linux master: [![Linux master Build Status](https://travis-ci.org/rdotnet/rdotnet.svg?branch=master "Linux master Build Status")](https://travis-ci.org/rdotnet/rdotnet/builds) [![Nuget Version](https://buildstats.info/nuget/R.NET)](https://www.nuget.org/packages/R.NET/)
 
 R.NET is an in-process bridge for the .NET Framework to access the R statistical language. R.NET works on Windows, Linux and MacOS.
 
