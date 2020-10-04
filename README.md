@@ -51,6 +51,13 @@ dotnet build --configuration Debug --no-restore RDotNet.Tests.sln
 # msbuild RDotNet.Tests.sln /p:Platform="Any CPU" /p:Configuration=Debug /consoleloggerparameters:ErrorsOnly
 ```
 
+Windows, if you have several versions side by side:
+
+```bat
+set DN="C:\Program Files (x86)\dotnet\dotnet.exe"
+%DN% build --configuration Debug --no-restore RDotNet.Tests.sln
+```
+
 #### Unit tests
 
 Unit tests can be run using:
@@ -90,7 +97,11 @@ set B_CONFIG=Release
 :: Or for initial testing/debugging substitute Debug for Release
 :: set B_CONFIG=Debug
 
-dotnet build --configuration %B_CONFIG% --no-restore RDotNet.Tests.sln
-dotnet pack R.NET/RDotNet.csproj --configuration %B_CONFIG% --no-build --no-restore --output nupkgs
-dotnet pack RDotNet.FSharp/RDotNet.FSharp.fsproj --configuration %B_CONFIG% --no-build --no-restore --output nupkgs
+%DN% build --configuration %B_CONFIG% --no-restore RDotNet.Tests.sln
+
+%DN% build R.NET/RDotNet.csproj --configuration %B_CONFIG% --no-restore
+%DN% build RDotNet.FSharp/RDotNet.FSharp.fsproj --configuration %B_CONFIG% --no-restore
+
+%DN% pack R.NET/RDotNet.csproj --configuration %B_CONFIG% --no-build --no-restore --output nupkgs
+%DN% pack RDotNet.FSharp/RDotNet.FSharp.fsproj --configuration %B_CONFIG% --no-build --no-restore --output nupkgs
 ```
