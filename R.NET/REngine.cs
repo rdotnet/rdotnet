@@ -57,6 +57,7 @@ namespace RDotNet
         private bool isRunning;
         private StartupParameter parameter;
         private static bool environmentIsSet = false;
+        private static NativeUtility nativeUtil = null;
         private static REngine engine = null;
         
         // Type cache to allow faster dynamic casting
@@ -420,7 +421,15 @@ namespace RDotNet
         public static void SetEnvironmentVariables(string rPath = null, string rHome = null)
         {
             environmentIsSet = true;
-            new NativeUtility().SetEnvironmentVariables(rPath: rPath, rHome: rHome);
+            REngine.nativeUtil = new NativeUtility();
+            nativeUtil.SetEnvironmentVariables(rPath: rPath, rHome: rHome);
+        }
+
+        private static void resetCachedEnvironmentVariables()
+        {
+            if (environmentIsSet != true)
+                throw new Exception("resetCachedEnvironmentVariables cannot be called if the R environment variables were not first set");
+            nativeUtil.SetCachedEnvironmentVariables();
         }
 
         /// <summary>
@@ -435,7 +444,7 @@ namespace RDotNet
             if (this.isRunning)
                 return;
             //         Console.WriteLine("REngine.Initialize, after isRunning checked as false");
-            this.parameter = parameter ?? new StartupParameter();
+            this.parameter = parameter ?? this.DefaultStartupParameter();
             this.adapter = new CharacterDeviceAdapter(device ?? DefaultDevice);
             // Disabling the stack checking here, to try to avoid the issue on Linux.
             // The disabling used to be here around end Nov 2013. Was moved later in this
@@ -470,6 +479,9 @@ namespace RDotNet
             var status = GetFunction<Rf_initialize_R>()(R_argc, R_argv);
             if (status != 0)
                 throw new Exception("A call to Rf_initialize_R returned a non-zero; status=" + status);
+            if (NativeUtility.GetPlatform() == PlatformID.Win32NT)
+                // also workaround for https://github.com/rdotnet/rdotnet/issues/127  : R.dll is intent on overriding R_HOME and PATH even if --no-environ is specified...
+                resetCachedEnvironmentVariables();
             //         Console.WriteLine("Initialize-Rf_initialize_R; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
             SetCstackChecking();
 
@@ -482,6 +494,8 @@ namespace RDotNet
             {
                 case PlatformID.Win32NT:
                     GetFunction<R_SetParams_Windows>("R_SetParams")(ref this.parameter.start);
+                    // also workaround for https://github.com/rdotnet/rdotnet/issues/127  : R.dll is intent on overriding R_HOME and PATH even if --no-environ is specified...
+                    resetCachedEnvironmentVariables();
                     break;
 
                 case PlatformID.MacOSX:
@@ -499,11 +513,29 @@ namespace RDotNet
 
             //Console.WriteLine("Initialize-just before leaving; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
 
-            // Partial Workaround (hopefully temporary) for https://rdotnet.codeplex.com/workitem/110
             if (NativeUtility.GetPlatform() == PlatformID.Win32NT)
             {
+                // also workaround for https://github.com/rdotnet/rdotnet/issues/127  : R.dll is intent on overriding R_HOME and PATH even if --no-environ is specified...
+                resetCachedEnvironmentVariables();
+                // Partial Workaround (hopefully temporary) for https://rdotnet.codeplex.com/workitem/110
                 Evaluate(string.Format("invisible(memory.limit({0}))", (this.parameter.MaxMemorySize / 1048576UL)));
             }
+        }
+
+        private StartupParameter DefaultStartupParameter()
+        {
+            var p = new StartupParameter();
+            // to avoid https://github.com/rdotnet/rdotnet/issues/127 ?
+            p.NoRenviron = true;
+            p.LoadInitFile = false;
+            p.LoadSiteFile = false;
+            return p;
+        }
+
+        private static void currentEnvVars(out string path, out string rhome)
+        {
+            path = Environment.GetEnvironmentVariable("PATH");
+            rhome = Environment.GetEnvironmentVariable("R_HOME");
         }
 
         private void SetCstackChecking()

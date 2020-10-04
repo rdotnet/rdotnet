@@ -64,6 +64,24 @@ namespace RDotNet.NativeLibrary
         public static string SetEnvironmentVariablesLog { get { return logSetEnvVar.ToString(); } }
 
         /// <summary>
+        /// Gets the path to the folder containing R.dll that this instance found when setting environment variables
+        /// </summary>
+        public string RPath { get; private set; }
+
+        /// <summary>
+        /// Gets the path to the R home directory that this instance found when setting environment variables
+        /// </summary>
+        public string RHome { get; private set; }
+
+        public void SetCachedEnvironmentVariables()
+        {
+            if (RPath == null || RHome == null)
+                throw new InvalidOperationException("SetCachedEnvironmentVariables requires R path and home directory to have been specified or detected");
+            SetenvPrepend(RPath);
+            Environment.SetEnvironmentVariable("R_HOME", RHome);
+        }
+
+        /// <summary>
         /// Sets the PATH to the R binaries and R_HOME environment variables if needed.
         /// </summary>
         /// <param name="rPath">The path of the directory containing the R native library.
@@ -114,6 +132,8 @@ namespace RDotNet.NativeLibrary
                 // so all we can do is an intelligible error message for the user, explaining he needs to set the LD_LIBRARY_PATH env variable
                 // Let's delay the notification about a missing LD_LIBRARY_PATH till loading libR.so fails, if it does.
             }
+            RPath = rPath;
+            RHome = rHome;
         }
 
         /// <summary>
@@ -486,7 +506,9 @@ namespace RDotNet.NativeLibrary
             string[] subKeyNames = rCoreKey.GetSubKeyNames();
             if (subKeyNames.Length > 0)
             {
-                var versionNum = subKeyNames.First();
+                Array.Sort(subKeyNames);
+                var versionNum = subKeyNames.Last(); // gets the latest version of R installed and registered.
+                //versionNum = subKeyNames.First(); // TEMP...
                 var rVersionCoreKey = rCoreKey.OpenSubKey(versionNum);
                 doLogSetEnvVarInfo("As a last resort, trying to recurse into " + rVersionCoreKey, logger);
                 return GetRInstallPathFromRCoreKegKey(rVersionCoreKey, logger);
