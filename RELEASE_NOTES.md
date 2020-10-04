@@ -1,3 +1,9 @@
+## 1.9.0
+
+* R.NET can on all recent R versions from 3.4 onwards, including adjustments for R 4.0.x. While not extensively tested, any of the R 3.X releases should be supported. Note that on Linux only 3.5.y is supported due to a difficulty in detecting R versions on that OS.
+* Workaround: The R engine overrides PATH and R_HOME if a .Renviron file is present, at least on on Windows. This led to [Default 'stats' package functions fail to load](https://github.com/rdotnet/rdotnet/issues/127)
+* Change on windows: if several versions of R are installed and registered in the windows registry, the most recent is the default R engine loaded.
+* Contributions by Luke Rasmussen and Kieren Johnstone are gratefully acknowledged
 
 ## 1.8.2
 

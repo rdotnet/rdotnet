@@ -7,8 +7,8 @@
     <ProjectGuid>541e564c-9414-4711-813e-697c1e9bd494</ProjectGuid>
     <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <Version>1.8.2</Version>
-    <Copyright>(c) 2014-2019 Jean-Michel Perraud and others see https://github.com/jmp75/rdotnet/blob/master/License.txt</Copyright>
+    <Version>1.9.0</Version>
+    <Copyright>(c) 2014-2020 Jean-Michel Perraud and others see https://github.com/jmp75/rdotnet/blob/master/License.txt</Copyright>
     <RepositoryUrl>https://github.com/jmp75/rdotnet</RepositoryUrl>
     <PackageProjectUrl>https://github.com/jmp75/rdotnet</PackageProjectUrl>
     <PackageReleaseNotes>Fix an issue with character columns in data frames, that occured for 3.5+ versions of R</PackageReleaseNotes>
