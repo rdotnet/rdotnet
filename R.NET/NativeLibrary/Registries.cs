@@ -33,6 +33,12 @@ namespace RDotNet.NativeLibrary
         ///
         /// <returns> An IRegistryKey.</returns>
         IRegistryKey OpenSubKey(string name);
+
+        /// <summary>
+        /// Retrieve the realkey for testing against null
+        /// </summary>
+        /// <returns>The RegistryKey it holds</returns>
+        Object GetRealKey();
     }
 
     /// <summary> Interface for registry.</summary>
@@ -86,6 +92,15 @@ namespace RDotNet.NativeLibrary
             this.realKey = realKey;
         }
         Microsoft.Win32.RegistryKey realKey;
+
+        /// <summary>
+        /// Get the real key
+        /// </summary>
+        /// <returns>Object</returns>
+        public Object GetRealKey() 
+        { 
+                return realKey; 
+        }
 
         /// <summary> Gets sub key names.</summary>
         ///
