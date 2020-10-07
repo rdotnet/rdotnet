@@ -34,6 +34,8 @@ cache:
 
 build_script:
 - cmd: >-
+    dotnet --info
+
     dotnet restore RDotNet.Tests.sln
 
     dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
@@ -42,8 +44,8 @@ build_script:
 # The active test run was aborted. Reason: 
 # Test Run Aborted.
 
-# test_script:
-# - cmd: >-
-#     dotnet test RDotNet.Tests/RDotNet.Tests.csproj
+test_script:
+- cmd: >-
+    dotnet test RDotNet.Tests/RDotNet.Tests.csproj
 
-#     dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
+    dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj

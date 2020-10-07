@@ -14,7 +14,7 @@ namespace RDotNet
     /// </summary>
     [DebuggerDisplay("RObjectType = {Type}")]
     [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.UnmanagedCode)]
-    public class SymbolicExpression : SafeHandle, IEquatable<SymbolicExpression>, IDynamicMetaObjectProvider
+    public class SymbolicExpression : SafeHandle, IEquatable<SymbolicExpression>  //, IDynamicMetaObjectProvider
     {
         private readonly REngine engine;
         private readonly dynamic sexp;

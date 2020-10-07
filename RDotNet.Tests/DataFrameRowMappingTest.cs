@@ -29,22 +29,24 @@ namespace RDotNet
             Assert.Equal(counts, (new[] { 50, 50, 50 }));
         }
 
-        [Fact]
-        public void TestDataFrameSubsetting()
-        {
-            SetUpTest();
-            var engine = this.Engine;
-            dynamic iris = engine.Evaluate("iris").AsDataFrame();
-            dynamic iris50 = engine.Evaluate("iris[1:50,]").AsDataFrame();
-            Assert.Equal(150, iris.RowCount);
-            Assert.Equal(50, iris50.RowCount);
-            var species50 = (DynamicVector)iris50.Species;
-            var species = (DynamicVector)iris.Species;
-            var sameRef = object.ReferenceEquals(species, species50);
-            Assert.Equal(150, species.Length);
-            Assert.Equal(50, species50.Length);
-            Assert.Equal(iris50["Species"].Length, 50);
-        }
+        // Was not behaving properly. Disabling the support for "dynamic" until investigation. Too dangerous.
+        //[Fact]
+        //public void TestDataFrameSubsetting()
+        //{
+        //    SetUpTest();
+        //    var engine = this.Engine;
+        //    dynamic iris = engine.Evaluate("iris").AsDataFrame();
+        //    engine.Evaluate("iris50 <- iris[1:50,]");
+        //    dynamic iris50 = engine.Evaluate("iris50").AsDataFrame();
+        //    Assert.Equal(150, iris.RowCount);
+        //    Assert.Equal(50, iris50.RowCount);
+        //    var species = iris.Species;
+        //    var species50 = iris50.Species;
+        //    var sameRef = object.ReferenceEquals(species, species50);
+        //    Assert.Equal(150, species.Length);
+        //    Assert.Equal(50, species50.Length);
+        //    Assert.Equal(iris50["Species"].Length, 50);
+        //}
 
         private static dynamic GetSpecies(dynamic iris)
         {
