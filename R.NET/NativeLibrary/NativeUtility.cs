@@ -538,11 +538,11 @@ namespace RDotNet.NativeLibrary
         {
             CheckPlatformWin32();
             IRegistryKey rCore = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
-            if (rCore == null)
+            if (rCore == null || rCore.GetRealKey() is null)
             {
                 doLogSetEnvVarInfo(@"Local machine SOFTWARE\R-core not found - trying current user", logger);
                 rCore = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\R-core");
-                if (rCore == null)
+                if (rCore == null || rCore.GetRealKey() is null)
                     throw new ApplicationException("Windows Registry key 'SOFTWARE\\R-core' not found in HKEY_LOCAL_MACHINE nor HKEY_CURRENT_USER");
             }
             doFoundWinRegKey(rCore, logger);

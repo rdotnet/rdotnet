@@ -78,6 +78,15 @@ namespace RDotNet
                 subKeys.Add(new MockRegistryKey(s));
         }
 
+        /// <summary>
+        /// Get the real key of a registry entry
+        /// </summary>
+        /// <returns>RegistryKey object</returns>
+        public Object GetRealKey()
+        {
+            return subKeys[0].GetRealKey();
+        }
+
         /// <summary> Gets sub key names.</summary>
         ///
         /// <returns> An array of string.</returns>
