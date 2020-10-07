@@ -244,7 +244,7 @@ namespace RDotNet
     }
 
 
-    public class REngineInitTest
+    public class REngineInitTest : RDotNetTestFixture
     {
         [Fact(Skip = "Cannot run this in a batch with the new singleton pattern")] // Cannot run this in a batch with the new singleton pattern.
         public void TestInitParams()
@@ -405,7 +405,8 @@ namespace RDotNet
         [Fact]
         public void TestGetPathInitSearchLog()
         {
-            REngine.GetInstance();
+            SetUpTest();
+            var engine = this.Engine;
             var log = NativeUtility.SetEnvironmentVariablesLog;
             Assert.NotEqual(string.Empty, log);
         }
@@ -414,7 +415,8 @@ namespace RDotNet
         public void TestUsingDefaultRPackages()
         {
             // This test was designed to look at a symptom observed alongside the issue https://github.com/rdotnet/rdotnet/issues/127  
-            var engine = REngine.GetInstance();
+            SetUpTest();
+            var engine = this.Engine;
             var se = engine.Evaluate("set.seed");
 
             if(NativeUtility.GetPlatform() == PlatformID.Win32NT)
