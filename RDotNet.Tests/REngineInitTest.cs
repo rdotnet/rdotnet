@@ -311,8 +311,13 @@ namespace RDotNet
         public void TestMockWindowsRegistry()
         {
 
-            var w = new WindowsRegistry();
-            IRegistryKey rCore = w.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
+            IRegistryKey rCore;
+            if (NativeUtility.IsWin32NT)
+            {
+                var w = new WindowsRegistry();
+                rCore = w.LocalMachine.OpenSubKey(@"SOFTWARE\R-core");
+            }
+
 
             string localMachineTestReg = @"
 [HKEY_LOCAL_MACHINE\SOFTWARE\R-core]
@@ -396,7 +401,6 @@ namespace RDotNet
             Assert.NotEqual(string.Empty, log);
         }
 
-
         [Fact]
         public void TestUsingDefaultRPackages()
         {
@@ -404,8 +408,11 @@ namespace RDotNet
             var engine = REngine.GetInstance();
             var se = engine.Evaluate("set.seed");
 
-            Assert.True(engine.Evaluate("Sys.which('R.dll')").AsCharacter()[0].Length > 0);
-            Assert.True(engine.Evaluate("Sys.which('RBLAS.dll')").AsCharacter()[0].Length > 0);
+            if(NativeUtility.GetPlatform() == PlatformID.Win32NT)
+            {
+                Assert.True(engine.Evaluate("Sys.which('R.dll')").AsCharacter()[0].Length > 0);
+                Assert.True(engine.Evaluate("Sys.which('RBLAS.dll')").AsCharacter()[0].Length > 0);
+            }
 
             string[] expected = { "base", "methods", "utils", "grDevices", "graphics", "stats" };
             var loadedDlls = engine.Evaluate("getLoadedDLLs()").AsList();
