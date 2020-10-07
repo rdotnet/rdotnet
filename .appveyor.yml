@@ -45,6 +45,6 @@ build_script:
 
 test_script:
 - cmd: >-
-    dotnet test RDotNet.Tests/RDotNet.Tests.csproj
+    dotnet test -v d --blame RDotNet.Tests/RDotNet.Tests.csproj
 
-    dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
+    dotnet test -v d --blame RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
