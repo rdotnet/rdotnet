@@ -9,6 +9,9 @@ namespace SimpleTest
     {
         static void Main(string[] args)
         {
+            github_issue_131();
+            return;
+
             string rHome = @"C:\Progra~1\R\R-36~1.0";
             string rPath = rHome + @"\bin\x64";
             if (args.Length > 0)
@@ -27,6 +30,8 @@ namespace SimpleTest
             {
                 ReproGH97(e);
             }
+
+
             //string rHome = null;
             //string rPath = null;
             //if (args.Length > 0)
@@ -103,6 +108,19 @@ namespace SimpleTest
             Console.WriteLine("*********************");
 
             Console.WriteLine(log);
+        }
+
+        private static void github_issue_131()
+        {
+            MockDevice device = new MockDevice();
+            REngine.SetEnvironmentVariables();
+            var engine = REngine.GetInstance(dll: null, initialize: true, parameter: null, device: device);
+            engine.Evaluate("rm(list=ls())");
+            device.Initialize();
+            engine.Evaluate("print(NULL)");
+            engine.Evaluate("cat(123123123)");
+            var s = device.GetString();
+            Console.WriteLine("My device has the string '{0}'", s);
         }
 
         private static void github_issue_90()

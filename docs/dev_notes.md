@@ -127,5 +127,11 @@ Note that if you have the conda env activated youll end up with ` -I/home/per202
 
 Kept having 'rnorm' not found; and libR.so had  `libRblas.so => not found`. Needed to put in /etc/environment: `export LD_LIBRARY_PATH="/usr/local/lib/R/lib:$LD_LIBRARY_PATH"` to solve this. ldd -v then reports finding libRblas.so.
 
+Talk about extremely annoying `dotnet test --filter TestGetPathInitSearchLog --blame RDotNet.Tests/RDotNet.Tests.csproj` was not reporting why this failed. I needed to use detailed verbose output `dotnet test -v d --filter TestGetPathInitSearchLog --blame RDotNet.Tests/RDotNet.Tests.csproj` to GET THE RELEVANT AND CRAFTED EXCEPTION MESSAGE. 
 
+`[xUnit.net 00:00:00.46]       System.ArgumentException : This 64-bit process failed to load the library libR.so. No further error message from the dynamic library loader ` likely requires:
 
+```sh
+export LD_LIBRARY_PATH="/usr/local/lib/R/lib:$LD_LIBRARY_PATH"
+export R_HOME="/usr/local/lib/R"
+```
