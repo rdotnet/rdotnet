@@ -2,12 +2,10 @@ version: '{build}'
 image:
 - Visual Studio 2019
 
-
-configuration: Debug
-platform: Any CPU
 environment:
-  PLATFORM: Any CPU
-  BuildPLATFORM: Any CPU
+  R_ARCH: x64
+  Platform: x64
+  BuildPlatform: Any CPU
   BuildConfiguration: Debug
   configuration: Debug
 
@@ -39,12 +37,18 @@ build_script:
 
     dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
 
+    dotnet restore TestApps/SimpleTest/SimpleTest.csproj 
+
+    dotnet build --configuration Debug --no-restore TestApps/SimpleTest/SimpleTest.csproj 
+
 # Cannot run test scripts; somehow:
 # The active test run was aborted. Reason: 
 # Test Run Aborted.
 
 test_script:
 - cmd: >-
-    dotnet test -v d --blame RDotNet.Tests/RDotNet.Tests.csproj
+    dotnet run -v d --project TestApps/SimpleTest/SimpleTest.csproj 
+
+    dotnet test -v d --blame --filter TestCharacter RDotNet.Tests/RDotNet.Tests.csproj
 
     dotnet test -v d --blame RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
