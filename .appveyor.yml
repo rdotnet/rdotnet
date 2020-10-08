@@ -2,10 +2,14 @@ version: '{build}'
 image:
 - Visual Studio 2019
 
+
+configuration: Debug
+platform: Any CPU
+  
 environment:
   R_ARCH: x64
-  Platform: x64
-  BuildPlatform: Any CPU
+  PLATFORM: Any CPU
+  BuildPLATFORM: Any CPU
   BuildConfiguration: Debug
   configuration: Debug
 
