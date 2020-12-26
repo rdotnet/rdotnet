@@ -47,7 +47,7 @@ build_script:
 
 test_script:
 - cmd: >-
-    dotnet run --project TestApps/SimpleTest/SimpleTest.csproj 
+    .\tests\detect_r.bat 
 
     dotnet test --blame --filter TestCharacter RDotNet.Tests/RDotNet.Tests.csproj
 
