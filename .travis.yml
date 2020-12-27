@@ -3,8 +3,7 @@ mono: none
 # dotnet: 2.1.602
 dotnet: 3.1
 dist: 
-  - focal # R ???
-  - bionic # R 3.4.x
+  - bionic # R 3.4.x by default TODO how to have a matrix of pre 3.5 and post 3.5
 
 branches:
   only:
@@ -12,6 +11,8 @@ branches:
   - testing
 
 before_install:
+  - echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/" >> /etc/apt/sources.list
+  - apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
   - sudo apt-get -qq update
   - sudo apt-get install -y r-base-dev  
 
