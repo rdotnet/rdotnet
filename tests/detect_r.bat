@@ -3,14 +3,16 @@ set exit_code=0
 
 dotnet run --project tests/minimal/minimal.csproj
 
-@if errorlevel 0 goto all_exit
-@echo "WARN: errorlevel for SimpleTest is %errorlevel%, not 0"
+@if errorlevel 0 goto SimpleTest
+echo "WARN: errorlevel for minimal is %errorlevel%, not 0"
 
 @IF '%errorlevel%'=='-1073740791' set exit_code=%errorlevel%
 @IF '%errorlevel%'=='-1073740791' goto MinimalFailedBufOvrrun
 
+:SimpleTest
 dotnet run --project TestApps/SimpleTest/SimpleTest.csproj 
 
+@if errorlevel 0 goto all_exit
 @echo "WARN: errorlevel for SimpleTest is %errorlevel%, not 0"
 
 @IF '%errorlevel%'=='-1073740791' set exit_code=%errorlevel%
