@@ -1,7 +1,7 @@
 @echo off
 set exit_code=0
 
-dotnet run --project minimal/minimal.csproj
+dotnet run --project tests/minimal/minimal.csproj
 
 @if errorlevel 0 goto all_exit
 @echo "WARN: errorlevel for SimpleTest is %errorlevel%, not 0"
