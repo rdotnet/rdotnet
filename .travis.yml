@@ -16,10 +16,12 @@ before_install:
 
 install:
   - dotnet restore RDotNet.Tests.sln
-  - dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
+  - dotnet build --configuration Debug --no-restore RDotNet.Tests.sln
 
 script:
+  - R --version
   - export R_HOME=/usr/lib/R
   - ls $R_HOME
+  - dotnet run --project TestApps/SimpleTest/SimpleTest.csproj 
   - dotnet test RDotNet.Tests/RDotNet.Tests.csproj
   - dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
