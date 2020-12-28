@@ -1,4 +1,4 @@
-﻿module RDotNet.Matrix
+module RDotNet.Matrix
 
 let inline checkRows (m:Matrix<'a>) rowStart rowFinish =
    let rowStart = defaultArg rowStart 0

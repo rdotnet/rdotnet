@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using RDotNet.Utilities;
 using System.Numerics;
 

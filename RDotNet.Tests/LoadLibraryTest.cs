@@ -1,4 +1,4 @@
-﻿using DynamicInterop;
+using DynamicInterop;
 using Xunit;
 using RDotNet.NativeLibrary;
 using System;

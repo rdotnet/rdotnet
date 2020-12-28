@@ -1,4 +1,4 @@
-﻿using RDotNet.Dynamic;
+using RDotNet.Dynamic;
 using RDotNet.Internals;
 using System;
 using System.Collections.Generic;

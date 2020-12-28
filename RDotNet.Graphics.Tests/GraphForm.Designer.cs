@@ -1,4 +1,4 @@
-﻿namespace RDotNet.Graphics
+namespace RDotNet.Graphics
 {
 	partial class GraphForm
 	{

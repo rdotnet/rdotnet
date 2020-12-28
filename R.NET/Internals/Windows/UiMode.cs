@@ -1,4 +1,4 @@
-﻿namespace RDotNet.Internals.Windows
+namespace RDotNet.Internals.Windows
 {
     /// <summary>
     /// User interface mode

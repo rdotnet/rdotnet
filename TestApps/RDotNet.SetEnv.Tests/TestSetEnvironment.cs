@@ -1,4 +1,4 @@
-﻿using RDotNet.NativeLibrary;
+using RDotNet.NativeLibrary;
 using System;
 
 namespace RDotNet.SetEnv.Tests

@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using RDotNet.Internals;
 using System;
 using System.Linq;

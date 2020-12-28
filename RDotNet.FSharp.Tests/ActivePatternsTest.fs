@@ -1,4 +1,4 @@
-﻿namespace RDotNet
+namespace RDotNet
 
 open Xunit
 

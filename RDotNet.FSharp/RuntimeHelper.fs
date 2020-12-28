@@ -1,4 +1,4 @@
-﻿[<AutoOpen>]
+[<AutoOpen>]
 module internal RDotNet.RuntimeHelper
 
 open System

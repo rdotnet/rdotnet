@@ -1,4 +1,4 @@
-﻿[<AutoOpen>]
+[<AutoOpen>]
 module RDotNet.Matrix
 
 type CharacterMatrix with

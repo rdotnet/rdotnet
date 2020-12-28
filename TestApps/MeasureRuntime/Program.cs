@@ -1,4 +1,4 @@
-﻿using RDotNet;
+using RDotNet;
 using RDotNet.Devices;
 using System;
 using System.Collections.Generic;

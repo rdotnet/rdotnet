@@ -1,4 +1,4 @@
-﻿namespace RDotNet.SetEnv.Tests._64
+namespace RDotNet.SetEnv.Tests._64
 {
     internal class Program
     {

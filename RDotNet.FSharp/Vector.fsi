@@ -1,4 +1,4 @@
-﻿[<AutoOpen>]
+[<AutoOpen>]
 module RDotNet.Vector
 
 type CharacterVector with

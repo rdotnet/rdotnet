@@ -1,4 +1,4 @@
-﻿using RDotNet;
+using RDotNet;
 using System;
 
 namespace EngineDisposeTest

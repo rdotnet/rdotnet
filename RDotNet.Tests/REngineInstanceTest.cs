@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using RDotNet.Devices;
 using System;
 using System.IO;

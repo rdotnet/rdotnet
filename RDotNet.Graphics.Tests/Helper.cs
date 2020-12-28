@@ -1,4 +1,4 @@
-﻿using RDotNet.NativeLibrary;
+using RDotNet.NativeLibrary;
 
 namespace RDotNet.Graphics
 {

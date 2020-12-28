@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using System.Collections;
 
 namespace RDotNet

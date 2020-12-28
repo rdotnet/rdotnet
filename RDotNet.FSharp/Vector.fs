@@ -1,4 +1,4 @@
-﻿module RDotNet.Vector
+module RDotNet.Vector
 
 let inline copy (v:Vector<'a>) start finish =
    let start = defaultArg start 0

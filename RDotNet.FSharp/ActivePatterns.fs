@@ -1,4 +1,4 @@
-﻿module RDotNet.ActivePatterns
+module RDotNet.ActivePatterns
 
 open RDotNet.Internals
 

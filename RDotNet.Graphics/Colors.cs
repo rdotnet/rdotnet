@@ -1,4 +1,4 @@
-﻿namespace RDotNet.Graphics
+namespace RDotNet.Graphics
 {
     /// <summary>
     /// Implements a set of predefined colors.

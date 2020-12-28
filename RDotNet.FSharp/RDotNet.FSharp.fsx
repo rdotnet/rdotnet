@@ -1,4 +1,4 @@
-﻿#r "RDotNet.dll"
+#r "RDotNet.dll"
 #r "RDotNet.FSharp.dll"
 
 open RDotNet

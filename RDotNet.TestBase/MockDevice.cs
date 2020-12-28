@@ -1,4 +1,4 @@
-﻿using RDotNet.Devices;
+using RDotNet.Devices;
 using RDotNet.Internals;
 using System;
 using System.Text;

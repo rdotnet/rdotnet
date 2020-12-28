@@ -1,4 +1,4 @@
-﻿namespace RDotNet.Internals
+namespace RDotNet.Internals
 {
     /// <summary>
     /// Specifies console to output.

@@ -1,4 +1,4 @@
-﻿using RDotNet.Internals;
+using RDotNet.Internals;
 using RDotNet.Utilities;
 using System;
 using System.Runtime.InteropServices;

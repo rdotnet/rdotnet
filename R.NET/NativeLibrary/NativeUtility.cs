@@ -1,4 +1,4 @@
-﻿using DynamicInterop;
+using DynamicInterop;
 using System;
 using System.IO;
 using System.Runtime.InteropServices;

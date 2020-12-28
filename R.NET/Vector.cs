@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using RDotNet.Diagnostics;
 using RDotNet.Internals;
 using System;
