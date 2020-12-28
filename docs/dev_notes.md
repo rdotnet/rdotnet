@@ -97,9 +97,51 @@ Note that if you have the conda env activated youll end up with ` -I/home/per202
 ./configure --prefix=/usr/local --enable-R-shlib CFLAGS=" -g -Og -ggdb"  --enable-java=no --with-recommended-packages=no
 ```
 
-`launch.json` to contain:
+Modify `launch.json`; see appendix section below for configuration
+
+Kept having 'rnorm' not found; and libR.so had  `libRblas.so => not found`. Needed to put in /etc/environment: `export LD_LIBRARY_PATH="/usr/local/lib/R/lib:$LD_LIBRARY_PATH"` to solve this. ldd -v then reports finding libRblas.so.
+
+Talk about extremely annoying `dotnet test --filter TestGetPathInitSearchLog --blame RDotNet.Tests/RDotNet.Tests.csproj` was not reporting why this failed. I needed to use detailed verbose output `dotnet test -v d --filter TestGetPathInitSearchLog --blame RDotNet.Tests/RDotNet.Tests.csproj` to GET THE RELEVANT AND CRAFTED EXCEPTION MESSAGE. 
+
+`[xUnit.net 00:00:00.46]       System.ArgumentException : This 64-bit process failed to load the library libR.so. No further error message from the dynamic library loader ` likely requires:
+
+```sh
+export LD_LIBRARY_PATH="/usr/local/lib/R/lib:$LD_LIBRARY_PATH"
+export R_HOME="/usr/local/lib/R"
+```
+
+Yes, does the job. 
+
+
+## Appendix
 
 ```json
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core SimpleTest",
+            "type": "coreclr",
+            "request": "launch",
+            // "preLaunchTask": "build",
+            "env": {
+                "R_HOME": "/usr/lib/R"
+            },
+            "program": "${workspaceFolder}/TestApps/SimpleTest/bin/Debug/netcoreapp3.1/SimpleTest",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            // "pipeTransport": {
+            //     "pipeCwd": "${workspaceFolder}",
+            //     "pipeProgram": "enter the fully qualified path for the pipe program name, for example '/usr/bin/ssh'",
+            //     "pipeArgs": [],
+            //     "debuggerPath": "enter the path for the debugger on the target machine, for example ~/vsdbg/vsdbg"
+            // }
+        },
         {
             // https://code.visualstudio.com/docs/cpp/launch-json-reference
             // Not used as such but looking like a useful source: https://www.justinmklam.com/posts/2017/10/vscode-debugger-setup/
@@ -111,13 +153,37 @@ Note that if you have the conda env activated youll end up with ` -I/home/per202
             // I follow the instructions in https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Using_gdb_on_wimpy_computers . May need adaptation to make it 
             // Nope. Need to use symbolLoadInfo below, but still stuck on libc6 exception
             // https://gist.github.com/asroy/ca018117e5dbbf53569b696a8c89204f
-            "name": "(gdb) Debug R.NET application",
+            "name": "(gdb) Debug Stresstest application",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/home/per202/src/github_jm/rdotnet/TestApps/StressTest/bin/Debug/netcoreapp3.1/StressTest",
+            "program": "${workspaceFolder}/TestApps/StressTest/bin/Debug/netcoreapp3.1/StressTest",
             "MIMode": "gdb",
             "miDebuggerPath": "gdb",
-            "cwd": "/home/per202/src/github_jm/rdotnet/TestApps/StressTest/bin/Debug/netcoreapp3.1/",
+            "cwd": "${workspaceFolder}/TestApps/StressTest/bin/Debug/netcoreapp3.1/",
+            "additionalSOLibSearchPath": "/usr/local/lib/R/lib",
+            "symbolLoadInfo":{
+                "loadAll": false,
+                "exceptionList": "libR.so"
+            },
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "environment": [
+                {"name": "R_HOME", "value": "/usr/local/lib/R"}
+            ]
+        },
+        {
+            "name": "(gdb) Debug Repro application",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/TestApps/Repro/bin/Debug/netcoreapp3.1/Repro",
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb",
+            "cwd": "${workspaceFolder}/TestApps/Repro/bin/Debug/netcoreapp3.1/",
             "additionalSOLibSearchPath": "/usr/local/lib/R/lib",
             "symbolLoadInfo":{
                 "loadAll": false,
@@ -134,19 +200,6 @@ Note that if you have the conda env activated youll end up with ` -I/home/per202
                 {"name": "R_HOME", "value": "/usr/local/lib/R"}
             ]
         }
- 
+    ]
+}
 ```
-
-Kept having 'rnorm' not found; and libR.so had  `libRblas.so => not found`. Needed to put in /etc/environment: `export LD_LIBRARY_PATH="/usr/local/lib/R/lib:$LD_LIBRARY_PATH"` to solve this. ldd -v then reports finding libRblas.so.
-
-Talk about extremely annoying `dotnet test --filter TestGetPathInitSearchLog --blame RDotNet.Tests/RDotNet.Tests.csproj` was not reporting why this failed. I needed to use detailed verbose output `dotnet test -v d --filter TestGetPathInitSearchLog --blame RDotNet.Tests/RDotNet.Tests.csproj` to GET THE RELEVANT AND CRAFTED EXCEPTION MESSAGE. 
-
-`[xUnit.net 00:00:00.46]       System.ArgumentException : This 64-bit process failed to load the library libR.so. No further error message from the dynamic library loader ` likely requires:
-
-```sh
-export LD_LIBRARY_PATH="/usr/local/lib/R/lib:$LD_LIBRARY_PATH"
-export R_HOME="/usr/local/lib/R"
-```
-
-Yes, does the job. 
-
