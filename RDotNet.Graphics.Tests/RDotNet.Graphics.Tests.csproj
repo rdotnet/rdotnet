@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A535A809-9FA8-4167-8551-5AC84C7C4E1D}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version>1.9.0</Version>
     <Copyright>(c) 2014-2020 Jean-Michel Perraud and others see https://github.com/jmp75/rdotnet/blob/master/License.txt</Copyright>
     <Description>A .NET interoperability library to access the R statistical language runtime from .NET languages. The library is designed for fast data exchange, in process.</Description>

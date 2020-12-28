@@ -1,12 +1,13 @@
 version: '{build}'
 image:
-- Visual Studio 2017
-# - Visual Studio 2015
+- Visual Studio 2019
 
 
 configuration: Debug
 platform: Any CPU
+  
 environment:
+  R_ARCH: x64
   PLATFORM: Any CPU
   BuildPLATFORM: Any CPU
   BuildConfiguration: Debug
@@ -34,16 +35,26 @@ cache:
 
 build_script:
 - cmd: >-
+    dotnet --info
+
     dotnet restore RDotNet.Tests.sln
 
     dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
 
-# Cannot run test scripts; somehow:
-# The active test run was aborted. Reason: 
-# Test Run Aborted.
+    dotnet restore TestApps/SimpleTest/SimpleTest.csproj 
 
-# test_script:
-# - cmd: >-
-#     dotnet test RDotNet.Tests/RDotNet.Tests.csproj
+    dotnet build --configuration Debug --no-restore TestApps/SimpleTest/SimpleTest.csproj 
 
-#     dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
+test_script:
+- cmd: >-
+    .\tests\detect_r.bat 
+
+    dotnet test --blame --filter TestCharacter RDotNet.Tests/RDotNet.Tests.csproj
+
+    dotnet test --blame RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj
+
+# dotnet run -v d --project TestApps/SimpleTest/SimpleTest.csproj 
+
+# dotnet test -v d --blame --filter TestCharacter RDotNet.Tests/RDotNet.Tests.csproj
+
+# dotnet test -v d --blame RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj

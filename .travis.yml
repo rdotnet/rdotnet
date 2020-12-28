@@ -1,9 +1,9 @@
 language: csharp
 mono: none
 # dotnet: 2.1.602
-dotnet: 2.2.203
-# dist: trusty
-dist: xenial
+dotnet: 3.1
+dist: 
+  - bionic # R 3.4.x by default TODO how to have a matrix of pre 3.5 and post 3.5
 
 branches:
   only:
@@ -11,15 +11,19 @@ branches:
   - testing
 
 before_install:
+  - sudo echo "deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40/" >> /etc/apt/sources.list
+  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
   - sudo apt-get -qq update
-  - sudo apt-get install -y r-base-dev  
+  - sudo apt-get install -y r-base-dev r-cran-mass r-cran-lattice r-cran-matrix
 
 install:
   - dotnet restore RDotNet.Tests.sln
-  - dotnet build --configuration Debug --no-restore  RDotNet.Tests.sln
+  - dotnet build --configuration Debug --no-restore RDotNet.Tests.sln
 
 script:
+  - R --version
   - export R_HOME=/usr/lib/R
   - ls $R_HOME
+  - dotnet run --project TestApps/SimpleTest/SimpleTest.csproj 
   - dotnet test RDotNet.Tests/RDotNet.Tests.csproj
   - dotnet test RDotNet.FSharp.Tests/RDotNet.FSharp.Tests.fsproj

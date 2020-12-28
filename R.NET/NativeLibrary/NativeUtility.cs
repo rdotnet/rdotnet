@@ -73,6 +73,10 @@ namespace RDotNet.NativeLibrary
         /// </summary>
         public string RHome { get; private set; }
 
+        /// <summary>
+        /// Re-apply the changes to the PATH and R_HOME environment variables. This can be needed if there are site or 
+        /// user .Renviron files, as the native R library will override modifications done by R.NET over the course of the engine initialisation
+        /// </summary>
         public void SetCachedEnvironmentVariables()
         {
             if (RPath == null || RHome == null)
@@ -276,7 +280,11 @@ namespace RDotNet.NativeLibrary
                         // if rPath is e.g. /usr/local/lib/R/lib/ ,
                         rHome = Path.GetDirectoryName(rPath);
                     else
-                        rHome = "/usr/lib/R";
+                    {
+                        rHome = "/usr/local/lib/R";
+                        if (!Directory.Exists(rHome))
+                            rHome = "/usr/lib/R";
+                    }
                     if (!rHome.EndsWith("R"))
                         // if rPath is e.g. /usr/lib/ (symlink)  then default
                         rHome = "/usr/lib/R";
@@ -582,6 +590,18 @@ namespace RDotNet.NativeLibrary
             {
                 var p = GetPlatform();
                 return p == PlatformID.MacOSX || p == PlatformID.Unix;
+            }
+        }
+
+        /// <summary>
+        /// Is the platform Win32NT (most windows desktop?)
+        /// </summary>
+        public static bool IsWin32NT
+        {
+            get
+            {
+                var p = GetPlatform();
+                return p == PlatformID.Win32NT;
             }
         }
     }

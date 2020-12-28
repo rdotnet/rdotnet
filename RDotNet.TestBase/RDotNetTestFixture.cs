@@ -23,8 +23,9 @@ namespace RDotNet
 
         protected static void ReportFailOnLinux(string additionalMsg)
         {
-            if (NativeUtility.IsUnix)
-                throw new NotSupportedException("This unit test is problematic to run from NUnit on Linux " + additionalMsg);
+            // 2020-10: on .NET core 3.1 on Linux, Linux only failing tests seem to be OK now
+            //if (NativeUtility.IsUnix)
+            //    throw new NotSupportedException("This unit test is problematic to run from NUnit on Linux " + additionalMsg);
         }
 
         protected RDotNetTestFixture()
