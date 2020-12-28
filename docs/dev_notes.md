@@ -1,5 +1,13 @@
 # Dev notes
 
+## Debugging on .NET Core with VScode
+
+On Linux
+
+OmniSharp : needed to open only the rdotnet folder (workspace with multiple folders seems to fail to work). Need to ctrl-shift-P omnisharp - open project/solution to get it to sort of have intellisense working. 
+
+.NET test explorer extension: trial and error needed to use "**/*Tests.csproj" for "Test Project Path". Only after that did it detect unit tests. Launching the test debug mode was a bit fiddly and hit and miss. 
+
 ## Trying on .NET core
 
 Was testing .NET5 so have on my linux box: `dotnet --version` returning 5.0.100-rc.1.20452.10
@@ -79,9 +87,13 @@ Solved with manual install of dotnet; [issues/128](https://github.com/rdotnet/rd
 
 I tried to build/install from source while having R installed from the debian repo. This may have caused libR.so to not depend on libRblas.so alongside but  the distro one. GDB was insisting on loading the repo libR.so so had to unintall the distro version, but then ldd fails to get the libRblas dependency. Uninstall `r-cran` before building a custom one. troublesome but may be required. 
 
+`aptitude search r-cran | grep "^i" > ~/backup_debinstall.txt` then `sudo apt remove r-cran-*`
+
 Note that if you have the conda env activated youll end up with ` -I/home/per202/anaconda3/include ` in the compilation. Not trustworthy... Deactivate. this Veeery likely causes issues.
 
-```
+`cd ~/src/tmp/R-4.0.2`
+
+```sh
 ./configure --prefix=/usr/local --enable-R-shlib CFLAGS=" -g -Og -ggdb"  --enable-java=no --with-recommended-packages=no
 ```
 
@@ -135,3 +147,6 @@ Talk about extremely annoying `dotnet test --filter TestGetPathInitSearchLog --b
 export LD_LIBRARY_PATH="/usr/local/lib/R/lib:$LD_LIBRARY_PATH"
 export R_HOME="/usr/local/lib/R"
 ```
+
+Yes, does the job. 
+

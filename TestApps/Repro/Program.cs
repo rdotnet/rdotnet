@@ -117,8 +117,10 @@ namespace SimpleTest
             var engine = REngine.GetInstance(dll: null, initialize: true, parameter: null, device: device);
             engine.Evaluate("rm(list=ls())");
             device.Initialize();
+            Console.WriteLine("Before calling engine.evaluate with console write actions");
             engine.Evaluate("print(NULL)");
             engine.Evaluate("cat(123123123)");
+            Console.WriteLine("After calling engine.evaluate with console write actions");
             var s = device.GetString();
             Console.WriteLine("My device has the string '{0}'", s);
         }
