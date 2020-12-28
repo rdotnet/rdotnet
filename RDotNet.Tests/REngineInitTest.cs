@@ -391,7 +391,7 @@ namespace RDotNet
             //Assert.Equal(1, fnmatch.Count());
         }
 
-        [Fact]
+        [Fact(Skip = "This still does not pass on Travis CI sourcing pkgs from https://cloud.r-project.org/bin/linux/ubuntu bionic-cran40")]
         public void TestFindRHomePath()
         {
             string rHomePath = createTestRegistryUtil().FindRHome();
