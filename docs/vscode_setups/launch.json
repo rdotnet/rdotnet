@@ -1,0 +1,86 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core SimpleTest",
+            "type": "coreclr",
+            "request": "launch",
+            // "preLaunchTask": "build",
+            "env": {
+                "R_HOME": "/usr/lib/R"
+            },
+            "program": "${workspaceFolder}/TestApps/SimpleTest/bin/Debug/netcoreapp3.1/SimpleTest",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            // "pipeTransport": {
+            //     "pipeCwd": "${workspaceFolder}",
+            //     "pipeProgram": "enter the fully qualified path for the pipe program name, for example '/usr/bin/ssh'",
+            //     "pipeArgs": [],
+            //     "debuggerPath": "enter the path for the debugger on the target machine, for example ~/vsdbg/vsdbg"
+            // }
+        },
+        {
+            // https://code.visualstudio.com/docs/cpp/launch-json-reference
+            // Not used as such but looking like a useful source: https://www.justinmklam.com/posts/2017/10/vscode-debugger-setup/
+            // Maybe: https://marketplace.visualstudio.com/items?itemName=webfreak.debug
+            // I seemed to manage to get a successful attach to libwaa.so even from python, 
+            // but python itself keeps breaking in VSCode (only once if cli gdb is used.) and stuck wiith Unable to open epoll_wait.c file. Who cares.
+            // Trying to find a way to tell GDB not to load the symbols for python program.
+            // https://stackoverflow.com/questions/31763639/how-to-prevent-gdb-from-loading-debugging-symbol-for-a-large-library
+            // I follow the instructions in https://developer.mozilla.org/en-US/docs/Archive/Mozilla/Using_gdb_on_wimpy_computers . May need adaptation to make it 
+            // Nope. Need to use symbolLoadInfo below, but still stuck on libc6 exception
+            // https://gist.github.com/asroy/ca018117e5dbbf53569b696a8c89204f
+            "name": "(gdb) Debug Stresstest application",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/TestApps/StressTest/bin/Debug/netcoreapp3.1/StressTest",
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb",
+            "cwd": "${workspaceFolder}/TestApps/StressTest/bin/Debug/netcoreapp3.1/",
+            "additionalSOLibSearchPath": "/usr/local/lib/R/lib",
+            "symbolLoadInfo":{
+                "loadAll": false,
+                "exceptionList": "libR.so"
+            },
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "environment": [
+                {"name": "R_HOME", "value": "/usr/local/lib/R"}
+            ]
+        },
+        {
+            "name": "(gdb) Debug Repro application",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/TestApps/Repro/bin/Debug/netcoreapp3.1/Repro",
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb",
+            "cwd": "${workspaceFolder}/TestApps/Repro/bin/Debug/netcoreapp3.1/",
+            "additionalSOLibSearchPath": "/usr/local/lib/R/lib",
+            "symbolLoadInfo":{
+                "loadAll": false,
+                "exceptionList": "libR.so"
+            },
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "environment": [
+                {"name": "R_HOME", "value": "/usr/local/lib/R"}
+            ]
+        }
+    ]
+}
