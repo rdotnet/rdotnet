@@ -1,0 +1,105 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-debug",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "build",
+                "--configuration",
+                "Debug",
+                "--no-restore",
+                "RDotNet.Tests.sln"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build-release",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "build",
+                "--configuration",
+                "Release",
+                "--no-restore",
+                "RDotNet.Tests.sln"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "clean",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "clean",
+                "--configuration",
+                "Debug",
+                "RDotNet.Tests.sln"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "test-rdn",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "test",
+                "--blame",
+                "RDotNet.Tests/RDotNet.Tests.csproj"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "test-rdn-fs",
+            "command": "dotnet",
+            "type": "shell",
+            "args": [
+                "test",
+                "--blame",
+                "RDotNet.Tests.FSharp/RDotNet.Tests.FSharp.csproj"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": "$msCompile"
+        },
+
+
+
+    ]
+}
