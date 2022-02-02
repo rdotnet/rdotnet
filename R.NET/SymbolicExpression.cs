@@ -25,7 +25,7 @@ namespace RDotNet
         /// <remarks>
         /// Following recommended practices in http://msdn.microsoft.com/en-us/library/vstudio/c5kehkcz(v=vs.120).aspx
         /// </remarks>
-        private static readonly Object lockObject = new Object();
+        protected static readonly Object lockObject = new Object();
 
         private bool isProtected;
 
@@ -257,7 +257,8 @@ namespace RDotNet
             {
                 if (Engine.EnableLock)
                 {
-                    lock (lockObject) { this.GetFunction<R_ReleaseObject>()(handle); ; }
+                    // Call to R_Unpreserve may occur in GC thread
+                    engine.ReleaseHandle(handle);
                 }
                 else
                     this.GetFunction<R_ReleaseObject>()(handle);
@@ -318,6 +319,16 @@ namespace RDotNet
         /// <param name="value"></param>
         public static void op_DynamicAssignment<K>(SymbolicExpression sexp, string name, dynamic value)
         {
+        }
+
+
+        /// <summary>
+        /// Retrieve lock object to lock when releasing handle
+        /// </summary>
+        /// <returns></returns>
+        public static Object GetLockObject()
+        {
+            return lockObject;
         }
     }
 }
