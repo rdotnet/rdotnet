@@ -53,8 +53,23 @@ namespace RDotNet
                 throw new ArgumentException(null, "environment");
             }
 
+
             bool errorOccurred;
-            IntPtr pointer = this.GetFunction<R_tryEval>()(handle, environment.DangerousGetHandle(), out errorOccurred);
+
+            IntPtr pointer;
+
+            if (Engine.EnableLock)
+            {
+                lock (lockObject)
+                {
+                    pointer = this.GetFunction<R_tryEval>()(handle, environment.DangerousGetHandle(), out errorOccurred);
+                }
+            }
+            else
+            {
+                pointer = this.GetFunction<R_tryEval>()(handle, environment.DangerousGetHandle(), out errorOccurred);
+            }
+
             result = errorOccurred ? null : new SymbolicExpression(Engine, pointer);
             return !errorOccurred;
         }

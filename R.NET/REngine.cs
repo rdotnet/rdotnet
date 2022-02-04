@@ -56,6 +56,8 @@ namespace RDotNet
         private CharacterDeviceAdapter adapter;
         private bool isRunning;
         private StartupParameter parameter;
+        private AsynchronousHandleReleaser releasePtrHandler;
+
         private static bool environmentIsSet = false;
         private static NativeUtility nativeUtil = null;
         private static REngine engine = null;
@@ -80,6 +82,7 @@ namespace RDotNet
             this.Disposed = false;
             this.EnableLock = true; // See https://rdotnet.codeplex.com/workitem/113; it seems wise to enable it by default.
             this.AutoPrint = false;  // 2019-05 changing to false by default, as this impacts the default performance drastically. There was an argument for a true default, but now I things this is superseded.
+            this.releasePtrHandler = new AsynchronousHandleReleaser(this);
         }
 
         /// <summary>
@@ -161,6 +164,11 @@ namespace RDotNet
                 return GetPredefinedSymbol("R_EmptyEnv").AsEnvironment();
             }
         }
+
+        /// <summary>
+        /// For debug / stats
+        /// </summary>
+        public int ReleasableHandleCount { get => releasePtrHandler.Count; }
 
         /// <summary>
         /// Gets the base environment.
@@ -380,6 +388,15 @@ namespace RDotNet
         }
 
         /// <summary>
+        /// Release SymbolicExpression handle
+        /// </summary>
+        /// <param name="handle"></param>
+        public void ReleaseHandle(IntPtr handle)
+        {
+            releasePtrHandler.AddHandler(handle);
+        }
+
+        /// <summary>
         /// if the parameter is null or empty string, return the default names of the R shared library file depending on the platform
         /// </summary>
         /// <param name="dll">The name of the library provided, possibly null or empty</param>
@@ -440,7 +457,7 @@ namespace RDotNet
         /// <param name="setupMainLoop">if true, call the functions to initialise the embedded R</param>
         public void Initialize(StartupParameter parameter = null, ICharacterDevice device = null, bool setupMainLoop = true)
         {
-            //         Console.WriteLine("REngine.Initialize start");
+            //        Console.WriteLine("REngine.Initialize start");
             if (this.isRunning)
                 return;
             //         Console.WriteLine("REngine.Initialize, after isRunning checked as false");
@@ -512,6 +529,8 @@ namespace RDotNet
             this.isRunning = true;
 
             //Console.WriteLine("Initialize-just before leaving; R_CStackLimit value is " + GetDangerousInt32("R_CStackLimit"));
+
+            releasePtrHandler.Init();
 
             if (NativeUtility.GetPlatform() == PlatformID.Win32NT)
             {
@@ -1103,6 +1122,8 @@ namespace RDotNet
         protected override void Dispose(bool disposing)
         {
             this.isRunning = false;
+            this.releasePtrHandler.Stop();
+            
             OnDisposing(EventArgs.Empty);
             if (disposing && !Disposed)
             {
